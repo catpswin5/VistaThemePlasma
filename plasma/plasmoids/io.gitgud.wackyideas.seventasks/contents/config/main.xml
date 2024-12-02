@@ -132,6 +132,10 @@
       <label>Whether to show the app name in task items.</label>
       <default>false</default>
     </entry>
+    <entry name="bottomMargin" type="Bool">
+      <label>Whether to show a 2px tall margin on the task items.</label>
+      <default>true</default>
+    </entry>
     <entry name="fill" type="Bool">
       <label>Whether task manager should occupy all available space.</label>
       <default>true</default>

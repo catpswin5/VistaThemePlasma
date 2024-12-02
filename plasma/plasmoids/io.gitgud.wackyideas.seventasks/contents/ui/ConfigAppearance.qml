@@ -28,11 +28,39 @@ KCM.SimpleKCM {
     property alias cfg_dragVista: dragVista.checked
     property alias cfg_enableAnimations: enableAnimations.checked
     property alias cfg_showAppName: showAppName.checked
+    property alias cfg_bottomMargin: bottomMargin.checked
 
     property alias cfg_maxStripes: maxStripes.value
     property alias cfg_forceStripes: forceStripes.checked
     property int cfg_iconSpacing: 0
     property alias cfg_jumplistArrow: jumplistArrow.checked
+
+    component CustomGroupBox: GroupBox {
+        id: gbox
+        label: Label {
+            id: lbl
+            x: gbox.leftPadding + 2
+            y: lbl.implicitHeight/2-gbox.bottomPadding-1
+            width: lbl.implicitWidth
+            text: gbox.title
+            elide: Text.ElideRight
+            Rectangle {
+                anchors.fill: parent
+                anchors.leftMargin: -2
+                anchors.rightMargin: -2
+                color: Kirigami.Theme.backgroundColor
+                z: -1
+            }
+        }
+        background: Rectangle {
+            y: gbox.topPadding - gbox.bottomPadding*2
+            width: parent.width
+            height: parent.height - gbox.topPadding + gbox.bottomPadding*2
+            color: "transparent"
+            border.color: "#d5dfe5"
+            radius: 3
+        }
+    }
 
     Component.onCompleted: {
         /* Don't rely on bindings for checking the radiobuttons
@@ -47,53 +75,92 @@ KCM.SimpleKCM {
             forceStripes.checked = true;
         }
     }
-    Kirigami.FormLayout {
-        CheckBox {
-            id: showToolTips
-            Kirigami.FormData.label: i18n("General:")
-            text: i18n("Show small window previews when hovering over Tasks")
+    ColumnLayout {
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: i18n("Window previews (not functional)")
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                CheckBox {
+                    id: showToolTips
+                    text: i18n("Show small window previews when hovering over Tasks")
+                }
+
+                CheckBox {
+                    id: highlightWindows
+                    text: i18n("Hide other windows when hovering over previews")
+                }
+            }
         }
 
-        CheckBox {
-            id: highlightWindows
-            text: i18n("Hide other windows when hovering over previews")
-        }
+        CustomGroupBox {
+            Layout.fillWidth: true
 
-        CheckBox {
-            id: indicateAudioStreams
-            text: i18n("Mark applications that play audio")
-            checked: cfg_indicateAudioStreams && plasmaPaAvailable
-            onToggled: cfg_indicateAudioStreams = checked
-            enabled: plasmaPaAvailable
-            visible: false
+            title: i18n("General")
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                CheckBox {
+                    id: disableHottracking
+                    text: i18n("Disable hottracking")
+                }
+                CheckBox {
+                    id: disableJumplists
+                    text: i18n("Use traditional context menus instead of jumplists")
+                }
+                CheckBox {
+                    id: enableAnimations
+                    text: i18n("Enable animations")
+                }
+            }
         }
-        CheckBox {
-            id: showLabels
-            text: i18n("Show labels next to task icons")
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: i18n("Vista Tweaks")
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                CheckBox {
+                    id: dragVista
+                    text: i18n("Enable dragging")
+                }
+            }
         }
-        CheckBox {
-            id: disableHottracking
-            text: i18n("Disable hottracking")
-        }
-        CheckBox {
-            id: disableJumplists
-            text: i18n("Use traditional context menus instead of jumplists")
-        }
-        CheckBox {
-            id: jumplistArrow
-            text: i18n("Show jumplist arrow")
-        }
-        CheckBox {
-            id: dragVista
-            text: i18n("Enable dragging on Vista taskbar")
-        }
-        CheckBox {
-            id: enableAnimations
-            text: i18n("Enable animations")
-        }
-        CheckBox {
-            id: showAppName
-            text: i18n("Show app name")
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: i18n("7 Milestone 2 tweaks")
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                CheckBox {
+                    id: showLabels
+                    text: i18n("Show labels next to task icons")
+                }
+                CheckBox {
+                    id: jumplistArrow
+                    text: i18n("Show jumplist arrow")
+                }
+                CheckBox {
+                    id: showAppName
+                    text: i18n("Show app name")
+                }
+                CheckBox {
+                    id: bottomMargin
+                    text: i18n("Enable 2px bottom margin on task items")
+                }
+            }
         }
 
         CheckBox {

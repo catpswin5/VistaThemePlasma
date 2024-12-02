@@ -19,8 +19,6 @@ import Qt5Compat.GraphicalEffects
 import "code/layoutmetrics.js" as LayoutMetrics
 import "code/tools.js" as TaskTools
 
-import "components/" as Components
-
 PlasmaCore.ToolTipArea {
     id: task
 
@@ -30,18 +28,16 @@ PlasmaCore.ToolTipArea {
     // This makes the tasks mirrored, so we mirror them again to fix that.
     rotation: Plasmoid.configuration.reverseMode && Plasmoid.formFactor === PlasmaCore.Types.Vertical ? 180 : 0
 
-    implicitHeight: !inPopup ? LayoutMetrics.preferredTaskHeight() : LayoutMetrics.preferredMaxHeight()
+    implicitHeight: LayoutMetrics.preferredTaskHeight();
     implicitWidth: {
         if(tasksRoot.vertical) {
             return tasksRoot.width;
         } else {
-            if(isIcon || model.IsLauncher || model.IsStartup) {
-                if(tasksRoot.milestone2Mode && tasksRoot.showJumplistBtn) {
-                    return LayoutMetrics.preferredMinLauncherWidth() + Kirigami.Units.smallSpacing*2 + Kirigami.Units.smallSpacing/2;
-                } else return LayoutMetrics.preferredMinLauncherWidth();
+            if(tasksRoot.iconsOnly || model.IsLauncher || model.IsStartup) {
+                return LayoutMetrics.preferredMinLauncherWidth();
             } else {
                 var minWidth = LayoutMetrics.preferredMinWidth();
-                var maxWidth = LayoutMetrics.preferredMaxWidth() - 2;
+                var maxWidth = LayoutMetrics.preferredMaxWidth();
 
 
                 var taskCount = taskList.contentItem.visibleChildren.length;
@@ -55,26 +51,26 @@ PlasmaCore.ToolTipArea {
         }
     }
     Behavior on implicitWidth {
-        NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { duration: 200; easing.type: Easing.OutQuad }
     }
     Behavior on implicitHeight {
-        NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { duration: 200; easing.type: Easing.OutQuad }
     }
 
     SequentialAnimation {
         id: addLabelsAnimation
-        NumberAnimation { target: task; properties: "opacity"; to: 1; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "opacity"; to: 1; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "visible"; value: true }
         PropertyAction { target: task; property: "state"; value: "" }
     }
     SequentialAnimation {
         id: removeLabelsAnimation
-        NumberAnimation { target: task; properties: "width"; to: 0; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "width"; to: 0; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
     SequentialAnimation {
         id: removeIconsAnimation
-        NumberAnimation { target: task; properties: "opacity"; to: 0; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "opacity"; to: 0; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
 
@@ -82,34 +78,29 @@ PlasmaCore.ToolTipArea {
     required property int index
     required property Item tasksRoot
 
-    readonly property int animationDuration: Plasmoid.configuration.enableAnimations ? 200 : 0
-
     readonly property int pid: model.AppPid
     readonly property string appName: model.AppName
     readonly property string appId: model.AppId.replace(/\.desktop/, '')
-    readonly property bool isIcon: tasksRoot.iconsOnly || model.IsLauncher || badge.visible
-    property bool isLauncher: model.IsLauncher
+    readonly property bool isIcon: tasksRoot.iconsOnly || model.IsLauncher
     property bool toolTipOpen: false
     property bool inPopup: false
     property bool isWindow: model.IsWindow
     property int childCount: model.ChildCount
     property int previousChildCount: 0
     property alias labelText: label.text
-    property alias mouseArea: dragArea
     property QtObject contextMenu: null
     property QtObject jumpList: null // Pointer to the reimplemented context menu.
     property bool jumpListOpen: jumpList !== null
-    //property bool containsMouseFalsePositive: false
-
-    readonly property bool hottrackingEnabled: !Plasmoid.configuration.disableHottracking && !inPopup
-
+    property bool containsMouseFalsePositive: false
     onJumpListOpenChanged: {
-        if(jumpList !== null) {
-            Qt.callLater(() => { Plasmoid.setMouseGrab(true, jumpList); } );
-        }/* else {
-            dragArea.visible = false;
-            dragArea.visible = true;
-        }*/
+        if(jumpList !== null)
+            Qt.callLater(() => { Plasmoid.setMouseGrab(true, jumpList); });
+        else {
+            if(dragArea.containsMouse) {
+                containsMouseFalsePositive = true;
+                console.log("false positive!")
+            }
+        }
     }
     readonly property bool smartLauncherEnabled: !inPopup && !model.IsStartup
     property QtObject smartLauncherItem: null
@@ -125,19 +116,17 @@ PlasmaCore.ToolTipArea {
         return item.muted
     })
 
-    readonly property bool highlighted: (inPopup && activeFocus) || (!inPopup && (dragArea.containsMouse /*&& !containsMouseFalsePositive*/))
+    readonly property bool highlighted: (inPopup && activeFocus) || (!inPopup && (dragArea.containsMouse && !containsMouseFalsePositive))
         || (task.contextMenu && task.contextMenu.status === PlasmaExtras.Menu.Open)
         || (task.jumpList)
         || (!!tasksRoot.groupDialog && tasksRoot.groupDialog.visualParent === task)
-        || jumplistBtnMa.containsMouse
 
-    active: false// (Plasmoid.configuration.showToolTips || tasksRoot.toolTipOpenedByClick === task) && !inPopup && !tasksRoot.groupDialog && !dragArea.held && dragArea.containsMouse
+    active: false //(Plasmoid.configuration.showToolTips || tasksRoot.toolTipOpenedByClick === task) && !inPopup && !tasksRoot.groupDialog && !dragArea.held
     interactive: false //model.IsWindow || mainItem.playerData
     location: Plasmoid.location
     mainItem: model.IsWindow ? openWindowToolTipDelegate : pinnedAppToolTipDelegate
     readonly property bool animateLabel: (!model.IsStartup && !model.IsLauncher) && !tasksRoot.iconsOnly
     readonly property bool shouldHideOnRemoval: model.IsStartup || model.IsLauncher
-
     ListView.onRemove: {
             if (tasksRoot.containsMouse && index != tasksModel.count &&
                 task.model.WinIdList.length > 0 &&
@@ -302,14 +291,14 @@ TaskManagerApplet.SmartLauncherItem { }
     }
     function showContextMenu(args) {
         //toolTipArea.hideImmediately();
-        if(Plasmoid.configuration.disableJumplists && !jumplistBtnMa.containsMouse) {
+        if(Plasmoid.configuration.disableJumplists) {
             showFallbackContextMenu(args);
         } else {
             var mIndex = modelIndex();
             jumpList = tasksRoot.createJumpList(task, mIndex, args);
             jumpList.menuDecoration = model.decoration;
             jumpListDebouncer.start();
-            Qt.callLater(() => { jumpList.show(); tasksRoot.jumpListItem = jumpList; });
+            jumpListHandler.start();
         }
     }
     function showFallbackContextMenu(args) {
@@ -546,6 +535,14 @@ TaskManagerApplet.SmartLauncherItem { }
         interval: 500
         onTriggered: { }
     }
+    Timer {
+        id: jumpListHandler
+        interval: 50
+        onTriggered: {
+            Qt.callLater(() => { jumpList.show(); tasksRoot.jumpListItem = jumpList; });
+            Qt.callLater(() => { Plasmoid.setMouseGrab(true, jumpList); });
+        }
+    }
     TapHandler {
         id: menuTapHandler
         acceptedButtons: Qt.LeftButton
@@ -644,7 +641,6 @@ TaskManagerApplet.SmartLauncherItem { }
 
         anchors.top: parent.top
         anchors.left: parent.left
-
         width: task.width
         height: task.height
 
@@ -834,7 +830,7 @@ TaskManagerApplet.SmartLauncherItem { }
         },
         State {
             name: "jumpListOpen"
-            when: (jumpList !== null) &&  task.hottrackingEnabled
+            when: (jumpList !== null) && !Plasmoid.configuration.disableHottracking
             PropertyChanges {
                 target: glow
                 opacity: 1
@@ -848,7 +844,7 @@ TaskManagerApplet.SmartLauncherItem { }
         },
         State {
             name: "startup"
-            when: (model.IsStartup || containerRect.loadingNewInstance)
+            when: (model.IsStartup || containerRect.loadingNewInstance) && !Plasmoid.configuration.disableHottracking
             PropertyChanges {
                 target: animationGlow
                 opacity: 1
@@ -869,7 +865,7 @@ TaskManagerApplet.SmartLauncherItem { }
         },
         State {
             name: "loaded"
-            when: !(model.IsStartup || model.IsLauncher) && task.tasksRoot.animationManager.getItem(task.appId) &&  task.hottrackingEnabled
+            when: !(model.IsStartup || model.IsLauncher) && task.tasksRoot.animationManager.getItem(task.appId) && !Plasmoid.configuration.disableHottracking
             PropertyChanges {
                 target: animationBorderGradient
                 opacity: 0
@@ -893,17 +889,13 @@ TaskManagerApplet.SmartLauncherItem { }
 
             anchors {
                 fill: parent
-                bottomMargin: tasksRoot.milestone2Mode ? 0 : 1
-                topMargin: tasksRoot.milestone2Mode ? 4 : 1
-                rightMargin: frame.groupIndicatorEnabled ? groupIndicator.margins.right : (!inPopup ? (frame.jumplistBtnEnabled ? 16 : 0) : -Kirigami.Units.largeSpacing)
-                leftMargin: !inPopup ? 0 : -Kirigami.Units.largeSpacing
             }
 
             imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
-            visible: model.IsLauncher// && !task.containsMouseFalsePositive
+            visible: model.IsLauncher
             prefix: {
                 if(dragArea.held || dragArea.containsPress) return "pressed-tab";
-                else if(task.highlighted || jumplistBtnMa.containsMouse) return "active-tab";
+                else if(dragArea.containsMouse) return "active-tab";
                 else return "";
             }
         }
@@ -929,9 +921,9 @@ TaskManagerApplet.SmartLauncherItem { }
         }
         RadialGradient {
             id: animationGlow
-            anchors.fill: frame
+            anchors.fill: parent
             anchors.margins: 2
-            visible:  task.hottrackingEnabled
+            visible: !Plasmoid.configuration.disableHottracking
             //visible: model.IsStartup
             opacity: 0//frame.isHovered && !dragArea.held ? 1 : 0
             Behavior on opacity {
@@ -950,9 +942,9 @@ TaskManagerApplet.SmartLauncherItem { }
         }
         RadialGradient {
             id: glow
-            anchors.fill: frame
+            anchors.fill: parent
             anchors.margins: 2
-            visible: !model.IsLauncher && task.hottrackingEnabled
+            visible: !model.IsLauncher && !Plasmoid.configuration.disableHottracking
             opacity: ((frame.isHovered && !dragArea.held && !(attentionFadeIn.running || attentionFadeOut.running)) ? 1 : 0) * canShow
             property real canShow: containerRect.state === "startup" ? 0 : 1 // Used for the startup animation
             Behavior on opacity {
@@ -976,7 +968,7 @@ TaskManagerApplet.SmartLauncherItem { }
             id: animationBorderGradient
             anchors.fill: borderGradient
             source: borderGradient
-            visible: task.hottrackingEnabled
+            visible: !Plasmoid.configuration.disableHottracking
             opacity: 0
             gradient: Gradient {
                 GradientStop { position: 0.0; color: containerRect.glowColorCenter }
@@ -994,7 +986,7 @@ TaskManagerApplet.SmartLauncherItem { }
             id: borderGradientRender
             anchors.fill: borderGradient
             source: borderGradient
-            visible: !model.IsLauncher && task.hottrackingEnabled
+            visible: !model.IsLauncher && !Plasmoid.configuration.disableHottracking
             opacity: (frame.isHovered && !dragArea.held && !(attentionFadeIn.running || attentionFadeOut.running)) ? 1 : 0
             Behavior on opacity {
                 NumberAnimation { duration: 250; easing.type: Easing.Linear }
@@ -1011,9 +1003,9 @@ TaskManagerApplet.SmartLauncherItem { }
         }
         Rectangle {
             id: attentionIndicator
-            anchors.fill: frame
-            visible: task.hottrackingEnabled
-            anchors.rightMargin: (task.childCount !== 0 && !frame.jumplistBtnEnabled) ? groupIndicator.margins.right : 0
+            anchors.fill: parent
+            visible: !Plasmoid.configuration.disableHottracking
+            anchors.rightMargin: (task.childCount !== 0) ? groupIndicator.margins.right : 0
             property bool requiresAttention: model.IsDemandingAttention || (task.smartLauncherItem && task.smartLauncherItem.urgent)
             color: "transparent"
             Rectangle {
@@ -1282,59 +1274,30 @@ TaskManagerApplet.SmartLauncherItem { }
 
             anchors {
                 fill: parent
-
-                bottomMargin: tasksRoot.milestone2Mode ? (Plasmoid.configuration.bottomMargin ? 2 : 1) : 1
-                topMargin: tasksRoot.milestone2Mode ? 4 : 1
-                rightMargin: groupIndicatorEnabled ? groupIndicator.margins.right : (!inPopup ? (jumplistBtnEnabled ? 16 : 0) : -Kirigami.Units.largeSpacing)
-                leftMargin: !inPopup ? 0 : -Kirigami.Units.largeSpacing
+                rightMargin: (task.childCount !== 0) ? groupIndicator.margins.right : 0
             }
-            imagePath: tasksRoot.milestone2Mode && !inPopup ? Qt.resolvedUrl("svgs/supertasks.svg") : Qt.resolvedUrl("svgs/tasks.svg")
-
-            // Milestone 2 properties
-            property bool groupIndicatorEnabled: groupIndicator.visible && tasksRoot.milestone2Mode
-            property bool jumplistBtnEnabled: !inPopup && tasksRoot.showJumplistBtn && tasksRoot.milestone2Mode && !groupIndicatorEnabled
-
+            imagePath: Qt.resolvedUrl("svgs/tasks.svg")
             property bool isHovered: (task.highlighted && Plasmoid.configuration.taskHoverEffect)
             property bool isActive: model.IsActive || dragArea.containsPress || dragArea.held
-
-            // separate the prefix in 3 parts
             property string basePrefix: {
-                if(jumplistBtn.visible && jumplistBtnEnabled) {
-                    if(jumplistBtnMa.containsMouse && !attentionIndicator.requiresAttention) return "jumphover-";
-                        else return "jumpbtn-";
-                } else return "";
-            }
-            property string base: {
                 if(model.IsLauncher) return "";
-                if(attentionIndicator.requiresAttention && !hottrackingEnabled) return "attention";
-                if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) return  "active";
-                if(!inPopup) return "normal";
-                else if (isHovered && !attentionIndicator.requiresAttention && !jumplistBtnMa.containsMouse) return "normal";
-                else return "";
+                if(attentionIndicator.requiresAttention && Plasmoid.configuration.disableHottracking) return "attention";
+                if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) return "active";
+                return "normal";
             }
-            property string baseSuffix: {
-                if(isHovered && !attentionIndicator.requiresAttention && !jumplistBtnMa.containsMouse && !hottrackingEnabled) {
-                    return "-hover"
-                } else return ""
-            }
-
-            prefix: basePrefix + base + baseSuffix
+            prefix: (basePrefix + ((isHovered && !attentionIndicator.requiresAttention) ? "-hover" : ""))
 
             KSvg.FrameSvgItem {
                 id: groupIndicator
-                imagePath: Qt.resolvedUrl("svgs/supertasks.svg")
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
+                imagePath: Qt.resolvedUrl("svgs/tasks.svg")
+                anchors.fill: parent
                 anchors.rightMargin: -groupIndicator.margins.right
-                anchors.left: parent.left
-                height: 33
-                visible: tasksRoot.milestone2Mode && !tasksRoot.showJumplistBtn
                 prefix: {
-                    if(model.ChildCount == 0) return "";
+                    if(task.childCount == 0) return "";
                     var result = "group";
                     if(frame.isActive) result = "active-" + result;
-                    console.log(model.ChildCount)
-                    if(model.ChildCount > 2) {
+                    console.log(task.childCount)
+                    if(task.childCount > 2) {
                         result += "3";
                     }
                     console.log(result);
@@ -1342,15 +1305,6 @@ TaskManagerApplet.SmartLauncherItem { }
                 }
             }
 
-            Rectangle {
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: -Kirigami.Units.smallSpacing/4
-                anchors.right: parent.right
-                anchors.left: parent.left
-                height: 1
-                color: "black"
-                visible: !Plasmoid.configuration.bottomMargin && tasksRoot.milestone2Mode
-            }
         }
 
         Loader {
@@ -1363,24 +1317,16 @@ TaskManagerApplet.SmartLauncherItem { }
             source: "TaskProgressOverlay.qml"
         }
 
-
         RowLayout {
             spacing: Kirigami.Units.smallSpacing
-            anchors.fill: model.IsLauncher ? launcherFrame : frame
+            anchors.fill: frame
             anchors.margins: Kirigami.Units.smallSpacing
-            anchors.rightMargin: Kirigami.Units.largeSpacing - ((dragArea.containsPress || dragArea.held && tasksRoot.milestone2Mode) ? 1 : 0)
-            anchors.leftMargin: Kirigami.Units.mediumSpacing
-            anchors.topMargin: model.IsActive ? (tasksRoot.milestone2Mode ? (Plasmoid.configuration.bottomMargin ? Kirigami.Units.smallSpacing/4 :
-                                                Kirigami.Units.smallSpacing/2) : Kirigami.Units.smallSpacing + 2) :
-                                                (tasksRoot.milestone2Mode ? (Plasmoid.configuration.bottomMargin ? Kirigami.Units.smallSpacing/4 :
-                                                Kirigami.Units.smallSpacing/2) : Kirigami.Units.smallSpacing)
-
-
-
+            anchors.rightMargin: (!label.visible ? Kirigami.Units.smallSpacing : Kirigami.Units.largeSpacing) - ((dragArea.containsPress || dragArea.held) ? 1 : 0)
+            anchors.leftMargin:  !label.visible ? Kirigami.Units.smallSpacing : Kirigami.Units.mediumSpacing
             Kirigami.Icon {
                 id: iconBox
                 property int iconSize: {
-                    if(tasksRoot.height <= 30 && !inPopup) {
+                    if(tasksRoot.height <= 30) {
                         return Kirigami.Units.iconSizes.small;
                     }
                     return Kirigami.Units.iconSizes.medium;
@@ -1392,10 +1338,8 @@ TaskManagerApplet.SmartLauncherItem { }
                 Layout.minimumHeight: iconSize
                 Layout.maximumHeight: iconSize
 
-                Layout.leftMargin: (label.visible ? Kirigami.Units.smallSpacing : 0) + ((dragArea.containsPress && tasksRoot.milestone2Mode
-                                                                                        || dragArea.held && tasksRoot.milestone2Mode) ? 1 : 0)
-                Layout.topMargin: ((dragArea.containsPress && tasksRoot.milestone2Mode || dragArea.held && tasksRoot.milestone2Mode) ? 1 : 0)
-
+                Layout.leftMargin: (label.visible ? Kirigami.Units.smallSpacing : 0) + ((dragArea.containsPress || dragArea.held) ? 1 : 0)
+                Layout.topMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
                 source: model.decoration
                 antialiasing: false
 
@@ -1404,164 +1348,40 @@ TaskManagerApplet.SmartLauncherItem { }
                 }
             }
 
-            Components.Label {
-                id: labelGrouped
+            PlasmaComponents3.Label {
+                id: label
 
-                visible: label.visible && model.ChildCount > 0 && !tasksRoot.milestone2Mode
-
+                visible: (inPopup || !iconsOnly && !model.IsLauncher
+                    && (parent.width - iconBox.height - Kirigami.Units.smallSpacing) >= LayoutMetrics.spaceRequiredToShowText())
+                Layout.topMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
                 //Layout.leftMargin: ((dragArea.containsPress || dragArea.held) ? -1 : 0)
                 //Layout.rightMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredWidth: 3
-                Layout.rightMargin: Kirigami.Units.smallSpacing/2
 
-                wrapping: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
-                bold: true
-                alignmentV: Text.AlignVCenter
-                foreground: "white"
+                wrapMode: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
+                elide: Text.ElideRight
+                textFormat: Text.PlainText
+                verticalAlignment: Text.AlignVCenter
+                maximumLineCount: 1//Plasmoid.configuration.maxTextLines || undefined
+                style: Text.Outline
+                styleColor: "#02ffffff"
 
                 Accessible.ignored: true
 
                 // use State to avoid unnecessary re-evaluation when the label is invisible
                 states: State {
                     name: "labelVisible"
-                    when: labelGrouped.visible
+                    when: label.visible
 
                     PropertyChanges {
-                        target: labelGrouped
-                        text: model.ChildCount
+                        target: label
+                        text: model.display
                     }
                 }
 
             }
 
-            ColumnLayout {
-                visible: (inPopup || !iconsOnly && !model.IsLauncher
-                && (parent.width) >= LayoutMetrics.spaceRequiredToShowText()) && !badge.visible
-
-                spacing: 0
-
-                Components.Label {
-                    id: label
-
-                    //Layout.leftMargin: ((dragArea.containsPress || dragArea.held) ? -1 : 0)
-                    //Layout.rightMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    wrapping: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
-                    // textFormat: Text.PlainText
-                    // add support for this
-                    alignmentV: Text.AlignVCenter
-                    foreground: "white"
-
-                    Accessible.ignored: true
-
-                    // use State to avoid unnecessary re-evaluation when the label is invisible
-                    states: State {
-                        name: "labelVisible"
-                        when: label.visible
-
-                        PropertyChanges {
-                            target: label
-                            text: model.display
-                        }
-                    }
-                }
-                Components.Label {
-                    id: appName
-
-                    visible: Plasmoid.configuration.showAppName && tasksRoot.milestone2Mode && !inPopup
-                    //Layout.leftMargin: ((dragArea.containsPress || dragArea.held) ? -1 : 0)
-                    //Layout.rightMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    wrapping: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
-                    // textFormat: Text.PlainText
-                    // add support for this
-                    alignmentV: Text.AlignVCenter
-                    foreground: "white"
-                    opacity: 0.5
-
-                    Accessible.ignored: true
-
-                    // use State to avoid unnecessary re-evaluation when the label is invisible
-                    states: State {
-                        name: "labelVisible"
-                        when: appName.visible
-
-                        PropertyChanges {
-                            target: appName
-                            text: model.AppName
-
-                        }
-                    }
-                }
-            }
-
-        }
-        KSvg.SvgItem {
-            id: arrow
-
-            anchors {
-                right: frame.right
-                rightMargin: 2
-                verticalCenter: frame.verticalCenter
-            }
-
-            visible: labelGrouped.visible
-
-            implicitWidth: 10
-            implicitHeight: 6
-
-            imagePath: "widgets/tasks"
-            elementId: elementForLocation()
-
-            function elementForLocation(): string {
-                switch (Plasmoid.location) {
-                    case PlasmaCore.Types.LeftEdge:
-                        return "group-expander-left";
-                    case PlasmaCore.Types.TopEdge:
-                        return "group-expander-bottom";
-                    case PlasmaCore.Types.RightEdge:
-                        return "group-expander-right";
-                    case PlasmaCore.Types.BottomEdge:
-                    default:
-                        return "group-expander-top";
-                }
-            }
-        }
-        Rectangle {
-            id: badge
-
-            width: 20
-            height: 20
-
-            anchors.bottom: frame.bottom
-            anchors.right: frame.right
-            anchors.margins: Kirigami.Units.smallSpacing
-
-            border.width: 1
-            border.color: "white"
-            radius: 12
-            color: "black"
-
-            visible: model.ChildCount !== 0 && tasksRoot.showJumplistBtn && tasksRoot.milestone2Mode
-
-            opacity: 0.3
-        }
-        Text {
-            anchors.centerIn: badge
-
-            text: model.ChildCount
-            font.bold: true
-            color: "white"
-
-            visible: model.ChildCount !== 0 && tasksRoot.showJumplistBtn && tasksRoot.milestone2Mode
         }
     }
 
@@ -1579,9 +1399,9 @@ TaskManagerApplet.SmartLauncherItem { }
         id: dragArea
         property alias taskIndex: task.index
         hoverEnabled: true
-        enabled: ((tasksRoot.jumpListItem === jumpList) || (tasksRoot.jumpListItem === null))
+        enabled: (tasksRoot.jumpListItem === jumpList) || (tasksRoot.jumpListItem === null)
         propagateComposedEvents: true
-        //preventStealing: true
+        preventStealing: true
         anchors.fill: parent
 
         onCanceled: {
@@ -1590,6 +1410,7 @@ TaskManagerApplet.SmartLauncherItem { }
             }
         }
         onContainsMouseChanged: {
+            task.containsMouseFalsePositive = false;
             if (containsMouse) {
                 task.forceActiveFocus(Qt.MouseFocusReason);
                 task.updateMainItemBindings();
@@ -1625,7 +1446,7 @@ TaskManagerApplet.SmartLauncherItem { }
         drag.minimumY: 0
         drag.maximumX: tasks.width - task.width
         drag.maximumY: tasks.height - task.height
-        drag.target: held && tasksRoot.milestone2Mode && !inPopup || Plasmoid.configuration.dragVista ? containerRect : undefined
+        drag.target: held ? containerRect : undefined
         drag.axis: {
             var result = Drag.XAxis | Drag.YAxis
             return result;
@@ -1640,10 +1461,9 @@ TaskManagerApplet.SmartLauncherItem { }
             }
         }
         onEntered: {
-            Plasmoid.sendMouseEvent(dragArea);
+            task.containsMouseFalsePositive = false;
         }
         onPositionChanged: {
-            //task.containsMouseFalsePositive = false;
             if(dragArea.containsPress && (dragThreshold.x !== -1 && dragThreshold.y !== -1)) {
                 if(Math.abs(dragThreshold.x - mouseX) > 10 || Math.abs(dragThreshold.y - mouseY) > 10) {
                     held = true;
@@ -1668,56 +1488,6 @@ TaskManagerApplet.SmartLauncherItem { }
                 dragThreshold = Qt.point(-1,-1);
             }
             event.accepted = false;
-        }
-    }
-    KSvg.FrameSvgItem {
-        id: jumplistBtn
-        imagePath: Qt.resolvedUrl("svgs/supertasks.svg")
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: Plasmoid.configuration.bottomMargin ? 2 : Kirigami.Units.smallSpacing/4
-        anchors.top: parent.top
-        anchors.topMargin: 4
-        anchors.left: parent.right
-        anchors.leftMargin: -16
-        width: visible ? 16 : 0
-        visible: tasksRoot.milestone2Mode && tasksRoot.showJumplistBtn && frame.isHovered && !inPopup && !dragArea.held
-        prefix: "jumplist-normal"
-
-        KSvg.SvgItem {
-            id: jumplistArrow
-
-            anchors.centerIn: parent
-
-            implicitWidth: 10
-            implicitHeight: 6
-
-            imagePath: "widgets/tasks"
-            elementId: "group-expander-bottom"
-        }
-        MouseArea {
-            id: jumplistBtnMa
-
-            anchors.fill: parent
-
-            hoverEnabled: true
-            preventStealing: true
-
-            z: 1
-
-            onEntered: parent.prefix = "jumplist-hover";
-            onExited: parent.prefix = "jumplist-normal";
-            onPressed: parent.prefix = "jumplist-pressed";
-            onReleased: parent.prefix = "jumplist-normal";
-            onClicked: showContextMenu();
-        }
-        Rectangle {
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: -Kirigami.Units.smallSpacing/4
-            anchors.right: parent.right
-            anchors.left: parent.left
-            height: 1
-            color: "black"
-            visible: !Plasmoid.configuration.bottomMargin && tasksRoot.milestone2Mode
         }
     }
     DropArea {
