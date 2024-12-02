@@ -136,15 +136,9 @@ ContainmentItem {
         // define a normal or a thick margin.
         KSvg.FrameSvgItem {
             id: panelSvg
+            visible: false
             imagePath: "widgets/panel-background"
-            anchors {
-                fill: parent
-
-                leftMargin: darkPart1.width - 4
-                rightMargin: darkPart2.width + darkPart2.anchors.rightMargin - 4
-            }
-            visible: parent.height == 40
-            prefix: "supersouth"
+            prefix: [root.plasmoidLocationString(), ""]
         }
         KSvg.FrameSvgItem {
             id: thickPanelSvg
@@ -245,8 +239,8 @@ ContainmentItem {
 
                 Layout.topMargin: getMargins('top')
                 Layout.bottomMargin: getMargins('bottom')
-                Layout.leftMargin: 0
-                Layout.rightMargin: 0
+                Layout.leftMargin: 0//getMargins('left')
+                Layout.rightMargin: getMargins('right')
 
                 // Always fill width/height, in order to still shrink the applet when there is not enough space.
                 // When the applet doesn't want to expand set a Layout.maximumWidth accordingly
@@ -394,6 +388,7 @@ ContainmentItem {
         Rectangle {
             id: gradientRect
             anchors.fill: currentLayout
+            anchors.topMargin: plasmoidLocationString() === "south" ? panelSvg.fixedMargins.top : 0
             anchors.bottomMargin: plasmoidLocationString() === "north" ? panelSvg.fixedMargins.bottom : 0
             anchors.leftMargin: plasmoidLocationString() === "west" ? panelSvg.fixedMargins.left : 0
             anchors.rightMargin:{
@@ -401,43 +396,17 @@ ContainmentItem {
                 else if(plasmoidLocationString() === "south" || plasmoidLocationString() === "north") return -parent.anchors.rightMargin;
                 else return 0;
             }
-            color: "transparent"
+            gradient: Gradient {
+                orientation: isHorizontal ? Gradient.Horizontal : Gradient.Vertical
+                GradientStop { position: 0.0; color: gradientRect.tint  }
+                GradientStop { position: gradientRect.gradStart; color: gradientRect.tint }
+                GradientStop { position: gradientRect.gradStart+0.02; color: gradientRect.gradColor}
+                GradientStop { position: gradientRect.gradEnd-0.02; color: gradientRect.gradColor}
+                GradientStop { position: gradientRect.gradEnd; color: gradientRect.tint }
+                GradientStop { position: 1.0; color: gradientRect.tint }
 
-            KSvg.FrameSvgItem {
-                id: darkPart1
-
-                anchors.left: parent.left
-                anchors.leftMargin: -2
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
-
-                width: parent.sevenstartItem + parent.quicklaunchItem + Kirigami.Units.smallSpacing*3 - Kirigami.Units.smallSpacing/2
-
-                imagePath: "widgets/panel-background"
-                visible: true
-                prefix: "supersouthtray"
-                z: 1
             }
-
-            KSvg.FrameSvgItem {
-                id: darkPart2
-
-                anchors.right: parent.right
-                anchors.rightMargin: parent.showDesktopItem - Kirigami.Units.smallSpacing/4
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
-
-                width: parent.clockItem + parent.sysTrayItem + parent.wmpToolbarItem + Kirigami.Units.smallSpacing*4
-
-                imagePath: "widgets/panel-background"
-                visible: true
-                prefix: "supersouthtray"
-                z: 1
-            }
-
-            visible: root.height == 40 ? Kirigami.Units.smallSpacing : 0
-
-            property string tint: "red"
+            property string tint: "#36000000"
             property string gradColor: applet ? "transparent" : gradientRect.tint
             property double gradStart: {
                 if(root.isHorizontal) {
@@ -446,6 +415,7 @@ ContainmentItem {
                     return (applet ? (applet.y / applet.availHeight) : 0.1)
                 }
             }
+            visible: false
             property double gradEnd: {
                 if(root.isHorizontal) {
                     if(nextApplet) {
@@ -465,73 +435,23 @@ ContainmentItem {
             property int index: applet ? applet.index : -1
             property int count: appletsModel.count
             property Item nextApplet: {
-                ii
+                for(var i = 0; i < currentLayout.visibleChildren.length; i++) {
+                    if(currentLayout.visibleChildren[i].applet.iconsOnly && currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "org.kde.plasma.icontasks") {
+                        if(i == currentLayout.visibleChildren.length-1) {
+                            return null;
+                        }
+                        return currentLayout.visibleChildren[i+1];
+                    }
+                }
+                return null;
             }
             property Item applet: {
                 for(var i = 0; i < currentLayout.visibleChildren.length; i++) {
-                    if(currentLayout.visibleChildren[i].applet.iconsOnly && currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.wackyideas.seventasks") {
+                    if(currentLayout.visibleChildren[i].applet.iconsOnly && currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "org.kde.plasma.icontasks") {
                         return currentLayout.visibleChildren[i];
                     }
                 }
                 return null
-            }
-
-            // The next code will probe around the panel looking for a certain plasmoid.
-            // If the plasmoid is found, it will store the width of that plasmoid in a property for later use
-
-            // Show desktop
-            property int showDesktopItem: {
-                for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.wackyideas.win7showdesktop") {
-                        return currentLayout.visibleChildren[i].applet.width;
-                    }
-                }
-                return 0
-            }
-            // Digital clock lite
-            property int clockItem: {
-                for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.wackyideas.digitalclocklite") {
-                        return currentLayout.visibleChildren[i].applet.width;
-                    }
-                }
-                return 0
-            }
-            // System tray
-            property int sysTrayItem: {
-                for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "org.kde.plasma.systemtray") {
-                        return currentLayout.visibleChildren[i].applet.width;
-                    }
-                }
-                return 0
-            }
-            // WMP toolbar
-            property int wmpToolbarItem: {
-                for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.wmptoolbar" && !currentLayout.visibleChildren[i].applet.hideToolbar) {
-                        return currentLayout.visibleChildren[i].applet.width;
-                    }
-                }
-                return 0
-            }
-            // Quick launch
-            property int quicklaunchItem: {
-                for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "org.kde.plasma.quicklaunch") {
-                        return currentLayout.visibleChildren[i].applet.width;
-                    }
-                }
-                return 0
-            }
-            // Sevenstart
-            property int sevenstartItem: {
-                for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.wackyideas.SevenStart") {
-                        return currentLayout.visibleChildren[i].applet.width;
-                    }
-                }
-                return 0
             }
         }
         GridLayout {
