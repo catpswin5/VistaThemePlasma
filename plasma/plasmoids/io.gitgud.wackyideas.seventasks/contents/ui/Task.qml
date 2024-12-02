@@ -1423,6 +1423,8 @@ TaskManagerApplet.SmartLauncherItem { }
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
+                visible: !iconsOnly && !model.IsLauncher
+
                 spacing: 0
 
                 Components.Label {
