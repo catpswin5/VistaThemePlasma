@@ -13,9 +13,17 @@ It is still in heavy development and testing. VTP has been tested on:
 
 See [INSTALL.md](./INSTALL.md) for a quick (almost left unmodified from ATP repo) install guide.
 
+
 ## Credits 
 
 Many thanks to the people who helped out by testing and providing some suggestions for certain plasmoids and other stuff. Special thanks goes to [WackyIdeas](https://gitgud.io/wackyideas/) for making the original [AeroThemePlasma](https://gitgud.io/wackyideas/aerothemeplasma) theme.
+
+### VTP Credits
+
+### Contributors
+
+- [AngelBruni](https://github.com/angelbruni) for contributing with SVG Vista taskbar texture.
+
 
 ### ATP Credits
 
