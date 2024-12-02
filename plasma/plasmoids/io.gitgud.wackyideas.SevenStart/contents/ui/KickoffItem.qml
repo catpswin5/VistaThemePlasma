@@ -53,6 +53,7 @@ Item {
 
     property bool dropEnabled: false
     property bool appView: false
+    property bool isFavorites: false
     property bool modelChildren: model.hasChildren || false
     property bool isCurrent: listItem.ListView.view.currentIndex === index;
     property bool showAppsByName: Plasmoid.configuration.showAppsByName
@@ -140,7 +141,11 @@ Item {
         }
         height: implicitHeight //undo PC2 height override, remove when porting to PC3
         // TODO: games should always show the by name!
-        text: model.display
+
+        text: model.display == Plasmoid.configuration.defaultInternetApp && parent.isFavorites == true ? "Internet" :
+             (model.display == Plasmoid.configuration.defaultEmailApp && parent.isFavorites == true? "E-Mail" : model.display)
+
+        font.bold: parent.isFavorites
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignLeft
         color: "#000000"
@@ -156,10 +161,9 @@ Item {
         }
         height: implicitHeight
         color: "#000000"
-        text: ""//model.description || ""
-        opacity: isCurrent ? 0.8 : 0.6
-        font: Kirigami.Theme.smallFont
-        elide: Text.ElideMiddle
+        text: parent.isFavorites && titleElement.text != model.display ? model.display : ""
+        opacity: 1
+        elide: Text.ElideRight
         horizontalAlignment: Text.AlignLeft
     }
 

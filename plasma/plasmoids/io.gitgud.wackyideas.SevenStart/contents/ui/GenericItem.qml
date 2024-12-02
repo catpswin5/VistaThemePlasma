@@ -86,7 +86,7 @@ Item {
     id: appicon
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
-    anchors.leftMargin: Kirigami.Units.smallSpacing*2 + Kirigami.Units.iconSizes.small
+    anchors.leftMargin: Kirigami.Units.smallSpacing*3
     width: Kirigami.Units.iconSizes.small
     height: width
     source: model.decoration
@@ -106,8 +106,10 @@ Item {
   KickoffHighlight {
     id: rectFill
     anchors.fill: parent
-    anchors.leftMargin: Kirigami.Units.iconSizes.small
+    anchors.leftMargin: Kirigami.Units.smallSpacing
+    anchors.rightMargin: -Kirigami.Units.smallSpacing
     opacity: (listView.currentIndex === index) * 0.7 + ma.containsMouse * 0.3
+    z: -1
   }
 
   Timer {

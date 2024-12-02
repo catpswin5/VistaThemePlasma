@@ -48,7 +48,6 @@ KCM.SimpleKCM {
     
     property alias cfg_showRecentsView: showRecentsView.checked
     property alias cfg_offsetFloatingOrb: offsetFloatingOrb.checked
-    property alias cfg_accurateSearchBar: accurateSearchBar.checked
 
     property alias cfg_appNameFormat: appNameFormat.currentIndex
     property alias cfg_switchCategoriesOnHover: switchCategoriesOnHover.checked
@@ -57,6 +56,9 @@ KCM.SimpleKCM {
     property alias cfg_useExtraRunners: useExtraRunners.checked
 
     property alias cfg_numberRows: numberRows.value
+
+    property string cfg_defaultInternetApp
+    property string cfg_defaultEmailApp
 
     component CustomGroupBox: GroupBox {
         id: gbox
@@ -178,12 +180,51 @@ KCM.SimpleKCM {
 
             ColumnLayout {
                 CheckBox {
-                    id: accurateSearchBar
-                    text: i18n("Apply uneven padding on the search text box")
-                }
-                CheckBox {
                     id: offsetFloatingOrb
                     text: i18n("Offset floating orb into the taskbar")
+                }
+            }
+        }
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: i18n("Default apps")
+
+            ColumnLayout {
+                RowLayout {
+                    Label {
+                        text: i18n("Internet:")
+                    }
+
+                    TextField {
+                        id: defaultInternetApp
+                        Layout.fillWidth: true
+
+                        placeholderText: configGeneral.cfg_defaultInternetApp
+
+                        inputMethodHints: Qt.ImhNoPredictiveText
+
+                        onTextChanged: {
+                            configGeneral.cfg_defaultInternetApp = text;
+                        }
+                    }
+                }
+                RowLayout {
+                    Label {
+                        text: i18n("E-Mail:")
+                    }
+                    TextField {
+                        id: defaultEmailApp
+                        Layout.fillWidth: true
+
+                        placeholderText: configGeneral.cfg_defaultEmailApp
+
+                        inputMethodHints: Qt.ImhNoPredictiveText
+
+                        onTextChanged: {
+                            configGeneral.cfg_defaultEmailApp = text;
+                        }
+                    }
                 }
             }
         }

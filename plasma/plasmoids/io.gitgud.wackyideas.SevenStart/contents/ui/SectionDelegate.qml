@@ -27,7 +27,7 @@ import org.kde.kirigami as Kirigami
 Item {
     id: sectionDelegate
     width: parent.width
-    height: Kirigami.Units.iconSizes.medium-1 //childrenRect.height
+    height: Kirigami.Units.iconSizes.smallMedium //childrenRect.height
     objectName: "SectionDelegate"
     function getName() {
         return sectionHeading.text;
@@ -37,14 +37,14 @@ Item {
         id: sectionHeading
         anchors {
             left: parent.left
-            leftMargin: Kirigami.Units.smallSpacing*2
+            leftMargin: Kirigami.Units.smallSpacing*4
             verticalCenter: parent.verticalCenter
             //verticalCenterOffset: Kirigami.Units.smallSpacing/2
         }
-        color: "#1d3287"
+        color: "#003693"
         //y: Math.round(Kirigami.Units.gridUnit / 4)
-        level: 3
-        text: section + (sectionCount > 0 ? " (" + sectionCount + ")" : "")
+        level: 5
+        text: section
     }
 
     Rectangle {
@@ -56,6 +56,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 1
         height: 1
-        color: "#e5e5e5"
+        color: "#ccd9ec"
+        opacity: 0.5
     }
 } // sectionDelegate

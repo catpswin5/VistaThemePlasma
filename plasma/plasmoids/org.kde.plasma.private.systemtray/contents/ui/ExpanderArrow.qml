@@ -52,12 +52,13 @@ PlasmaCore.ToolTipArea {
     TapHandler {
         onPressedChanged: {
             if (pressed) {
-                tooltip.wasExpanded = systemTrayState.expanded;
+                root.showHidden = false
+                arrow.elementId= "left-arrow"
             }
         }
         onTapped: {
-            systemTrayState.expanded = !tooltip.wasExpanded;
-            expandedRepresentation.hiddenLayout.currentIndex = -1;
+            root.showHidden = true
+            arrow.elementId= "right-arrow"
         }
     }
 
@@ -71,31 +72,20 @@ PlasmaCore.ToolTipArea {
         //height: width-1
 
         // This is the Aero styled button texture used for the system tray expander.
-        KSvg.FrameSvgItem {
+        KSvg.SvgItem {
             id: hoverButton
             z: -1 // To prevent layout issues with the MouseArea.
             anchors.fill: parent
             imagePath: Qt.resolvedUrl("svgs/systray.svg")
-            prefix: {
-                if(tooltip.containsPress || (systemTrayState.expanded && expandedRepresentation.hiddenLayout.visible)) return "pressed";
-                if(tooltip.containsMouse) return "hover";
-                return "normal"; // The normal state actually just makes the button invisible.
+            elementId: {
+                if(tooltip.containsPress || (systemTrayState.expanded && expandedRepresentation.hiddenLayout.visible)) return "vista-pressed";
+                if(tooltip.containsMouse) return "vista-hover";
+                return "normal";
             }
         }
         imagePath: "widgets/arrows"
         //svg: arrowSvg
-        elementId: {
-            // Depending on the taskbar orientation, choose different arrow orientation from the SVG.
-            if (Plasmoid.location === PlasmaCore.Types.TopEdge) {
-                return "down-arrow";
-            } else if (Plasmoid.location === PlasmaCore.Types.LeftEdge) {
-                return "right-arrow";
-            } else if (Plasmoid.location === PlasmaCore.Types.RightEdge) {
-                return "left-arrow";
-            } else {
-                return "up-arrow";
-            }
-        }
+        elementId: "left-arrow"
     }
     /*Kirigami.Icon {
         anchors.fill: parent

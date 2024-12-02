@@ -43,6 +43,7 @@ FocusScope {
     readonly property Item scrollView: scrollView
     property bool showAppsByName: true
     property bool small: false
+    property bool favorites: false
 
     signal addBreadcrumb(var model, string title)
     signal reset
@@ -97,6 +98,8 @@ FocusScope {
                 appView: view.appView
                 showAppsByName: view.showAppsByName
                 smallIcon: small
+
+                isFavorites: view.favorites
 
                 onAddBreadcrumb: (model, title) => view.addBreadcrumb(model, title)
                 onReset: view.reset()

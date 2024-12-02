@@ -19,6 +19,9 @@ PlasmaCore.ToolTipArea {
 
     property var model: itemModel
 
+    property bool isPlasmoid: model.applet.Plasmoid.pluginName != ""
+    property string itemIcon: model.applet.plasmoid.icon
+
     property alias mouseArea: mouseArea
     property string itemId
     property alias text: label.text
@@ -69,7 +72,7 @@ PlasmaCore.ToolTipArea {
     KSvg.FrameSvgItem {
         id: itemHighLight
         anchors.fill: parent
-        anchors.bottomMargin: ((Plasmoid.location === PlasmaCore.Types.BottomEdge || Plasmoid.location === PlasmaCore.Types.TopEdge) && !inHiddenLayout) ? -2 : 0
+        anchors.bottomMargin: 0
         //property int location
 
         property bool animationEnabled: true
@@ -78,33 +81,15 @@ PlasmaCore.ToolTipArea {
         z: -1 // always draw behind icons
         opacity: (mouseArea.containsMouse && !dropArea.containsDrag) ? 1 : 0
 
+        visible: root.milestone2Mode
+
         imagePath: Qt.resolvedUrl("../svgs/tabbar.svgz")
         //imagePath: "widgets/tabbar"
-        prefix: "active-tab"
+        prefix: mouseArea.containsPress ? "pressed-tab" : "active-tab"
         Behavior on opacity {
             NumberAnimation {
                 duration: Kirigami.Units.longDuration
                 easing.type: Easing.InOutQuad
-            }
-        }
-        Rectangle {
-            id: pressRect
-            property alias activatedPress: pressRect.opacity
-            anchors.fill: parent
-            anchors.leftMargin: Kirigami.Units.smallSpacing / 2; // We don't want the rectangle to draw over the highlight texture itself.
-            anchors.rightMargin: Kirigami.Units.smallSpacing / 2;
-            gradient: Gradient {
-                // The first and last gradient stops are offset by +/-0.1 to avoid a sudden gradient "cutoff".
-                GradientStop { position: 0.1; color: "transparent"; }
-                GradientStop { position: 0.5; color: "#8c000000"; }
-                GradientStop { position: 0.9; color: "transparent"; }
-            }
-            opacity: mouseArea.containsPress ? 1 : 0
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 150;
-                    easing.type: Easing.InOutQuad
-                }
             }
         }
     }
@@ -253,6 +238,15 @@ PlasmaCore.ToolTipArea {
             implicitWidth: root.vertical && abstractItem.inVisibleLayout ? abstractItem.width : size
             implicitHeight: !root.vertical && abstractItem.inVisibleLayout ? abstractItem.height : size
             //Layout.topMargin: abstractItem.inHiddenLayout ? Kirigami.Units.mediumSpacing : 0
+
+            // fallback icon in case iconContainer fails to show the icon in Milestone 2 mode
+            Kirigami.Icon {
+                anchors.fill: parent
+
+                visible: abstractItem.isPlasmoid && !abstractItem.inVisibleLayout
+
+                source: abstractItem.itemIcon
+            }
         }
         PlasmaComponents3.Label {
             id: label

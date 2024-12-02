@@ -54,6 +54,7 @@ PlasmoidItem {
         // add the dataengine TZ offset to it
         return new Date(msUTC + (data["Offset"] * 1000));
     }
+    property bool milestone2Mode: parent.height == 38
 
     function initTimezones() {
         const tz = []
@@ -108,8 +109,8 @@ PlasmoidItem {
     }
     Component {
         id: smallRepresentation
-        DigitalClock
-        {}
+        DigitalClock {
+        }
     }
 
     hideOnWindowDeactivate: !Plasmoid.configuration.pin

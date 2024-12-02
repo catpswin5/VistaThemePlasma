@@ -16,13 +16,14 @@
  *   Free Software Foundation, Inc.,                                         *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .          *
  ****************************************************************************/
-import QtQuick 2.12
+import QtQuick
+import QtQuick.Layouts
 
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kquickcontrolsaddons 2.0
-import QtQuick.Controls 2.15
+import QtQuick.Controls
 
 import org.kde.draganddrop 2.0
 

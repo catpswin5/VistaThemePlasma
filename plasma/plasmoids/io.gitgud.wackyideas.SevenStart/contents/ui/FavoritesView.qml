@@ -178,6 +178,7 @@ Item {
         interactive: contentHeight > height
         model: globalFavorites
         move: moveTransition
+        favorites: true
         moveDisplaced: moveTransition
 
         onCountChanged: {

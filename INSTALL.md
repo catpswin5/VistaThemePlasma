@@ -6,7 +6,7 @@
 2. [Plasma components](#plasma)
 3. [KWin components](#kwin)
 4. [Miscellaneous components](#misc)
-5. [Configuring AeroThemePlasma](#conf)
+5. [Configuring VistaThemePlasma](#conf)
 
 ## Prerequisites <a name="preq"></a>
 
@@ -72,11 +72,12 @@ This section relates to the directories found in the ```kwin``` folder.
     - Login
     - Logout
     - SMOD Glow
-    - SMOD Snap
+    - SMOD Snap*
     - Squash
-    - SMOD Peek
+    - SMOD Peek*
     - Scale
     - Dim Screen for Administrator Mode
+    (*) Only if using Milestone 2 mode
 - In Window Behavior -> Desktop Effects, **disable** the following: 
     - Background Contrast
     - Blur
@@ -99,10 +100,10 @@ This section relates to the directories found in the ```misc``` folder.
 
 If SDDM fails to pick up on the cursor theme, go to System Settings -> Startup and Shutdown -> Login Screen (SDDM), and click on Apply Plasma Settings to enforce your current cursor theme, and other relevant settings. Do this *after* installing everything else. If even that fails, change the default cursor theme in ```/usr/share/icons/default/index.theme``` to say ```aero-drop```.
 
-## Configuring AeroThemePlasma <a name="conf"></a>
+## Configuring VistaThemePlasma <a name="conf"></a>
 
-1. Set the panel height to 40px (or 30px for small taskbar).
-2. Upon installation and configuring the panel layout, restart plasmashell and/or kwin (```plasmashell --replace & disown``` and ```kwin_x11 --replace & disown``` in the terminal respectively) as needed
+1. Set the panel height to 40px for Milestone 2 mode or 30px for normal Vista mode.
+2. Upon installation and configuring the panel layout, restart plasmashell and/or kwin (```plasmashell --replace & disown``` and ```kwin_x11 --replace & disown``` in the terminal respectively) as needed.
 3. When updating KDE Plasma, usually through a full system upgrade, recompiling KWin effects and the DefaultToolTip component is necessary.
 4. In System Settings -> Session -> Desktop Session, uncheck the "Ask for confirmation" option.
 5. In System Settings -> Keyboard -> Shortcuts, under KWin, disable the "Peek at Desktop" shortcut, and remap the "MinimizeAll" to Meta+D
@@ -113,13 +114,13 @@ If SDDM fails to pick up on the cursor theme, go to System Settings -> Startup a
 The following steps are optional: 
 
 7. To enable full font hinting just for Segoe UI, move the ```fontconfig``` folder to ```~/.config```. This will enable full font hinting for Segoe UI while keeping slight font hinting for other fonts. *While full font hinting makes the font rendering look sharper and somewhat closer to Windows 7's ClearType, on Linux this option causes noticeably faulty kerning. This has been a [prominent](https://github.com/OpenTTD/OpenTTD/issues/11765) [issue](https://gitlab.gnome.org/GNOME/pango/-/issues/656) [for](https://gitlab.gnome.org/GNOME/pango/-/issues/463) [several](https://gitlab.gnome.org/GNOME/pango/-/issues/404) [years](https://github.com/harfbuzz/harfbuzz/issues/2394) [now](https://www.phoronix.com/news/HarfBuzz-Hinting-Woe) and while the situation has improved from being unreadable to just being ugly, a complete solution for this doesn't seem to be coming anytime soon.*
-8. For Wine users it's recommended to install the [VistaVG Ultimate](https://www.deviantart.com/vishal-gupta/art/VistaVG-Ultimate-57715902) msstyles theme.
+8. For Wine users it's recommended to install the [VistaVG Ultimate](https://www.deviantart.com/vishal-gupta/art/VistaVG-Ultimate-57715902) msstyle theme.
 9. Add the following to ```~/.bashrc``` to get bash to look more like the command prompt on Windows:
 
 ```
 PS1='C:${PWD//\//\\\\}> '
 
-echo -e "Microsoft Windows [Version 6.1.7600]\nCopyright (c) 2009 Microsoft Corporation.  All rights reserved.\n"
+echo -e "Microsoft Windows [Version 6.0.6002]\nCopyright (c) 2006 Microsoft Corporation.  All rights reserved.\n"
 ```
 
 10. In the terminal emulator of your choice (e.g Konsole), set the font to [TerminalVector](https://www.yohng.com/software/terminalvector.html), size 9pt. Disable smooth font rendering and bold text, reduce the line spacing and margins to 0px, set the cursor shape to underline, and enable cursor blinking. 

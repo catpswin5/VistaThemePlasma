@@ -216,15 +216,6 @@ Item
                 anchors.top: avatarparent.bottom
                 //anchors.topMargin: -3
                 anchors.horizontalCenter: avatarparent.horizontalCenter
-
-                layer.enabled: true
-                layer.effect: DropShadow
-                {
-                    verticalOffset: 1
-                    color: "#000"
-                    radius: 7
-                    samples: 20
-                }
             }
 
             MouseArea
@@ -294,7 +285,7 @@ Item
         }
 
         // for testing failed login
-        currentIndex: config.boolValue("startup") && config.boolValue("enableStartup") ? Main.LoginPage.Startup : Main.LoginPage.SelectUser
+        currentIndex: config.boolValue("startup") == true ? Main.LoginPage.Startup : Main.LoginPage.SelectUser
 
         Component.onCompleted:
         {
@@ -645,15 +636,6 @@ Item
                         renderType: Text.NativeRendering
                         font.hintingPreference: Font.PreferVerticalHinting
                         //font.weight: Font.Medium
-
-                        layer.enabled: true
-                        layer.effect: DropShadow
-                        {
-                            verticalOffset: 1
-                            color: "#ef000000"
-                            radius: 9
-                            samples: 80
-                        }
                     }
 
                     QQC2.TextField
@@ -938,15 +920,6 @@ Item
                 width: implicitWidth
                 color: "white"
                 horizontalAlignment: Text.AlignCenter
-                layer.enabled: true
-                layer.effect: DropShadow {
-                    horizontalOffset: 0
-                    verticalOffset: 1
-                    radius: 6
-                    samples: 14
-                    spread: 0.0001
-                    color: "#bf000000"
-                }
             }
 
             QQC2.Button

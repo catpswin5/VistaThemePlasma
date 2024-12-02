@@ -25,6 +25,13 @@
       <default></default>
     </entry>
 
+    <entry name="defaultInternetApp" type="String">
+      <default>Mozilla Firefox</default>
+    </entry>
+    <entry name="defaultEmailApp" type="String">
+      <default>Thunderbird</default>
+    </entry>
+
     <entry name="showFilterList" type="Bool">
       <default>true</default>
     </entry>

@@ -38,15 +38,19 @@ Item {
     property bool showLocalTimezone: Plasmoid.configuration.showLocalTimezone
     property bool showDate: Plasmoid.configuration.showDate && !shortTaskbarHideDate
 
-    property var dateFormat: {
-        if (Plasmoid.configuration.dateFormat === "longDate") {
-            return Locale.LongFormat;//Qt.SystemLocaleLongDate;
-        } else if (Plasmoid.configuration.dateFormat === "isoDate") {
-            return Qt.ISODate;
-        }
+    // Milestone 2 mode settings
+    property bool milestone2Mode: root.milestone2Mode
 
-        return Qt.locale()//Locale.ShortFormat;//Qt.SystemLocaleShortDate;
-    }
+    // property var dateFormat: {
+    //     if (Plasmoid.configuration.dateFormat === "longDate") {
+    //         return Locale.LongFormat;//Qt.SystemLocaleLongDate;
+    //     } else if (Plasmoid.configuration.dateFormat === "isoDate") {
+    //         return Qt.ISODate;
+    //     }
+    //
+    //     return Qt.locale() //Locale.ShortFormat;//Qt.SystemLocaleShortDate;
+    // }
+    property string dateFormat: "dd/MM/yyyy"
 
     property string lastSelectedTimezone: Plasmoid.configuration.lastSelectedTimezone
     property bool displayTimezoneAsCode: Plasmoid.configuration.displayTimezoneAsCode
@@ -118,13 +122,97 @@ Item {
     states: [
         State {
             name: "horizontalPanel"
+            when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && !main.oneLineMode && main.milestone2Mode
+
+            PropertyChanges {
+                target: main
+                Layout.fillHeight: true
+                Layout.fillWidth: false
+                Layout.minimumWidth: contentItem.width + Kirigami.Units.smallSpacing*2
+                Layout.maximumWidth: Layout.minimumWidth
+            }
+
+            PropertyChanges {
+                target: contentItem
+
+                height: timeLabel.height + (main.showDate || timezoneLabel.visible ? 0.8 * timeLabel.height : 0)
+                width: Math.max(labelsGrid.width, timezoneLabel.paintedWidth, dateLabel.paintedWidth)
+            }
+
+            PropertyChanges {
+                target: labelsGrid
+
+                rows: main.showDate ? 1 : 2
+            }
+
+            AnchorChanges {
+                target: labelsGrid
+
+                anchors.horizontalCenter: contentItem.horizontalCenter
+            }
+
+            PropertyChanges {
+                target: timeLabel
+
+                height: sizehelper.height
+                //rightPadding: 1
+                //width: sizehelper.contentWidth
+                //width: contentItem.width
+                //width: !showDate ? timeMetrics.advanceWidth(dateLabel.text) : timeLabel.paintedWidth
+                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(timeLabel.height * 72 / 96))
+            }
+
+            PropertyChanges {
+                target: timezoneLabel
+
+                //height: main.showDate ? 0.7 * timeLabel.height : 0.8 * timeLabel.height
+                //width: main.showDate ? timezoneLabel.paintedWidth : timeLabel.width
+
+                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(timezoneLabel.height * 72 / 96))
+            }
+
+            PropertyChanges {
+                target: dateLabel
+
+                height: 0.8 * timeLabel.height
+                width: dateLabel.paintedWidth
+
+                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(dateLabel.height * 72 / 96))
+            }
+
+            AnchorChanges {
+                target: dateLabel
+
+                anchors.top: labelsGrid.bottom
+                anchors.horizontalCenter: labelsGrid.horizontalCenter
+            }
+
+            PropertyChanges {
+                target: sizehelper
+
+                /*
+                 * The value 0.71 was picked by testing to give the clock the right
+                 * size (aligned with tray icons).
+                 * Value 0.56 seems to be chosen rather arbitrary as well such that
+                 * the time label is slightly larger than the date or timezone label
+                 * and still fits well into the panel with all the applied margins.
+                 */
+                height: Math.min(main.showDate || timezoneLabel.visible ? main.height * 0.56 : main.height * 0.71,
+                                 3 * Kirigami.Theme.defaultFont.pixelSize)
+
+                font.pixelSize: sizehelper.height
+            }
+        },
+
+        State {
+            name: "horizontalPanel"
             when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && !main.oneLineMode
 
             PropertyChanges {
                 target: main
                 Layout.fillHeight: true
                 Layout.fillWidth: false
-                Layout.minimumWidth: contentItem.width + Kirigami.Units.smallSpacing
+                Layout.minimumWidth: contentItem.width + Kirigami.Units.smallSpacing*4
                 Layout.maximumWidth: Layout.minimumWidth
             }
 
@@ -499,9 +587,11 @@ Item {
         PlasmaCore.ToolTipArea {
             id: timeToolTip
 
-            mainText: {
+            mainItem: ToolTipCompact {
+                time: {
                     var now = dataSource.data[plasmoid.configuration.lastSelectedTimezone]["DateTime"];
                     return Qt.formatDate(now, "dddd, MMMM dd, yyyy");
+                }
             }
         }
     }
@@ -510,24 +600,23 @@ Item {
     * Visible elements
     *
     */
-
-	//This FrameSvgItem uses a non-standard variant of the tabbar SVG file that includes a "pressed" state
-    KSvg.FrameSvgItem {
-        id: hoverIndicator
-        imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
-        visible: mouseArea.containsMouse || dashWindow.visible
-        anchors.fill: parent
-        anchors.leftMargin: -Kirigami.Units.smallSpacing
-        anchors.rightMargin: -Kirigami.Units.smallSpacing
-        anchors.bottomMargin: (Plasmoid.location === PlasmaCore.Types.BottomEdge || Plasmoid.location === PlasmaCore.Types.TopEdge) ? -Kirigami.Units.smallSpacing/2 : 0
-        z: -1
-        prefix: mouseArea.containsPress ? "pressed-tab" : "active-tab";
-    }
+   KSvg.FrameSvgItem {
+       id: hoverIndicator
+       imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
+       anchors.fill: parent
+       anchors.leftMargin: -Kirigami.Units.smallSpacing
+       anchors.rightMargin: -Kirigami.Units.smallSpacing
+       z: -1
+       visible: mouseArea.containsMouse && main.milestone2Mode
+       prefix: mouseArea.containsPress ? "pressed-tab" : "active-tab";
+   }
 
     Item {
         id: contentItem
         anchors.verticalCenter: main.verticalCenter
         anchors.horizontalCenter: main.horizontalCenter
+        anchors.horizontalCenterOffset: main.milestone2Mode ? 0 : -Kirigami.Units.smallSpacing
+        anchors.verticalCenterOffset: main.milestone2Mode ? -Kirigami.Units.smallSpacing/2 : 0
 
         Grid {
             id: labelsGrid

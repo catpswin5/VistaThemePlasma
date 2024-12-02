@@ -37,6 +37,14 @@ KSvg.FrameSvgItem {
     imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
     prefix: "active-tab"
 
+    MouseArea {
+        id: highlightMa
+
+        anchors.fill: parent
+
+        propagateComposedEvents: true
+    }
+
     // update when System Tray is expanded - applet activated or hidden icons shown
     Connections {
         target: systemTrayState

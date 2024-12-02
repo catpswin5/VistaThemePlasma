@@ -1,2 +1,0 @@
-
-__AppInterface.locked = false;

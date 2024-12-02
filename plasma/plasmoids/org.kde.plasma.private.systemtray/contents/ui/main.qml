@@ -37,6 +37,11 @@ ContainmentItem {
     readonly property alias hiddenLayout: expandedRepresentation.hiddenLayout
     readonly property bool oneRowOrColumn: tasksGrid.rowsOrColumns === 1
 
+    property bool showHidden: false
+
+    // Milestone 2 mode settings
+    property bool milestone2Mode: parent.height == 38
+
     KSvg.Svg {
         id: buttonIcons
         imagePath: Qt.resolvedUrl("svgs/icons.svg");
@@ -153,6 +158,45 @@ ContainmentItem {
                 saveConfiguration();
             }*/
         }
+        Item {
+            id: hiddenOrderingManager
+            property var orderObject: {}
+
+            function saveConfiguration() {
+                for(var i = 0; i < passiveModel.items.count; i++) {
+                    var item = passiveModel.items.get(i);
+                    if(item.model.itemId !== "")
+                        setItemOrder(item.model.itemId, item.itemsIndex, false);
+                }
+                writeToConfig();
+            }
+            function setItemOrder(id, index, write = true) {
+                if(typeof orderObject === "undefined")
+                    orderObject = {};
+                orderObject[id] = index;
+                if(write) writeToConfig();
+            }
+            function getItemOrder(id) {
+                if(typeof orderObject[id] === "undefined") return -1;
+                return orderObject[id];
+            }
+            function writeToConfig() {
+                Plasmoid.configuration.itemOrdering = JSON.stringify(orderObject);
+                Plasmoid.configuration.writeConfig();
+            }
+
+            Component.onCompleted: {
+                var list = Plasmoid.configuration.itemOrdering;
+                if(list !== "")
+                    orderObject = JSON.parse(list);
+
+                if(typeof orderObject === "undefined")
+                    orderObject = {};
+            }
+            /*Component.onDestruction: {
+             *       saveConfiguration();
+        }*/
+        }
 
         DelegateModel {
             id: activeModel
@@ -224,6 +268,77 @@ ContainmentItem {
                 }
             }
         }
+        DelegateModel {
+            id: passiveModel
+            model: KItemModels.KSortFilterProxyModel {
+                sourceModel: Plasmoid.systemTrayModel
+                filterRoleName: "effectiveStatus"
+                filterRowCallback: (sourceRow, sourceParent) => {
+                    let value = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), filterRole);
+                    return value === PlasmaCore.Types.PassiveStatus;
+                }
+            }
+            function determinePosition(item) {
+                let lower = 0;
+                let upper = items.count
+                while(lower < upper) {
+                    const middle = Math.floor(lower + (upper - lower) / 2)
+                    var middleItem = items.get(middle);
+
+                    var first = hiddenOrderingManager.getItemOrder(item.model.itemId);
+                    var second = hiddenOrderingManager.getItemOrder(middleItem.model.itemId);
+
+                    const result = first < second;
+                    if(result) {
+                        upper = middle;
+                    } else {
+                        lower = middle + 1;
+                    }
+                }
+                return lower;
+            }
+            function sort() {
+                while(hiddenUnsortedItems.count > 0) {
+                    const item = hiddenUnsortedItems.get(0);
+                    //var shouldInsert = item.model.itemId !== "" || (typeof item.model.hasApplet !== "undefined");
+                    var i = determinePosition(item); //orderingManager.getItemOrder(item.model.itemId);
+                    item.groups = "items";
+                    items.move(item.itemsIndex, i);
+                }
+            }
+            items.includeByDefault: false
+            groups: DelegateModelGroup {
+                id: hiddenUnsortedItems
+                name: "unsorted"
+
+                includeByDefault: true
+                onChanged: {
+                    passiveModel.sort();
+                }
+            }
+            delegate: ItemLoader {
+                id: hiddenDelegate
+                width: hiddenTasksGrid.cellWidth
+                height: hiddenTasksGrid.cellHeight
+                property int visualIndex: DelegateModel.itemsIndex
+                minLabelHeight: 0
+                // We need to recalculate the stacking order of the z values due to how keyboard navigation works
+                // the tab order depends exclusively from this, so we redo it as the position in the list
+                // ensuring tab navigation focuses the expected items
+                Component.onCompleted: {
+                    let item = hiddenTasksGrid.itemAtIndex(index - 1);
+                    if (item) {
+                        Plasmoid.stackItemBefore(delegate, item)
+                    } else {
+                        item = hiddenTasksGrid.itemAtIndex(index + 1);
+                    }
+                    if (item) {
+                        Plasmoid.stackItemAfter(delegate, item)
+                    }
+                }
+            }
+        }
+
         //Main Layout
         GridLayout {
             id: mainLayout
@@ -231,16 +346,82 @@ ContainmentItem {
             rowSpacing: 0
             columnSpacing: 0
             anchors.fill: parent
+            anchors.topMargin: root.milestone2Mode ? 0 : -Kirigami.Units.smallSpacing
 
             flow: vertical ? GridLayout.TopToBottom : GridLayout.LeftToRight
+
             ExpanderArrow {
                 id: expander
-                Layout.fillWidth: vertical
-                Layout.fillHeight: !vertical
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.alignment: vertical ? Qt.AlignVCenter : Qt.AlignHCenter
+                Layout.topMargin: !vertical ? Kirigami.Units.smallSpacing/2 : 0
+                visible: root.hiddenLayout.itemCount > 0 && !root.milestone2Mode
+            }
+            ExpanderArrowM2 {
+                id: expanderM2
                 Layout.alignment: vertical ? Qt.AlignVCenter : Qt.AlignHCenter
                 Layout.topMargin: !vertical ? 1 : 0
-                iconSize: tasksGrid.itemSize
-                visible: root.hiddenLayout.itemCount > 0
+                visible: root.hiddenLayout.itemCount > 0 && root.milestone2Mode
+            }
+            GridView {
+                id: hiddenTasksGrid
+
+                Layout.alignment: Qt.AlignCenter
+                Layout.rightMargin: 12
+
+                interactive: false //disable features we don't need
+                flow: vertical ? GridView.LeftToRight : GridView.TopToBottom
+
+                // The icon size to display when not using the auto-scaling setting
+                readonly property int smallIconSize: Kirigami.Units.iconSizes.small
+
+                // Automatically use autoSize setting when in tablet mode, if it's
+                // not already being used
+                readonly property bool autoSize: Plasmoid.configuration.scaleIconsToFit || Kirigami.Settings.tabletMode
+
+                readonly property int gridThickness: root.vertical ? root.width : root.height
+                // Should change to 2 rows/columns on a 56px panel (in standard DPI)
+                readonly property int rowsOrColumns: autoSize ? 1 : Math.max(1, Math.min(count, Math.floor(gridThickness / (smallIconSize + Kirigami.Units.smallSpacing))))
+
+                // Add margins only if the panel is larger than a small icon (to avoid large gaps between tiny icons)
+                readonly property int cellSpacing: Kirigami.Units.smallSpacing/2
+                readonly property int smallSizeCellLength: gridThickness < smallIconSize ? smallIconSize : smallIconSize + cellSpacing
+
+                cellHeight: {
+                    if (root.vertical) {
+                        return autoSize ? itemSize + (gridThickness < itemSize ? 0 : cellSpacing) : smallSizeCellLength
+                    } else {
+                        return autoSize ? root.height : Math.floor(root.height / rowsOrColumns)
+                    }
+                }
+                cellWidth: {
+                    if (root.vertical) {
+                        return autoSize ? root.width : Math.floor(root.width / rowsOrColumns)
+                    } else {
+                        return autoSize ? itemSize + (gridThickness < itemSize ? 0 : cellSpacing) : smallSizeCellLength
+                    }
+                }
+
+                //depending on the form factor, we are calculating only one dimension, second is always the same as root/parent
+                implicitHeight: root.vertical ? cellHeight * Math.ceil(count / rowsOrColumns) : root.height
+                implicitWidth: !root.vertical ? (showHidden ? cellWidth * Math.ceil(count / rowsOrColumns) : 0) : root.width
+
+                Behavior on implicitWidth {
+                    NumberAnimation { duration: 150 }
+                }
+
+                readonly property int itemSize: {
+                    if (autoSize) {
+                        return Kirigami.Units.iconSizes.roundedIconSize(Math.min(Math.min(root.width, root.height) / rowsOrColumns, Kirigami.Units.iconSizes.enormous))
+                    } else {
+                        return smallIconSize
+                    }
+                }
+
+                model: root.milestone2Mode ? undefined : passiveModel
+
+                visible: implicitWidth == 0 ? false : true
             }
             GridView {
                 id: tasksGrid
@@ -262,7 +443,7 @@ ContainmentItem {
                 readonly property int rowsOrColumns: autoSize ? 1 : Math.max(1, Math.min(count, Math.floor(gridThickness / (smallIconSize + Kirigami.Units.smallSpacing))))
 
                 // Add margins only if the panel is larger than a small icon (to avoid large gaps between tiny icons)
-                readonly property int cellSpacing: Kirigami.Units.smallSpacing * (Kirigami.Settings.tabletMode ? 6 : Plasmoid.configuration.iconSpacing)
+                readonly property int cellSpacing: Kirigami.Units.smallSpacing/2
                 readonly property int smallSizeCellLength: gridThickness < smallIconSize ? smallIconSize : smallIconSize + cellSpacing
 
                 cellHeight: {

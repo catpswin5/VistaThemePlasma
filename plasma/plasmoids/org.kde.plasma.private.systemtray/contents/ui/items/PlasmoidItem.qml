@@ -17,6 +17,8 @@ AbstractItem {
     property Item applet: model.applet || null
     text: applet ? applet.plasmoid.title : ""
 
+    isPlasmoid: true
+
     itemId: applet ? applet.plasmoid.pluginName : ""
     mainText: applet ? applet.toolTipMainText : ""
     subText: applet ? applet.toolTipSubText : ""
