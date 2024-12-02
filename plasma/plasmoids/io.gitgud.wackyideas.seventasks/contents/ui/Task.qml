@@ -1425,7 +1425,7 @@ TaskManagerApplet.SmartLauncherItem { }
 
                 spacing: 0
 
-                PlasmaComponents3.Label {
+                Components.Label {
                     id: label
 
                     visible: (inPopup || !iconsOnly && !model.IsLauncher
@@ -1436,13 +1436,11 @@ TaskManagerApplet.SmartLauncherItem { }
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    wrapMode: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
+                    wrapping: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
                     // textFormat: Text.PlainText
                     // add support for this
-                    verticalAlignment: Text.AlignVCenter
-                    maximumLineCount: 1
-                    color: "white"
-                    elide: Text.ElideRight
+                    alignmentV: Text.AlignVCenter
+                    foreground: "white"
 
                     Accessible.ignored: true
 
@@ -1457,25 +1455,24 @@ TaskManagerApplet.SmartLauncherItem { }
                         }
                     }
                 }
-                PlasmaComponents3.Label {
+                Components.Label {
                     id: appName
 
                     visible: (inPopup || !iconsOnly && !model.IsLauncher
                     && (parent.width) >= LayoutMetrics.spaceRequiredToShowText()) && !badge.visible && Plasmoid.configuration.showAppName
+                    && tasksRoot.milestone2Mode
                     //Layout.leftMargin: ((dragArea.containsPress || dragArea.held) ? -1 : 0)
                     //Layout.rightMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
 
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    wrapMode: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
+                    wrapping: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
                     // textFormat: Text.PlainText
                     // add support for this
-                    verticalAlignment: Text.AlignVCenter
-                    maximumLineCount: 1
-                    color: "white"
+                    alignmentV: Text.AlignVCenter
+                    foreground: "white"
                     opacity: 0.7
-                    elide: Text.ElideRight
 
                     Accessible.ignored: true
 
