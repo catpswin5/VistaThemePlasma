@@ -1,0 +1,6 @@
+[Desktop Entry]
+Icon=user-desktop
+Name[es_ES]=Mostrar el escritorio
+Name=Show desktop
+Type=Application
+Execute=qdbus6 org.kde.kglobalaccel /component/kwin invokeShortcut "MinimizeAll"
