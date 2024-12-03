@@ -304,7 +304,7 @@ Rectangle {
                         source: delegate.model.icon
                     }
                     Text {
-                        color: ma.containsMouse ? "#074ae5" : "#151c55"
+                        color: ma.containsMouse ? "#a9f3e4" : "white"
                         font.underline: ma.containsMouse
                         font.bold: parent.highlighted || delegate.focus
                         text: parent.model.name
