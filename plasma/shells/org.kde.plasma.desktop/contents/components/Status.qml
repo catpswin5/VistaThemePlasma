@@ -31,6 +31,16 @@ RowLayout {
         renderType: Text.NativeRendering
         font.hintingPreference: Font.PreferFullHinting
         font.kerning: false
+        layer.enabled: true
+        layer.effect: DropShadow {
+            //visible: !softwareRendering
+            horizontalOffset: 0
+            verticalOffset: 1
+            radius: 6
+            samples: 14
+            spread: 0.0001
+            color: "#bf000000"
+        }
     }
 
     SequentialAnimation {

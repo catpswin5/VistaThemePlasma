@@ -17,12 +17,12 @@ var blacklist = [
     // The lockscreen isn't a popup window
     "kscreenlocker_greet kscreenlocker_greet",
     // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml"
+    "ksplashqml ksplashqml",
 ];
 
 var blacklistNames = [
     "seventasks-floatingavatar",
-    "aerothemeplasma-windowframe-special"
+    "aerothemeplasma-windowframe-special",
 ];
 
 function isPopupWindow(window) {
@@ -31,6 +31,14 @@ function isPopupWindow(window) {
     if (blacklist.indexOf(window.windowClass) != -1) {
         return false;
     }
+
+    if(window.specialWindow && (window.windowClass == "kwin_x11 kwin" || window.windowClass == "kwin_wayland kwin")) {
+        return false;
+    }
+    if(window.dialog && window.windowClass === "plasmashell plasmashell") {
+        return false;
+    }
+
 
     if(blacklistNames.indexOf(window.caption) != -1) {
         return false;

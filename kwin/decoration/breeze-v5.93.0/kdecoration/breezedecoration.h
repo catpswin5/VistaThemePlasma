@@ -65,6 +65,9 @@ public:
     //* caption height
     int captionHeight() const;
 
+    //* titlebar height
+    int titlebarHeight() const;
+
     //* button height
     int buttonHeight() const;
 
