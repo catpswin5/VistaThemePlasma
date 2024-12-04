@@ -54,6 +54,7 @@ KCM.SimpleKCM {
     property alias cfg_stickOutOrb: stickOutOrb.checked
     property alias cfg_fadeOrb: fadeOrb.checked
     property alias cfg_disableBold: disableBold.checked
+    property alias cfg_disableSleep: disableSleep.checked
 
     property alias cfg_useExtraRunners: useExtraRunners.checked
 
@@ -194,6 +195,11 @@ KCM.SimpleKCM {
                     id: disableBold
 
                     text: i18n("Disable bold text for pinned apps")
+                }
+                CheckBox {
+                    id: disableSleep
+
+                    text: i18n("Show shutdown instead of sleep")
                 }
             }
         }

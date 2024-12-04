@@ -323,14 +323,27 @@ PlasmaCore.Dialog {
 				onClicked: filteredMenuItemsModel.trigger(index)
 			}
 			onObjectAdded: (index, object) => {
-				if(object.model.decoration != "system-shutdown") {
-					if(index == 3 || index == 5)
-						var separator = Qt.createQmlObject(`
-					import org.kde.plasma.extras as PlasmaExtras
+				if(Plasmoid.configuration.disableSleep) {
+					if(object.model.decoration != "system-shutdown") {
+						if(index == 3 || index == 5)
+							var separator = Qt.createQmlObject(`
+							import org.kde.plasma.extras as PlasmaExtras
 
-					PlasmaExtras.MenuItem { separator: true }
-					`, contextMenu);
-					contextMenu.addMenuItem(object);
+							PlasmaExtras.MenuItem { separator: true }
+							`, contextMenu);
+						contextMenu.addMenuItem(object);
+					}
+				}
+				else if(!Plasmoid.configuration.disableSleep) {
+					if(object.model.decoration != "system-suspend") {
+						if(index == 3 || index == 5)
+							var separator = Qt.createQmlObject(`
+							import org.kde.plasma.extras as PlasmaExtras
+
+							PlasmaExtras.MenuItem { separator: true }
+							`, contextMenu);
+						contextMenu.addMenuItem(object);
+					}
 				}
 			}
 			onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
@@ -1241,9 +1254,16 @@ PlasmaCore.Dialog {
 					imagePath: Qt.resolvedUrl("svgs/startmenu-buttons.svg")
 
 					prefix: {
-						if(ma.containsPress) return "sleep-pressed";
-						else if(ma.containsMouse) return "sleep-hover";
-						else return "sleep";
+						if(!Plasmoid.configuration.disableSleep) {
+							if(ma.containsPress) return "sleep-pressed";
+							else if(ma.containsMouse) return "sleep-hover";
+							else return "sleep";
+						}
+						else {
+							if(ma.containsPress) return "shutdown-pressed";
+							else if(ma.containsMouse) return "shutdown-hover";
+							else return "shutdown";
+						}
 					}
 				}
 
@@ -1256,7 +1276,7 @@ PlasmaCore.Dialog {
 					anchors.verticalCenterOffset: ma.containsPress ? 1 : 0
 					width: 16
 					height: 17
-					elementId: "sleep"
+					elementId: Plasmoid.configuration.disableSleep ? "shutdown" : "sleep"
 					z: 1
 				}
 
@@ -1272,7 +1292,8 @@ PlasmaCore.Dialog {
 					}
 					onClicked: {
 						root.visible = false;
-						pmEngine.performOperation("requestShutDown");
+						if(Plasmoid.configuration.disableSleep) pmEngine.performOperation("requestShutdown");
+						else pmEngine.performOperation("suspend");
 					}
 				}
 			}
@@ -1337,7 +1358,7 @@ PlasmaCore.Dialog {
 					}
 					onClicked: {
 						root.visible = false;
-						pmEngine.performOperation("requestShutDown");
+						pmEngine.performOperation("lockScreen");
 					}
 				}
 			}

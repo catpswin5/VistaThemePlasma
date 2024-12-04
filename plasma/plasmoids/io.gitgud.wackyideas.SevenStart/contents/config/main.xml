@@ -90,6 +90,9 @@
     <entry name="disableBold" type="Bool">
       <default>false</default>
     </entry>
+    <entry name="disableSleep" type="Bool">
+      <default>false</default>
+    </entry>
 
     <entry name="favoritesPortedToKAstats" type="Bool">
       <label>Are the favorites ported to use KActivitiesStats to allow per-activity favorites</label>
