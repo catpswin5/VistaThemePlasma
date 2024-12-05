@@ -1283,7 +1283,7 @@ TaskManagerApplet.SmartLauncherItem { }
             anchors {
                 fill: parent
 
-                bottomMargin: tasksRoot.milestone2Mode ? (Plasmoid.configuration.bottomMargin ? 2 : 1) : 1
+                bottomMargin: 1
                 topMargin: tasksRoot.milestone2Mode ? 4 : 1
                 rightMargin: groupIndicatorEnabled ? groupIndicator.margins.right : (!inPopup ? (jumplistBtnEnabled ? 16 : 0) : -Kirigami.Units.largeSpacing)
                 leftMargin: !inPopup ? 0 : -Kirigami.Units.largeSpacing
@@ -1370,10 +1370,8 @@ TaskManagerApplet.SmartLauncherItem { }
             anchors.margins: Kirigami.Units.smallSpacing
             anchors.rightMargin: Kirigami.Units.largeSpacing - ((dragArea.containsPress || dragArea.held && tasksRoot.milestone2Mode) ? 1 : 0)
             anchors.leftMargin: Kirigami.Units.mediumSpacing
-            anchors.topMargin: model.IsActive ? (tasksRoot.milestone2Mode ? (Plasmoid.configuration.bottomMargin ? Kirigami.Units.smallSpacing/4 :
-                                                Kirigami.Units.smallSpacing/2) : Kirigami.Units.smallSpacing + 2) :
-                                                (tasksRoot.milestone2Mode ? (Plasmoid.configuration.bottomMargin ? Kirigami.Units.smallSpacing/4 :
-                                                Kirigami.Units.smallSpacing/2) : Kirigami.Units.smallSpacing)
+            anchors.topMargin: model.IsActive ? (tasksRoot.milestone2Mode ? Kirigami.Units.smallSpacing/2 : Kirigami.Units.smallSpacing + 2) :
+                                                (tasksRoot.milestone2Mode ? Kirigami.Units.smallSpacing/2 : Kirigami.Units.smallSpacing)
 
 
 

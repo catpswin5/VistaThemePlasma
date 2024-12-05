@@ -501,7 +501,7 @@ PlasmaCore.Dialog {
             TasksMenuItemWrapper {
                 id: closeWindowItem
 
-                visible: false
+                visible: !milestone2Mode
 
                 enabled: visualParent && get(atm.IsClosable) === true
 

@@ -64,7 +64,7 @@ This section relates to the directories found in the ```kwin``` folder.
     - Main: Thumbnail Seven, Include "Show Desktop" entry
     - Alternative: Flip Switch, Forward shortcut: Meta+Tab
 - In Window Behavior -> KWin Scripts: 
-    - Enable Minimize All, SMOD Peek
+    - Enable Minimize All, SMOD Peek*
 - In Window Behavior -> Desktop Effects, enable the following: 
     - Aero Glass Blur
     - Desaturate Unresponsive Applications
@@ -77,7 +77,6 @@ This section relates to the directories found in the ```kwin``` folder.
     - SMOD Peek*
     - Scale
     - Dim Screen for Administrator Mode
-    (*) Only if using Milestone 2 mode
 - In Window Behavior -> Desktop Effects, **disable** the following: 
     - Background Contrast
     - Blur
@@ -85,6 +84,7 @@ This section relates to the directories found in the ```kwin``` folder.
     - Sliding Popups
     - Dialog Parent
     - Dim Inactive
+(*) Only if using Milestone 2 mode
 
 ## Miscellaneous components <a name="misc"></a>
 
@@ -113,7 +113,7 @@ If SDDM fails to pick up on the cursor theme, go to System Settings -> Startup a
 
 The following steps are optional: 
 
-7. To enable full font hinting just for Segoe UI, move the ```fontconfig``` folder to ```~/.config```. This will enable full font hinting for Segoe UI while keeping slight font hinting for other fonts. *While full font hinting makes the font rendering look sharper and somewhat closer to Windows 7's ClearType, on Linux this option causes noticeably faulty kerning. This has been a [prominent](https://github.com/OpenTTD/OpenTTD/issues/11765) [issue](https://gitlab.gnome.org/GNOME/pango/-/issues/656) [for](https://gitlab.gnome.org/GNOME/pango/-/issues/463) [several](https://gitlab.gnome.org/GNOME/pango/-/issues/404) [years](https://github.com/harfbuzz/harfbuzz/issues/2394) [now](https://www.phoronix.com/news/HarfBuzz-Hinting-Woe) and while the situation has improved from being unreadable to just being ugly, a complete solution for this doesn't seem to be coming anytime soon.*
+7. To enable full font hinting just for Segoe UI, move the ```fontconfig``` folder to ```~/.config```. This will enable full font hinting for Segoe UI while keeping slight font hinting for other fonts. *While full font hinting makes the font rendering look sharper and somewhat closer to Windows 7/Vista's ClearType, on Linux this option causes noticeably faulty kerning. This has been a [prominent](https://github.com/OpenTTD/OpenTTD/issues/11765) [issue](https://gitlab.gnome.org/GNOME/pango/-/issues/656) [for](https://gitlab.gnome.org/GNOME/pango/-/issues/463) [several](https://gitlab.gnome.org/GNOME/pango/-/issues/404) [years](https://github.com/harfbuzz/harfbuzz/issues/2394) [now](https://www.phoronix.com/news/HarfBuzz-Hinting-Woe) and while the situation has improved from being unreadable to just being ugly, a complete solution for this doesn't seem to be coming anytime soon.*
 8. For Wine users it's recommended to install the [VistaVG Ultimate](https://www.deviantart.com/vishal-gupta/art/VistaVG-Ultimate-57715902) msstyle theme.
 9. Add the following to ```~/.bashrc``` to get bash to look more like the command prompt on Windows:
 

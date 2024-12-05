@@ -912,7 +912,7 @@ PlasmaCore.Dialog {
 			spacing: 0
 
 			EvenGenericItem {
-				text: "See all results"
+				text: "Search everywhere"
 				icon: "edit-find"
 				Layout.fillWidth: true
 			}
@@ -1292,8 +1292,7 @@ PlasmaCore.Dialog {
 					}
 					onClicked: {
 						root.visible = false;
-						if(Plasmoid.configuration.disableSleep) pmEngine.performOperation("requestShutdown");
-						else pmEngine.performOperation("suspend");
+						pmEngine.performOperation(Plasmoid.configuration.disableSleep ? "requestShutDown" : "suspend");
 					}
 				}
 			}
