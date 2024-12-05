@@ -55,7 +55,7 @@ PlasmaCore.ToolTipArea {
         }
     }
     Behavior on implicitWidth {
-        NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { duration: !tasksRoot.milestone2Mode ? 200 : animationDuration; easing.type: Easing.OutQuad }
     }
     Behavior on implicitHeight {
         NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
@@ -69,7 +69,7 @@ PlasmaCore.ToolTipArea {
     }
     SequentialAnimation {
         id: removeLabelsAnimation
-        NumberAnimation { target: task; properties: "width"; to: 0; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "width"; to: 0; duration: !tasksRoot.milestone2Mode ? 0 : animationDuration; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
     SequentialAnimation {

@@ -116,7 +116,7 @@ KCM.SimpleKCM {
                 }
                 CheckBox {
                     id: enableAnimations
-                    text: i18n("Enable animations")
+                    text: i18n("Enable extra animations")
                 }
             }
         }

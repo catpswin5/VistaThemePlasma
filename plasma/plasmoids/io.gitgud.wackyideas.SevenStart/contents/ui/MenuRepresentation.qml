@@ -118,6 +118,7 @@ PlasmaCore.Dialog {
 
 			if(!firstTimeShadowSetup) {
 				Plasmoid.enableShadow(Plasmoid.configuration.enableShadow);
+				Plasmoid.syncBorders(Qt.rect(dashWindow.x, dashWindow.y, dashWindow.width, dashWindow.height), Plasmoid.location);
 				firstTimeShadowSetup = true;
 			}
         }
@@ -337,28 +338,13 @@ PlasmaCore.Dialog {
 				onClicked: filteredMenuItemsModel.trigger(index)
 			}
 			onObjectAdded: (index, object) => {
-				if(Plasmoid.configuration.disableSleep) {
-					if(object.model.decoration != "system-shutdown") {
-						if(index == 3 || index == 5)
-							var separator = Qt.createQmlObject(`
-							import org.kde.plasma.extras as PlasmaExtras
+				if(index == 3 || index == 5)
+					var separator = Qt.createQmlObject(`
+					import org.kde.plasma.extras as PlasmaExtras
 
-							PlasmaExtras.MenuItem { separator: true }
-							`, contextMenu);
-						contextMenu.addMenuItem(object);
-					}
-				}
-				else if(!Plasmoid.configuration.disableSleep) {
-					if(object.model.decoration != "system-suspend") {
-						if(index == 3 || index == 5)
-							var separator = Qt.createQmlObject(`
-							import org.kde.plasma.extras as PlasmaExtras
-
-							PlasmaExtras.MenuItem { separator: true }
-							`, contextMenu);
-						contextMenu.addMenuItem(object);
-					}
-				}
+					PlasmaExtras.MenuItem { separator: true }
+					`, contextMenu);
+				contextMenu.addMenuItem(object);
 			}
 			onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
 		}
@@ -926,7 +912,7 @@ PlasmaCore.Dialog {
 			spacing: 0
 
 			EvenGenericItem {
-				text: "Search everywhere"
+				text: "Search Everywhere"
 				icon: "edit-find"
 				Layout.fillWidth: true
 			}
