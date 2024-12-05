@@ -1,3 +1,4 @@
+#!/usr/bin/env xdg-open
 [Desktop Entry]
 Icon=user-desktop
 Name[es_ES]=Mostrar el escritorio

@@ -55,6 +55,7 @@ KCM.SimpleKCM {
     property alias cfg_fadeOrb: fadeOrb.checked
     property alias cfg_disableBold: disableBold.checked
     property alias cfg_disableSleep: disableSleep.checked
+    property alias cfg_enableShadow: enableShadow.checked
 
     property alias cfg_useExtraRunners: useExtraRunners.checked
 
@@ -200,6 +201,11 @@ KCM.SimpleKCM {
                     id: disableSleep
 
                     text: i18n("Show shutdown instead of sleep")
+                }
+                CheckBox {
+                    id: enableShadow
+                    text: i18n("Enable shadow (really unstable)")
+                    visible: false // disabling visibility until the crashing issues have been fixed
                 }
             }
         }

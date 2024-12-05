@@ -371,7 +371,21 @@ void Decoration::smodPaintTitleBar(QPainter *painter, const QRect &repaintRegion
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-        FrameTexture gl(l, r, t, b, blurWidth + 8, blurHeight*2+3, &glow, c->isActive() ? 0.8 : 0.6);
+        int glowHeight = blurHeight*2+3;
+        int glowWidth = blurWidth + 8;
+        if(glowWidth < l+r)
+        {
+            glowWidth = l+r;
+            //l -= (l+r) - glowWidth;
+        }
+        if(glowHeight < t+b)
+        {
+            glowHeight = t+b;
+            //t -= (t+b) - glowHeight;
+        }
+
+        FrameTexture gl(l, r, t, b, glowWidth, glowHeight, &glow, c->isActive() ? 0.8 : 0.6);
+
 
         if(!caption.trimmed().isEmpty())
         {

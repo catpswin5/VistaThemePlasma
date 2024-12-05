@@ -60,6 +60,7 @@ PlasmaCore.Dialog {
     property bool searching: (searchField.text != "")
     property bool showingAllPrograms: false
     property bool firstTimePopup: false // To make sure the user icon is displayed properly.
+    property bool firstTimeShadowSetup: false
 
     property int animationDuration: Kirigami.Units.longDuration*1.5
 
@@ -96,6 +97,13 @@ PlasmaCore.Dialog {
 		firstTimePopup = true;
 	}
 
+	onXChanged: {
+		Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
+	}
+	onYChanged: {
+		Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
+	}
+
     onVisibleChanged: {
 		popupPosition();
         if (!visible) {
@@ -105,10 +113,15 @@ PlasmaCore.Dialog {
 			searchField.forceActiveFocus();
 			rootModel.refresh();
 			setFloatingAvatarPosition();
+			Plasmoid.setDialogAppearance(root, dialogBackground.mask);
+			Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
 
+			if(!firstTimeShadowSetup) {
+				Plasmoid.enableShadow(Plasmoid.configuration.enableShadow);
+				firstTimeShadowSetup = true;
+			}
         }
 		resetRecents(); // Resets the recents model to prevent errors and crashes.
-		Plasmoid.setDialogAppearance(root, dialogBackground.mask);
     }
     onHeightChanged: {
 		popupPosition();
@@ -120,6 +133,7 @@ PlasmaCore.Dialog {
 		popupPosition();
 		setFloatingAvatarPosition();
 		Plasmoid.setDialogAppearance(root, dialogBackground.mask);
+		Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
     }
 
     onSearchingChanged: {
