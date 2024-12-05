@@ -16,7 +16,7 @@
       <default>true</default>
     </entry>
     <entry name="enableShadow" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
     <entry name="customButtonImage" type="Url">
       <default></default>

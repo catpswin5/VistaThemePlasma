@@ -204,8 +204,9 @@ KCM.SimpleKCM {
                 }
                 CheckBox {
                     id: enableShadow
-                    text: i18n("Enable shadow (really unstable)")
-                    visible: false // disabling visibility until the crashing issues have been fixed
+                    text: i18n("Enable shadow")
+                    visible: false
+                    checked: true
                 }
             }
         }
