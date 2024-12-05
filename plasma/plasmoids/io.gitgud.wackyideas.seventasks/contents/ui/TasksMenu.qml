@@ -643,7 +643,7 @@ PlasmaCore.Dialog {
         Connections {
             target: Plasmoid;
             function onMouseEventDetected(mouse) {
-                if(!fscope.contains(Plasmoid.getPosition(tasksMenu)) && !sliderAnimation.running) {
+                if(!fscope.contains(Plasmoid.getPosition(fscope)) && !sliderAnimation.running) {
                     tasksMenu.closeMenu();
                 }
             }
@@ -654,7 +654,7 @@ PlasmaCore.Dialog {
     Component.onCompleted: {
         backend.showAllPlaces.connect(showContextMenuWithAllPlaces)
         tasksMenu.backgroundHints = 2; // Sets the dialog background to the solid SVG variant.
-        tasksMenu.y = tasksMenu.visualParent.y - tasksMenu.slide;
+        tasksMenu.y = tasksMenu.taskY - tasksMenu.slide;
         Plasmoid.setMouseGrab(true, tasksMenu);
     }
     Component.onDestruction: {
