@@ -30,7 +30,7 @@ PlasmaCore.Dialog {
     location: "Floating"
 
     readonly property real preferredWidth: Screen.width / (3 * Screen.devicePixelRatio)
-    readonly property real preferredHeight: 30*groupListView.count
+    readonly property real preferredHeight: Screen.height / (2 * Screen.devicePixelRatio)
     readonly property real contentWidth: mainItem.width // No padding here to avoid text elide.
 
     property alias overflowing: scrollView.overflowing
@@ -56,18 +56,7 @@ PlasmaCore.Dialog {
 
         Rectangle {
             anchors.fill: parent
-            color: "#0f0f0f"
-            opacity: 0.7
-            border.width: 1
-            border.color: "black"
-
-            Rectangle {
-                anchors.fill: parent
-                anchors.margins: 1
-                color: "transparent"
-                border.width: 1
-                border.color: "lightgray"
-            }
+            color: "black"
         }
 
         target: groupListView
@@ -98,8 +87,6 @@ PlasmaCore.Dialog {
             anchors.fill: parent
             readonly property bool overflowing: leftPadding > 0 || rightPadding > 0 // Scrollbar is visible
 
-            spacing: 0
-
             ListView {
                 id: groupListView
 
@@ -109,7 +96,7 @@ PlasmaCore.Dialog {
                                                 + 2 * (LayoutMetrics.labelMargin + LayoutMetrics.iconMargin)
                                                 + scrollView.leftPadding + scrollView.rightPadding
                 // Use groupFilter.count because sometimes count is not updated in time (BUG 446105)
-                readonly property real maxHeight: groupFilter.count * (Math.max(Kirigami.Units.iconSizes.sizeForLabels, Kirigami.Units.iconSizes.medium))
+                readonly property real maxHeight: groupFilter.count * (LayoutMetrics.verticalMargins() + Math.max(Kirigami.Units.iconSizes.sizeForLabels, Kirigami.Units.iconSizes.medium))
 
                 model: DelegateModel {
                     id: groupFilter
@@ -120,7 +107,6 @@ PlasmaCore.Dialog {
                     model: tasksModel
                     rootIndex: tasksModel.makeModelIndex(groupDialog.visualParent.index)
                     delegate: Task {
-                        id: taskItem
                         width: groupListView.width
                         visible: true
                         inPopup: true

@@ -30,7 +30,7 @@ PlasmaCore.ToolTipArea {
     // This makes the tasks mirrored, so we mirror them again to fix that.
     rotation: Plasmoid.configuration.reverseMode && Plasmoid.formFactor === PlasmaCore.Types.Vertical ? 180 : 0
 
-    implicitHeight: !inPopup ? LayoutMetrics.preferredTaskHeight() : LayoutMetrics.preferredMaxHeight()
+    implicitHeight: LayoutMetrics.preferredTaskHeight()
     implicitWidth: {
         if(tasksRoot.vertical) {
             return tasksRoot.width;
@@ -125,7 +125,7 @@ PlasmaCore.ToolTipArea {
         return item.muted
     })
 
-    readonly property bool highlighted: (inPopup && activeFocus) || (!inPopup && (dragArea.containsMouse /*&& !containsMouseFalsePositive*/))
+    readonly property bool highlighted: dragArea.containsMouse
         || (task.contextMenu && task.contextMenu.status === PlasmaExtras.Menu.Open)
         || (task.jumpList)
         || (!!tasksRoot.groupDialog && tasksRoot.groupDialog.visualParent === task)
@@ -1419,8 +1419,8 @@ TaskManagerApplet.SmartLauncherItem { }
             spacing: Kirigami.Units.smallSpacing
             anchors.fill: model.IsLauncher ? launcherFrame : frame
             anchors.margins: Kirigami.Units.smallSpacing
-            anchors.rightMargin: Kirigami.Units.largeSpacing - ((dragArea.containsPress || dragArea.held && tasksRoot.milestone2Mode) ? 1 : 0)
-            anchors.leftMargin: Kirigami.Units.mediumSpacing
+            anchors.rightMargin: Kirigami.Units.mediumSpacing - ((dragArea.containsPress || dragArea.held && tasksRoot.milestone2Mode) ? 1 : 0)
+            anchors.leftMargin: inPopup ? Kirigami.Units.largeSpacing : Kirigami.Units.mediumSpacing
             anchors.topMargin: model.IsActive ? (tasksRoot.milestone2Mode ? Kirigami.Units.smallSpacing/2 : Kirigami.Units.smallSpacing + 2) :
                                                 (tasksRoot.milestone2Mode ? Kirigami.Units.smallSpacing/2 : Kirigami.Units.smallSpacing)
 
@@ -1429,7 +1429,7 @@ TaskManagerApplet.SmartLauncherItem { }
             Kirigami.Icon {
                 id: iconBox
                 property int iconSize: {
-                    if(tasksRoot.height <= 30 && !inPopup) {
+                    if(tasksRoot.height <= 30) {
                         return Kirigami.Units.iconSizes.small;
                     }
                     return Kirigami.Units.iconSizes.medium;

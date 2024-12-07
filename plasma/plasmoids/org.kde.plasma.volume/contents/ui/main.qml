@@ -43,34 +43,7 @@ PlasmoidItem {
 
     Plasmoid.icon: PreferredDevice.sink && !isDummyOutput(PreferredDevice.sink) ? AudioIcon.forVolume(volumePercent(PreferredDevice.sink.volume), PreferredDevice.sink.muted, "")
                                                                                           : AudioIcon.forVolume(0, true, "")
-    toolTipMainText: {
-        var sink = PreferredDevice.sink
-        if (!sink || isDummyOutput(sink)) {
-            return displayName;
-        }
-
-        if (sink.muted) {
-            return i18n("Audio Muted");
-        } else {
-            return i18n("Volume at %1%", volumePercent(sink.volume));
-        }
-    }
-    toolTipSubText: {
-        let lines = [];
-
-        if (PreferredDevice.sink && paSinkFilterModel.count > 1 && !isDummyOutput(PreferredDevice.sink)) {
-            lines.push(nodeName(PreferredDevice.sink))
-        }
-
-        if (paSinkFilterModel.count > 0) {
-            lines.push(main.globalMute ? i18n("Middle-click to unmute")
-                                    : i18n("Middle-click to mute all audio"));
-            lines.push(i18n("Scroll to adjust volume"));
-        } else {
-            lines.push(main.noDevicePlaceholderMessage);
-        }
-        return lines.join("\n");
-    }
+    toolTipItem: Tooltip {  }
 
     function nodeName(pulseObject) {
         const nodeNick = pulseObject.pulseProperties["node.nick"]
@@ -185,6 +158,12 @@ PlasmoidItem {
             if (mouse.button == Qt.LeftButton) {
                 main.expanded = !wasExpanded;
             }
+        }
+        onEntered: {
+            compactTooltip.showToolTip()
+        }
+        onExited: {
+            compactTooltip.hideTooltip()
         }
         onWheel: wheel => {
             const delta = (wheel.inverted ? -1 : 1) * (wheel.angleDelta.y ? wheel.angleDelta.y : -wheel.angleDelta.x);

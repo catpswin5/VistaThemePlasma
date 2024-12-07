@@ -517,19 +517,27 @@ PlasmaCore.Dialog {
 			//visible: container.appletHasFooter
 			height: 40 + Kirigami.Units.smallSpacing / 2 //+ container.footerHeight + Kirigami.Units.smallSpacing
 			//height: trayHeading.height + container.headingHeight + (container.headingHeight === 0 ? 0 : Kirigami.Units.smallSpacing/2)
-			color: "#f1f5fb"
+			color: "#f0f0f0"
 			Rectangle {
-				id: plasmoidFooterBorder
+				id: plasmoidFooterBorder2
 				anchors {
 					top: parent.top
 					left: parent.left
 					right: parent.right
 				}
-				gradient: Gradient {
-					GradientStop { position: 0.0; color: "#ccd9ea" }
-					GradientStop { position: 1.0; color: "#f1f5fb" }
+				color: "#dde0e2"
+				height: 1
+			}
+			Rectangle {
+				id: plasmoidFooterBorder1
+				anchors {
+					top: parent.top
+					topMargin: 1
+					left: parent.left
+					right: parent.right
 				}
-				height: Kirigami.Units.smallSpacing
+				color: "white"
+				height: 1
 			}
 
 			PlasmaExtras.Heading {
@@ -542,7 +550,7 @@ PlasmaCore.Dialog {
 
 				horizontalAlignment: Text.AlignHCenter
 				text: "Change date and time settings..."
-				color: "#0066cc" //heading_ma.containsPress ? "#90e7ff" : (heading_ma.containsMouse ? "#b6ffff" : Kirigami.Theme.textColor)
+				color: "#4465a2" //heading_ma.containsPress ? "#90e7ff" : (heading_ma.containsMouse ? "#b6ffff" : Kirigami.Theme.textColor)
 				font.underline: link_ma.containsMouse
 				level: 5
 				MouseArea {

@@ -49,6 +49,7 @@ Item {
         }
         return Qt.locale() //Locale.ShortFormat;//Qt.SystemLocaleShortDate;
     }
+    // property string dateFormat: "d/M/yyyy"
 
     property string lastSelectedTimezone: Plasmoid.configuration.lastSelectedTimezone
     property bool displayTimezoneAsCode: Plasmoid.configuration.displayTimezoneAsCode

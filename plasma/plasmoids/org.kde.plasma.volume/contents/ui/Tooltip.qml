@@ -11,10 +11,9 @@ import org.kde.kirigami as Kirigami
 import org.kde.kwindowsystem 1.0
 import org.kde.ksvg as KSvg
 
-Item {
-    id: toolMain
+import org.kde.plasma.private.volume
 
-    property string time: ""
+Item {
     property int preferredTextWidth: Kirigami.Units.gridUnit * 10
     property bool compositing: KWindowSystem.isPlatformX11 ? KX11Extras.compositingActive : true
     //KWindowSystem { id: kwindowsystem }
@@ -54,12 +53,11 @@ Item {
         id: mainLayout
         anchors.centerIn: parent
 
-        spacing: 8
-
-        Image {
-            source: "pngs/calendar.png"
-            Layout.preferredWidth: 32
-            Layout.preferredHeight: 32
+        Kirigami.Icon {
+            animated: false
+            source: "audio-speakers"
+            Layout.preferredWidth: 48
+            Layout.preferredHeight: 48
             Layout.leftMargin: -Kirigami.Units.smallSpacing*2/1.6
         }
 
@@ -72,7 +70,7 @@ Item {
                 Layout.fillWidth: true
                 elide: Text.ElideRight
                 wrapMode: Text.Wrap
-                text: ""
+                text: i18n("Volume at %1%", main.volumePercent(PreferredDevice.sink.volume))
                 textFormat: Text.PlainText
                 color: "#003399"
                 visible: text !== ""
@@ -81,7 +79,13 @@ Item {
             PlasmaComponents.Label {
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                text: toolMain.time
+                text: {
+                    let lines = [];
+                    if (PreferredDevice.sink && main.paSinkFilterModel.count > 1 && !isDummyOutput(PreferredDevice.sink)) {
+                        lines.push(nodeName(PreferredDevice.sink))
+                    }
+                    return lines.join("\n");
+                }
                 opacity: 0.75
                 visible: text !== ""
                 maximumLineCount: 8
