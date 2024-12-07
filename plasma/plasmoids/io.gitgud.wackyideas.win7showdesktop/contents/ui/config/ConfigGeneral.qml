@@ -18,6 +18,8 @@ ConfigPage {
 	property alias cfg_mousewheel_up: mousewheel_up.text
 	property alias cfg_mousewheel_down: mousewheel_down.text
 
+	property alias cfg_alwaysVisible: alwaysVisible.checked
+
 	property bool showDebug: false
 	property int indentWidth: 24
 
@@ -69,6 +71,12 @@ ConfigPage {
 				configKey: "pressedColor"
 				defaultColor: config.defaultPressedColor
 				label: ""
+			}
+			ConfigCheckBox {
+				id: alwaysVisible
+				Kirigami.FormData.label: i18n("Always visible:")
+				configKey: "alwaysVisible"
+				text: i18n("Enable")
 			}
 		}
 	}
@@ -211,6 +219,7 @@ ConfigPage {
 				configKey: "peekingEnabled"
 				text: i18n("Enable")
 			}
+
 
 			ConfigSpinBox {
 				Kirigami.FormData.label: i18n("Peek threshold:")

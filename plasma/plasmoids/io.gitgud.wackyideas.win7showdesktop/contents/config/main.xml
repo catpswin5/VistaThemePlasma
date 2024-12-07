@@ -24,6 +24,9 @@
 		<entry name="peekingEnabled" type="bool">
 			<default>true</default>
 		</entry>
+		<entry name="alwaysVisible" type="bool">
+			<default>false</default>
+		</entry>
 		<entry name="peekingThreshold" type="int">
 			<default>750</default>
 		</entry>

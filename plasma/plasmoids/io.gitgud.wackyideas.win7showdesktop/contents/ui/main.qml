@@ -39,10 +39,10 @@ PlasmoidItem {
 
 	Layout.fillHeight: true
 
-	Layout.maximumWidth: vertical ? Layout.minimumWidth : (height == 40 ? Math.max(1, Plasmoid.configuration.size) + Kirigami.Units.smallSpacing * 2 - Kirigami.Units.smallSpacing / 2 : 0)
+	Layout.maximumWidth: vertical ? Layout.minimumWidth : (height == 40 || Plasmoid.configuration.alwaysVisible ? Math.max(1, Plasmoid.configuration.size) + Kirigami.Units.smallSpacing * 2 - Kirigami.Units.smallSpacing / 2 : 0)
 	Layout.maximumHeight: vertical ? Math.max(1, Plasmoid.configuration.size) : parent.height
 
-	Layout.preferredWidth: height == 40 ? Layout.maximumWidth : 0
+	Layout.preferredWidth: height == 40 || Plasmoid.configuration.alwaysVisible ? Layout.maximumWidth : 0
 	Layout.preferredHeight: parent.height
 
 	Plasmoid.constraintHints: Plasmoid.CanFillArea
@@ -77,7 +77,7 @@ PlasmoidItem {
 		id: mouseArea
 		anchors.fill: parent
 
-		visible: parent.height == 40
+		visible: parent.height == 40 || Plasmoid.configuration.alwaysVisible
 
 		activeFocusOnTab: true
 		hoverEnabled: true
