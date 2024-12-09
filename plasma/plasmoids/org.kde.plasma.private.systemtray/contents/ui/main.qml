@@ -1,9 +1,9 @@
 /*
-    SPDX-FileCopyrightText: 2011 Marco Martin <mart@kde.org>
-    SPDX-FileCopyrightText: 2020 Konrad Materka <materka@gmail.com>
-
-    SPDX-License-Identifier: LGPL-2.0-or-later
-*/
+ *    SPDX-FileCopyrightText: 2011 Marco Martin <mart@kde.org>
+ *    SPDX-FileCopyrightText: 2020 Konrad Materka <materka@gmail.com>
+ *
+ *    SPDX-License-Identifier: LGPL-2.0-or-later
+ */
 
 import QtQuick 2.5
 import QtQml.Models 2.10
@@ -14,7 +14,7 @@ import org.kde.ksvg 1.0 as KSvg
 import org.kde.plasma.plasmoid 2.0
 import org.kde.draganddrop 2.0 as DnD
 import org.kde.kirigami 2.5 as Kirigami // For Settings.tabletMode
-import org.kde.kitemmodels 1.0 as KItemModels
+import org.kde.kitemmodels as KItemModels
 
 import "items"
 
@@ -85,7 +85,7 @@ ContainmentItem {
             preventStealing: true
 
             /** Extracts the name of the system tray applet in the drag data if present
-            * otherwise returns null*/
+             * otherwise returns null*/
             function systemTrayAppletName(event) {
                 if (event.mimeData.formats.indexOf("text/x-plasmoidservicename") < 0) {
                     return null;
@@ -155,8 +155,8 @@ ContainmentItem {
                     orderObject = {};
             }
             /*Component.onDestruction: {
-                saveConfiguration();
-            }*/
+             *                saveConfiguration();
+        }*/
         }
         Item {
             id: hiddenOrderingManager
@@ -197,15 +197,63 @@ ContainmentItem {
              *       saveConfiguration();
         }*/
         }
+        Item {
+            id: systemOrderingManager
+            property var orderObject: {}
+
+            function saveConfiguration() {
+                for(var i = 0; i < systemModel.items.count; i++) {
+                    var item = systemModel.items.get(i);
+                    if(item.model.itemId !== "")
+                        setItemOrder(item.model.itemId, item.itemsIndex, false);
+                }
+                writeToConfig();
+            }
+            function setItemOrder(id, index, write = true) {
+                if(typeof orderObject === "undefined")
+                    orderObject = {};
+                orderObject[id] = index;
+                if(write) writeToConfig();
+            }
+            function getItemOrder(id) {
+                if(typeof orderObject[id] === "undefined") return -1;
+                return orderObject[id];
+            }
+            function writeToConfig() {
+                Plasmoid.configuration.itemOrdering = JSON.stringify(orderObject);
+                Plasmoid.configuration.writeConfig();
+            }
+
+            Component.onCompleted: {
+                var list = Plasmoid.configuration.itemOrdering;
+                if(list !== "")
+                    orderObject = JSON.parse(list);
+
+                if(typeof orderObject === "undefined")
+                    orderObject = {};
+            }
+            /*Component.onDestruction: {
+             *       saveConfiguration();
+        }*/
+        }
 
         DelegateModel {
             id: activeModel
             model: KItemModels.KSortFilterProxyModel {
                 sourceModel: Plasmoid.systemTrayModel
                 filterRoleName: "effectiveStatus"
+                function filterItemId(itemId) {
+                    return itemId == "org.kde.plasma.battery" || itemId == "org.kde.plasma.networkmanagement" || itemId == "org.kde.plasma.volume"
+                }
                 filterRowCallback: (sourceRow, sourceParent) => {
                     let value = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), filterRole);
-                    return value === PlasmaCore.Types.ActiveStatus;
+                    var itemIdRole = KItemModels.KRoleNames.role("itemId");
+                    let value2 = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), itemIdRole);
+                    if(root.milestone2Mode) {
+                        return value == PlasmaCore.Types.ActiveStatus
+                    } else {
+                        return (value == PlasmaCore.Types.ActiveStatus && !filterItemId(value2));
+                    }
                 }
             }
             function determinePosition(item) {
@@ -273,9 +321,14 @@ ContainmentItem {
             model: KItemModels.KSortFilterProxyModel {
                 sourceModel: Plasmoid.systemTrayModel
                 filterRoleName: "effectiveStatus"
+                function filterItemId(itemId) {
+                    return itemId == "org.kde.plasma.battery" || itemId == "org.kde.plasma.networkmanagement" || itemId == "org.kde.plasma.volume"
+                }
                 filterRowCallback: (sourceRow, sourceParent) => {
                     let value = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), filterRole);
-                    return value === PlasmaCore.Types.PassiveStatus;
+                    var itemIdRole = KItemModels.KRoleNames.role("itemId");
+                    let value2 = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), itemIdRole);
+                    return (value == PlasmaCore.Types.PassiveStatus && !filterItemId(value2));
                 }
             }
             function determinePosition(item) {
@@ -338,6 +391,79 @@ ContainmentItem {
                 }
             }
         }
+        DelegateModel {
+            id: systemModel
+            model: KItemModels.KSortFilterProxyModel {
+                sourceModel: Plasmoid.systemTrayModel
+                filterRoleName: "itemId"
+                filterRowCallback: (sourceRow, sourceParent) => {
+                    let value = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), filterRole);
+                    // console.log("!! !! SYSTEM MODEL !! !!");
+                    // console.log("value = " + value);
+                    // console.log("isAllowedToPass = " + (value == "org.kde.plasma.battery" || value == "org.kde.plasma.volume" || value == "org.kde.plasma.networkmanagement"));
+                    return value == "org.kde.plasma.battery" || value == "org.kde.plasma.volume" || value == "org.kde.plasma.networkmanagement"; // hopefully the missing items issue is only happening to me
+                }
+            }
+            function determinePosition(item) {
+                let lower = 0;
+                let upper = items.count
+                while(lower < upper) {
+                    const middle = Math.floor(lower + (upper - lower) / 2)
+                    var middleItem = items.get(middle);
+
+                    var first = systemOrderingManager.getItemOrder(item.model.itemId);
+                    var second = systemOrderingManager.getItemOrder(middleItem.model.itemId);
+
+                    const result = first < second;
+                    if(result) {
+                        upper = middle;
+                    } else {
+                        lower = middle + 1;
+                    }
+                }
+                return lower;
+            }
+            function sort() {
+                while(systemUnsortedItems.count > 0) {
+                    const item = systemUnsortedItems.get(0);
+                    //var shouldInsert = item.model.itemId !== "" || (typeof item.model.hasApplet !== "undefined");
+                    var i = determinePosition(item); //orderingManager.getItemOrder(item.model.itemId);
+                    item.groups = "items";
+                    items.move(item.itemsIndex, i);
+                }
+            }
+            items.includeByDefault: false
+            groups: DelegateModelGroup {
+                id: systemUnsortedItems
+                name: "unsorted"
+
+                includeByDefault: true
+                onChanged: {
+                    systemModel.sort();
+                }
+            }
+            delegate: ItemLoader {
+                id: systemDelegate
+                width: systemIconsGrid.cellWidth
+                height: systemIconsGrid.cellHeight
+                property int visualIndex: DelegateModel.itemsIndex
+                minLabelHeight: 0
+                // We need to recalculate the stacking order of the z values due to how keyboard navigation works
+                // the tab order depends exclusively from this, so we redo it as the position in the list
+                // ensuring tab navigation focuses the expected items
+                Component.onCompleted: {
+                    let item = systemIconsGrid.itemAtIndex(index - 1);
+                    if (item) {
+                        Plasmoid.stackItemBefore(delegate, item)
+                    } else {
+                        item = systemIconsGrid.itemAtIndex(index + 1);
+                    }
+                    if (item) {
+                        Plasmoid.stackItemAfter(delegate, item)
+                    }
+                }
+            }
+        }
 
         //Main Layout
         GridLayout {
@@ -354,7 +480,7 @@ ContainmentItem {
                 id: expander
                 Layout.alignment: vertical ? Qt.AlignVCenter : Qt.AlignHCenter
                 Layout.topMargin: !vertical ? Kirigami.Units.smallSpacing*2 - Kirigami.Units.smallSpacing/2 : 0
-                Layout.rightMargin: -Kirigami.Units.smallSpacing*2 + Kirigami.Units.smallSpacing/2
+                Layout.rightMargin: -Kirigami.Units.smallSpacing/2
                 visible: root.hiddenLayout.itemCount > 0 && !root.milestone2Mode
             }
             ExpanderArrowM2 {
@@ -363,11 +489,10 @@ ContainmentItem {
                 Layout.topMargin: !vertical ? 1 : 0
                 visible: root.hiddenLayout.itemCount > 0 && root.milestone2Mode
             }
-            GridView {
+            GridView { // hidden icons
                 id: hiddenTasksGrid
 
                 Layout.alignment: Qt.AlignCenter
-                Layout.rightMargin: 12
 
                 interactive: false //disable features we don't need
                 flow: vertical ? GridView.LeftToRight : GridView.TopToBottom
@@ -422,7 +547,7 @@ ContainmentItem {
 
                 visible: implicitWidth == 0 ? false : true
             }
-            GridView {
+            GridView { // non-hidden icons (active)
                 id: tasksGrid
 
                 Layout.alignment: Qt.AlignCenter
@@ -474,6 +599,61 @@ ContainmentItem {
 
                 model: activeModel
             }
+            GridView { // system icons
+                id: systemIconsGrid
+
+                Layout.alignment: Qt.AlignCenter
+                Layout.leftMargin: 12
+
+                interactive: false //disable features we don't need
+                flow: vertical ? GridView.LeftToRight : GridView.TopToBottom
+
+                // The icon size to display when not using the auto-scaling setting
+                readonly property int smallIconSize: Kirigami.Units.iconSizes.small
+
+                // Automatically use autoSize setting when in tablet mode, if it's
+                // not already being used
+                readonly property bool autoSize: Plasmoid.configuration.scaleIconsToFit || Kirigami.Settings.tabletMode
+
+                readonly property int gridThickness: root.vertical ? root.width : root.height
+                // Should change to 2 rows/columns on a 56px panel (in standard DPI)
+                readonly property int rowsOrColumns: autoSize ? 1 : Math.max(1, Math.min(count, Math.floor(gridThickness / (smallIconSize + Kirigami.Units.smallSpacing))))
+
+                // Add margins only if the panel is larger than a small icon (to avoid large gaps between tiny icons)
+                readonly property int cellSpacing: Kirigami.Units.smallSpacing/2
+                readonly property int smallSizeCellLength: gridThickness < smallIconSize ? smallIconSize : smallIconSize + cellSpacing
+
+                cellHeight: {
+                    if (root.vertical) {
+                        return autoSize ? itemSize + (gridThickness < itemSize ? 0 : cellSpacing) : smallSizeCellLength
+                    } else {
+                        return autoSize ? root.height : Math.floor(root.height / rowsOrColumns)
+                    }
+                }
+                cellWidth: {
+                    if (root.vertical) {
+                        return autoSize ? root.width : Math.floor(root.width / rowsOrColumns)
+                    } else {
+                        return autoSize ? itemSize + (gridThickness < itemSize ? 0 : cellSpacing) : smallSizeCellLength
+                    }
+                }
+
+                //depending on the form factor, we are calculating only one dimension, second is always the same as root/parent
+                implicitHeight: root.vertical ? cellHeight * Math.ceil(count / rowsOrColumns) : root.height
+                implicitWidth: !root.vertical ? cellWidth * Math.ceil(count / rowsOrColumns) : root.width
+
+                readonly property int itemSize: {
+                    if (autoSize) {
+                        return Kirigami.Units.iconSizes.roundedIconSize(Math.min(Math.min(root.width, root.height) / rowsOrColumns, Kirigami.Units.iconSizes.enormous))
+                    } else {
+                        return smallIconSize
+                    }
+                }
+
+                model: systemModel
+
+                visible: !root.milestone2Mode
+            }
         }
 
         Timer {
@@ -486,44 +666,20 @@ ContainmentItem {
         PlasmaCore.Dialog {
             id: dialog
             objectName: "popupWindow"
-            //visualParent: root
+
             flags: Qt.WindowStaysOnTopHint
-            /*popupDirection: switch (Plasmoid.location) {
-                case PlasmaCore.Types.TopEdge:
-                    return Qt.BottomEdge
-                case PlasmaCore.Types.LeftEdge:
-                    return Qt.RightEdge
-                case PlasmaCore.Types.RightEdge:
-                    return Qt.LeftEdge
-                default:
-                    return Qt.TopEdge
-            }
-            //margin: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing/2 //(Plasmoid.containmentDisplayHints & PlasmaCore.Types.ContainmentPrefersFloatingApplets) ? Kirigami.Units.largeSpacing :
-            animated: false*/
-            //floating: true //Plasmoid.location == PlasmaCore.Desktop
-            //location: PlasmaCore.Dialog.Floating
-            location: "Floating"//Plasmoid.location
+            location: "Floating"
             x: 0
             y: 0
-            //floating: 1
+
             property int flyoutMargin: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing/2
             property bool firstTimePopup: false
 
-            /*removeBorderStrategy: PlasmaCore.AppletPopup.Never */ /*Plasmoid.location === PlasmaCore.Types.Floating
-            ? PlasmaCore.AppletPopup.AtScreenEdges
-            : PlasmaCore.AppletPopup.AtScreenEdges | PlasmaCore.AppletPopup.AtPanelEdges*/
-
-            /*minimumWidth: expandedRepresentation.flyoutWidth
-            maximumWidth: minimumWidth*/
-            /*minimumHeight: expandedRepresentation.flyoutHeight
-            maximumHeight: expandedRepresentation.flyoutHeight*/
             hideOnWindowDeactivate: !Plasmoid.configuration.pin
             visible: systemTrayState.expanded
             appletInterface: root
 
-            //flags: Qt.Dialog | Qt.FramelessWindowHint
-
-            backgroundHints: PlasmaCore.Dialog.SolidBackground //(Plasmoid.containmentDisplayHints & PlasmaCore.Types.ContainmentPrefersOpaqueBackground) ? PlasmaCore.AppletPopup.SolidBackground : PlasmaCore.AppletPopup.StandardBackground
+            backgroundHints: PlasmaCore.Dialog.SolidBackground
 
             onWidthChanged: setDialogPosition();
             onHeightChanged: setDialogPosition();
@@ -545,13 +701,6 @@ ContainmentItem {
                 if((y + dialog.height - screen.y) >= availScreen.height) {
                     y = screen.y + availScreen.height - dialog.height - flyoutMargin;
                 }
-                /*if(root.vertical) {
-                    if(pos.x > dialog.x) dialog.x -= flyoutMargin;
-                    else dialog.x += flyoutMargin;
-                } else {
-                    if(pos.y > dialog.y) dialog.y -= flyoutMargin;
-                    else dialog.y += flyoutMargin;
-                }*/
             }
             onYChanged: {
                 if(!firstTimePopup) { setDialogPosition(); }

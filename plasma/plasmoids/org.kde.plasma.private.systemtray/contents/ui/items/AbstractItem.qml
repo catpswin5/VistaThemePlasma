@@ -243,7 +243,7 @@ PlasmaCore.ToolTipArea {
             Kirigami.Icon {
                 anchors.fill: parent
 
-                visible: abstractItem.isPlasmoid && !abstractItem.inVisibleLayout
+                visible: abstractItem.isPlasmoid
 
                 source: abstractItem.itemIcon
             }

@@ -17,6 +17,8 @@ KCM.SimpleKCM {
     property bool cfg_scaleIconsToFit
     property int cfg_iconSpacing
 
+    property alias cfg_activeIconsOnly: activeIconsOnly.checked
+
     Kirigami.FormLayout {
         Layout.fillHeight: true
 
@@ -82,6 +84,10 @@ KCM.SimpleKCM {
             visible: Kirigami.Settings.tabletMode
             text: i18nc("@info:usagetip under a combobox when Touch Mode is on", "Automatically set to Large when in Touch Mode")
             font: Kirigami.Theme.smallFont
+        }
+        QQC2.CheckBox {
+            id: activeIconsOnly
+            Kirigami.FormData.label: i18n("Only show active icons:")
         }
     }
 }
