@@ -4,13 +4,13 @@
  *  SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
  */
 
-import QtQuick 2.2
-import QtQuick.Layouts 1.0
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import QtQuick.Layouts
+import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.draganddrop 2.0 as DragAndDrop
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.draganddrop as DragAndDrop
 import org.kde.plasma.private.quicklaunch 1.0
 
 import "layout.js" as LayoutManager
@@ -26,7 +26,7 @@ PlasmoidItem {
     readonly property bool horizontal : plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool dragging : false
 
-    Layout.minimumWidth: LayoutManager.minimumWidth() + (plasmoid.configuration.extraPadding ? Kirigami.Units.smallSpacing*4 : 0)
+    Layout.minimumWidth: LayoutManager.minimumWidth() + (plasmoid.configuration.extraPadding ? plasmoid.configuration.extraPaddingSize : 0)
     Layout.minimumHeight: LayoutManager.minimumHeight()
 
     preferredRepresentation: fullRepresentation

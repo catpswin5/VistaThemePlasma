@@ -19,6 +19,7 @@ KCM.SimpleKCM {
     property alias cfg_showLauncherNames: showLauncherNames.checked
     property alias cfg_enablePopup: enablePopup.checked
     property alias cfg_extraPadding: extraPadding.checked
+    property alias cfg_extraPaddingSize: extraPaddingSize.value
 
     Kirigami.FormLayout {
         QQC2.SpinBox {
@@ -50,6 +51,14 @@ KCM.SimpleKCM {
         QQC2.CheckBox {
             id: extraPadding
             text: i18nc("@option:check", "Extra padding")
+        }
+
+        QQC2.SpinBox {
+            id: extraPaddingSize
+
+            Kirigami.FormData.label: i18n("Size of the extra padding: ")
+
+            from: 0
         }
 
 
