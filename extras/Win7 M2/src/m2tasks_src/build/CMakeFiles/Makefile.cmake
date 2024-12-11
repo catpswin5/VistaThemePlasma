@@ -7,11 +7,11 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/CMakeLists.txt"
+  "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/CMakeLists.txt"
   "CMakeFiles/3.31.1/CMakeCCompiler.cmake"
   "CMakeFiles/3.31.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.31.1/CMakeSystem.cmake"
-  "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/CMakeLists.txt"
+  "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/CMakeLists.txt"
   "/usr/lib/cmake/KF6Config/KF6ConfigCompilerTargets-noconfig.cmake"
   "/usr/lib/cmake/KF6Config/KF6ConfigCompilerTargets.cmake"
   "/usr/lib/cmake/KF6Config/KF6ConfigConfig.cmake"
@@ -962,7 +962,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   ".qt/QtDeploySupport.cmake"
   ".qt/QtDeployTargets.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
-  "src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/AutogenInfo.json"
+  "src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/AutogenInfo.json"
   "src/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
@@ -977,6 +977,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/Plasma_QCH.dir/DependInfo.cmake"
   "CMakeFiles/KF6Package_QCH.dir/DependInfo.cmake"
   "CMakeFiles/KF6CoreAddons_QCH.dir/DependInfo.cmake"
-  "src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/DependInfo.cmake"
-  "src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/DependInfo.cmake"
+  "src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/DependInfo.cmake"
+  "src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/DependInfo.cmake"
   )

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src"
+CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build"
+CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
 
 # Utility rule file for uninstall.
 
@@ -67,7 +67,7 @@ include CMakeFiles/uninstall.dir/compiler_depend.make
 include CMakeFiles/uninstall.dir/progress.make
 
 CMakeFiles/uninstall:
-	/usr/bin/cmake -P /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/ecm_uninstall.cmake
+	/usr/bin/cmake -P /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/ecm_uninstall.cmake
 
 CMakeFiles/uninstall.dir/codegen:
 .PHONY : CMakeFiles/uninstall.dir/codegen
@@ -85,6 +85,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles/uninstall.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles/uninstall.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/uninstall.dir/depend
 

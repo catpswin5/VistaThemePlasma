@@ -2,7 +2,6 @@
 #define __cpp_nontype_template_parameter_auto 201606L
 #define __UINT_LEAST16_MAX__ 0xffff
 #define __FLT16_HAS_QUIET_NAN__ 1
-#define io_gitgud_catpswin56_vistatasks_EXPORTS 1
 #define __ATOMIC_ACQUIRE 2
 #define __FLT128_MAX_10_EXP__ 4932
 #define __FLT_MIN__ 1.17549435082228750796873653722224568e-38F
@@ -33,6 +32,7 @@
 #define __FLT64_DECIMAL_DIG__ 17
 #define __cpp_noexcept_function_type 201510L
 #define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 2
+#define io_gitgud_catpswin56_m2tasks_EXPORTS 1
 #define __cpp_variadic_templates 200704L
 #define __UINT_FAST64_MAX__ 0xffffffffffffffffUL
 #define __SIG_ATOMIC_TYPE__ int
@@ -333,7 +333,7 @@
 #define __INT_FAST16_WIDTH__ 64
 #define __FLT64_HAS_INFINITY__ 1
 #define __FLT64X_MAX__ 1.18973149535723176502126385303097021e+4932F64x
-#define TRANSLATION_DOMAIN "plasma_applet_io.gitgud.catpswin56.vistatasks"
+#define TRANSLATION_DOMAIN "plasma_applet_io.gitgud.catpswin56.m2tasks"
 #define __FLT16_HAS_INFINITY__ 1
 #define __STDCPP_DEFAULT_NEW_ALIGNMENT__ 16
 #define __SIG_ATOMIC_MIN__ (-__SIG_ATOMIC_MAX__ - 1)

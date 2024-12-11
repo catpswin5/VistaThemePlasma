@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src"
+CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build"
+CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -97,7 +97,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"io.gitgud.catpswin56.vistatasks\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"io.gitgud.catpswin56.m2tasks\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -142,14 +142,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src//CMakeFiles/progress.marks"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles" 0
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src//CMakeFiles/progress.marks"
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -158,77 +158,77 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/rule:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/rule
-.PHONY : src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/rule
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/rule:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/rule
+.PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/rule
 
 # Convenience name for target.
-io.gitgud.catpswin56.vistatasks: src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/rule
-.PHONY : io.gitgud.catpswin56.vistatasks
+io.gitgud.catpswin56.m2tasks: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/rule
+.PHONY : io.gitgud.catpswin56.m2tasks
 
 # fast build rule for target.
-io.gitgud.catpswin56.vistatasks/fast:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build
-.PHONY : io.gitgud.catpswin56.vistatasks/fast
+io.gitgud.catpswin56.m2tasks/fast:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build
+.PHONY : io.gitgud.catpswin56.m2tasks/fast
 
 # Convenience name for target.
-src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/rule:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/rule
-.PHONY : src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/rule
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/rule:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/rule
+.PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/rule
 
 # Convenience name for target.
-io.gitgud.catpswin56.vistatasks_autogen: src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/rule
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen
+io.gitgud.catpswin56.m2tasks_autogen: src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/rule
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen
 
 # fast build rule for target.
-io.gitgud.catpswin56.vistatasks_autogen/fast:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/build
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/fast
+io.gitgud.catpswin56.m2tasks_autogen/fast:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/fast
 
-io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.o: io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.o
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.o
+io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.o: io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.o
 
 # target to build an object file
-io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.o:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.o
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.o
+io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o
 
-io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.i: io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.i
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.i
+io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.i: io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.i
 
 # target to preprocess a source file
-io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.i:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.i
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.i
+io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i
 
-io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.s: io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.s
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.s
+io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.s: io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.s
 
 # target to generate assembly for a file
-io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.s:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.s
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.s
+io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s
 
 seventasks.o: seventasks.cpp.o
 .PHONY : seventasks.o
 
 # target to build an object file
 seventasks.cpp.o:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/seventasks.cpp.o
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o
 .PHONY : seventasks.cpp.o
 
 seventasks.i: seventasks.cpp.i
@@ -236,7 +236,7 @@ seventasks.i: seventasks.cpp.i
 
 # target to preprocess a source file
 seventasks.cpp.i:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/seventasks.cpp.i
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.i
 .PHONY : seventasks.cpp.i
 
 seventasks.s: seventasks.cpp.s
@@ -244,7 +244,7 @@ seventasks.s: seventasks.cpp.s
 
 # target to generate assembly for a file
 seventasks.cpp.s:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/seventasks.cpp.s
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s
 .PHONY : seventasks.cpp.s
 
 # Help Target
@@ -260,11 +260,11 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
-	@echo "... io.gitgud.catpswin56.vistatasks_autogen"
-	@echo "... io.gitgud.catpswin56.vistatasks"
-	@echo "... io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.o"
-	@echo "... io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.i"
-	@echo "... io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.s"
+	@echo "... io.gitgud.catpswin56.m2tasks_autogen"
+	@echo "... io.gitgud.catpswin56.m2tasks"
+	@echo "... io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.o"
+	@echo "... io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.i"
+	@echo "... io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.s"
 	@echo "... seventasks.o"
 	@echo "... seventasks.i"
 	@echo "... seventasks.s"
@@ -279,6 +279,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

@@ -1,7 +1,7 @@
-src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/seventasks.cpp.o: \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.cpp \
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o: \
+ /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/seventasks.cpp \
  /usr/include/stdc-predef.h \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.h \
+ /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/seventasks.h \
  /usr/include/qt6/QtGui/QGuiApplication \
  /usr/include/qt6/QtGui/qguiapplication.h \
  /usr/include/qt6/QtGui/qtguiglobal.h /usr/include/qt6/QtCore/qglobal.h \
@@ -439,7 +439,7 @@ src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/seventasks.cpp.o: \
  /usr/include/KF6/KWindowSystem/kwindowsystem.h \
  /usr/include/KF6/KWindowSystem/kwindowinfo.h \
  /usr/include/KF6/KWindowSystem/netwm_def.h \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/include/seventasks.moc \
+ /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/include/seventasks.moc \
  /usr/include/qt6/QtCore/qplugin.h /usr/include/qt6/QtCore/qjsonobject.h \
  /usr/include/qt6/QtCore/q20algorithm.h \
  /usr/include/qt6/QtCore/qtmochelpers.h

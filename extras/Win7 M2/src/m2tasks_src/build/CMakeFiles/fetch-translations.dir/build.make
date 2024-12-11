@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src"
+CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build"
+CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
 
 # Utility rule file for fetch-translations.
 
@@ -67,14 +67,14 @@ include CMakeFiles/fetch-translations.dir/compiler_depend.make
 include CMakeFiles/fetch-translations.dir/progress.make
 
 CMakeFiles/fetch-translations: releaseme
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Downloading translations for io.gitgud.catpswin56.vistatasks branch trunk..."
-	git -C /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/releaseme pull
-	cmake -E remove_directory /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/po
-	cmake -E remove_directory /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/poqm
-	ruby /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/releaseme/fetchpo.rb --origin trunk --project io.gitgud.catpswin56.vistatasks --output-dir /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/po --output-poqm-dir /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/poqm /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Downloading translations for io.gitgud.catpswin56.m2tasks branch trunk..."
+	git -C /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/releaseme pull
+	cmake -E remove_directory /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/po
+	cmake -E remove_directory /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/poqm
+	ruby /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/releaseme/fetchpo.rb --origin trunk --project io.gitgud.catpswin56.m2tasks --output-dir /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/po --output-poqm-dir /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/poqm /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src
 
 releaseme:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Fetching releaseme scripts to download translations..."
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Fetching releaseme scripts to download translations..."
 	git clone --depth 1 https://invent.kde.org/sdk/releaseme.git
 
 CMakeFiles/fetch-translations.dir/codegen:
@@ -94,6 +94,6 @@ CMakeFiles/fetch-translations.dir/clean:
 .PHONY : CMakeFiles/fetch-translations.dir/clean
 
 CMakeFiles/fetch-translations.dir/depend:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles/fetch-translations.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles/fetch-translations.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/fetch-translations.dir/depend
 

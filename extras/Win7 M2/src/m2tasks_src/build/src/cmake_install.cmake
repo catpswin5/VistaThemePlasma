@@ -1,4 +1,4 @@
-# Install script for directory: /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src
+# Install script for directory: /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -42,29 +42,29 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "io.gitgud.catpswin56.vistatasks" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistatasks.so" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistatasks.so")
+if(CMAKE_INSTALL_COMPONENT STREQUAL "io.gitgud.catpswin56.m2tasks" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.m2tasks.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.m2tasks.so")
     file(RPATH_CHECK
-         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistatasks.so"
+         FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.m2tasks.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets" TYPE MODULE FILES "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks.so")
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistatasks.so" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistatasks.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets" TYPE MODULE FILES "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks.so")
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.m2tasks.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.m2tasks.so")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistatasks.so")
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.m2tasks.so")
     endif()
   endif()
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "io.gitgud.catpswin56.vistatasks" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/install-cxx-module-bmi-noconfig.cmake" OPTIONAL)
+if(CMAKE_INSTALL_COMPONENT STREQUAL "io.gitgud.catpswin56.m2tasks" OR NOT CMAKE_INSTALL_COMPONENT)
+  include("/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/install-cxx-module-bmi-noconfig.cmake" OPTIONAL)
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/install_local_manifest.txt"
+  file(WRITE "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

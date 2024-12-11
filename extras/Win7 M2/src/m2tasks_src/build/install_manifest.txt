@@ -1,1 +1,1 @@
-/usr/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistatasks.so
+/usr/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.m2tasks.so

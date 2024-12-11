@@ -382,13 +382,13 @@ void Decoration::recalculateBorders()
 
     top = isMaximized() ? titlebarHeight()+1 : titlebarHeight()+9;
 
-    if (hideInnerBorder())
+    /*if (hideInnerBorder())
     {
         left = left < INNER_BORDER_SIZE ? 0 : left - INNER_BORDER_SIZE;
         right = right < INNER_BORDER_SIZE ? 0 : right - INNER_BORDER_SIZE;
         top = top < INNER_BORDER_SIZE ? 0 : top - INNER_BORDER_SIZE;
         bottom = bottom < INNER_BORDER_SIZE ? 0 : bottom - INNER_BORDER_SIZE;
-    }
+    }*/
 
     left   = qMax(0, left);
     right  = qMax(0, right);
@@ -447,14 +447,21 @@ void Decoration::updateButtonsGeometry()
 
     if (!m_rightButtons->buttons().isEmpty()) {
         const int vPadding = isMaximized() ? -1 : 1;
-        const int lessPadding = hideInnerBorder() ? 0 : INNER_BORDER_SIZE;
+        const int lessPadding = g_sizingmargins.frameRightSizing().inner_inset;
         m_rightButtons->setPos(QPointF(
             size().width() - m_rightButtons->geometry().width() - borderRight() - (isMaximized() ? 2 : 0) + lessPadding, vPadding));
+
+        m_rightButtons->setSpacing(g_sizingmargins.commonSizing().caption_button_spacing);
     }
     foreach (QPointer<KDecoration2::DecorationButton> button, m_rightButtons->buttons()) {
         static_cast<Button *>(button.data())->updateGeometry();
     }
 
+    if(g_sizingmargins.commonSizing().caption_button_align_vcenter)
+    {
+        auto p = m_rightButtons->pos();
+        m_rightButtons->setPos(QPointF(p.x(), borderTop() / 2.0f - m_rightButtons->geometry().height() / 2.0f));
+    }
     update();
 
     return;

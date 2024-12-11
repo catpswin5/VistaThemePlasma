@@ -1,8 +1,8 @@
-src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.o: \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp \
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o: \
+ /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp \
  /usr/include/stdc-predef.h \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/EWIEGA46WW/moc_seventasks.cpp \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/EWIEGA46WW/../../../../src/seventasks.h \
+ /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/moc_seventasks.cpp \
+ /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/../../../../src/seventasks.h \
  /usr/include/qt6/QtGui/QGuiApplication \
  /usr/include/qt6/QtGui/qguiapplication.h \
  /usr/include/qt6/QtGui/qtguiglobal.h /usr/include/qt6/QtCore/qglobal.h \

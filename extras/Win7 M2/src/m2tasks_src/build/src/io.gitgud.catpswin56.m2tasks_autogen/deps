@@ -1,9 +1,9 @@
-io.gitgud.catpswin56.vistatasks_autogen/timestamp: \
-	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/moc_predefs.h \
-	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/CMakeLists.txt \
-	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/metadata.json \
-	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.cpp \
-	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.h \
+io.gitgud.catpswin56.m2tasks_autogen/timestamp: \
+	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/moc_predefs.h \
+	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/CMakeLists.txt \
+	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/metadata.json \
+	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/seventasks.cpp \
+	/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/seventasks.h \
 	/usr/include/KF6/KConfig/kconfig_version.h \
 	/usr/include/KF6/KConfigCore/KConfigGroup \
 	/usr/include/KF6/KConfigCore/kconfigbase.h \

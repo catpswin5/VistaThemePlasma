@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src"
+CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build"
+CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -97,7 +97,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"io.gitgud.catpswin56.vistatasks\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"io.gitgud.catpswin56.m2tasks\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -142,9 +142,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build//CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build//CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -289,30 +289,30 @@ KF6CoreAddons_QCH/fast:
 .PHONY : KF6CoreAddons_QCH/fast
 
 #=============================================================================
-# Target rules for targets named io.gitgud.catpswin56.vistatasks
+# Target rules for targets named io.gitgud.catpswin56.m2tasks
 
 # Build rule for target.
-io.gitgud.catpswin56.vistatasks: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 io.gitgud.catpswin56.vistatasks
-.PHONY : io.gitgud.catpswin56.vistatasks
+io.gitgud.catpswin56.m2tasks: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 io.gitgud.catpswin56.m2tasks
+.PHONY : io.gitgud.catpswin56.m2tasks
 
 # fast build rule for target.
-io.gitgud.catpswin56.vistatasks/fast:
-	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/build
-.PHONY : io.gitgud.catpswin56.vistatasks/fast
+io.gitgud.catpswin56.m2tasks/fast:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build
+.PHONY : io.gitgud.catpswin56.m2tasks/fast
 
 #=============================================================================
-# Target rules for targets named io.gitgud.catpswin56.vistatasks_autogen
+# Target rules for targets named io.gitgud.catpswin56.m2tasks_autogen
 
 # Build rule for target.
-io.gitgud.catpswin56.vistatasks_autogen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 io.gitgud.catpswin56.vistatasks_autogen
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen
+io.gitgud.catpswin56.m2tasks_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 io.gitgud.catpswin56.m2tasks_autogen
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen
 
 # fast build rule for target.
-io.gitgud.catpswin56.vistatasks_autogen/fast:
-	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/build
-.PHONY : io.gitgud.catpswin56.vistatasks_autogen/fast
+io.gitgud.catpswin56.m2tasks_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen/fast
 
 # Help Target
 help:
@@ -335,9 +335,9 @@ help:
 	@echo "... KF6WindowSystem_QCH"
 	@echo "... Plasma_QCH"
 	@echo "... fetch-translations"
-	@echo "... io.gitgud.catpswin56.vistatasks_autogen"
+	@echo "... io.gitgud.catpswin56.m2tasks_autogen"
 	@echo "... uninstall"
-	@echo "... io.gitgud.catpswin56.vistatasks"
+	@echo "... io.gitgud.catpswin56.m2tasks"
 .PHONY : help
 
 

@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "" "src/io.gitgud.catpswin56.vistatasks_autogen/timestamp" "custom" "src/io.gitgud.catpswin56.vistatasks_autogen/deps"
+  "" "src/io.gitgud.catpswin56.m2tasks_autogen/timestamp" "custom" "src/io.gitgud.catpswin56.m2tasks_autogen/deps"
   )
 
 # Targets to which this target links which contain Fortran sources.
