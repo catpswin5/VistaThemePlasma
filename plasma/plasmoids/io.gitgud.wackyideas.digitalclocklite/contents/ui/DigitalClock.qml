@@ -518,7 +518,6 @@ Item {
         }
     ]
     
-
     Timer {
         id: tooltipTimer
         interval: 750
@@ -614,7 +613,7 @@ Item {
         id: contentItem
         anchors.verticalCenter: main.verticalCenter
         anchors.horizontalCenter: main.horizontalCenter
-        anchors.horizontalCenterOffset: main.milestone2Mode ? 0 : -Kirigami.Units.smallSpacing
+        anchors.horizontalCenterOffset: main.milestone2Mode && !Plasmoid.configuration.offsetClock ? 0 : -Kirigami.Units.smallSpacing
         anchors.verticalCenterOffset: Plasmoid.configuration.offsetClock ? -Kirigami.Units.smallSpacing/2 : 0
 
         Grid {
