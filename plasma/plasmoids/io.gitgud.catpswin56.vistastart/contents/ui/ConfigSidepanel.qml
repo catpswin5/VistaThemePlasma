@@ -42,6 +42,7 @@ KCM.SimpleKCM {
     property alias cfg_showRecentItemsSidepanel: showRecentItemsSidepanel.checked
     property alias cfg_showRootSidepanel: showRootSidepanel.checked
     property alias cfg_showNetworkSidepanel: showNetworkSidepanel.checked
+    property alias cfg_showConnectToSidepanel: showConnectToSidepanel.checked
     property alias cfg_showSettingsSidepanel: showSettingsSidepanel.checked
     property alias cfg_showDevicesSidepanel: showDevicesSidepanel.checked
     property alias cfg_showDefaultsSidepanel: showDefaultsSidepanel.checked
@@ -114,6 +115,10 @@ KCM.SimpleKCM {
            		    id: showNetworkSidepanel
            		    text: i18n("Network")
            		}
+           		CheckBox {
+					id: showConnectToSidepanel
+					text: i18n("Connect To")
+				}
            		CheckBox {
            		    id: showSettingsSidepanel
            		    text: i18n("Control Panel")

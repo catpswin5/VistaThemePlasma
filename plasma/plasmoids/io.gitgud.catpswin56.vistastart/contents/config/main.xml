@@ -138,6 +138,9 @@
     <entry name="showNetworkSidepanel" type="Bool">
       <default>false</default>
     </entry>
+    <entry name="showConnectToSidepanel" type="Bool">
+      <default>true</default>
+    </entry>
     <entry name="showSettingsSidepanel" type="Bool">
       <default>true</default>
     </entry>
