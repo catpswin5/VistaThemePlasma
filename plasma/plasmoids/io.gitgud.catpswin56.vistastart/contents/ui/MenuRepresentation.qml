@@ -658,7 +658,7 @@ PlasmaCore.Dialog {
 				}
 				Text {
 					id: showingAllProgramsText
-					text: showingAllPrograms ? "    Back" : "    All Programs"
+					text: showingAllPrograms ? i18n("Back") : i18n("All Programs")
 					font.pixelSize: 12
 					font.bold: true
 					anchors.left: arrowDirection.right
@@ -691,7 +691,7 @@ PlasmaCore.Dialog {
 						anchors.bottomMargin: 2
 						font.italic: true
 						color: searchFieldPlaceholderColor
-						text: i18n(" Start search")
+						text: i18n("Start search")
 						verticalAlignment: Text.AlignVCenter
 						visible: !searching
 						style: Text.Outline
@@ -926,12 +926,12 @@ PlasmaCore.Dialog {
 			spacing: 0
 
 			EvenGenericItem {
-				text: "Search Everywhere"
+				text: i18n("Search Everywhere")
 				icon: "edit-find"
 				Layout.fillWidth: true
 			}
 			EvenGenericItem {
-				text: "Search the Internet"
+				text: i18n("Search the Internet")
 				icon: "edit-find"
 				Layout.fillWidth: true
 			}
@@ -1033,7 +1033,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Documents"
+					itemText: i18n("Documents")
 					itemIcon: "folder-documents"
 					executableString: folderDialog.getPath(2)
 					visible: Plasmoid.configuration.showDocumentsSidepanel
@@ -1044,7 +1044,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Pictures"
+					itemText: i18n("Pictures")
 					itemIcon: "folder-pictures"
 					executableString: folderDialog.getPath(3)
 					visible: Plasmoid.configuration.showPicturesSidepanel
@@ -1055,7 +1055,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Music"
+					itemText: i18n("Music")
 					itemIcon: "folder-music"
 					executableString: folderDialog.getPath(4)
 					visible: Plasmoid.configuration.showMusicSidepanel
@@ -1066,7 +1066,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Videos"
+					itemText: i18n("Videos")
 					itemIcon: "folder-video"
 					executableString: folderDialog.getPath(5)
 					visible: Plasmoid.configuration.showVideosSidepanel
@@ -1077,7 +1077,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Downloads"
+					itemText: i18n("Downloads")
 					itemIcon: "folder-download"
 					executableString: folderDialog.getPath(6)
 					visible: Plasmoid.configuration.showDownloadsSidepanel
@@ -1088,7 +1088,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Games"
+					itemText: i18n("Games")
 					itemIcon: "applications-games"
 					executableString: folderDialog.getPath(9)
 					visible: Plasmoid.configuration.showGamesSidepanel
@@ -1105,7 +1105,7 @@ PlasmaCore.Dialog {
 					Layout.alignment: Qt.AlignHCenter
 				}
 				SidePanelItemDelegate {
-					itemText: "Recent Items"
+					itemText: i18n("Recent Items")
 					itemIcon: "document-open-recent"
 					executableString: folderDialog.getPath(11)
 					visible: Plasmoid.configuration.showRecentItemsSidepanel
@@ -1127,7 +1127,7 @@ PlasmaCore.Dialog {
 					}
 				}
 				SidePanelItemDelegate {
-					itemText: "Computer"
+					itemText: i18n("Computer")
 					itemIcon: "computer"
 					executableString: folderDialog.getPath(7)
 					visible: Plasmoid.configuration.showRootSidepanel
@@ -1138,7 +1138,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Network"
+					itemText: i18n("Network")
 					itemIcon: "network"
 					executableString: folderDialog.getPath(8)
 					visible: Plasmoid.configuration.showNetworkSidepanel
@@ -1149,10 +1149,10 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Connect To"
+					itemText: i18n("Connect To")
 					itemIcon: "connectto"
 					executableString: folderDialog.getPath(8)
-					visible: Plasmoid.configuration.showNetworkSidepanel
+					visible: Plasmoid.configuration.showConnectToSidepanel
 					onVisibleChanged: {
 						separator1.updateVisibility();
 						separator2.updateVisibility();
@@ -1166,7 +1166,7 @@ PlasmaCore.Dialog {
 					Layout.alignment: Qt.AlignHCenter
 				}
 				SidePanelItemDelegate {
-					itemText: "Control Panel"
+					itemText: i18n("Control Panel")
 					itemIcon: "preferences-system"
 					executableString: "systemsettings"
 					executeProgram: true
@@ -1178,7 +1178,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Devices and Printers"
+					itemText: i18n("Devices and Printers")
 					itemIcon: "input_devices_settings"
 					executableString: "systemsettings kcm_printer_manager"
 					executeProgram: true
@@ -1190,7 +1190,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Default Programs"
+					itemText: i18n("Default Programs")
 					itemIcon: "preferences-desktop-default-applications"
 					executableString: "systemsettings kcm_componentchooser"
 					executeProgram: true
@@ -1202,7 +1202,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Help and Support"
+					itemText: i18n("Help and Support")
 					itemIcon: "help-browser"
 					executableString: folderDialog.getPath(10);
 					visible: Plasmoid.configuration.showHelpSidepanel
@@ -1213,7 +1213,7 @@ PlasmaCore.Dialog {
 					Layout.fillWidth: true
 				}
 				SidePanelItemDelegate {
-					itemText: "Run..."
+					itemText: i18n("Run...")
 					itemIcon: "krunner"
 					executableString: "krunner --replace";
 					executeProgram: true

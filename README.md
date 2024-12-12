@@ -23,7 +23,7 @@ Many thanks to the people who helped out by testing and providing some suggestio
 ### Contributors
 
 - [AngelBruni](https://github.com/angelbruni) for contributing with SVG Vista taskbar texture.
-- [ThePhantom](https://github.com/ThePhantom6314) for remaking the task items in SVG.
+- [ThePhantom](https://github.com/ThePhantom6314) for remaking the task items and power buttons glyphs in SVG.
 
 
 ### ATP Credits

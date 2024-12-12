@@ -142,11 +142,11 @@ Item {
         height: implicitHeight //undo PC2 height override, remove when porting to PC3
         // TODO: games should always show the by name!
 
-        text: model.display == Plasmoid.configuration.defaultInternetApp && parent.isFavorites == true ? "Internet" :
-             (model.display == Plasmoid.configuration.defaultEmailApp && parent.isFavorites == true? "E-Mail" : model.display)
+        text: model.display == Plasmoid.configuration.defaultInternetApp && parent.isFavorites == true ? i18n("Internet") :
+             (model.display == Plasmoid.configuration.defaultEmailApp && parent.isFavorites == true? i18n("E-Mail") : model.display)
 
         font.bold: parent.isFavorites && !Plasmoid.configuration.disableBold ? true :
-                  (text == "Internet" && parent.isFavorites || text == "E-Mail" && parent.isFavorites ? true : false)
+                  (text == i18n("Internet") && parent.isFavorites || text == i18n("E-Mail") && parent.isFavorites ? true : false)
 
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignLeft
