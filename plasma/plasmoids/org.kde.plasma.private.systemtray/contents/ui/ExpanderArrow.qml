@@ -49,16 +49,21 @@ PlasmaCore.ToolTipArea {
         }
     }
 
-    TapHandler {
-        onPressedChanged: {
-            if (pressed) {
+    MouseArea {
+        id: arrowMa
+
+        anchors.fill: parent
+
+        hoverEnabled: true
+
+        onClicked: {
+            if (root.showHidden == true) {
                 root.showHidden = false
-                arrow.elementId= "left-arrow"
+                arrow.elementId = "vista-arrow-left"
+            } else {
+                root.showHidden = true
+                arrow.elementId = "vista-arrow-right"
             }
-        }
-        onTapped: {
-            root.showHidden = true
-            arrow.elementId= "right-arrow"
         }
     }
 
@@ -78,14 +83,14 @@ PlasmaCore.ToolTipArea {
             anchors.fill: parent
             imagePath: Qt.resolvedUrl("svgs/systray.svg")
             elementId: {
-                if(tooltip.containsPress || (systemTrayState.expanded && expandedRepresentation.hiddenLayout.visible)) return "vista-pressed";
-                if(tooltip.containsMouse) return "vista-hover";
+                if(arrowMa.containsPress || (systemTrayState.expanded && expandedRepresentation.hiddenLayout.visible)) return "vista-pressed";
+                if(arrowMa.containsMouse) return "vista-hover";
                 return "normal";
             }
         }
-        imagePath: "widgets/arrows"
+        imagePath: Qt.resolvedUrl("svgs/systray.svg")
         //svg: arrowSvg
-        elementId: "left-arrow"
+        elementId: "vista-arrow-left"
     }
     /*Kirigami.Icon {
         anchors.fill: parent
