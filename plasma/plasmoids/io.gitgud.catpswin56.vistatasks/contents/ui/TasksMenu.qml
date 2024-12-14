@@ -66,9 +66,8 @@ PlasmaCore.Dialog {
     property bool alsoCloseTask: false
     property bool secondaryColumn: false
 
-    property color backgroundColorStatic: "#f1f6fb"
-    property color backgroundColorGradient: "white"
-    property color borderColor: "#ccd9ea"
+    property color backgroundColorStatic: "#f0f0f0"
+    property color backgroundColorStatic2: "white"
     property alias sliderAnimation: sliderAnimation
 
     // Functions inherited from the original ContextMenu
@@ -547,11 +546,7 @@ PlasmaCore.Dialog {
                 rightMargin: 0
                 topMargin: 0
             }
-            gradient: Gradient {
-                GradientStop { position: 0; color: backgroundColorStatic }
-                GradientStop { position: 0.5; color: backgroundColorGradient }
-                GradientStop { position: 1; color: backgroundColorStatic }
-            }
+            color: backgroundColorStatic2
             z: -2
         }
         Rectangle {
@@ -566,17 +561,25 @@ PlasmaCore.Dialog {
                 topMargin: -4
             }
             Rectangle {
-                id: bgStaticBorderLine
+                id: plasmoidFooterBorder2
                 anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
                 }
-                height: Kirigami.Units.smallSpacing
-                gradient: Gradient {
-                    GradientStop { position: 0; color: borderColor }
-                    GradientStop { position: 1; color: "transparent"}
+                color: "#dde0e2"
+                height: 2
+            }
+            Rectangle {
+                id: plasmoidFooterBorder1
+                anchors {
+                    top: parent.top
+                    topMargin: 1
+                    left: parent.left
+                    right: parent.right
                 }
+                color: "white"
+                height: 1
             }
             z: -1
             color: backgroundColorStatic
