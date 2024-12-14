@@ -122,9 +122,6 @@ PlasmaCore.ToolTipArea {
     })
 
     readonly property bool highlighted: dragArea.containsMouse
-        || (task.contextMenu && task.contextMenu.status === PlasmaExtras.Menu.Open)
-        || (task.jumpList)
-        || (!!tasksRoot.groupDialog && tasksRoot.groupDialog.visualParent === task)
 
     active: false// (Plasmoid.configuration.showToolTips || tasksRoot.toolTipOpenedByClick === task) && !inPopup && !tasksRoot.groupDialog && !dragArea.held && dragArea.containsMouse
     interactive: false //model.IsWindow || mainItem.playerData
@@ -1285,13 +1282,17 @@ TaskManagerApplet.SmartLauncherItem { }
             }
             imagePath: Qt.resolvedUrl("svgs/tasks.svg")
 
-            property bool isHovered: (task.highlighted && Plasmoid.configuration.taskHoverEffect)
-            property bool isActive: model.IsActive || dragArea.containsPress || dragArea.held
+            property bool isHovered: task.highlighted
+            property bool isActive: model.IsActive
+                                    || dragArea.containsPress
+                                    || dragArea.held
+                                    || (task.contextMenu && task.contextMenu.status === PlasmaExtras.Menu.Open) || (task.jumpList)
+                                    || (!!tasksRoot.groupDialog && tasksRoot.groupDialog.visualParent === task)
 
             property string base: {
                 if(model.IsLauncher) return "";
                 if(attentionIndicator.requiresAttention && !hottrackingEnabled && !isHovered) return "attention";
-                if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) return  "active";
+                if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) return "active";
                 if(!inPopup) return "normal";
                 else if (isHovered && !attentionIndicator.requiresAttention) return "normal";
                 else return "";

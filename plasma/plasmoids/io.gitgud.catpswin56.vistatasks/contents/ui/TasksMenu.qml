@@ -461,49 +461,7 @@ PlasmaCore.Dialog {
                 text: get(atm.AppName) === "" ? get(atm.Decoration) : get(atm.AppName)
                 icon: menuDecoration
                 onClicked: tasksModel.requestNewInstance(modelIndex)
-            }
-
-            TasksMenuItemWrapper {
-                id: launcherToggleAction
-                text: "Pin program to taskbar"
-                icon: "window-pin"
-                visible: visualParent
-                && get(atm.IsLauncher) !== true
-                && get(atm.IsStartup) !== true
-                && plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
-                && (activityInfo.numberOfRunningActivities < 2)
-                && !doesBelongToCurrentActivity()
-
-                enabled: visible
-                function doesBelongToCurrentActivity() {
-                    return tasksModel.launcherActivities(get(atm.LauncherUrlWithoutIcon)).some(function(activity) {
-                        return activity === activityInfo.currentActivity || activity === activityInfo.nullUuid;
-                    });
-                }
-
-                onClicked: {
-                    tasksModel.requestAddLauncher(get(atm.LauncherUrl));
-                    tasksMenu.closeMenu();
-                }
-            }
-
-            TasksMenuItemWrapper {
-                id: unpinFromTaskMan
-
-                enabled: visible
-                visible: (visualParent
-                && Plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
-                && !launcherToggleAction.visible
-                && activityInfo.numberOfRunningActivities < 2)
-
-                text: i18n("Unpin program from taskbar")
-                icon: "window-unpin"
-                onClicked: {
-                    delayedMenu(150, function() {
-                        tasksModel.requestRemoveLauncher(get(atm.LauncherUrlWithoutIcon));
-                        tasksMenu.destroy();
-                    });
-                }
+                isDefault: true
             }
 
             TasksMenuItemWrapper {
@@ -521,6 +479,7 @@ PlasmaCore.Dialog {
                     alsoCloseTask = true;
                     closeMenu();
                 }
+                isDefault: true
             }
             /*TasksMenuItemWrapper {
              *                id: testItem

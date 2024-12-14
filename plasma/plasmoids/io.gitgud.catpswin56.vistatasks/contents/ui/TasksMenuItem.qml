@@ -28,6 +28,7 @@ Item {
     property var menuText: ""
     property bool selected: false
     property QtObject wrapperItem: tasksMenuItem.parent
+    property bool isDefault: false
 
     KSvg.FrameSvgItem {
         id: texture
@@ -93,7 +94,7 @@ Item {
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         opacity: parent.enabled ? 1 : 0.75
-        color: "black"
+        color: isDefault ? "#4465a2" : "black"
         style: Text.Sunken
         styleColor: "transparent"
     }

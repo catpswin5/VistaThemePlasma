@@ -116,6 +116,9 @@
     <entry name="disableJumplists" type="Bool">
       <default>false</default>
     </entry>
+    <entry name="showMore" type="Bool">
+      <default>false</default>
+    </entry>
     <entry name="draggingEnabled" type="Bool">
       <label>Whether to enable dragging on Vista taskbar.</label>
       <default>false</default>

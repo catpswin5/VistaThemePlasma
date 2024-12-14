@@ -27,6 +27,7 @@ KCM.SimpleKCM {
     property alias cfg_disableJumplists: disableJumplists.checked
     property alias cfg_draggingEnabled: draggingEnabled.checked
     property alias cfg_enableAnimations: enableAnimations.checked
+    property alias cfg_showMore: showMore.checked
 
     property alias cfg_maxStripes: maxStripes.value
     property alias cfg_forceStripes: forceStripes.checked
@@ -110,6 +111,11 @@ KCM.SimpleKCM {
                 CheckBox {
                     id: disableJumplists
                     text: i18n("Use traditional context menus instead of jumplists")
+                }
+                CheckBox {
+                    id: showMore
+                    enabled: disableJumplists.checked
+                    text: i18n("Show more items in context menus")
                 }
                 CheckBox {
                     id: enableAnimations
