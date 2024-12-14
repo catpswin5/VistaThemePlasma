@@ -65,18 +65,13 @@ PlasmaCore.ToolTipArea {
 
     SequentialAnimation {
         id: addLabelsAnimation
-        NumberAnimation { target: task; properties: "opacity"; to: 1; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "opacity"; to: 1; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "visible"; value: true }
         PropertyAction { target: task; property: "state"; value: "" }
     }
     SequentialAnimation {
         id: removeLabelsAnimation
-        NumberAnimation { target: task; properties: "width"; to: 0; duration: !tasksRoot.iconsOnly && !Plasmoid.configuration.enableAnimations ? 0 : animationDuration; easing.type: Easing.OutQuad }
-        PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
-    }
-    SequentialAnimation {
-        id: removeIconsAnimation
-        NumberAnimation { target: task; properties: "opacity"; to: 0; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "width"; to: 0; duration: !Plasmoid.configuration.enableAnimations ? 0 : animationDuration; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
 

@@ -84,7 +84,7 @@ ListView {
     Transition {
         id: addAnimation
         ParallelAnimation {
-            NumberAnimation { property: tasks.iconsOnly ? "" : "implicitWidth"; duration: transitionDuration; easing.type: Easing.OutQuad; }
+            NumberAnimation { property: tasks.iconsOnly ? "" : "implicitWidth"; duration: 200; easing.type: Easing.OutQuad; }
             NumberAnimation { property: tasks.iconsOnly ? "opacity" : ""; from: 0; to: 1; duration: transitionDuration; easing.type: Easing.OutQuad; }
         }
     }
