@@ -142,14 +142,9 @@ KCM.SimpleKCM {
                         from: 0
                     }
                 }
-                RowLayout {
-                    QQC2.CheckBox {
-                        id: offsetIcons
-                        Kirigami.FormData.label: i18n("Offset icons:")
-                    }
-                    Text {
-                        text: i18n("Offset icons")
-                    }
+                QQC2.CheckBox {
+                    id: offsetIcons
+                    text: i18n("Offset icons")
                 }
             }
         }
@@ -162,29 +157,17 @@ KCM.SimpleKCM {
             title: i18n("Enabled system icons")
 
             ColumnLayout {
-                RowLayout {
-                    QQC2.CheckBox {
-                        id: batteryEnabled
-                    }
-                    Text {
-                        text: i18n("Battery")
-                    }
+                QQC2.CheckBox {
+                    id: batteryEnabled
+                    text: i18n("Battery")
                 }
-                RowLayout {
-                    QQC2.CheckBox {
-                        id: networkEnabled
-                    }
-                    Text {
-                        text: i18n("Network")
-                    }
+                QQC2.CheckBox {
+                    id: networkEnabled
+                    text: i18n("Network")
                 }
-                RowLayout {
-                    QQC2.CheckBox {
-                        id: volumeEnabled
-                    }
-                    Text {
-                        text: i18n("Volume")
-                    }
+                QQC2.CheckBox {
+                    id: volumeEnabled
+                    text: i18n("Volume")
                 }
             }
         }

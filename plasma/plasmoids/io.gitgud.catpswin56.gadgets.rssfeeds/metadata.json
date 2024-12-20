@@ -1,0 +1,24 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "catpswin56"
+            }
+        ],
+        "Category": "Online Services",
+        "Description": "RSS feed gadget",
+        "EnabledByDefault": true,
+        "FormFactors": [
+            "tablet",
+            "handset",
+            "desktop"
+        ],
+        "Icon": "application-rss.xml",
+        "Id": "io.gitgud.catpswin56.gadgets.rssfeeds",
+        "License": "GPL-2.0+",
+        "Name": "RSS feed gadget",
+        "Website": "https://gitgud.io/catpswin56/vistathemeplasma"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

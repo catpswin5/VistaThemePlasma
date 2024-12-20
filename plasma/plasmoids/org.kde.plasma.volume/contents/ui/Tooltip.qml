@@ -70,7 +70,7 @@ Item {
                 Layout.fillWidth: true
                 elide: Text.ElideRight
                 wrapMode: Text.Wrap
-                text: i18n("Volume at %1%", main.volumePercent(PreferredDevice.sink.volume))
+                text: i18n("Volume: %1%", main.volumePercent(PreferredDevice.sink.volume))
                 textFormat: Text.PlainText
                 color: "#003399"
                 visible: text !== ""

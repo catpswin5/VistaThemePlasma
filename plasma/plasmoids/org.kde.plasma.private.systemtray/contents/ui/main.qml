@@ -420,11 +420,11 @@ ContainmentItem {
                         case ("org.kde.plasma.battery"):
                             return Plasmoid.configuration.batteryEnabled;
                             break;
-                        case ("org.kde.plasma.networkmanagement"):
-                            return Plasmoid.configuration.networkEnabled;
-                            break;
                         case ("org.kde.plasma.volume"):
                             return Plasmoid.configuration.volumeEnabled;
+                            break;
+                        case ("org.kde.plasma.networkmanagement"):
+                            return Plasmoid.configuration.networkEnabled;
                             break;
                     }
                 }
