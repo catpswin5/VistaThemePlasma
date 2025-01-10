@@ -36,7 +36,7 @@ Item {
         imagePath: Qt.resolvedUrl("svgs/jumplistitem.svg")
         prefix: "hover"
         visible: (tasksMA.containsMouse || selected) && parent.enabled
-        opacity: selected ? 1.0 : 0.6
+        opacity: selected ? 0.8 : 0.4
     }
     MouseArea {
         id: tasksMA
@@ -93,7 +93,7 @@ Item {
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         opacity: parent.enabled ? 1 : 0.75
-        color: "black"
+        color: "white"
         style: Text.Sunken
         styleColor: "transparent"
     }

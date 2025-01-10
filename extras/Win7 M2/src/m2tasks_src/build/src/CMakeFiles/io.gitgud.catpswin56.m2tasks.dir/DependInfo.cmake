@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "" "src/io.gitgud.catpswin56.m2tasks_autogen/timestamp" "custom" "src/io.gitgud.catpswin56.m2tasks_autogen/deps"
+  "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp" "src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o" "gcc" "src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o.d"
   "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp" "src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o" "gcc" "src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o.d"
   "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp" "src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o" "gcc" "src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o.d"
   )

@@ -106,22 +106,38 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s"
 	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s
 
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/flags.make
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows.cpp
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o"
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o -MF CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o.d -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o -c "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp"
+
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i"
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp" > CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i
+
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s"
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s
+
 # Object files for target io.gitgud.catpswin56.m2tasks
 io_gitgud_catpswin56_m2tasks_OBJECTS = \
 "CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o" \
-"CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o"
+"CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o" \
+"CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o"
 
 # External object files for target io.gitgud.catpswin56.m2tasks
 io_gitgud_catpswin56_m2tasks_EXTERNAL_OBJECTS =
 
 src/io.gitgud.catpswin56.m2tasks.so: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o
 src/io.gitgud.catpswin56.m2tasks.so: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o
+src/io.gitgud.catpswin56.m2tasks.so: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o
 src/io.gitgud.catpswin56.m2tasks.so: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make
 src/io.gitgud.catpswin56.m2tasks.so: /usr/lib/libX11.so
 src/io.gitgud.catpswin56.m2tasks.so: /usr/lib/libGLX.so
 src/io.gitgud.catpswin56.m2tasks.so: /usr/lib/libOpenGL.so
 src/io.gitgud.catpswin56.m2tasks.so: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX shared module io.gitgud.catpswin56.m2tasks.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared module io.gitgud.catpswin56.m2tasks.so"
 	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

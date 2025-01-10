@@ -5,6 +5,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_io.gitgud.catpswin56.m2task
 
 set(seventasks_SRCS
     seventasks.cpp
+    dialogshadows.cpp
 )
 
 add_library(io.gitgud.catpswin56.m2tasks MODULE ${seventasks_SRCS})
@@ -23,7 +24,7 @@ target_link_libraries(io.gitgud.catpswin56.m2tasks
 
 
 #target_link_libraries(plasma_applet_seventasks KF5::WindowSystem)
-include_directories(/usr/include/Plasma /usr/include/KF6/KConfigCore/ /usr/include/KF6/KConfig/ /usr/include/KF6/KCoreAddons/)
+include_directories(/usr/include/Plasma /usr/include/KF6/KConfigCore/ /usr/include/KF6/KConfig/ /usr/include/KF6/KCoreAddons/ /usr/include/PlasmaQuick/)
 
 install(TARGETS io.gitgud.catpswin56.m2tasks DESTINATION ${KDE_INSTALL_PLUGINDIR}/plasma/applets)
 

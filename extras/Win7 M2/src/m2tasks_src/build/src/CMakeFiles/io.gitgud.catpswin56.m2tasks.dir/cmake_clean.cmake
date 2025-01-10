@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/AutogenUsed.txt"
   "CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/ParseCache.txt"
   "io.gitgud.catpswin56.m2tasks_autogen"
+  "CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o"
+  "CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o.d"
   "CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o.d"
   "CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o"

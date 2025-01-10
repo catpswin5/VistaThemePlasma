@@ -302,6 +302,19 @@ io.gitgud.catpswin56.m2tasks/fast:
 .PHONY : io.gitgud.catpswin56.m2tasks/fast
 
 #=============================================================================
+# Target rules for targets named io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps
+
+# Build rule for target.
+io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps
+
+# fast build rule for target.
+io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps/fast:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/build
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps/fast
+
+#=============================================================================
 # Target rules for targets named io.gitgud.catpswin56.m2tasks_autogen
 
 # Build rule for target.
@@ -336,6 +349,7 @@ help:
 	@echo "... Plasma_QCH"
 	@echo "... fetch-translations"
 	@echo "... io.gitgud.catpswin56.m2tasks_autogen"
+	@echo "... io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps"
 	@echo "... uninstall"
 	@echo "... io.gitgud.catpswin56.m2tasks"
 .PHONY : help

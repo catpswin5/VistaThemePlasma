@@ -52,9 +52,13 @@ PlasmaCore.Dialog {
     property QtObject currentItem: null
     property int currentItemIndex: -1
 
+    property int taskWidth: 0
+    property int taskHeight: 0
+    property int taskX: 0
+    property int taskY: 0
+
     readonly property int menuItemHeight: Kirigami.Units.smallSpacing*5
     readonly property int menuWidth: 238
-    readonly property int slide: Kirigami.Units.smallSpacing*3
     property bool finishedAnimating: false
 
     property bool showAllPlaces: false
@@ -71,7 +75,6 @@ PlasmaCore.Dialog {
         return tasksModel.data(modelIndex, modelProp)
     }
     function showContextMenuWithAllPlaces() {
-        console.log("Showing context menu with all places.")
         visualParent.showContextMenu({showAllPlaces: true});
     }
 
@@ -155,12 +158,15 @@ PlasmaCore.Dialog {
             tasksMenu.y = globalPos.y - tasksMenu.height;
             //var diff = parent.mapToGlobal(tasksMenu.x, tasksMenu.y).x - tasksMenu.x;
 
-            var parentPos = parent.mapToGlobal(visualParent.x, visualParent.y);
-            xpos = parentPos.x;
-            tasksMenu.x = parentPos.x;
-            xpos = parentPos.x + visualParent.width/2 - Kirigami.Units.largeSpacing + 1;
+            var parentPos = parent.mapToGlobal(taskX, taskY);
+            xpos = parentPos.x + taskWidth / 2;
+            tasksMenu.x = parentPos.x + taskWidth / 2;
+            xpos = parentPos.x +  taskWidth / 2 - Kirigami.Units.largeSpacing + 1;
             xpos -= menuWidth / 2;
-            if(xpos <= 0) xpos = Kirigami.Units.largeSpacing;
+            if(xpos <= 0) {
+               xpos = Kirigami.Units.largeSpacing;
+               tasksMenu.x = Kirigami.Units.largeSpacing;
+            }
             tasksMenu.x = xpos;
         }
         else if(!visible) {
@@ -177,15 +183,14 @@ PlasmaCore.Dialog {
     function show() {
         loadDynamicLauncherActions(get(atm.LauncherUrlWithoutIcon));
         visible = true;
-        tasksMenu.x = xpos;
-        tasksMenu.y -= slide;
         opacity = 1;
-        Qt.callLater(() => {Plasmoid.setMouseGrab(true, tasksMenu);});
+        Qt.callLater(() => {Plasmoid.setMouseGrab(true, tasksMenu); tasksMenu.x = xpos; Plasmoid.setDashWindow(tasksMenu, bg.mask, bg.imagePath);});
+        if(xpos !== tasksMenu.x) tasksMenu.x = xpos;
+        openTimer.start();
     }
     // Closes the menu gracefully, by first showing a fade out animation before freeing the object from memory.
     function closeMenu() {
         Plasmoid.disableBlurBehind(tasksMenu);
-        tasksMenu.y += slide;
         opacity = 0;
         closeTimer.start();
     }
@@ -358,10 +363,10 @@ PlasmaCore.Dialog {
             muteItem.clicked.connect(function() {
                 tasksMenu.visualParent.toggleMuted();
                 muteItem.text = !muteItem.checked ? "Unmute" : "Mute";
-                muteItem.icon= !muteItem.checked ? "audio-volume-muted" : "audio-volume-high";
+                muteItem.icon = !muteItem.checked ? "audio-volume-muted" : "audio-volume-high";
             });
             muteItem.text = muteItem.checked ? "Unmute" : "Mute";
-            muteItem.icon= muteItem.checked ? "audio-volume-muted" : "audio-volume-high";
+            muteItem.icon = muteItem.checked ? "audio-volume-muted" : "audio-volume-high";
             secondaryColumn = true;
         }
     }
@@ -381,8 +386,8 @@ PlasmaCore.Dialog {
         focus: true
         Layout.minimumWidth: menuWidth
         Layout.maximumWidth: menuWidth
-        Layout.minimumHeight: staticMenuItems.height + menuitems.height + Kirigami.Units.smallSpacing*3 - (secondaryColumn ? 0 : Kirigami.Units.smallSpacing*2)
-        Layout.maximumHeight: staticMenuItems.height + menuitems.height + Kirigami.Units.smallSpacing*3 - (secondaryColumn ? 0 : Kirigami.Units.smallSpacing*2)
+        Layout.minimumHeight: staticMenuItems.height + menuitems.height + Kirigami.Units.smallSpacing*3 - (!menuitems.isEmpty() ? 0 : Kirigami.Units.smallSpacing*2)
+        Layout.maximumHeight: staticMenuItems.height + menuitems.height + Kirigami.Units.smallSpacing*3 - (!menuitems.isEmpty() ? 0 : Kirigami.Units.smallSpacing*2)
         // This is the last resort to avoiding the dialog displacement bug. It's set to correct the x position at a delay of 18ms.
         // This may result in a brief but noticeable jump in position when the context menu is shown.
         //enabled: !sliderAnimation.running;
@@ -394,9 +399,8 @@ PlasmaCore.Dialog {
             interval: 25
             repeat: false
             onTriggered: {
+                Plasmoid.setDashWindow(tasksMenu, bg.mask, bg.imagePath);
                 tasksMenu.x = xpos;
-                tasksMenu.y -= slide;
-                Plasmoid.setMouseGrab(true, tasksMenu);
             }
         }
         // Timer used to free the object from memory after the fade out animation has finished.
@@ -411,6 +415,9 @@ PlasmaCore.Dialog {
             id: menuitems
             z: 1
 
+            function isEmpty() {
+                return menuitems.visibleChildren.length <= 2;
+            }
             onHeightChanged: {
                 if(sliderAnimation.running)
                     tasksMenu.y -= tasksMenu.slide;
@@ -450,7 +457,7 @@ PlasmaCore.Dialog {
             TasksMenuItemWrapper {
                 id: startNewInstanceItem
                 visible: true
-                text: get(atm.AppName)
+                text: get(atm.AppName) === "" ? get(atm.Decoration) : get(atm.AppName)
                 icon: menuDecoration
                 onClicked: tasksModel.requestNewInstance(modelIndex)
             }
@@ -501,7 +508,7 @@ PlasmaCore.Dialog {
             TasksMenuItemWrapper {
                 id: closeWindowItem
 
-                visible: !milestone2Mode
+                visible: (visualParent && get(atm.IsLauncher) !== true && get(atm.IsStartup) !== true) && !Plasmoid.configuration.disableJumplists
 
                 enabled: visualParent && get(atm.IsClosable) === true
 
@@ -514,64 +521,39 @@ PlasmaCore.Dialog {
                     closeMenu();
                 }
             }
-            /*TasksMenuItemWrapper {
-             *                id: testItem
-             *                Layout.fillWidth: true
-             *                Layout.preferredHeight: menuItemHeight
-             *
-             *                text: "Test"
-             *                icon: "window-close"
-             *                onClicked: {
-        }
-        }*/
         }
 
+        KSvg.FrameSvgItem {
+            id: bg
+
+            anchors.fill: parent
+
+            imagePath: Qt.resolvedUrl("svgs/jumplist.svg")
+        }
         Rectangle {
-            id: bgRect
-            visible: secondaryColumn
             anchors {
-                top: parent.top
-                bottom: bgStatic.top
-                left: parent.left
-                right: parent.right
-                leftMargin: 0
-                rightMargin: 0
-                topMargin: 0
+                top: bg.top
+                topMargin: 1
+                right: bg.right
+                rightMargin: 1
+                left: bg.left
+                leftMargin: 1
             }
+
+            height: 17
+
+            topRightRadius: 5
+            topLeftRadius: 5
+
             gradient: Gradient {
-                GradientStop { position: 0; color: backgroundColorStatic }
-                GradientStop { position: 0.5; color: backgroundColorGradient }
-                GradientStop { position: 1; color: backgroundColorStatic }
+                GradientStop { position: 0.0; color: "gray" }
+                GradientStop { position: 0.5; color: "white" }
+                GradientStop { position: 1.0; color: "transparent" }
             }
-            z: -2
+
+            opacity: 0.1
         }
-        Rectangle {
-            id: bgStatic
-            anchors {
-                top: staticMenuItems.top
-                bottom: parent.bottom
-                left: parent.left
-                right: parent.right
-                leftMargin: 0
-                rightMargin: 0
-                topMargin: -4
-            }
-            Rectangle {
-                id: bgStaticBorderLine
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-                height: Kirigami.Units.smallSpacing
-                gradient: Gradient {
-                    GradientStop { position: 0; color: borderColor }
-                    GradientStop { position: 1; color: "transparent"}
-                }
-            }
-            z: -1
-            color: backgroundColorStatic
-        }
+
         function decreaseItemIndex() {
             currentItemIndex--;
             if(currentItemIndex < 0) {
@@ -653,8 +635,9 @@ PlasmaCore.Dialog {
 
     Component.onCompleted: {
         backend.showAllPlaces.connect(showContextMenuWithAllPlaces)
-        tasksMenu.backgroundHints = 2; // Sets the dialog background to the solid SVG variant.
-        tasksMenu.y = tasksMenu.taskY - tasksMenu.slide;
+        tasksMenu.backgroundHints = 0; // Sets the dialog background to the solid SVG variant.
+        // tasksMenu.y = tasksMenu.taskY - tasksMenu.slide;
+        Plasmoid.setDashWindow(tasksMenu, bg.mask, bg.imagePath);
         Plasmoid.setMouseGrab(true, tasksMenu);
     }
     Component.onDestruction: {

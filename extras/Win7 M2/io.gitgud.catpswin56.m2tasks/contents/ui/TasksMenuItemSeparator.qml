@@ -42,7 +42,7 @@ Item {
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignTop
-        color: "#002e89"
+        color: "white"
         style: Text.Sunken
         styleColor: "transparent"
     }
@@ -69,7 +69,7 @@ Item {
 
     Rectangle {
         id: separatorLine
-        color: "#afbedf"
+        color: "white"
         height: 1
         //width: parent.width
         anchors {

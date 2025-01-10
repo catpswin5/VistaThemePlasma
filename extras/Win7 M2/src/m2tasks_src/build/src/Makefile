@@ -186,6 +186,20 @@ io.gitgud.catpswin56.m2tasks/fast:
 .PHONY : io.gitgud.catpswin56.m2tasks/fast
 
 # Convenience name for target.
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/rule:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/rule
+.PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/rule
+
+# Convenience name for target.
+io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps: src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/rule
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps
+
+# fast build rule for target.
+io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps/fast:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/build
+.PHONY : io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps/fast
+
+# Convenience name for target.
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/rule:
 	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/rule
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/rule
@@ -198,6 +212,30 @@ io.gitgud.catpswin56.m2tasks_autogen: src/CMakeFiles/io.gitgud.catpswin56.m2task
 io.gitgud.catpswin56.m2tasks_autogen/fast:
 	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build
 .PHONY : io.gitgud.catpswin56.m2tasks_autogen/fast
+
+dialogshadows.o: dialogshadows.cpp.o
+.PHONY : dialogshadows.o
+
+# target to build an object file
+dialogshadows.cpp.o:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o
+.PHONY : dialogshadows.cpp.o
+
+dialogshadows.i: dialogshadows.cpp.i
+.PHONY : dialogshadows.i
+
+# target to preprocess a source file
+dialogshadows.cpp.i:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i
+.PHONY : dialogshadows.cpp.i
+
+dialogshadows.s: dialogshadows.cpp.s
+.PHONY : dialogshadows.s
+
+# target to generate assembly for a file
+dialogshadows.cpp.s:
+	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build.make src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s
+.PHONY : dialogshadows.cpp.s
 
 io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.o: io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o
 .PHONY : io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.o
@@ -261,7 +299,11 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... io.gitgud.catpswin56.m2tasks_autogen"
+	@echo "... io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps"
 	@echo "... io.gitgud.catpswin56.m2tasks"
+	@echo "... dialogshadows.o"
+	@echo "... dialogshadows.i"
+	@echo "... dialogshadows.s"
 	@echo "... io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.o"
 	@echo "... io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.i"
 	@echo "... io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.s"
