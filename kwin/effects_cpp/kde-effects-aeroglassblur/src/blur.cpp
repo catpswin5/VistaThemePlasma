@@ -1214,7 +1214,7 @@ bool BlurEffect::shouldHaveCornerGlow(const EffectWindow *w) const
 {
 	QString windowClass = w->windowClass().split(' ')[1];
     if(w->isTooltip()) return false;
-    if(w->caption() == "sevenstart-menurepresentation" || (windowClass != "kwin" && w->isDock())) return false; // Disables panels and start menu
+    if(w->caption() == "sevenstart-menurepresentation" || (windowClass != "kwin" && w->isDock()) || w->caption() == "m2tasks-jumplist") return false; // Disables panels and start menu
     return true;
 }
 

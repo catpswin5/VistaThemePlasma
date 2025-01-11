@@ -46,6 +46,9 @@
     <entry name="MaximizeColorization" type="Bool">
         <default>true</default>
     </entry>
+    <entry name="EnableCornerGlow" type="Bool">
+        <default>true</default>
+    </entry>
     <entry name="AccentColorName" type="Int">
         <default>18</default>
     </entry>

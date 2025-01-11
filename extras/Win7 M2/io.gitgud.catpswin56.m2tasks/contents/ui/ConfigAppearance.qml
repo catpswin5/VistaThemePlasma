@@ -24,7 +24,6 @@ KCM.SimpleKCM {
     property alias cfg_showLabels: showLabels.checked
     property alias cfg_disableHottracking: disableHottracking.checked
     property alias cfg_disableJumplists: disableJumplists.checked
-    property alias cfg_enableAnimations: enableAnimations.checked
     property alias cfg_showAppName: showAppName.checked
     property alias cfg_bottomMargin: bottomMargin.checked
     property alias cfg_showMore: showMore.checked
@@ -126,10 +125,6 @@ KCM.SimpleKCM {
                     id: showMore
                     enabled: disableJumplists.checked
                     text: i18n("Show more items in context menus")
-                }
-                CheckBox {
-                    id: enableAnimations
-                    text: i18n("Enable extra animations")
                 }
             }
         }

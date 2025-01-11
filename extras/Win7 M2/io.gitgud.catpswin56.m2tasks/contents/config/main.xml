@@ -134,14 +134,6 @@
       <label>Whether to show a jumplist arrow on task items.</label>
       <default>true</default>
     </entry>
-    <entry name="dragVista" type="Bool">
-      <label>Whether to enable dragging on Vista taskbar.</label>
-      <default>false</default>
-    </entry>
-    <entry name="enableAnimations" type="Bool">
-      <label>Whether to enable animations on the taskbar.</label>
-      <default>false</default>
-    </entry>
     <entry name="showAppName" type="Bool">
       <label>Whether to show the app name in task items.</label>
       <default>false</default>

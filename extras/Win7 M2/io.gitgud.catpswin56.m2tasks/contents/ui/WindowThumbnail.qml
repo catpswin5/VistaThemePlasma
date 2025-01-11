@@ -189,6 +189,7 @@ MouseArea {
 
                     onClicked: {
                         tasksModel.requestClose(modelIndex);
+                        if(!isGroupDelegate) root.visible = false;
                     }
                 }
             }

@@ -27,7 +27,7 @@ ListView {
     interactive: false
     cacheBuffer: 9999
     spacing: 2
-    readonly property int transitionDuration: Plasmoid.configuration.enableAnimations ? 200 : 0
+    readonly property int transitionDuration: 400
     property alias taskAnimation: taskAnimation
     property alias resetTransition: resetTransition
     property alias resetAddTransition: resetAddTransition
@@ -79,13 +79,14 @@ ListView {
     }*/
     displaced: taskAnimation
     remove: Transition {
-            NumberAnimation { properties: tasks.iconsOnly ? "opacity" : ""; to: 0; duration: transitionDuration; easing.type: Easing.OutQuad; }
+        NumberAnimation { property: "implicitWidth"; to: 0; duration: transitionDuration; easing.type: Easing.OutQuad; }
+        NumberAnimation { properties: "opacity"; to: 0; duration: transitionDuration; easing.type: Easing.OutQuad; }
     }
     Transition {
         id: addAnimation
         ParallelAnimation {
-            NumberAnimation { property: tasks.iconsOnly ? "" : "implicitWidth"; duration: transitionDuration; easing.type: Easing.OutQuad; }
-            NumberAnimation { property: tasks.iconsOnly ? "opacity" : ""; from: 0; to: 1; duration: transitionDuration; easing.type: Easing.OutQuad; }
+            NumberAnimation { property: "implicitWidth"; from: 0; duration: transitionDuration; easing.type: Easing.OutQuad; }
+            NumberAnimation { property: "opacity"; to: 1; duration: transitionDuration; easing.type: Easing.OutQuad; }
         }
     }
     add: addAnimation

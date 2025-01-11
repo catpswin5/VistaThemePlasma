@@ -53,21 +53,24 @@ Item {
         }
     }
     Behavior on implicitWidth {
-        NumberAnimation { duration: !tasksRoot.iconsOnly ? 200 : animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { duration: task.state == "animateLabels" ? 0 : animationDuration; easing.type: Easing.OutQuad }
     }
     Behavior on implicitHeight {
         NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
     }
 
+    Behavior on opacity {
+        NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
+    }
+
     SequentialAnimation {
         id: addLabelsAnimation
-        NumberAnimation { target: task; properties: "opacity"; to: 1; duration: animationDuration; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "visible"; value: true }
         PropertyAction { target: task; property: "state"; value: "" }
     }
     SequentialAnimation {
         id: removeLabelsAnimation
-        NumberAnimation { target: task; properties: "width"; to: 0; duration: !tasksRoot.iconsOnly && !Plasmoid.configuration.enableAnimations ? 0 : animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "width"; to: 0; duration: animationDuration; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
     SequentialAnimation {
@@ -80,7 +83,7 @@ Item {
     required property int index
     required property Item tasksRoot
 
-    readonly property int animationDuration: Plasmoid.configuration.enableAnimations ? 200 : (!tasksRoot.iconsOnly ? 200 : 0)
+    readonly property int animationDuration: 400
 
     readonly property int pid: model.AppPid
     readonly property string appName: model.AppName
@@ -127,7 +130,7 @@ Item {
         || (task.toolTip && task.toolTip.taskIndex == model.index)
 	|| jumplistBtnMa.containsMouse
 
-    readonly property bool animateLabel: (!model.IsStartup && !model.IsLauncher) && !tasksRoot.iconsOnly
+    readonly property bool animateLabel: (!model.IsStartup && !model.IsLauncher)
     readonly property bool shouldHideOnRemoval: model.IsStartup || model.IsLauncher
 
     ListView.onRemove: {
@@ -140,12 +143,6 @@ Item {
             if(shouldHideOnRemoval) {
                 taskList.add = null;
                 taskList.resetAddTransition.start();
-            }
-            if(animateLabel) { // Closing animation for tasks with labels
-                taskList.displaced = null;
-                ListView.delayRemove = true;
-                taskList.resetTransition.start();
-                removeLabelsAnimation.start();
             }
     }
     ListView.onAdd: {
@@ -167,7 +164,7 @@ Item {
     states: [
         State {
             name: "animateLabels"
-            PropertyChanges { target: task; implicitWidth: 0 }
+            PropertyChanges { target: task; opacity: 0; implicitWidth: 0 }
         }
     ]
 
@@ -592,7 +589,6 @@ TaskManagerApplet.SmartLauncherItem { }
                 toolTipOpenTimer.stop();
                 TaskTools.activateTask(modelIndex(), model, point.modifiers, task, Plasmoid, tasksRoot, effectWatcher.registered);
             }
-            TaskTools.activateTask(modelIndex(), model, point.modifiers, task, Plasmoid, tasksRoot, effectWatcher.registered);
         }
     }
 
@@ -1470,8 +1466,8 @@ TaskManagerApplet.SmartLauncherItem { }
                 PlasmaComponents3.Label {
                     id: appName
 
-                    visible: (!iconsOnly && !model.IsLauncher
-                             && (parent.width - iconBox.height - Kirigami.Units.smallSpacing) >= LayoutMetrics.spaceRequiredToShowText())
+                    visible: label.visible && Plasmoid.configuration.showAppName && text != ""
+
                     Layout.topMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
                     Layout.fillWidth: true
                     Layout.fillHeight: true
@@ -1549,10 +1545,10 @@ TaskManagerApplet.SmartLauncherItem { }
         onTriggered: {
             if(model.ChildCount > 0 && !tasksRoot.compositionEnabled) return;
             else {
-                if(toolTip == null) {
+                if(!toolTip) {
                     showToolTip();
                     updateToolTipBindings(true);
-                } else if(toolTip != null) updateToolTipBindings(false);
+                } else if(toolTip) updateToolTipBindings(false);
             }
         }
     }

@@ -59,6 +59,7 @@ PlasmaCore.Dialog {
 
     readonly property int menuItemHeight: Kirigami.Units.smallSpacing*5
     readonly property int menuWidth: 238
+    readonly property int slide: Kirigami.Units.smallSpacing*3
     property bool finishedAnimating: false
 
     property bool showAllPlaces: false
@@ -128,13 +129,10 @@ PlasmaCore.Dialog {
     visible: false
     opacity: 0
     objectName: "tasksMenuDialog"
+    title: "m2tasks-jumplist"
     hideOnWindowDeactivate: true // Makes it so that the context menu disappears if it gets forcibly out of focus by an external event.
     flags: Qt.WindowStaysOnTopHint | Qt.Dialog
 
-    // Used to animate the context menu appearing and disappearing.
-    Behavior on opacity {
-        NumberAnimation { duration: 100; }
-    }
     Behavior on y {
         NumberAnimation {
             id: sliderAnimation

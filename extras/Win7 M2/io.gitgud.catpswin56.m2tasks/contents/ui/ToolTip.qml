@@ -95,7 +95,7 @@ PlasmaCore.Dialog {
     opacity: 0
 
     onOpacityChanged: {
-        if(opacity == 0) refreshBlur();
+        if(opacity == 1) refreshBlur();
     }
     onMainItemChanged: {
         refreshBlur();

@@ -660,7 +660,6 @@ PlasmoidItem {
     }
 
     function createToolTip(rootTask, modelIndex, args = {}) {
-        console.log("Creating constant intialArgs");
         const initialArgs = Object.assign(args, {
             modelIndex: modelIndex,
             taskWidth: rootTask.width,
@@ -668,7 +667,6 @@ PlasmoidItem {
             taskX: rootTask.x,
             taskY: rootTask.y
         });
-        console.log("Creating");
         return toolTipComponent.createObject(rootTask, initialArgs);
     }
 
