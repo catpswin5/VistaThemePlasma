@@ -53,29 +53,26 @@ Item {
         }
     }
     Behavior on implicitWidth {
-        NumberAnimation { duration: task.state == "animateLabels" ? 0 : animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { duration: 200; easing.type: Easing.OutQuad }
     }
     Behavior on implicitHeight {
-        NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
-    }
-
-    Behavior on opacity {
-        NumberAnimation { duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { duration: 200; easing.type: Easing.OutQuad }
     }
 
     SequentialAnimation {
         id: addLabelsAnimation
+        NumberAnimation { target: task; properties: "opacity"; to: 1; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "visible"; value: true }
         PropertyAction { target: task; property: "state"; value: "" }
     }
     SequentialAnimation {
         id: removeLabelsAnimation
-        NumberAnimation { target: task; properties: "width"; to: 0; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "width"; to: 0; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
     SequentialAnimation {
         id: removeIconsAnimation
-        NumberAnimation { target: task; properties: "opacity"; to: 0; duration: animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "opacity"; to: 0; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
 
@@ -130,20 +127,25 @@ Item {
         || (task.toolTip && task.toolTip.taskIndex == model.index)
 	|| jumplistBtnMa.containsMouse
 
-    readonly property bool animateLabel: (!model.IsStartup && !model.IsLauncher)
-    readonly property bool shouldHideOnRemoval: model.IsStartup || model.IsLauncher
-
-    ListView.onRemove: {
-            if (tasksRoot.containsMouse && index != tasksModel.count &&
-                task.model.WinIdList.length > 0 &&
-                taskClosedWithMouseMiddleButton.indexOf(item.winIdList[0]) > -1) {
-                tasksRoot.needLayoutRefresh = true;
+	readonly property bool animateLabel: (!model.IsStartup && !model.IsLauncher) && !tasksRoot.iconsOnly
+	readonly property bool shouldHideOnRemoval: model.IsStartup || model.IsLauncher
+	ListView.onRemove: {
+        if (tasksRoot.containsMouse && index != tasksModel.count &&
+            task.model.WinIdList.length > 0 &&
+            taskClosedWithMouseMiddleButton.indexOf(item.winIdList[0]) > -1) {
+            tasksRoot.needLayoutRefresh = true;
             }
             taskClosedWithMouseMiddleButton = [];
-            if(shouldHideOnRemoval) {
-                taskList.add = null;
-                taskList.resetAddTransition.start();
-            }
+        if(shouldHideOnRemoval) {
+            taskList.add = null;
+            taskList.resetAddTransition.start();
+        }
+        if(animateLabel) { // Closing animation for tasks with labels
+            taskList.displaced = null;
+            ListView.delayRemove = true;
+            taskList.resetTransition.start();
+            removeLabelsAnimation.start();
+        }
     }
     ListView.onAdd: {
         if(model.IsStartup && !taskInLauncherList(appId)) {
@@ -164,7 +166,7 @@ Item {
     states: [
         State {
             name: "animateLabels"
-            PropertyChanges { target: task; opacity: 0; implicitWidth: 0 }
+            PropertyChanges { target: task; implicitWidth: 0 }
         }
     ]
 
