@@ -19,9 +19,7 @@ import Qt5Compat.GraphicalEffects
 import "code/layoutmetrics.js" as LayoutMetrics
 import "code/tools.js" as TaskTools
 
-import "components/" as Components
-
-PlasmaCore.ToolTipArea {
+Item {
     id: task
 
     activeFocusOnTab: true
@@ -30,7 +28,7 @@ PlasmaCore.ToolTipArea {
     // This makes the tasks mirrored, so we mirror them again to fix that.
     rotation: Plasmoid.configuration.reverseMode && Plasmoid.formFactor === PlasmaCore.Types.Vertical ? 180 : 0
 
-    implicitHeight: 30
+    implicitHeight: LayoutMetrics.preferredTaskHeight();
     implicitWidth: {
         if(tasksRoot.vertical) {
             return tasksRoot.width;
@@ -38,21 +36,17 @@ PlasmaCore.ToolTipArea {
             if(model.IsLauncher || model.IsStartup) {
                 return LayoutMetrics.preferredMinLauncherWidth();
             } else {
-                if(inPopup) {
-                    return 158;
-                }
-                else {
-                    var minWidth = LayoutMetrics.preferredMinWidth();
-                    var maxWidth = LayoutMetrics.preferredMaxWidth();
+                var minWidth = LayoutMetrics.preferredMinWidth(); // 158
+                var maxWidth = LayoutMetrics.preferredMaxWidth();
 
-                    var taskCount = taskList.contentItem.visibleChildren.length;
-                    if(taskCount <= 1) taskCount = taskList.count
-                    if(taskCount < 0) taskCount = 0;
-                    var launcherCount = tasksModel.logicalLauncherCount;
-                    if(launcherCount === 0) launcherCount = 1;
-                    var currentWidth = Math.floor((taskList.width - (LayoutMetrics.preferredMinLauncherWidth()+16) * (launcherCount)) / (taskList.count - tasksModel.logicalLauncherCount));
-                    return Math.min(maxWidth, Math.max(minWidth, currentWidth));
-                }
+
+                var taskCount = taskList.contentItem.visibleChildren.length;
+                if(taskCount <= 1) taskCount = taskList.count
+                if(taskCount < 0) taskCount = 0;
+                var launcherCount = tasksModel.logicalLauncherCount;
+                if(launcherCount === 0) launcherCount = 1;
+                var currentWidth = Math.floor((taskList.width - (LayoutMetrics.preferredMinLauncherWidth()+16) * (launcherCount)) / (taskList.count - tasksModel.logicalLauncherCount));
+                return Math.min(maxWidth, Math.max(minWidth, currentWidth));
             }
         }
     }
@@ -86,7 +80,6 @@ PlasmaCore.ToolTipArea {
     readonly property string appId: model.AppId.replace(/\.desktop/, '')
     property bool isLauncher: model.IsLauncher
     property bool toolTipOpen: false
-    property bool inPopup: false
     property bool isWindow: model.IsWindow
     property int childCount: model.ChildCount
     property int previousChildCount: 0
@@ -94,27 +87,25 @@ PlasmaCore.ToolTipArea {
     property alias mouseArea: dragArea
     property QtObject contextMenu: null
     property QtObject jumpList: null // Pointer to the reimplemented context menu.
+    property QtObject toolTip: tasksRoot.toolTipItem // Pointer to the rewritten tooltips.
     property bool jumpListOpen: jumpList !== null
-    //property bool containsMouseFalsePositive: false
-
-    readonly property bool hottrackingEnabled: !Plasmoid.configuration.disableHottracking && !inPopup
+    property bool wasActive: false
 
     onJumpListOpenChanged: {
         if(jumpList !== null) {
             Qt.callLater(() => { Plasmoid.setMouseGrab(true, jumpList); } );
-        }/* else {
-            dragArea.visible = false;
-            dragArea.visible = true;
-        }*/
+        } else {
+            task.wasActive = false;
+        }
     }
-    readonly property bool smartLauncherEnabled: !inPopup && !model.IsStartup
+    readonly property bool smartLauncherEnabled: !model.IsStartup
     property QtObject smartLauncherItem: null
     property Item audioStreamIcon: null
     property var audioStreams: []
     property bool delayAudioStreamIndicator: false
     property bool completed: false
     readonly property bool hasAudioStream: audioStreams.length > 0
-    readonly property bool playingAudio: hasAudioStream && audioStreams.some(function (item) {
+    readonly property bool playing: hasAudioStream && audioStreams.some(function (item) {
         return !item.corked
     })
     readonly property bool muted: hasAudioStream && audioStreams.every(function (item) {
@@ -123,13 +114,8 @@ PlasmaCore.ToolTipArea {
 
     readonly property bool highlighted: dragArea.containsMouse
 
-    active: false// (Plasmoid.configuration.showToolTips || tasksRoot.toolTipOpenedByClick === task) && !inPopup && !tasksRoot.groupDialog && !dragArea.held && dragArea.containsMouse
-    interactive: false //model.IsWindow || mainItem.playerData
-    location: Plasmoid.location
-    mainItem: model.IsWindow ? openWindowToolTipDelegate : pinnedAppToolTipDelegate
     readonly property bool animateLabel: (!model.IsStartup && !model.IsLauncher) && !tasksRoot.iconsOnly
     readonly property bool shouldHideOnRemoval: model.IsStartup || model.IsLauncher
-
     ListView.onRemove: {
             if (tasksRoot.containsMouse && index != tasksModel.count &&
                 task.model.WinIdList.length > 0 &&
@@ -209,16 +195,6 @@ PlasmaCore.ToolTipArea {
     Accessible.role: Accessible.Button
     Accessible.onPressAction: leftTapHandler.leftClick()
 
-    onToolTipVisibleChanged: toolTipVisible => {
-                                 task.toolTipOpen = toolTipVisible;
-                                 if (!toolTipVisible) {
-                                     tasksRoot.toolTipOpenedByClick = null;
-                                 } else {
-                                     tasksRoot.toolTipAreaItem = task;
-                                 }
-                             }
-
-
     onHighlightedChanged: {
         // ensure it doesn't get stuck with a window highlighted
         backend.cancelHighlightWindows();
@@ -244,9 +220,7 @@ PlasmaCore.ToolTipArea {
     }
 
     onIndexChanged: {
-        hideToolTip();
-
-        if (!inPopup && !tasksRoot.vertical
+        if (!tasksRoot.vertical
                 && !Plasmoid.configuration.separateLaunchers) {
             tasksRoot.requestLayout();
         }
@@ -272,31 +246,30 @@ TaskManagerApplet.SmartLauncherItem { }
     Keys.onSpacePressed: Keys.returnPressed(event);
     Keys.onUpPressed: Keys.leftPressed(event)
     Keys.onDownPressed: Keys.rightPressed(event)
-    Keys.onLeftPressed: if (!inPopup && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier)) {
+    Keys.onLeftPressed: if ((event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier)) {
                             tasksModel.move(task.index, task.index - 1);
                         } else {
                             event.accepted = false;
                         }
-    Keys.onRightPressed: if (!inPopup && (event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier)) {
+    Keys.onRightPressed: if ((event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier)) {
                              tasksModel.move(task.index, task.index + 1);
                          } else {
                              event.accepted = false;
                          }
 
     function modelIndex() {
-        return (inPopup ? tasksModel.makeModelIndex(groupDialog.visualParent.index, index)
-                        : tasksModel.makeModelIndex(index));
+        return tasksModel.makeModelIndex(index);
     }
-
 
     function showControlMenu(args) {
         moreMenu.openRelative();
     }
     function showContextMenu(args) {
-        //toolTipArea.hideImmediately();
+        if(toolTip) toolTip.destroy();
         if(Plasmoid.configuration.disableJumplists) {
             showFallbackContextMenu(args);
         } else {
+            if(model.IsActive) task.wasActive = true;
             var mIndex = modelIndex();
             jumpList = tasksRoot.createJumpList(task, mIndex, args);
             jumpList.menuDecoration = model.decoration;
@@ -304,8 +277,42 @@ TaskManagerApplet.SmartLauncherItem { }
             Qt.callLater(() => { jumpList.show(); tasksRoot.jumpListItem = jumpList; });
         }
     }
+
+    function showToolTip(args) {
+        tasksRoot.toolTipItem = tasksRoot.createToolTip(task, modelIndex(), args);
+        Qt.callLater(() => { toolTip.visible = true; });
+    }
+
+    function updateToolTipBindings(firstCreation, isList) {
+        toolTip.parentTask = task;
+
+        toolTip.firstCreation = firstCreation;
+        toolTip.list = isList;
+
+        toolTip.minimized = Qt.binding(() => model.IsMinimized);
+        toolTip.display = Qt.binding(() => model.display);
+        toolTip.icon = Qt.binding(() => model.decoration);
+        toolTip.active = Qt.binding(() => model.IsActive);
+        toolTip.pinned = Qt.binding(() => model.IsLauncher);
+        toolTip.startup = Qt.binding(() => model.IsStartup)
+        toolTip.windows = Qt.binding(() => model.WinIdList);
+        toolTip.modelIndex = Qt.binding(() => task.modelIndex());
+        toolTip.taskIndex = Qt.binding(() => model.index);
+        toolTip.pidParent = Qt.binding(() => model.AppPid);
+        toolTip.launcherUrl = Qt.binding(() => model.LauncherUrlWithoutIcon);
+        toolTip.childCount = Qt.binding(() => model.ChildCount);
+        toolTip.taskHovered = Qt.binding(() => dragArea.containsMouse);
+
+        toolTip.modelIndex = modelIndex();
+        toolTip.taskWidth = task.width;
+        toolTip.taskHeight = task.height;
+        toolTip.taskX = task.x;
+        toolTip.taskY = task.y;
+
+        toolTip.bindingsUpdated(); // used to refresh thumbnail
+    }
+
     function showFallbackContextMenu(args) {
-        task.hideImmediately();
         contextMenu = tasksRoot.createContextMenu(task, modelIndex(), args);
         contextMenu.show();
     }
@@ -439,10 +446,6 @@ TaskManagerApplet.SmartLauncherItem { }
             icon: "window-close"
 
             onClicked: {
-                /*if (tasks.groupDialog !== null && tasks.groupDialog.visualParent === visualParent) {
-                    tasks.groupDialog.visible = false;
-                }*/
-
                 tasksModel.requestClose(modelIndex());
             }
         }
@@ -491,38 +494,6 @@ TaskManagerApplet.SmartLauncherItem { }
         } else {
             task.audioStreams.forEach(function (item) { item.mute(); });
         }
-    }
-
-    // Will also be called in activateTaskAtIndex(index)
-    function updateMainItemBindings() {
-        if ((mainItem.parentTask === task && mainItem.rootIndex.row === task.index) || (tasksRoot.toolTipOpenedByClick === null && !task.active) || (tasksRoot.toolTipOpenedByClick !== null && tasksRoot.toolTipOpenedByClick !== task)) {
-            return;
-        }
-
-        mainItem.blockingUpdates = (mainItem.isGroup !== model.IsGroupParent); // BUG 464597 Force unload the previous component
-
-        mainItem.parentTask = task;
-        mainItem.rootIndex = tasksModel.makeModelIndex(index, -1);
-
-        mainItem.appName = Qt.binding(() => model.AppName);
-        mainItem.pidParent = Qt.binding(() => model.AppPid);
-        mainItem.windows = Qt.binding(() => model.WinIdList);
-        mainItem.isGroup = Qt.binding(() => model.IsGroupParent);
-        mainItem.icon = Qt.binding(() => model.decoration);
-        mainItem.launcherUrl = Qt.binding(() => model.LauncherUrlWithoutIcon);
-        mainItem.isLauncher = Qt.binding(() => model.IsLauncher);
-        mainItem.isMinimizedParent = Qt.binding(() => model.IsMinimized);
-        mainItem.displayParent = Qt.binding(() => model.display);
-        mainItem.genericName = Qt.binding(() => model.GenericName);
-        mainItem.virtualDesktopParent = Qt.binding(() => model.VirtualDesktops);
-        mainItem.isOnAllVirtualDesktopsParent = Qt.binding(() => model.IsOnAllVirtualDesktops);
-        mainItem.activitiesParent = Qt.binding(() => model.Activities);
-
-        mainItem.smartLauncherCountVisible = Qt.binding(() => task.smartLauncherItem && task.smartLauncherItem.countVisible);
-        mainItem.smartLauncherCount = Qt.binding(() => mainItem.smartLauncherCountVisible ? task.smartLauncherItem.count : 0);
-
-        mainItem.blockingUpdates = false;
-        tasksRoot.toolTipAreaItem = task;
     }
 
     Connections {
@@ -590,11 +561,20 @@ TaskManagerApplet.SmartLauncherItem { }
         acceptedButtons: Qt.LeftButton
         onTapped: leftClick()
 
-        function leftClick(): void {
-            if (Plasmoid.configuration.showToolTips && task.active) {
-                hideToolTip();
+        function leftClick() {
+            if(model.ChildCount > 1) {
+                if(!toolTip) {
+                    showToolTip();
+                    updateToolTipBindings(true, true);
+                } else if(toolTip) toolTip.destroy();
+                toolTipOpenTimer.stop();
+            } else {
+                if(toolTip) {
+                    toolTip.destroy();
+                }
+                toolTipOpenTimer.stop();
+                TaskTools.activateTask(modelIndex(), model, point.modifiers, task, Plasmoid, tasksRoot, effectWatcher.registered);
             }
-            TaskTools.activateTask(modelIndex(), model, point.modifiers, task, Plasmoid, tasksRoot, effectWatcher.registered);
         }
     }
 
@@ -636,7 +616,6 @@ TaskManagerApplet.SmartLauncherItem { }
 
         anchors.top: parent.top
         anchors.left: parent.left
-
         width: task.width
         height: task.height
 
@@ -826,7 +805,7 @@ TaskManagerApplet.SmartLauncherItem { }
         },
         State {
             name: "jumpListOpen"
-            when: (jumpList !== null) &&  task.hottrackingEnabled
+            when: (jumpList !== null) && !Plasmoid.configuration.disableHottracking
             PropertyChanges {
                 target: glow
                 opacity: 1
@@ -840,7 +819,7 @@ TaskManagerApplet.SmartLauncherItem { }
         },
         State {
             name: "startup"
-            when: (model.IsStartup || containerRect.loadingNewInstance)
+            when: (model.IsStartup || containerRect.loadingNewInstance) && !Plasmoid.configuration.disableHottracking
             PropertyChanges {
                 target: animationGlow
                 opacity: 1
@@ -861,7 +840,7 @@ TaskManagerApplet.SmartLauncherItem { }
         },
         State {
             name: "loaded"
-            when: !(model.IsStartup || model.IsLauncher) && task.tasksRoot.animationManager.getItem(task.appId) &&  task.hottrackingEnabled
+            when: !(model.IsStartup || model.IsLauncher) && task.tasksRoot.animationManager.getItem(task.appId) && !Plasmoid.configuration.disableHottracking
             PropertyChanges {
                 target: animationBorderGradient
                 opacity: 0
@@ -885,17 +864,13 @@ TaskManagerApplet.SmartLauncherItem { }
 
             anchors {
                 fill: parent
-                bottomMargin: 1
-                topMargin: 1
-                rightMargin: !inPopup ? 0 : -Kirigami.Units.largeSpacing
-                leftMargin: !inPopup ? 0 : -Kirigami.Units.largeSpacing
             }
 
             imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
             visible: model.IsLauncher// && !task.containsMouseFalsePositive
             prefix: {
                 if(dragArea.held || dragArea.containsPress) return "pressed-tab";
-                else if(task.highlighted) return "active-tab";
+                else if(dragArea.containsMouse) return "active-tab";
                 else return "";
             }
         }
@@ -921,9 +896,9 @@ TaskManagerApplet.SmartLauncherItem { }
         }
         RadialGradient {
             id: animationGlow
-            anchors.fill: frame
+            anchors.fill: parent
             anchors.margins: 2
-            visible:  task.hottrackingEnabled
+            visible: !Plasmoid.configuration.disableHottracking
             //visible: model.IsStartup
             opacity: 0//frame.isHovered && !dragArea.held ? 1 : 0
             Behavior on opacity {
@@ -942,9 +917,9 @@ TaskManagerApplet.SmartLauncherItem { }
         }
         RadialGradient {
             id: glow
-            anchors.fill: frame
+            anchors.fill: parent
             anchors.margins: 2
-            visible: !model.IsLauncher && task.hottrackingEnabled
+            visible: !model.IsLauncher && !Plasmoid.configuration.disableHottracking
             opacity: ((frame.isHovered && !dragArea.held && !(attentionFadeIn.running || attentionFadeOut.running)) ? 1 : 0) * canShow
             property real canShow: containerRect.state === "startup" ? 0 : 1 // Used for the startup animation
             Behavior on opacity {
@@ -968,14 +943,11 @@ TaskManagerApplet.SmartLauncherItem { }
             id: animationBorderGradient
             anchors.fill: borderGradient
             source: borderGradient
-            visible: task.hottrackingEnabled
+            visible: !Plasmoid.configuration.disableHottracking
             opacity: 0
             gradient: Gradient {
                 GradientStop { position: 0.0; color: containerRect.glowColorCenter }
                 GradientStop { position: 0.3; color: containerRect.glowColor }
-            }
-            Behavior on horizontalOffset {
-                NumberAnimation { duration: containerRect.state === "jumpListOpen" ? 250 : 0; easing.type: Easing.Linear }
             }
             verticalOffset: parent.height / 2
             verticalRadius: task.height * 1.5
@@ -986,10 +958,13 @@ TaskManagerApplet.SmartLauncherItem { }
             id: borderGradientRender
             anchors.fill: borderGradient
             source: borderGradient
-            visible: !model.IsLauncher && task.hottrackingEnabled
+            visible: !model.IsLauncher && !Plasmoid.configuration.disableHottracking
             opacity: (frame.isHovered && !dragArea.held && !(attentionFadeIn.running || attentionFadeOut.running)) ? 1 : 0
             Behavior on opacity {
                 NumberAnimation { duration: 250; easing.type: Easing.Linear }
+            }
+            Behavior on horizontalOffset {
+                NumberAnimation { duration: containerRect.state === "jumpListOpen" ? 250 : 0; easing.type: Easing.Linear }
             }
             gradient: Gradient {
                 GradientStop { position: 0.0; color: containerRect.glowColorCenter }
@@ -1003,9 +978,8 @@ TaskManagerApplet.SmartLauncherItem { }
         }
         Rectangle {
             id: attentionIndicator
-            anchors.fill: frame
-            visible: task.hottrackingEnabled
-            anchors.rightMargin: 0
+            anchors.fill: parent
+            visible: !Plasmoid.configuration.disableHottracking
             property bool requiresAttention: model.IsDemandingAttention || (task.smartLauncherItem && task.smartLauncherItem.urgent)
             color: "transparent"
             Rectangle {
@@ -1277,61 +1251,40 @@ TaskManagerApplet.SmartLauncherItem { }
 
                 bottomMargin: 1
                 topMargin: 1
-                rightMargin: !inPopup ? 0 : -Kirigami.Units.largeSpacing
-                leftMargin: !inPopup ? 0 : -Kirigami.Units.largeSpacing
             }
-
             imagePath: Qt.resolvedUrl("svgs/tasks.svg")
-
-            property bool isHovered: task.highlighted
-            property bool isActive: model.IsActive
-                                    || dragArea.containsPress
-                                    || dragArea.held
-                                    || (task.contextMenu && task.contextMenu.status === PlasmaExtras.Menu.Open) || (task.jumpList)
-                                    || (!!tasksRoot.groupDialog && tasksRoot.groupDialog.visualParent === task)
-
-            property string base: {
+            property bool isHovered: (task.highlighted && Plasmoid.configuration.taskHoverEffect)
+            property bool isActive: model.IsActive || dragArea.containsPress || dragArea.held || task.wasActive
+            property string basePrefix: {
                 if(model.IsLauncher) return "";
-                if(attentionIndicator.requiresAttention && !hottrackingEnabled && !isHovered) return "attention";
+                if(attentionIndicator.requiresAttention && Plasmoid.configuration.disableHottracking) return "attention";
                 if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) return "active";
-                if(!inPopup) return "normal";
-                else if (isHovered && !attentionIndicator.requiresAttention) return "normal";
-                else return "";
+                return "normal";
             }
-            property string baseSuffix: {
-                if(isHovered && !dragArea.held && Plasmoid.configuration.disableHottracking) {
-                    return "-hover"
-                } else return ""
-            }
-
-            prefix: base + baseSuffix
+            prefix: (basePrefix + ((isHovered && !attentionIndicator.requiresAttention) ? "-hover" : ""))
         }
 
         Loader {
             id: taskProgressOverlayLoader
 
             anchors.fill: frame
+            anchors.margins: -1
             asynchronous: true
             active: model.IsWindow && task.smartLauncherItem && task.smartLauncherItem.progressVisible
 
             source: "TaskProgressOverlay.qml"
-        }
 
+            z: -1
+        }
 
         RowLayout {
             id: contentBox
 
             spacing: Kirigami.Units.smallSpacing
 
-            property int rightMargin: {
-                if(inPopup) {
-                    return Kirigami.Units.smallSpacing;
-                } else return Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
-            }
+            property int rightMargin: Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
             property int leftMargin: {
-                if(inPopup) {
-                    return Kirigami.Units.largeSpacing;
-                } else if(model.IsActive) {
+                if(model.IsActive) {
                     return Kirigami.Units.smallSpacing*2 - Kirigami.Units.smallSpacing/4;
                 } else return Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
             }
@@ -1366,28 +1319,23 @@ TaskManagerApplet.SmartLauncherItem { }
                 }
             }
 
-            Components.Label {
+            PlasmaComponents3.Label {
                 id: groupLabel
 
-                visible: label.visible && model.ChildCount > 0
+                visible: model.ChildCount > 0
 
-                //Layout.leftMargin: ((dragArea.containsPress || dragArea.held) ? -1 : 0)
-                //Layout.rightMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.preferredWidth: 3
-                Layout.rightMargin: Kirigami.Units.smallSpacing/2
-
-                wrapping: Text.NoWrap
-                bold: true
-                alignmentV: Text.AlignVCenter
-                foreground: "white"
+                textFormat: Text.PlainText
+                verticalAlignment: Text.AlignVCenter
+                maximumLineCount: 1
+                style: Text.Outline
+                styleColor: "#02ffffff"
+                font.bold: true
 
                 Accessible.ignored: true
 
                 // use State to avoid unnecessary re-evaluation when the label is invisible
                 states: State {
-                    name: "labelVisible"
+                    name: "groupLabelVisible"
                     when: groupLabel.visible
 
                     PropertyChanges {
@@ -1395,38 +1343,41 @@ TaskManagerApplet.SmartLauncherItem { }
                         text: model.ChildCount
                     }
                 }
-
             }
 
-            Components.Label {
+            PlasmaComponents3.Label {
                 id: label
 
-                //Layout.leftMargin: ((dragArea.containsPress || dragArea.held) ? -1 : 0)
-                //Layout.rightMargin: ((dragArea.containsPress || dragArea.held) ? 1 : 0)
+                visible: (!iconsOnly && !model.IsLauncher
+                    && (parent.width - iconBox.height - Kirigami.Units.smallSpacing) >= LayoutMetrics.spaceRequiredToShowText())
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                wrapping: Text.NoWrap
-                visible: (parent.width) >= LayoutMetrics.spaceRequiredToShowText()
-                alignmentV: Text.AlignVCenter
-                foreground: "white"
+                wrapMode: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
+                elide: Text.ElideRight
+                textFormat: Text.PlainText
+                verticalAlignment: Text.AlignVCenter
+                maximumLineCount: 1//Plasmoid.configuration.maxTextLines || undefined
+                style: Text.Outline
+                styleColor: "#02ffffff"
 
-                    Accessible.ignored: true
+                Accessible.ignored: true
 
-                    // use State to avoid unnecessary re-evaluation when the label is invisible
-                    states: State {
-                        name: "labelVisible"
-                        when: label.visible
+                // use State to avoid unnecessary re-evaluation when the label is invisible
+                states: State {
+                    name: "labelVisible"
+                    when: label.visible
 
-                        PropertyChanges {
-                            target: label
-                            text: model.display
-                        }
+                    PropertyChanges {
+                        target: label
+                        text: model.display
                     }
+                }
             }
 
         }
+
         KSvg.SvgItem {
             id: groupIndicator
 
@@ -1471,13 +1422,29 @@ TaskManagerApplet.SmartLauncherItem { }
         }
     }
 
+    Timer {
+        id: toolTipOpenTimer
+        interval: 500
+        running: dragArea.containsMouse && !dragArea.held
+        onTriggered: {
+            if(model.ChildCount > 0 && !tasksRoot.compositionEnabled) return;
+            else {
+                if(!toolTip) {
+                    showToolTip();
+                    updateToolTipBindings(true, false);
+                } else if(toolTip) {
+                    if(!toolTip.list) updateToolTipBindings(false, false);
+                }
+            }
+        }
+    }
+
     MouseArea {
         id: dragArea
         property alias taskIndex: task.index
         hoverEnabled: true
         enabled: ((tasksRoot.jumpListItem === jumpList) || (tasksRoot.jumpListItem === null))
         propagateComposedEvents: true
-        //preventStealing: true
         anchors.fill: parent
 
         onCanceled: {
@@ -1486,11 +1453,8 @@ TaskManagerApplet.SmartLauncherItem { }
             }
         }
         onContainsMouseChanged: {
-            if (containsMouse) {
-                task.forceActiveFocus(Qt.MouseFocusReason);
-                task.updateMainItemBindings();
-            } else {
-                tasksRoot.toolTipOpenedByClick = null;
+            if (containsMouse && toolTip) {
+                if((!model.IsLauncher || model.ChildCount == 0) && !toolTip.list) task.updateToolTipBindings(false, false);
             }
         }
         property bool held: false
@@ -1536,7 +1500,7 @@ TaskManagerApplet.SmartLauncherItem { }
             }
         }
         onEntered: {
-            Plasmoid.sendMouseEvent(dragArea);
+            if(!held) Plasmoid.sendMouseEvent(dragArea);
         }
         onPositionChanged: {
             //task.containsMouseFalsePositive = false;
@@ -1548,19 +1512,13 @@ TaskManagerApplet.SmartLauncherItem { }
             currentDrag = Qt.point(containerRect.x, containerRect.y);
         }
         function sendItemBack() {
-            if(Plasmoid.configuration.enableAnimations && Plasmoid.configuration.draggingEnabled) {
-                beginDrag = Qt.point(task.x, task.y);
-                backAnimX.from = currentDrag.x //- taskList.contentX;
-                backAnimX.to = beginDrag.x - taskList.contentX;
-                backAnimY.from = currentDrag.y// - taskList.contentY;
-                backAnimY.to = beginDrag.y - taskList.contentY;
-                backAnim.start();
-                dragThreshold = Qt.point(-1,-1);
-            } else {
-                beginDrag = Qt.point(task.x, task.y);
-                dragThreshold = Qt.point(-1,-1);
-                dragArea.held = false;
-            }
+            beginDrag = Qt.point(task.x, task.y);
+            backAnimX.from = currentDrag.x //- taskList.contentX;
+            backAnimX.to = beginDrag.x - taskList.contentX;
+            backAnimY.from = currentDrag.y// - taskList.contentY;
+            backAnimY.to = beginDrag.y - taskList.contentY;
+            backAnim.start();
+            dragThreshold = Qt.point(-1,-1);
         }
         onReleased: event => {
             if(held) {
@@ -1573,6 +1531,7 @@ TaskManagerApplet.SmartLauncherItem { }
         }
     }
     DropArea {
+        id: dropArea
         visible: tasksRoot.dragItem !== null;
         anchors {
             fill: parent
@@ -1584,23 +1543,104 @@ TaskManagerApplet.SmartLauncherItem { }
         onEntered: (drag) => {
             if(drag.source.taskIndex === task.index) return;
             tasksModel.move(drag.source.taskIndex, task.index);
+        }
+    }
 
+    DropArea {
+        signal urlsDropped(var urls)
+
+        visible: !dropArea.visible // just to make sure it doesn't conflict with the dragging droparea
+
+        anchors.fill: parent
+
+        onPositionChanged: {
+            if(model.ChildCount == 0) {
+                if(toolTip) {
+                    toolTip.dragDrop = false;
+                }
+            }
+            activationTimer.restart();
+        }
+
+        onExited: {
+            if(toolTip) {
+                toolTip.dragDrop = false;
+            }
+            activationTimer.stop();
+        }
+
+        onDropped: event => {
+            // Reject internal drops.
+            if (event.formats.indexOf("application/x-orgkdeplasmataskmanager_taskbuttonitem") >= 0) {
+                event.accepted = false;
+                return;
+            }
+
+            // Reject plasmoid drops.
+            if (event.formats.indexOf("text/x-plasmoidservicename") >= 0) {
+                event.accepted = false;
+                return;
+            }
+
+            if (event.hasUrls) {
+                urlsDropped(event.urls);
+                return;
+            }
+        }
+
+        onUrlsDropped: (urls) => {
+            // If all dropped URLs point to application desktop files, we'll add a launcher for each of them.
+            var createLaunchers = urls.every(function (item) {
+                return backend.isApplication(item)
+            });
+
+            if (createLaunchers) {
+                return;
+            }
+
+            // Otherwise we'll just start a new instance of the application with the URLs as argument,
+            // as you probably don't expect some of your files to open in the app and others to spawn launchers.
+            if(model.ChildCount == 0) {
+                tasksModel.requestOpenUrls(task.modelIndex(), urls);
+            } else if(model.ChildCount > 0) {
+                if(toolTip) {
+                    toolTip.dragDrop = false;
+                }
+            }
+        }
+
+        Timer {
+            id: activationTimer
+
+            interval: 250
+            repeat: false
+
+            onTriggered: {
+                if(task.model.ChildCount > 0) {
+                    if(!toolTip) {
+                        showToolTip(false)
+                        toolTip.dragDrop = true;
+                        updateToolTipBindings(true, true);
+                    }
+                }
+                else {
+                    if(toolTip) {
+                        toolTip.dragDrop = false;
+                    }
+                    tasksModel.requestActivate(modelIndex());
+                }
+            }
         }
     }
 
     Component.onCompleted: {
-        if (!inPopup && model.IsWindow) {
+        if (model.IsWindow) {
             updateAudioStreams({delay: false});
         }
 
-        if (!inPopup && !model.IsWindow) {
+        if (!model.IsWindow) {
             taskInitComponent.createObject(task);
         }
         completed = true;
-    }
-    Component.onDestruction: {
-        /*if (moveAnim.running) {
-            task.parent.animationsRunning -= 1; // why is this null sometimes? It has to be because the task delegate becomes parent-less
-        }*/
     }
 }

@@ -42,6 +42,10 @@
       <label>Whether to group always or only when the widget runs out of space to show additional task buttons comfortably.</label>
       <default>true</default>
     </entry>
+    <entry name="thmbnlCaptionAlignment" type="Int">
+      <label>Window previews caption alignment. 0 = Left, 1 = Center, 2 = Right</label>
+      <default>0</default>
+    </entry>
     <entry name="groupingAppIdBlacklist" type="StringList">
       <label>The id's (usually .desktop file names) of applications that should not have their tasks grouped.</label>
       <default></default>
@@ -105,6 +109,9 @@
     </entry>
     <entry name="indicateAudioStreams" type="Bool">
       <label>Whether to indicate applications that are playing audio including an option to mute them.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showPreviews" type="Bool">
       <default>true</default>
     </entry>
     <entry name="showLabels" type="Bool">

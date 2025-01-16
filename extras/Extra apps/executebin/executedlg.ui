@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ExecuteDlg</class>
+ <widget class="QMainWindow" name="ExecuteDlg">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>397</width>
+    <height>175</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Run...</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="shell32.qrc">
+    <normaloff>:/16</normaloff>:/16</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QListView" name="listView">
+    <property name="geometry">
+     <rect>
+      <x>2</x>
+      <y>2</y>
+      <width>394</width>
+      <height>122</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::NoFrame</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cancelBtn">
+    <property name="geometry">
+     <rect>
+      <x>206</x>
+      <y>137</y>
+      <width>86</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="browseBtn">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>137</y>
+      <width>88</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Browse...</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="okBtn">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>137</y>
+      <width>88</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>OK</string>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="open">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>72</y>
+      <width>42</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Open:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="description">
+    <property name="geometry">
+     <rect>
+      <x>72</x>
+      <y>6</y>
+      <width>313</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="icon">
+    <property name="geometry">
+     <rect>
+      <x>18</x>
+      <y>22</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="shell32.qrc">:/32</pixmap>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>72</x>
+      <y>78</y>
+      <width>308</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
+    </property>
+    <property name="frame">
+     <bool>true</bool>
+    </property>
+    <property name="clearButtonEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="shell32.qrc"/>
+ </resources>
+ <connections/>
+</ui>

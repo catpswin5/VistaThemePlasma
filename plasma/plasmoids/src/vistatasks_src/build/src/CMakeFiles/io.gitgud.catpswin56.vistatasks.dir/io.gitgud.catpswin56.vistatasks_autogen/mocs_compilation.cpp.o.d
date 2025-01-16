@@ -420,12 +420,23 @@ src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatas
  /usr/include/qt6/QtQuick/qquickitemgrabresult.h \
  /usr/include/qt6/QtCore/QUrl /usr/include/qt6/QtGui/QImage \
  /usr/include/qt6/QtQml/QJSValue /usr/include/qt6/QtQml/qjsvalue.h \
- /usr/include/qt6/QtGui/QWindow /usr/include/qt6/QtGui/qwindow.h \
- /usr/include/qt6/QtCore/QEvent /usr/include/qt6/QtCore/qcoreevent.h \
- /usr/include/qt6/QtCore/QMargins /usr/include/qt6/QtCore/qmargins.h \
- /usr/include/qt6/QtGui/qsurface.h \
+ /usr/include/qt6/QtQuick/QQuickWindow \
+ /usr/include/qt6/QtQuick/qquickwindow.h \
+ /usr/include/qt6/QtQuick/qsgrendererinterface.h \
+ /usr/include/qt6/QtQuick/qsgnode.h \
+ /usr/include/qt6/QtQuick/qsggeometry.h /usr/include/qt6/QtCore/QRectF \
+ /usr/include/qt6/QtGui/QMatrix4x4 /usr/include/qt6/QtGui/qmatrix4x4.h \
+ /usr/include/qt6/QtGui/qvector3d.h /usr/include/qt6/QtGui/qvector4d.h \
+ /usr/include/qt6/QtGui/qquaternion.h \
+ /usr/include/qt6/QtGui/qgenericmatrix.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/float.h \
+ /usr/include/qt6/QtGui/qwindow.h /usr/include/qt6/QtCore/QEvent \
+ /usr/include/qt6/QtCore/qcoreevent.h /usr/include/qt6/QtCore/QMargins \
+ /usr/include/qt6/QtCore/qmargins.h /usr/include/qt6/QtGui/qsurface.h \
  /usr/include/qt6/QtGui/qsurfaceformat.h /usr/include/qt6/QtGui/qcursor.h \
- /usr/include/qt6/QtGui/qbitmap.h /usr/include/qt6/QtGui/QCursor \
+ /usr/include/qt6/QtGui/qbitmap.h /usr/include/qt6/QtQml/qqmldebug.h \
+ /usr/include/qt6/QtQml/qqmlinfo.h /usr/include/qt6/QtGui/QWindow \
+ /usr/include/qt6/QtGui/qwindow.h /usr/include/qt6/QtGui/QCursor \
  /usr/include/qt6/QtGui/qcursor.h /usr/include/qt6/QtCore/QVariantList \
  /usr/include/qt6/QtCore/qvariantlist.h /usr/include/qt6/QtCore/QVariant \
  /usr/include/KF6/KWindowSystem/kx11extras.h \
@@ -437,4 +448,28 @@ src/CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatas
  /usr/include/KF6/KWindowSystem/kwindowsystem_export.h \
  /usr/include/qt6/QtGui/QWidgetList /usr/include/qt6/QtGui/qwindowdefs.h \
  /usr/include/qt6/QtGui/QRegion /usr/include/qt6/QtGui/qregion.h \
+ /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/EWIEGA46WW/../../../../src/dialogshadows_p.h \
+ /usr/include/qt6/QtCore/QSet /usr/include/qt6/QtCore/qset.h \
+ /usr/include/KF6/KSvg/KSvg/FrameSvg \
+ /usr/include/KF6/KSvg/ksvg/framesvg.h \
+ /usr/include/KF6/KSvg/ksvg/ksvg_export.h \
+ /usr/include/KF6/KSvg/ksvg_version.h /usr/include/KF6/KSvg/ksvg/svg.h \
+ /usr/include/KF6/KSvg/ksvg/imageset.h \
+ /usr/include/KF6/KConfigCore/KSharedConfig \
+ /usr/include/KF6/KConfigCore/ksharedconfig.h \
+ /usr/include/KF6/KConfigCore/kconfig.h \
+ /usr/include/qt6/QtCore/QByteArray /usr/include/qt6/QtCore/qbytearray.h \
+ /usr/include/qt6/QtCore/QList /usr/include/qt6/QtCore/QStandardPaths \
+ /usr/include/qt6/QtCore/qstandardpaths.h /usr/include/KF6/KSvg/KSvg/Svg \
+ /usr/include/PlasmaQuick/plasmaquick/dialog.h \
+ /usr/include/qt6/QtQml/QQmlParserStatus \
+ /usr/include/qt6/QtQml/qqmlparserstatus.h \
+ /usr/include/qt6/QtQuick/QQuickItem \
+ /usr/include/qt6/QtQuick/QQuickWindow \
+ /usr/include/qt6/QtCore/QScopedPointer \
+ /usr/include/qt6/QtCore/qscopedpointer.h \
+ /usr/include/Plasma/Plasma/Theme /usr/include/Plasma/plasma/theme.h \
+ /usr/include/qt6/QtGui/QFont /usr/include/qt6/QtGui/qfont.h \
+ /usr/include/KF6/KWindowSystem/netwm_def.h \
+ /usr/include/PlasmaQuick/plasmaquick/plasmaquick_export.h \
  /usr/include/qt6/QtCore/qtmochelpers.h

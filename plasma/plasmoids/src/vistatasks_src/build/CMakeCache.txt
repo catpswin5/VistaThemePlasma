@@ -509,6 +509,9 @@ QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH:STRING=
 //Additional directories where find(Qt6 ...) components are searched
 QT_ADDITIONAL_PACKAGES_PREFIX_PATH:STRING=
 
+//The directory containing a CMake configuration file for Qt6Concurrent.
+Qt6Concurrent_DIR:PATH=/usr/lib/cmake/Qt6Concurrent
+
 //The directory containing a CMake configuration file for Qt6CoreTools.
 Qt6CoreTools_DIR:PATH=/usr/lib/cmake/Qt6CoreTools
 
@@ -520,6 +523,9 @@ Qt6DBusTools_DIR:PATH=/usr/lib/cmake/Qt6DBusTools
 
 //The directory containing a CMake configuration file for Qt6DBus.
 Qt6DBus_DIR:PATH=/usr/lib/cmake/Qt6DBus
+
+//The directory containing a CMake configuration file for Qt6ExamplesAssetDownloaderPrivate.
+Qt6ExamplesAssetDownloaderPrivate_DIR:PATH=/usr/lib/cmake/Qt6ExamplesAssetDownloaderPrivate
 
 //The directory containing a CMake configuration file for Qt6GuiTools.
 Qt6GuiTools_DIR:PATH=/usr/lib/cmake/Qt6GuiTools
@@ -533,8 +539,11 @@ Qt6Network_DIR:PATH=/usr/lib/cmake/Qt6Network
 //The directory containing a CMake configuration file for Qt6OpenGL.
 Qt6OpenGL_DIR:PATH=/usr/lib/cmake/Qt6OpenGL
 
-//The directory containing a CMake configuration file for Qt6QmlCompilerPlusPrivate.
-Qt6QmlCompilerPlusPrivate_DIR:PATH=Qt6QmlCompilerPlusPrivate_DIR-NOTFOUND
+//The directory containing a CMake configuration file for Qt6QmlAssetDownloader.
+Qt6QmlAssetDownloader_DIR:PATH=/usr/lib/cmake/Qt6QmlAssetDownloader
+
+//The directory containing a CMake configuration file for Qt6QmlCompilerPlusPrivateTools.
+Qt6QmlCompilerPlusPrivateTools_DIR:PATH=Qt6QmlCompilerPlusPrivateTools_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for Qt6QmlIntegration.
 Qt6QmlIntegration_DIR:PATH=/usr/lib/cmake/Qt6QmlIntegration
@@ -1017,7 +1026,7 @@ CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
 CMAKE_CACHE_MINOR_VERSION:INTERNAL=31
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=1
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=3
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -1174,9 +1183,9 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Gettext
 FIND_PACKAGE_MESSAGE_DETAILS_Gettext:INTERNAL=[/usr/bin/msgmerge][/usr/bin/msgfmt][v0.22.5()]
 //Details about finding KF6
-FIND_PACKAGE_MESSAGE_DETAILS_KF6:INTERNAL=[success][cfound components: I18n ][v6.8.0()]
+FIND_PACKAGE_MESSAGE_DETAILS_KF6:INTERNAL=[success][cfound components: I18n ][v6.9.0()]
 //Details about finding KF6I18n
-FIND_PACKAGE_MESSAGE_DETAILS_KF6I18n:INTERNAL=[/usr/lib/cmake/KF6I18n/KF6I18nConfig.cmake][v6.8.0()]
+FIND_PACKAGE_MESSAGE_DETAILS_KF6I18n:INTERNAL=[/usr/lib/cmake/KF6I18n/KF6I18nConfig.cmake][v6.9.0()]
 //Details about finding OpenGL
 FIND_PACKAGE_MESSAGE_DETAILS_OpenGL:INTERNAL=[/usr/lib/libOpenGL.so][/usr/lib/libGLX.so][/usr/include][c ][v()]
 //Details about finding WrapAtomic
@@ -1350,11 +1359,11 @@ PKG_FONTCONFIG_STATIC_CFLAGS:INTERNAL=-I/usr/include;-I/usr/include/freetype2;-I
 PKG_FONTCONFIG_STATIC_CFLAGS_I:INTERNAL=
 PKG_FONTCONFIG_STATIC_CFLAGS_OTHER:INTERNAL=-DWITH_GZFILEOP;-pthread;-DXML_STATIC
 PKG_FONTCONFIG_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include;/usr/include/freetype2;/usr/include/libpng16;/usr/include/harfbuzz;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/include/sysprof-6
-PKG_FONTCONFIG_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lfontconfig;-pthread;-lfreetype;-L/usr/lib;-lbz2;-lpng16;-lm;-lm;-lz;-lharfbuzz;-pthread;-lm;-lglib-2.0;-lm;-lsysprof-capture-4;-pthread;-lpcre2-8;-lgraphite2;-lbrotlidec;-lbrotlicommon;-lexpat;-lm
+PKG_FONTCONFIG_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lfontconfig;-pthread;-lfreetype;-lbz2;-lpng16;-lm;-lm;-lz;-lharfbuzz;-pthread;-lm;-lglib-2.0;-lm;-lsysprof-capture-4;-pthread;-lpcre2-8;-lgraphite2;-lbrotlidec;-lbrotlicommon;-lexpat;-lm
 PKG_FONTCONFIG_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread;-pthread;-pthread
 PKG_FONTCONFIG_STATIC_LIBDIR:INTERNAL=
 PKG_FONTCONFIG_STATIC_LIBRARIES:INTERNAL=fontconfig;freetype;bz2;png16;m;m;z;harfbuzz;m;glib-2.0;m;sysprof-capture-4;pcre2-8;graphite2;brotlidec;brotlicommon;expat;m
-PKG_FONTCONFIG_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib;/usr/lib
+PKG_FONTCONFIG_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib
 PKG_FONTCONFIG_STATIC_LIBS:INTERNAL=
 PKG_FONTCONFIG_STATIC_LIBS_L:INTERNAL=
 PKG_FONTCONFIG_STATIC_LIBS_OTHER:INTERNAL=
@@ -1449,6 +1458,8 @@ QT_FEATURE_avx512vbmi2:INTERNAL=ON
 QT_FEATURE_avx512vl:INTERNAL=ON
 //Qt feature: backtrace (from target Qt6::Core)
 QT_FEATURE_backtrace:INTERNAL=ON
+//Qt feature: broken_threadlocal_dtors (from target Qt6::Core)
+QT_FEATURE_broken_threadlocal_dtors:INTERNAL=OFF
 //Qt feature: brotli (from target Qt6::Network)
 QT_FEATURE_brotli:INTERNAL=ON
 //Qt feature: cborstreamreader (from target Qt6::Core)

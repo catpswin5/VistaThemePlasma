@@ -4,21 +4,33 @@
 /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/timestamp
  /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/io.gitgud.catpswin56.vistatasks_autogen/moc_predefs.h
  /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/CMakeLists.txt
+ /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/dialogshadows.cpp
+ /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/dialogshadows_p.h
  /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/metadata.json
  /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.cpp
  /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.h
  /usr/bin/cmake
  /usr/include/KF6/KConfig/kconfig_version.h
  /usr/include/KF6/KConfigCore/KConfigGroup
+ /usr/include/KF6/KConfigCore/KSharedConfig
+ /usr/include/KF6/KConfigCore/kconfig.h
  /usr/include/KF6/KConfigCore/kconfigbase.h
  /usr/include/KF6/KConfigCore/kconfigconversioncheck_p.h
  /usr/include/KF6/KConfigCore/kconfigcore_export.h
  /usr/include/KF6/KConfigCore/kconfiggroup.h
+ /usr/include/KF6/KConfigCore/ksharedconfig.h
  /usr/include/KF6/KCoreAddons/KPluginFactory
  /usr/include/KF6/KCoreAddons/kcoreaddons_export.h
  /usr/include/KF6/KCoreAddons/kcoreaddons_version.h
  /usr/include/KF6/KCoreAddons/kpluginfactory.h
  /usr/include/KF6/KCoreAddons/kpluginmetadata.h
+ /usr/include/KF6/KSvg/KSvg/FrameSvg
+ /usr/include/KF6/KSvg/KSvg/Svg
+ /usr/include/KF6/KSvg/ksvg/framesvg.h
+ /usr/include/KF6/KSvg/ksvg/imageset.h
+ /usr/include/KF6/KSvg/ksvg/ksvg_export.h
+ /usr/include/KF6/KSvg/ksvg/svg.h
+ /usr/include/KF6/KSvg/ksvg_version.h
  /usr/include/KF6/KWindowSystem/kwindoweffects.h
  /usr/include/KF6/KWindowSystem/kwindowinfo.h
  /usr/include/KF6/KWindowSystem/kwindowsystem.h
@@ -28,10 +40,14 @@
  /usr/include/KF6/KWindowSystem/netwm_def.h
  /usr/include/Plasma/Plasma/Applet
  /usr/include/Plasma/Plasma/Plasma
+ /usr/include/Plasma/Plasma/Theme
  /usr/include/Plasma/plasma/applet.h
  /usr/include/Plasma/plasma/plasma.h
  /usr/include/Plasma/plasma/plasma_export.h
+ /usr/include/Plasma/plasma/theme.h
  /usr/include/Plasma/plasma_version.h
+ /usr/include/PlasmaQuick/plasmaquick/dialog.h
+ /usr/include/PlasmaQuick/plasmaquick/plasmaquick_export.h
  /usr/include/alloca.h
  /usr/include/asm-generic/errno-base.h
  /usr/include/asm-generic/errno.h
@@ -278,6 +294,7 @@
  /usr/include/linux/limits.h
  /usr/include/locale.h
  /usr/include/pthread.h
+ /usr/include/qt6/QtCore/QByteArray
  /usr/include/qt6/QtCore/QDate
  /usr/include/qt6/QtCore/QEvent
  /usr/include/qt6/QtCore/QExplicitlySharedDataPointer
@@ -289,8 +306,12 @@
  /usr/include/qt6/QtCore/QObject
  /usr/include/qt6/QtCore/QPoint
  /usr/include/qt6/QtCore/QRect
+ /usr/include/qt6/QtCore/QRectF
+ /usr/include/qt6/QtCore/QScopedPointer
+ /usr/include/qt6/QtCore/QSet
  /usr/include/qt6/QtCore/QSize
  /usr/include/qt6/QtCore/QSizeF
+ /usr/include/qt6/QtCore/QStandardPaths
  /usr/include/qt6/QtCore/QString
  /usr/include/qt6/QtCore/QStringList
  /usr/include/qt6/QtCore/QUrl
@@ -398,6 +419,7 @@
  /usr/include/qt6/QtCore/qsharedpointer_impl.h
  /usr/include/qt6/QtCore/qsize.h
  /usr/include/qt6/QtCore/qspan.h
+ /usr/include/qt6/QtCore/qstandardpaths.h
  /usr/include/qt6/QtCore/qstring.h
  /usr/include/qt6/QtCore/qstringalgorithms.h
  /usr/include/qt6/QtCore/qstringbuilder.h
@@ -446,10 +468,12 @@
  /usr/include/qt6/QtGui/QAction
  /usr/include/qt6/QtGui/QColor
  /usr/include/qt6/QtGui/QCursor
+ /usr/include/qt6/QtGui/QFont
  /usr/include/qt6/QtGui/QGuiApplication
  /usr/include/qt6/QtGui/QIcon
  /usr/include/qt6/QtGui/QImage
  /usr/include/qt6/QtGui/QKeySequence
+ /usr/include/qt6/QtGui/QMatrix4x4
  /usr/include/qt6/QtGui/QMouseEvent
  /usr/include/qt6/QtGui/QPixmap
  /usr/include/qt6/QtGui/QRegion
@@ -466,6 +490,7 @@
  /usr/include/qt6/QtGui/qevent.h
  /usr/include/qt6/QtGui/qeventpoint.h
  /usr/include/qt6/QtGui/qfont.h
+ /usr/include/qt6/QtGui/qgenericmatrix.h
  /usr/include/qt6/QtGui/qguiapplication.h
  /usr/include/qt6/QtGui/qguiapplication_platform.h
  /usr/include/qt6/QtGui/qicon.h
@@ -473,11 +498,13 @@
  /usr/include/qt6/QtGui/qinputdevice.h
  /usr/include/qt6/QtGui/qinputmethod.h
  /usr/include/qt6/QtGui/qkeysequence.h
+ /usr/include/qt6/QtGui/qmatrix4x4.h
  /usr/include/qt6/QtGui/qpaintdevice.h
  /usr/include/qt6/QtGui/qpixelformat.h
  /usr/include/qt6/QtGui/qpixmap.h
  /usr/include/qt6/QtGui/qpointingdevice.h
  /usr/include/qt6/QtGui/qpolygon.h
+ /usr/include/qt6/QtGui/qquaternion.h
  /usr/include/qt6/QtGui/qregion.h
  /usr/include/qt6/QtGui/qrgb.h
  /usr/include/qt6/QtGui/qrgba64.h
@@ -490,6 +517,8 @@
  /usr/include/qt6/QtGui/qtguiglobal.h
  /usr/include/qt6/QtGui/qtransform.h
  /usr/include/qt6/QtGui/qvector2d.h
+ /usr/include/qt6/QtGui/qvector3d.h
+ /usr/include/qt6/QtGui/qvector4d.h
  /usr/include/qt6/QtGui/qvectornd.h
  /usr/include/qt6/QtGui/qwindow.h
  /usr/include/qt6/QtGui/qwindowdefs.h
@@ -498,12 +527,15 @@
  /usr/include/qt6/QtNetwork/qtnetworkglobal.h
  /usr/include/qt6/QtQml/QJSValue
  /usr/include/qt6/QtQml/QQmlListProperty
+ /usr/include/qt6/QtQml/QQmlParserStatus
  /usr/include/qt6/QtQml/qjsnumbercoercion.h
  /usr/include/qt6/QtQml/qjsprimitivevalue.h
  /usr/include/qt6/QtQml/qjsvalue.h
  /usr/include/qt6/QtQml/qqml.h
  /usr/include/qt6/QtQml/qqmlcomponent.h
+ /usr/include/qt6/QtQml/qqmldebug.h
  /usr/include/qt6/QtQml/qqmlerror.h
+ /usr/include/qt6/QtQml/qqmlinfo.h
  /usr/include/qt6/QtQml/qqmllist.h
  /usr/include/qt6/QtQml/qqmlparserstatus.h
  /usr/include/qt6/QtQml/qqmlprivate.h
@@ -515,8 +547,13 @@
  /usr/include/qt6/QtQmlIntegration/qqmlintegration.h
  /usr/include/qt6/QtQuick/QQuickItem
  /usr/include/qt6/QtQuick/QQuickItemGrabResult
+ /usr/include/qt6/QtQuick/QQuickWindow
  /usr/include/qt6/QtQuick/qquickitem.h
  /usr/include/qt6/QtQuick/qquickitemgrabresult.h
+ /usr/include/qt6/QtQuick/qquickwindow.h
+ /usr/include/qt6/QtQuick/qsggeometry.h
+ /usr/include/qt6/QtQuick/qsgnode.h
+ /usr/include/qt6/QtQuick/qsgrendererinterface.h
  /usr/include/qt6/QtQuick/qtquick-config.h
  /usr/include/qt6/QtQuick/qtquickexports.h
  /usr/include/qt6/QtQuick/qtquickglobal.h
@@ -532,6 +569,7 @@
  /usr/include/sys/types.h
  /usr/include/time.h
  /usr/include/wchar.h
+ /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/float.h
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdarg.h
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdbool.h
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stddef.h

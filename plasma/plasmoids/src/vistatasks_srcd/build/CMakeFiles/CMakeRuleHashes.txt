@@ -1,0 +1,6 @@
+# Hashes of file build rules.
+a93e4ee6fc700911fe7e6d18d060ff4d CMakeFiles/fetch-translations
+206f44595febeded38b68fbeb5aa6fd2 CMakeFiles/uninstall
+0a56306e4a539c6d2c99ba08444313e4 releaseme
+f02376f16682dd82d5b0c5f8d97c569c src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen
+acad21d9815acd390bc07ad2a96af32d src/io.gitgud.catpswin56.vistatasks_autogen/timestamp

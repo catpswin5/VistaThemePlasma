@@ -16,11 +16,12 @@ import org.kde.plasma.private.mpris as Mpris
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kitemmodels as KItemModels
 
-import org.kde.plasma.workspace.trianglemousefilter 1.0
-
 import org.kde.taskmanager 0.1 as TaskManager
 import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
 import org.kde.plasma.workspace.dbus as DBus
+
+import org.kde.kquickcontrolsaddons
+import org.kde.kwindowsystem
 
 import "code/layoutmetrics.js" as LayoutMetrics
 import "code/tools.js" as TaskTools
@@ -41,15 +42,15 @@ PlasmoidItem {
         iconGeometryTimer.start();
     }
 
-    property var toolTipOpenedByClick: null
-    property var toolTipAreaItem: null
     property var jumpListItem: null
+    property var toolTipItem: null
     onJumpListItemChanged: {
         taskList.forceMouseEvent();
     }
 
     property QtObject jumpListComponent: Qt.createComponent("TasksMenu.qml");
     property QtObject contextMenuComponent: Qt.createComponent("ContextMenu.qml")
+    property QtObject toolTipComponent: Qt.createComponent("ToolTip.qml");
     property QtObject pulseAudioComponent: Qt.createComponent("PulseAudio.qml")
 
     property bool needLayoutRefresh: false;
@@ -72,6 +73,12 @@ PlasmoidItem {
                 return "south";
         }
         return "";
+    }
+
+    property bool compositionEnabled: {
+        if(KWindowSystem.isPlatformX11) {
+            return KX11Extras.compositingActive;
+        } else return true; // Composition is always enabled in Wayland
     }
 
     Item {
@@ -100,12 +107,6 @@ PlasmoidItem {
 
     Plasmoid.constraintHints: Plasmoid.CanFillArea
 
-    Plasmoid.onUserConfiguringChanged: {
-        if (Plasmoid.userConfiguring && !!tasks.groupDialog) {
-            tasks.groupDialog.visible = false;
-        }
-    }
-
     Layout.fillWidth: tasks.vertical ? true : Plasmoid.configuration.fill
     Layout.fillHeight: !tasks.vertical ? true : Plasmoid.configuration.fill
     Layout.minimumWidth: {
@@ -120,27 +121,6 @@ PlasmoidItem {
         }
         return !tasks.vertical ? 0 : LayoutMetrics.preferredMinHeight();
     }
-
-/*//BEGIN TODO: this is not precise enough: launchers are smaller than full tasks
-    Layout.preferredWidth: {
-        if (shouldShrinkToZero) {
-            return 0.01;
-        }
-        if (tasks.vertical) {
-            return Kirigami.Units.iconSizes.small * 10;
-        }
-        return taskList.Layout.maximumWidth
-    }
-    Layout.preferredHeight: {
-        if (shouldShrinkToZero) {
-            return 0.01;
-        }
-        if (tasks.vertical) {
-            return taskList.Layout.maximumHeight
-        }
-        return Kirigami.Units.iconSizes.small * 2;
-    }
-//END TODO*/
 
     function setRequestedInhibitDnd(value) {
         // This is modifying the value in the panel containment that
@@ -442,97 +422,85 @@ PlasmoidItem {
                 if (!hoveredItem) {
                     return;
                 }
-
-                // Otherwise we'll just start a new instance of the application with the URLs as argument,
-                // as you probably don't expect some of your files to open in the app and others to spawn launchers.
-                tasksModel.requestOpenUrls(hoveredItem.modelIndex(), urls);
             }
         }
 
-        ToolTipDelegate {
-            id: openWindowToolTipDelegate
-            visible: false
-        }
+        GroupThumbnails {
+            id: groupThumbnails
 
-        ToolTipDelegate {
-            id: pinnedAppToolTipDelegate
-            visible: false
-        }
+            root: toolTipItem
 
-        TriangleMouseFilter {
-            id: tmf
-            filterTimeOut: 300
-            active: tasks.toolTipAreaItem && tasks.toolTipAreaItem.toolTipOpen
-            blockFirstEnter: false
+            KSvg.FrameSvgItem {
+                id: groupThumbnailsBg
 
-            edge: {
-                switch (Plasmoid.location) {
-                    case PlasmaCore.Types.BottomEdge:
-                        return Qt.TopEdge;
-                    case PlasmaCore.Types.TopEdge:
-                        return Qt.BottomEdge;
-                    case PlasmaCore.Types.LeftEdge:
-                        return Qt.RightEdge;
-                    case PlasmaCore.Types.RightEdge:
-                        return Qt.LeftEdge;
-                    default:
-                        return Qt.TopEdge;
-                }
+                anchors.fill: parent
+
+                imagePath: Qt.resolvedUrl("svgs/tooltip.svg")
+                prefix: "list"
+
+                visible: compositionEnabled
+
+                z: -1
             }
+        }
+        PinnedToolTip {
+            id: pinnedToolTip
 
-            secondaryPoint: {
-                if (tasks.toolTipAreaItem === null) {
-                    return Qt.point(0, 0);
-                }
-                const x = tasks.toolTipAreaItem.x;
-                const y = tasks.toolTipAreaItem.y;
-                const height = tasks.toolTipAreaItem.height;
-                const width = tasks.toolTipAreaItem.width;
-                return Qt.point(x+width/2, height);
+            root: toolTipItem
+        }
+        WindowThumbnail {
+            id: windowThumbnail
+
+            root: toolTipItem
+
+            KSvg.FrameSvgItem {
+                id: windowThumbnailBg
+
+                anchors.fill: parent
+
+                imagePath: Qt.resolvedUrl("svgs/tooltip.svg")
+
+                z: -1
+            }
+        }
+
+        TaskList {
+            id: taskList
+
+            Rectangle {
+                id: testRe
+                color: "red"
+                opacity: 0
+                anchors.fill: parent
+                z: -1
             }
 
             anchors {
                 left: parent.left
-                top: parent.top
+                leftMargin: 1
+                right: parent.right
+            }
+            height: tasks.height
+            orientation: {
+                if(tasks.vertical) {
+                    return ListView.Vertical
+                }
+                return ListView.Horizontal
             }
 
-            height: taskList.childrenRect.height
-            width: taskList.childrenRect.width
+            Behavior on width {
+                NumberAnimation { duration: 250 }
+            }
 
-            TaskList {
-                id: taskList
-
-                Rectangle {
-                    id: testRe
-                    color: "red"
-                    opacity: 0
-                    anchors.fill: parent
-                    z: -1
-                }
-                anchors {
-                    left: parent.left
-                    leftMargin: 1
-                    top: parent.top
-                }
-                width: tasks.width
-                height: tasks.height
-                orientation: {
-                    if(tasks.vertical) {
-                        return ListView.Vertical
-                    }
-                    return ListView.Horizontal
-                }
-
-                // Is this really needed?
-                // It apparently is, this somehow resets MouseArea and makes stuff actually work
-                function forceMouseEvent() {
-                    for(var child in taskList.contentItem.children) {
-                        var t = taskList.contentItem.children[child];
-                        if(typeof t !== "undefined") {
-                            if(t.isLauncher) {
-                                t.visible = false;
-                                t.visible = true;
-                            }
+            // Is this really needed?
+            // It apparently is, this somehow resets MouseArea and makes stuff actually work
+            function forceMouseEvent() {
+                for(var child in taskList.contentItem.children) {
+                    var t = taskList.contentItem.children[child];
+                    if(typeof t !== "undefined") {
+                        if(t.isLauncher) {
+                            t.visible = false;
+                            t.visible = true;
                         }
                     }
                 }
@@ -541,36 +509,32 @@ PlasmoidItem {
                         tasks.publishIconGeometries(visibleChildren, tasks);
                     }
                 }
-
-                delegate: Task {
-                    tasksRoot: tasks
-                }
-                model: tasksModel
-                /*model: KItemModels.KSortFilterProxyModel {
-                    sourceModel: tasksModel
-
-                    filterRowCallback: function(source_row, source_parent) {
-                        const IsStartup = sourceModel.KItemModels.KRoleNames.role("IsStartup");
-                        const IsLauncher = sourceModel.KItemModels.KRoleNames.role("AppId");
-                        const launcher = sourceModel.data(sourceModel.index(source_row, 0, source_parent), IsLauncher);
-                        const startup = sourceModel.data(sourceModel.index(source_row, 0, source_parent), IsStartup);
-                        var inLauncherList = false;
-                        for(var i = 0; i < tasksModel.launcherList.length; i++) {
-                            if(sourceModel.launcherList[i].includes(launcher)) {
-                                inLauncherList = true;
-                                break;
-                            }
-                        }
-                        return !(startup && !inLauncherList); // Removes startups that do not belong to launchers
-                    }
-
-                }*/
             }
+            delegate: Task {
+                tasksRoot: tasks
+            }
+            model: tasksModel
+            /*model: KItemModels.KSortFilterProxyModel {
+             *       sourceModel: tasksModel
+             *
+             *       filterRowCallback: function(source_row, source_parent) {
+             *           const IsStartup = sourceModel.KItemModels.KRoleNames.role("IsStartup");
+             *           const IsLauncher = sourceModel.KItemModels.KRoleNames.role("AppId");
+             *           const launcher = sourceModel.data(sourceModel.index(source_row, 0, source_parent), IsLauncher);
+             *           const startup = sourceModel.data(sourceModel.index(source_row, 0, source_parent), IsStartup);
+             *           var inLauncherList = false;
+             *           for(var i = 0; i < tasksModel.launcherList.length; i++) {
+             *               if(sourceModel.launcherList[i].includes(launcher)) {
+             *                   inLauncherList = true;
+             *                   break;
+        }
+        }
+        return !(startup && !inLauncherList); // Removes startups that do not belong to launchers
+        }
+
+        }*/
         }
     }
-
-    readonly property Component groupDialogComponent: Qt.createComponent("GroupDialog.qml")
-    property GroupDialog groupDialog: null
 
     readonly property bool supportsLaunchers: true
 
@@ -582,11 +546,6 @@ PlasmoidItem {
         if (Plasmoid.immutability !== PlasmaCore.Types.SystemImmutable) {
             tasksModel.requestAddLauncher(url);
         }
-    }
-
-    function refresh() {
-        taskList.visible = false
-        taskList.visible = true
     }
 
     function removeLauncher(url) {
@@ -608,7 +567,6 @@ PlasmoidItem {
     }
 
     function createJumpList(rootTask, modelIndex, args = {}) {
-        console.log(modelIndex);
         const initialArgs = Object.assign(args, {
             visualParent: rootTask,
             modelIndex: modelIndex,
@@ -630,6 +588,18 @@ PlasmoidItem {
             backend,
         });
         return contextMenuComponent.createObject(rootTask, initialArgs);
+    }
+
+    function createToolTip(rootTask, modelIndex, args = {}) {
+        const initialArgs = Object.assign(args, {
+            visualParent: rootTask,
+            modelIndex: modelIndex,
+            taskWidth: rootTask.width,
+            taskHeight: rootTask.height,
+            taskX: rootTask.x,
+            taskY: rootTask.y
+        });
+        return toolTipComponent.createObject(rootTask, initialArgs);
     }
 
     Component.onCompleted: {

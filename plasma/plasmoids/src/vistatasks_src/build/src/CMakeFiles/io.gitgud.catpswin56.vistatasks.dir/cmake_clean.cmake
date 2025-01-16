@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/AutogenUsed.txt"
   "CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/ParseCache.txt"
   "io.gitgud.catpswin56.vistatasks_autogen"
+  "CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/dialogshadows.cpp.o"
+  "CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/dialogshadows.cpp.o.d"
   "CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/io.gitgud.catpswin56.vistatasks_autogen/mocs_compilation.cpp.o.d"
   "CMakeFiles/io.gitgud.catpswin56.vistatasks.dir/seventasks.cpp.o"

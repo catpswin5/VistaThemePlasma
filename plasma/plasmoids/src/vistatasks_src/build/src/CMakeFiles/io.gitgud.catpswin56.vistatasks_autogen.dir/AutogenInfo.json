@@ -15,6 +15,12 @@
 	"HEADERS" : 
 	[
 		[
+			"/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/dialogshadows_p.h",
+			"Mu",
+			"EWIEGA46WW/moc_dialogshadows_p.cpp",
+			null
+		],
+		[
 			"/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.h",
 			"Mu",
 			"EWIEGA46WW/moc_seventasks.cpp",
@@ -63,6 +69,7 @@
 		"/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src",
 		"/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src",
 		"/usr/include/Plasma",
+		"/usr/include/PlasmaQuick",
 		"/usr/include/KF6/KConfigCore",
 		"/usr/include/KF6/KConfig",
 		"/usr/include/KF6/KCoreAddons",
@@ -127,6 +134,11 @@
 	"SETTINGS_FILE" : "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.vistatasks_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[
+			"/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/dialogshadows.cpp",
+			"Mu",
+			null
+		],
 		[
 			"/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/plasma/plasmoids/src/vistatasks_src/src/seventasks.cpp",
 			"Mu",

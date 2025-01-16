@@ -417,12 +417,6 @@ PlasmaExtras.Menu {
         text: get(atm.IsGroupParent) ? i18nc("@item:inmenu", "&Close All") : i18n("&Close")
         icon: "marlett-close"
 
-        onClicked: {
-            if (tasks.groupDialog !== null && tasks.groupDialog.visualParent === visualParent) {
-                tasks.groupDialog.visible = false;
-            }
-
-            tasksModel.requestClose(modelIndex);
-        }
+        onClicked: tasksModel.requestClose(modelIndex);
     }
 }
