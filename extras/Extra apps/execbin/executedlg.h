@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QProcess>
 #include <QFileDialog>
+#include <QSettings>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,13 +22,10 @@ public:
     ~ExecuteDlg();
 
 private slots:
-    void finished();
-
     void on_okBtn_clicked();
     void on_cancelBtn_clicked();
 
     void on_browseBtn_clicked();
-
     void setCurrentFile(QString file);
 
     void on_lineEdit_returnPressed();
@@ -38,6 +36,6 @@ private:
     QFileDialog* filedlg;
 
     QProcess *binary;
-    QString input;
+    QSettings settings;
 };
 #endif // EXECUTEDLG_H

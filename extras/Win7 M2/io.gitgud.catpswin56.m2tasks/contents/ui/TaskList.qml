@@ -79,7 +79,7 @@ ListView {
     }*/
     displaced: taskAnimation
     remove: Transition {
-        NumberAnimation { property: "implicitWidth"; to: 0; duration: transitionDuration; easing.type: Easing.OutQuad; }
+        NumberAnimation { property: "implicitWidth"; to: 20; duration: transitionDuration; easing.type: Easing.OutQuad; }
         NumberAnimation { properties: "opacity"; to: 0; duration: transitionDuration; easing.type: Easing.OutQuad; }
     }
     Transition {

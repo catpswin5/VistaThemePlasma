@@ -67,7 +67,7 @@ Item {
     }
     SequentialAnimation {
         id: removeLabelsAnimation
-        NumberAnimation { target: task; properties: "width"; to: 0; duration: 200; easing.type: Easing.OutQuad }
+        NumberAnimation { target: task; properties: "width"; to: 1; duration: 200; easing.type: Easing.OutQuad }
         PropertyAction { target: task; property: "ListView.delayRemove"; value: false }
     }
     SequentialAnimation {

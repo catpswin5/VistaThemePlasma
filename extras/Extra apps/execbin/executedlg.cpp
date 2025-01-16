@@ -4,12 +4,20 @@
 void ExecuteDlg::executeFile()
 {
     binary = new QProcess(this);
-    connect (binary, SIGNAL(started()), this, SLOT(finished()));
 
-    QString program = ui->lineEdit->text();
-    binary->startCommand(program);
+    QString input = ui->lineEdit->text();
+    QStringList arguments = input.split(" ");
+    QString program = arguments.takeFirst();
+    if(program == "cmd")
+        binary->startDetached("konsole");
+    if(program == "winver")
+        binary->startDetached("linver");
+    else
+        binary->startDetached(program, arguments);
 
-    this->hide();
+    settings.setValue("lastExec", input);
+
+    this->close();
 }
 
 ExecuteDlg::ExecuteDlg(QWidget *parent)
@@ -19,13 +27,10 @@ ExecuteDlg::ExecuteDlg(QWidget *parent)
     ui->setupUi(this);
 
     ui->lineEdit->setFocus(Qt::OtherFocusReason);
-    ui->okBtn->setEnabled(false);
+    ui->lineEdit->setText(settings.value("lastExec", "").toString());
+    ui->okBtn->setEnabled(settings.value("lastExec", "").toString() != "");
 }
 
-void ExecuteDlg::finished()
-{
-    this->close();
-}
 void ExecuteDlg::on_cancelBtn_clicked()
 {
     this->close();
@@ -38,6 +43,9 @@ void ExecuteDlg::on_okBtn_clicked()
 
 ExecuteDlg::~ExecuteDlg()
 {
+    if(ui->lineEdit->text() == "")
+        settings.setValue("lastExec", "");
+
     delete ui;
 }
 

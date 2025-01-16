@@ -2,6 +2,6 @@
 
 mkdir build
 cd ./build/
-qmake6 ../executebin.pro
+qmake6 ../execbin.pro
 make
 sudo make install

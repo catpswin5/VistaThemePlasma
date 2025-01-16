@@ -3,9 +3,13 @@
 #include <QApplication>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QCoreApplication>
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationName("catpswin56");
+    QCoreApplication::setApplicationName("execbin");
+
     QApplication a(argc, argv);
     ExecuteDlg w;
     w.show();

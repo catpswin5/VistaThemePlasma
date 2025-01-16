@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="16">resources/16.png</file>
+        <file alias="16">resources/app.ico</file>
         <file alias="32">resources/32.png</file>
     </qresource>
 </RCC>
