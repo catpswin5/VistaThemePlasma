@@ -6,7 +6,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Layouts 1.15
 import Qt5Compat.GraphicalEffects
 
@@ -374,7 +374,7 @@ ContainmentItem {
                 opacity: bgMa.containsMouse ? 0.6 : 0
 
                 Behavior on opacity {
-                    NumberAnimation { duration: 250 }
+                    NumberAnimation { duration: 500 }
                 }
 
                 RowLayout {
@@ -427,22 +427,14 @@ ContainmentItem {
                     imagePath: Qt.resolvedUrl("svgs/controls.svg")
                     elementId: "add"
 
-                    opacity: addMa.containsMouse ? 0.8 : 0.6
-
-                    Behavior on opacity {
-                        NumberAnimation { duration: 250 }
-                    }
+                    opacity: addMa.containsMouse ? (addMa.containsPress ? 0.6 : 0.8) : 0.6
 
                     KSvg.SvgItem {
                         anchors.fill: parent
                         imagePath: Qt.resolvedUrl("svgs/controls.svg")
                         elementId: "hover"
 
-                        opacity: addMa.containsMouse ? 0.4 : 0.0
-
-                        Behavior on opacity {
-                            NumberAnimation { duration: 250 }
-                        }
+                        opacity: addMa.containsMouse ? (addMa.containsPress ? 0.6 : 0.8) : 0.0
                     }
 
                     MouseArea {
@@ -454,15 +446,13 @@ ContainmentItem {
                         propagateComposedEvents: true
 
                         onClicked: {
-                            if(appletsLayout.editMode) {
-                                appletsLayout.editMode = false;
-                            } else appletsLayout.editMode = true;
+                            appletsLayout.editMode = !appletsLayout.editMode;
                         }
                     }
                 }
 
                 Rectangle {
-                    Layout.preferredHeight: 16
+                    Layout.preferredHeight: 12
                     Layout.preferredWidth: 1
                     color: "white"
                 }
@@ -486,10 +476,53 @@ ContainmentItem {
             visible: Plasmoid.configuration.fakeSidebar
         }
 
+        Rectangle {
+            id: addTextBg
+
+            anchors {
+                top: bg.top
+                topMargin: Kirigami.Units.smallSpacing*2
+                right: pillThingy.left
+                rightMargin: -Kirigami.Units.smallSpacing*2
+            }
+
+            height: 22
+            width: addText.implicitWidth + Kirigami.Units.smallSpacing*5
+
+            topLeftRadius: 12
+            bottomLeftRadius: 12
+
+            color: "#214d72"
+
+            opacity: addMa.containsMouse ? 0.6 : 0
+
+            Behavior on opacity {
+                NumberAnimation { duration: 250 }
+            }
+
+            z: -1
+        }
+
+        Text {
+            id: addText
+
+            anchors.centerIn: addTextBg
+            anchors.horizontalCenterOffset: -Kirigami.Units.smallSpacing/2
+
+            text: "Gadgets"
+            color: "white"
+
+            opacity: addMa.containsMouse
+
+            Behavior on opacity {
+                NumberAnimation { duration: 250 }
+            }
+        }
+
         ContainmentLayoutManager.AppletsLayout {
             id: appletsLayout
             anchors.fill: Plasmoid.configuration.fakeSidebar ? bg : parent
-            anchors.topMargin:Plasmoid.configuration.fakeSidebar ? pillThingy.height + Kirigami.Units.smallSpacing*4 : 0
+            anchors.topMargin:Plasmoid.configuration.fakeSidebar ? pillThingy.height + Kirigami.Units.smallSpacing*5 : 0
             relayoutLock: width !== root.availableScreenRect.width || height !== root.availableScreenRect.height
             // NOTE: use root.availableScreenRect and not own width and height as they are updated not atomically
             configKey: "ItemGeometries-" + Math.round(root.screenGeometry.width) + "x" + Math.round(root.screenGeometry.height)
@@ -501,14 +534,13 @@ ContainmentItem {
                     ? ContainmentLayoutManager.AppletsLayout.Locked
                     : ContainmentLayoutManager.AppletsLayout.AfterPressAndHold
 
-            // Sets the containment in edit mode when we go in edit mode as well
             onEditModeChanged: Plasmoid.containment.corona.editMode = editMode;
 
-            minimumItemWidth: Kirigami.Units.iconSizes.small * 3
-            minimumItemHeight: minimumItemWidth
+            minimumItemWidth: 0
+            minimumItemHeight: 0
 
-            cellWidth: Kirigami.Units.iconSizes.small
-            cellHeight: cellWidth
+            cellWidth: 0
+            cellHeight: 0
 
             eventManagerToFilter: folderViewLayer.item?.view.view ?? null
 
@@ -520,6 +552,139 @@ ContainmentItem {
                     : ContainmentLayoutManager.ItemContainer.AfterPressAndHold
 
                 configOverlaySource: "ConfigOverlay.qml"
+
+                MouseArea {
+                    id: appletMa
+
+                    anchors.fill: parent
+
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+
+                    visible: Plasmoid.configuration.fakeSidebar
+
+                    Item {
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+
+                        height: 48
+                        width: 11
+
+                        visible: opacity
+
+                        opacity: parent.containsMouse
+
+                        Behavior on opacity {
+                            NumberAnimation { duration: 250 }
+                        }
+
+                        Rectangle {
+                            anchors.fill: parent
+
+                            border.width: 1
+                            border.color: "white"
+                            radius: 4
+
+                            color: "#214d72"
+
+                            opacity: 0.3
+                        }
+                        ColumnLayout {
+                            anchors.top: parent.top
+                            anchors.right: parent.right
+                            anchors.rightMargin: -1
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            spacing: 0
+
+                            KSvg.FrameSvgItem {
+                                property string suffix: closeMa.containsMouse ? (closeMa.containsPress ? "-pressed" : "-hover") : ""
+
+                                Layout.preferredHeight: 15
+                                Layout.preferredWidth: 11
+
+                                imagePath: Qt.resolvedUrl("svgs/gadget-buttons.svg")
+                                prefix: "close" + suffix
+
+                                KSvg.SvgItem {
+                                    anchors.centerIn: parent
+                                    width: 9
+                                    height: 8
+                                    imagePath: Qt.resolvedUrl("svgs/gadget-buttons.svg")
+                                    elementId: "close"
+                                }
+
+                                MouseArea {
+                                    id: closeMa
+
+                                    anchors.fill: parent
+
+                                    hoverEnabled: true
+
+                                    onClicked: appletContainer.applet.plasmoid.internalAction("remove").trigger()
+                                }
+                            }
+
+                            Rectangle {
+                                Layout.preferredHeight: 1
+                                Layout.preferredWidth: 7
+                                Layout.leftMargin: 2
+                                Layout.topMargin: -1
+                                color: "white"
+                                opacity: 0.3
+                            }
+
+                            KSvg.FrameSvgItem {
+                                property string suffix: optionsMa.containsMouse ? (optionsMa.containsPress ? "-pressed" : "-hover") : ""
+
+                                Layout.preferredHeight: 15
+                                Layout.preferredWidth: 11
+
+                                imagePath: Qt.resolvedUrl("svgs/gadget-buttons.svg")
+                                prefix: "other" + suffix
+
+                                KSvg.SvgItem {
+                                    anchors.centerIn: parent
+                                    width: 9
+                                    height: 9
+                                    imagePath: Qt.resolvedUrl("svgs/gadget-buttons.svg")
+                                    elementId: "options"
+                                }
+
+                                MouseArea {
+                                    id: optionsMa
+
+                                    anchors.fill: parent
+
+                                    hoverEnabled: true
+
+                                    onClicked: appletContainer.applet.plasmoid.internalAction("configure").trigger()
+                                }
+                            }
+
+                            Rectangle {
+                                Layout.preferredHeight: 1
+                                Layout.preferredWidth: 7
+                                Layout.leftMargin: 2
+                                Layout.topMargin: -1
+                                Layout.bottomMargin: 3
+                                color: "white"
+                                opacity: 0.3
+                            }
+
+                            KSvg.SvgItem {
+                                Layout.preferredWidth: 5
+                                Layout.preferredHeight: 11
+                                Layout.alignment: Qt.AlignHCenter
+                                Layout.rightMargin: 2
+                                imagePath: Qt.resolvedUrl("svgs/gadget-buttons.svg")
+                                elementId: "drag"
+                            }
+                        }
+                    }
+
+                    z: -1
+                }
 
                 onUserDrag: (newPosition, dragCenter) => {
                     const pos = mapToItem(root.parent, dragCenter.x, dragCenter.y);

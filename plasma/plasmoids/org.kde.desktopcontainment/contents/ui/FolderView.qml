@@ -229,32 +229,34 @@ FocusScope {
         Text {
             id: text1
             text: {
-                if(Plasmoid.configuration.watermarkStyle === 0) return "Windows Vista™"
-                    else if(Plasmoid.configuration.watermarkStyle === 1) return "VistaThemePlasma"
-                        else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText1
+                if(Plasmoid.configuration.watermarkStyle === 0) return "Windows Vista™";
+                else if(Plasmoid.configuration.watermarkStyle === 1) return "VistaThemePlasma";
+                else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText1;
             }
             Layout.alignment: Qt.AlignRight
             color: "white"
+            visible: text != ""
         }
         Text {
             id: text2
             text: {
-                if(Plasmoid.configuration.watermarkStyle === 0) return "Build 6002"
-                    else if(Plasmoid.configuration.watermarkStyle === 1) return "Build 7/12/2024"
-                        else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText2
+                if(Plasmoid.configuration.watermarkStyle === 0) return "Build 6002";
+                else if(Plasmoid.configuration.watermarkStyle === 1) return "Build 19/1/2025";
+                else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText2;
             }
             Layout.alignment: Qt.AlignRight
             color: "white"
+            visible: text != ""
         }
         Text {
             id: text3
             text: {
-                if(Plasmoid.configuration.watermarkStyle === 0) return "This copy of Windows is not genuine"
-                    else if(Plasmoid.configuration.watermarkStyle === 1) return "This copy of VistaThemePlasma is not genuine"
-                        else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText3
+                if(Plasmoid.configuration.watermarkStyle === 0) return "This copy of Windows is not genuine";
+                else if(Plasmoid.configuration.watermarkStyle === 1) return "This copy of VistaThemePlasma is not genuine";
+                else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText3;
             }
             Layout.alignment: Qt.AlignRight
-            visible: Plasmoid.configuration.watermarkGenuine
+            visible: Plasmoid.configuration.watermarkGenuine && text != ""
             color: "white"
         }
     }
@@ -582,30 +584,7 @@ FocusScope {
                 z: 99999
 
                 function close() {
-                    opacityAnimation.restart();
-                }
-
-                OpacityAnimator {
-                    id: opacityAnimation
-                    target: rubberBand
-                    to: 0
-                    from: 1
-                    duration: Kirigami.Units.shortDuration
-
-                    // This easing curve has an elognated start, which works
-                    // better than a standard easing curve for the rubberband
-                    // animation, which fades out fast and is generally of a
-                    // small area.
-                    easing {
-                        bezierCurve: [0.4, 0.0, 1, 1]
-                        type: Easing.Bezier
-                    }
-
-                    onFinished: {
-                        rubberBand.visible = false;
-                        rubberBand.enabled = false;
-                        rubberBand.destroy();
-                    }
+                    rubberBand.opacity = 0;
                 }
             }
         }
@@ -689,6 +668,7 @@ FocusScope {
                 scrollArea.ready = true;
             }
 
+
             GridView {
                 id: gridView
                 clip: true
@@ -741,7 +721,6 @@ FocusScope {
                     }
                     return Math.floor(extraSpacing);
                 }
-
                 cellWidth: {
                     if (root.useListViewMode) {
                         return gridView.width - (verticalScrollBar.visible ? verticalScrollBar.width : 0);
@@ -757,15 +736,8 @@ FocusScope {
                         var columns = Math.ceil(scrollArea.viewportWidth / (iconSize + 2*maxSpacing));
                         var iconWidth = scrollArea.viewportWidth / columns;
                         var spacing = Math.floor((iconWidth - iconSize) / 2);
-                        var iconWidth = iconSize + 2*spacing; //+ (2 * Kirigami.Units.iconSizes.small);// + (2 * Kirigami.Units.smallSpacing);
+                        var iconWidth = iconSize + 2*spacing;
                         return iconWidth;
-                        /*if (root.isContainment && isRootView && scrollArea.viewportWidth > 0) {
-                            var minIconWidth = Math.max(iconWidth, Kirigami.Units.iconSizes.small * ((Plasmoid.configuration.labelWidth * 2) + 4));
-                            var extraWidth = calcExtraSpacing(minIconWidth, scrollArea.viewportWidth);
-                            return minIconWidth + extraWidth;
-                        } else {
-                            return iconWidth;
-                        }*/
                     }
                 }
 
@@ -776,7 +748,7 @@ FocusScope {
                             listItemSvg.margins.top + listItemSvg.margins.bottom)) / 2) * 2;
                     } else {
                         // the smallSpacings are for padding
-                        var iconHeight = iconSize + (Kirigami.Units.iconSizes.small * Plasmoid.configuration.textLines) + (Kirigami.Units.smallSpacing * 4);
+                        var iconHeight = iconSize + (Kirigami.Units.iconSizes.small * Plasmoid.configuration.textLines) + (Kirigami.Units.smallSpacing * 2);
                         if (root.isContainment && isRootView && scrollArea.viewportHeight > 0) {
                             var extraHeight = calcExtraSpacing(iconHeight, scrollArea.viewportHeight);
                             return iconHeight + extraHeight;
@@ -1341,11 +1313,12 @@ FocusScope {
                         moves.push(to);
                     }
                 }
-
+                console.log(moves);
                 if (moves.length) {
                     // Update also the currentIndex, otherwise it
                     // is not set properly.
-                    gridView.currentIndex = positioner.move(moves);
+                    var ind = positioner.move(moves);
+                    gridView.currentIndex = ind;
                     gridView.forceLayout();
                 }
 
@@ -1359,6 +1332,7 @@ FocusScope {
             enabled: isContainment && sortMode === -1
 
             folderModel: dir
+
 
             perStripe: Math.floor((gridView.flow === GridView.FlowLeftToRight)
                 ? (gridView.width / gridView.cellWidth)
