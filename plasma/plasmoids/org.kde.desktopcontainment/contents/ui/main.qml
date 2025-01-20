@@ -440,13 +440,16 @@ ContainmentItem {
                     MouseArea {
                         id: addMa
 
+                        property QtObject qAction: root.Plasmoid.internalAction("add widgets")
+
                         anchors.fill: parent
 
                         hoverEnabled: true
                         propagateComposedEvents: true
 
                         onClicked: {
-                            appletsLayout.editMode = !appletsLayout.editMode;
+                            qAction.trigger();
+                            // appletsLayout.editMode = !appletsLayout.editMode;
                         }
                     }
                 }
