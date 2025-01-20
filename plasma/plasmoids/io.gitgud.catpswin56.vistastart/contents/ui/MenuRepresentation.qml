@@ -1013,7 +1013,7 @@ PlasmaCore.Dialog {
 			//Side panel items
             ColumnLayout {
                 id: columnItems
-                spacing: 3
+                spacing: 2
 				Layout.alignment: Qt.AlignTop
 				width: Math.max(cellWidthSide, columnItems.implicitWidth)
 

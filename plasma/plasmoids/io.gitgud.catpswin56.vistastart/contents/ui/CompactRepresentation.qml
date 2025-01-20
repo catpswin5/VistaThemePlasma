@@ -47,7 +47,7 @@ Item {
     readonly property var screenGeometry: Plasmoid.screenGeometry
 
     // Should the orb be rendered in its own dialog window so that it can stick out of the panel?
-    readonly property bool stickOutOrb: (Plasmoid.location == PlasmaCore.Types.TopEdge || Plasmoid.location == PlasmaCore.Types.BottomEdge) && Plasmoid.configuration.stickOutOrb && kicker.height <= 30 && !editMode
+    readonly property bool stickOutOrb: (Plasmoid.location == PlasmaCore.Types.TopEdge || Plasmoid.location == PlasmaCore.Types.BottomEdge) && Plasmoid.configuration.stickOutOrb && !editMode
     readonly property bool useCustomButtonImage: (Plasmoid.configuration.useCustomButtonImage)
     readonly property bool vertical: (Plasmoid.formFactor == PlasmaCore.Types.Vertical)
     readonly property bool enableShadow: (Plasmoid.configuration.enableShadow)
