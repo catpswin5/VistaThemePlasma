@@ -10,6 +10,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents3
+import org.kde.draganddrop as DragAndDrop
 import org.kde.plasma.private.quicklaunch 1.0
 
 import "layout.js" as LayoutManager
@@ -33,6 +34,37 @@ PlasmoidItem {
 
     Item {
         anchors.fill: parent
+
+        DragAndDrop.DropArea {
+            anchors.fill: parent
+            preventStealing: true
+            enabled: !plasmoid.immutable
+
+            onDragEnter: drag => {
+                var item = grid.itemAt(drag.x, drag.y);
+                item.leftSep.visible = true;
+            }
+
+            onDrop: event => {
+                if (isInternalDrop(event)) {
+                    event.accept(Qt.IgnoreAction);
+                    saveConfiguration();
+                } else {
+                    var index = grid.indexAt(event.x, event.y);
+                    var item = grid.itemAt(event.x, event.y);
+                    launcherModel.insertUrls(index == -1 ? launcherModel.count : index, event.mimeData.urls);
+                    item.leftSep.visible = false;
+                    event.accept(event.proposedAction);
+                }
+            }
+        }
+
+        Text {
+            id: dfla
+            text: dorparea.containsDrag
+            color: "white"
+            z: 1
+        }
 
         Item {
             id: launcher

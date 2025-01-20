@@ -39,6 +39,14 @@ Item {
         }
     }
 
+    PlasmaCore.ToolTipArea {
+        id: tooltip
+
+        anchors.fill: parent
+
+        mainText: iconItem.launcher.applicationName
+    }
+
     Item {
         id: itemRect
 
@@ -85,7 +93,7 @@ Item {
 
             width: 16
             height: width
-            source: url == "quicklaunch:drop" ? "" : iconName
+            source: iconName
 
             opacity: mouseArea.held ? 0.5 : 1.0
         }
@@ -167,6 +175,12 @@ Item {
             PlasmaExtras.MenuItem { }
         }
 
+        Timer {
+            interval: 1000
+            running: mouseArea.containsMouse
+            onTriggered: tooltip.showToolTip();
+        }
+
         MouseArea {
             id: mouseArea
 
@@ -229,9 +243,7 @@ Item {
         visible: root.dragging
 
         onEntered: (drag) => {
-            if(drag.source.itemIndex !== model.index) {
-                iconItem.GridView.view.model.moveUrl(drag.source.itemIndex, model.index);
-            } else return;
+            if(drag.source.itemIndex !== model.index) iconItem.GridView.view.model.moveUrl(drag.source.itemIndex, model.index);
         }
     }
 
