@@ -40,10 +40,6 @@ PlasmoidItem {
         }
     }
 
-    onMilestone2ModeChanged: {
-        Plasmoid.configuration.useAlternateIcon = milestone2Mode;
-    }
-
     Plasmoid.title: "Open Network and Sharing Center"
     toolTipMainText: i18n("Networks")
     toolTipSubText: {
@@ -61,8 +57,19 @@ PlasmoidItem {
         }
     }
 
+    property bool uploading: Plasmoid.configuration.txSpeed > 500
+    property bool downloading: Plasmoid.configuration.rxSpeed > 500
+
+    property string activityIcon: uploading && downloading ? "connected-activity" :
+                                  uploading ? "connected-uploading" :
+                                  downloading ? "connected-downloading" : "connected-noactivity"
+    property string state: networkStatus.connectivity === NMQt.NetworkManager.Portal ? "-limited" : ""
+    property string defaultIcon: Plasmoid.configuration.connectionState == PlasmaNM.Enums.Deactivated || !enabledConnections.wirelessEnabled ?
+                                 "network-wired-disconnected" : activityIcon + state
+    property string alternateIcon: inPanel ? connectionIconProvider.connectionIcon + "-symbolic" : connectionIconProvider.connectionTooltipIcon
+
     Plasmoid.busy: connectionIconProvider.connecting
-    Plasmoid.icon: inPanel ? connectionIconProvider.connectionIcon + "-symbolic" : connectionIconProvider.connectionTooltipIcon
+    Plasmoid.icon: Plasmoid.configuration.useAlternateIcon || PlasmaNM.Configuration.airplaneModeEnabled ? alternateIcon : defaultIcon
     switchWidth: Kirigami.Units.iconSizes.small * 10
     switchHeight: Kirigami.Units.iconSizes.small * 10
 

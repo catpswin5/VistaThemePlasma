@@ -76,8 +76,6 @@ PlasmaExtras.Representation {
 
                         source: "configure"
                     }
-
-                    visible: !mainWindow.milestone2Mode
                 }
             }
 
@@ -89,7 +87,7 @@ PlasmaExtras.Representation {
 
                 text: "Use alternate icon"
                 visible: cfgBtn.showConfig
-                checked: Plasmoid.configuration.useAlternateIcon && !mainWindow.milestone2Mode
+                checked: Plasmoid.configuration.useAlternateIcon
 
                 onCheckedChanged: Plasmoid.configuration.useAlternateIcon = checked
             }
