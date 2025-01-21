@@ -57,8 +57,8 @@ PlasmoidItem {
         }
     }
 
-    property bool uploading: Plasmoid.configuration.txSpeed > 500
-    property bool downloading: Plasmoid.configuration.rxSpeed > 500
+    property bool uploading: Plasmoid.configuration.txSpeed > 0
+    property bool downloading: Plasmoid.configuration.rxSpeed > 0
 
     property string activityIcon: uploading && downloading ? "connected-activity" :
                                   uploading ? "connected-uploading" :
