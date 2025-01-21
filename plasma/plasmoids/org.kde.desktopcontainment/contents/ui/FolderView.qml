@@ -241,7 +241,7 @@ FocusScope {
             id: text2
             text: {
                 if(Plasmoid.configuration.watermarkStyle === 0) return "Build 6003";
-                else if(Plasmoid.configuration.watermarkStyle === 1) return "Build 20/1/2025";
+                else if(Plasmoid.configuration.watermarkStyle === 1) return "Build 21/1/2025";
                 else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText2;
             }
             Layout.alignment: Qt.AlignRight

@@ -354,7 +354,7 @@ ContainmentItem {
                 GradientStop { position: 1.0; color: "black" }
                 GradientStop { position: 0.0; color: "transparent" }
             }
-            opacity: 0.7
+            opacity: 0.8
 
             visible: Plasmoid.configuration.fakeSidebar
 
@@ -393,6 +393,20 @@ ContainmentItem {
                     }
                 }
             }
+
+            Rectangle {
+                anchors.fill: parent
+
+                color: "white"
+
+                opacity: bgMa.containsMouse ? 0.1 : 0
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 500 }
+                }
+
+                z: -1
+            }
         }
 
         Rectangle {
@@ -414,7 +428,7 @@ ContainmentItem {
 
             color: "#214d72"
 
-            opacity: 0.6
+            opacity: 0.4
 
             RowLayout {
                 anchors.fill: parent
@@ -427,14 +441,14 @@ ContainmentItem {
                     imagePath: Qt.resolvedUrl("svgs/controls.svg")
                     elementId: "add"
 
-                    opacity: addMa.containsMouse ? (addMa.containsPress ? 0.6 : 0.8) : 0.6
+                    opacity: addMa.containsMouse ? (addMa.containsPress ? 0.8 : 1) : 0.8
 
                     KSvg.SvgItem {
                         anchors.fill: parent
                         imagePath: Qt.resolvedUrl("svgs/controls.svg")
                         elementId: "hover"
 
-                        opacity: addMa.containsMouse ? (addMa.containsPress ? 0.6 : 0.8) : 0.0
+                        opacity: addMa.containsMouse ? (addMa.containsPress ? 0.8 : 1) : 0.0
                     }
 
                     MouseArea {
@@ -465,14 +479,14 @@ ContainmentItem {
                     Layout.preferredHeight: 16
                     imagePath: Qt.resolvedUrl("svgs/controls.svg")
                     elementId: "left"
-                    opacity: 0.2
+                    opacity: 0.4
                 }
                 KSvg.SvgItem {
                     Layout.preferredWidth: 16
                     Layout.preferredHeight: 16
                     imagePath: Qt.resolvedUrl("svgs/controls.svg")
                     elementId: "right"
-                    opacity: 0.2
+                    opacity: 0.4
                 }
             }
 
