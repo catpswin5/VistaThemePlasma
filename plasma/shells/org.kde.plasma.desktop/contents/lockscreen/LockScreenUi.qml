@@ -26,7 +26,6 @@ import org.kde.plasma.private.sessions 2.0
 import "../components"
 
 Item {
-
     id: lockScreenUi
     // If we're using software rendering, draw outlines instead of shadows
     // See https://bugs.kde.org/show_bug.cgi?id=398317
@@ -37,17 +36,6 @@ Item {
     Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
     Kirigami.Theme.inherit: false
     //colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
-
-    Image {
-        id: backgroundWallpaper
-
-        anchors.fill: parent
-
-        source: "/usr/share/sddm/themes/sddm-theme-mod/bgtexture.jpg"
-        fillMode: Image.Stretch
-
-        z: -1
-    }
 
     Rectangle {
         id: blackRect
@@ -329,6 +317,15 @@ Item {
         id: lockScreenRoot
 
         property bool calledUnlock: false
+
+        Image {
+            id: backgroundWallpaper
+
+            anchors.fill: parent
+
+            source: "/usr/share/sddm/themes/sddm-theme-mod/bgtexture.jpg"
+            fillMode: Image.Stretch
+        }
 
         Component.onCompleted: {
             executable.exec("kreadconfig6 --file ~/.config/kdeglobals --group Sounds --key Theme");
