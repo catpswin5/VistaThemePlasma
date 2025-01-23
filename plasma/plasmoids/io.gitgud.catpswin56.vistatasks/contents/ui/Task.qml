@@ -108,10 +108,19 @@ Item {
     readonly property bool shouldHideOnRemoval: model.IsStartup || model.IsLauncher
 
     ListView.onAdd: {
-        task.implicitWidth = 0;
-        task.visible = false;
-        task.state = "animateLabels";
-        addLabelsAnimation.start();
+        if(model.IsStartup && !taskInLauncherList(appId)) {
+            task.implicitWidth = 0;
+            task.visible = false;
+        }
+        if(shouldHideOnRemoval) {
+            taskList.add = null;
+            taskList.resetAddTransition.start();
+        }
+        if(animateLabel) {
+            task.visible = false;
+            task.state = "animateLabels";
+            addLabelsAnimation.start();
+        }
         layoutDelay.start()
     }
 
