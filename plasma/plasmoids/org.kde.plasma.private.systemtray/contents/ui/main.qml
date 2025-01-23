@@ -638,8 +638,10 @@ ContainmentItem {
             }
             Item {
                 id: trayGap
-                Layout.preferredWidth: !vertical ? (root.milestone2Mode ? 0 : Plasmoid.configuration.trayGapSize) : 0
-                Layout.preferredHeight: vertical ? (root.milestone2Mode ? 0 : Plasmoid.configuration.trayGapSize) : 0
+                Layout.preferredWidth: !vertical ? Plasmoid.configuration.trayGapSize : 0
+                Layout.preferredHeight: vertical ? Plasmoid.configuration.trayGapSize : 0
+
+                visible: !root.milestone2Mode && systemIconsGrid.count > 0 && tasksGrid.count > 0
             }
             GridView { // system icons
                 id: systemIconsGrid
