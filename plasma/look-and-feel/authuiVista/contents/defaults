@@ -16,6 +16,9 @@ LayoutName=org.kde.breeze.desktop
 [kwinrc][WindowSwitcher]
 LayoutName=thumbnail_seven
 
+[kwinrc][org.kde.kdecoration2]
+library=org.smod.smod
+
 [plasmarc][Theme]
 name=Vista-Black
 

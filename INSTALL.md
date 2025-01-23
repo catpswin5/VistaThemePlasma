@@ -43,7 +43,7 @@ This section relates to the directories found in the ```plasma``` folder.
 
 2. Move the folders ```desktoptheme```, ```look-and-feel```, ```plasmoids```, ```layout-templates```, ```shells``` into ```~/.local/share/plasma```. If the folder doesn't exist, create it. These folders contain the following:
     - Plasma Style
-    - Global Theme (more accurately, just the lock screen)
+    - Global Theme (more accurately, just the Ctrl+Alt+Del screen and splash screen)
     - Plasmoids
     - Plasma shell
     - Preset panel layout that can be applied from Edit mode

@@ -229,8 +229,8 @@ Image {
                     changeArrow.source = "../images/command.png"
                 }
                 onClicked: {
-                    root.cancelRequested()
                     executable.exec("systemsettings kcm_users & disown")
+                    root.cancelRequested()
                 }
 
                 KSvg.FrameSvgItem {
@@ -281,8 +281,8 @@ Image {
                     taskmgrArrow.source = "../images/command.png"
                 }
                 onClicked: {
+                    executable.exec("ksysguard & disown")
                     root.cancelRequested()
-                    executable.exec("ksysguard")
                 }
 
                 KSvg.FrameSvgItem {
