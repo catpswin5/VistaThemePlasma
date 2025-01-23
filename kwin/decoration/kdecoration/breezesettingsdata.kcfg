@@ -111,7 +111,7 @@
     </entry>
 
     <entry name="TitlebarSize" type="Int">
-      <default>21</default>
+      <default>19</default>
     </entry>
 
     <entry name="AlternativeButtonSizing" type="Bool">
