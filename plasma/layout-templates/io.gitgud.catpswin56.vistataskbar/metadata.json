@@ -1,0 +1,25 @@
+{
+    "KPackageStructure": "Plasma/LayoutTemplate",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "wackyideas@disroot.org",
+                "Name": "WackyIdeas"
+            },
+            {
+                "Name": "catpswin56"
+            }
+        ],
+        "Category": "",
+        "Description": "Default panel featuring application launcher, quick launch, task manager, etc",
+        "EnabledByDefault": true,
+        "Id": "io.gitgud.catpswin56.vistataskbar",
+        "License": "AGPLv3",
+        "Name": "VistaThemePlasma Taskbar",
+        "Website": "https://gitgud.io/catpswin56/vistathemeplasma"
+    },
+    "X-Plasma-ContainmentCategories": [
+        "panel"
+    ],
+    "X-Plasma-Shell": "plasmashell"
+}

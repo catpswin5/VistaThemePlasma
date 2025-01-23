@@ -10,6 +10,8 @@
 
 ## Prerequisites <a name="preq"></a>
 
+**NOTE**: Dependencies for other disros besides Arch Linux have been provided by contributors and aren't updated frequently, which may result in incorrect or missing dependencies.
+
 ### Arch Linux
 Required packages:
 
@@ -37,15 +39,16 @@ dnf install plasma-workspace-devel kvantum qt6-qtmultimedia-devel qt6-qt5compat-
 
 This section relates to the directories found in the ```plasma``` folder.
 
-1. Move the ```smod``` folder to ```~/.local/share``` or ```/usr/share/```. This will install the resources required by many other components.
+1. Move the ```smod``` folder to ```~/.local/share```, or ```/usr/share/``` for a system-wide installation. This will install the resources required by many other components in this project.
 
-2. Move the folders ```desktoptheme```, ```look-and-feel```, ```plasmoids```, ```shells``` into ```~/.local/share/plasma```. If the folder doesn't exist, create it. These folders contain the following:
+2. Move the folders ```desktoptheme```, ```look-and-feel```, ```plasmoids```, ```layout-templates```, ```shells``` into ```~/.local/share/plasma```. If the folder doesn't exist, create it. These folders contain the following:
     - Plasma Style
     - Global Theme (more accurately, just the lock screen)
     - Plasmoids
     - Plasma shell
-
-Make sure to compile the C++ components of plasmoids located in ```plasmoids/src/``` by running ```install.sh``` for every source folder. 
+    - Preset panel layout that can be applied from Edit mode
+    
+Make sure to compile the C++ components of plasmoids located in ```plasmoids/src/``` by running ```install.sh``` for every source folder. You can also use ```install_ninja.sh``` to build using Ninja.
 
 3. Move ```sddm-theme-mod``` to ```/usr/share/sddm/themes```, and then run ```install-services.sh``` found in ```sddm-theme-mod/Services```.
 4. Import and apply the color scheme through System Settings. 
@@ -55,7 +58,7 @@ Make sure to compile the C++ components of plasmoids located in ```plasmoids/src
 
 This section relates to the directories found in the ```kwin``` folder.
 
-1. Compile the decoration theme and C++ KWin effects (found in ```decoration``` and ```effects_cpp``` respectively) using the provided install scripts. (Make sure to first build the decoration theme, as some C++ effects depend on it)
+1. Compile the decoration theme first and C++ KWin effects (found in ```decoration``` and ```effects_cpp``` respectively) using the provided install scripts. (Make sure to first build the decoration theme, as the C++ effects depend on it)
 2. Move ```effects```, ```tabbox```, ```outline```, ```scripts``` to ```~/.local/share/kwin```.
 3. In System Settings, apply the following settings: 
 - In Window Behavior -> Titlebar Actions: 
@@ -85,7 +88,7 @@ This section relates to the directories found in the ```kwin``` folder.
     - Dialog Parent
     - Dim Inactive
     
-(*) Only if using Milestone 2 mode
+(*) Enable only if you're gonna use the Milestone 2 variant of this theme
 
 ## Miscellaneous components <a name="misc"></a>
 
@@ -104,8 +107,8 @@ If SDDM fails to pick up on the cursor theme, go to System Settings -> Startup a
 
 ## Configuring VistaThemePlasma <a name="conf"></a>
 
-1. Set the panel height to 40px for Milestone 2 mode or 30px for normal Vista mode.
-2. Upon installation and configuring the panel layout, restart plasmashell and/or kwin (```plasmashell --replace & disown``` and ```kwin_x11 --replace & disown``` in the terminal respectively) as needed.
+1. After installing everything, restart KDE Plasma and KWin (you can do so by running ```plasmashell --replace & disown``` and ```kwin_x11 --replace & disown``` (only works for X11) in a terminal)
+2. On a fresh KDE install, **remove** the default panel and add the "VistaThemePlasma Taskbar" panel using Edit mode. You can also manually configure the panel for a finer setup.
 3. When updating KDE Plasma, usually through a full system upgrade, recompiling KWin effects and the DefaultToolTip component is necessary.
 4. In System Settings -> Session -> Desktop Session, uncheck the "Ask for confirmation" option.
 5. In System Settings -> Keyboard -> Shortcuts, under KWin, disable the "Peek at Desktop" shortcut, and remap the "MinimizeAll" to Meta+D
@@ -116,14 +119,13 @@ If SDDM fails to pick up on the cursor theme, go to System Settings -> Startup a
 The following steps are optional: 
 
 7. To enable full font hinting just for Segoe UI, move the ```fontconfig``` folder to ```~/.config```. This will enable full font hinting for Segoe UI while keeping slight font hinting for other fonts. Additionally, append ```QML_DISABLE_DISTANCEFIELD=1``` into ```/etc/environment``` in order for this to be properly applied. *While full font hinting makes the font rendering look sharper and somewhat closer to Windows 7's ClearType, on Linux this option causes noticeably faulty kerning. This has been a [prominent](https://github.com/OpenTTD/OpenTTD/issues/11765) [issue](https://gitlab.gnome.org/GNOME/pango/-/issues/656) [for](https://gitlab.gnome.org/GNOME/pango/-/issues/463) [several](https://gitlab.gnome.org/GNOME/pango/-/issues/404) [years](https://github.com/harfbuzz/harfbuzz/issues/2394) [now](https://www.phoronix.com/news/HarfBuzz-Hinting-Woe) and while the situation has improved from being unreadable to just being ugly, a complete solution for this doesn't seem to be coming anytime soon.*
-
 8. For Wine users it's recommended to install the [VistaVG Ultimate](https://www.deviantart.com/vishal-gupta/art/VistaVG-Ultimate-57715902) msstyle theme.
 9. Add the following to ```~/.bashrc``` to get bash to look more like the command prompt on Windows:
 
 ```
 PS1='C:${PWD//\//\\\\}> '
 
-echo -e "Microsoft Windows [Version 6.0.6002]\nCopyright (c) 2006 Microsoft Corporation.  All rights reserved.\n"
+echo -e "Microsoft Windows [Version 6.0.6003]\nCopyright (c) 2006 Microsoft Corporation.  All rights reserved.\n"
 ```
 
 10. In the terminal emulator of your choice (e.g Konsole), set the font to [TerminalVector](https://www.yohng.com/software/terminalvector.html), size 9pt. Disable smooth font rendering and bold text, reduce the line spacing and margins to 0px, set the cursor shape to underline, and enable cursor blinking. 
