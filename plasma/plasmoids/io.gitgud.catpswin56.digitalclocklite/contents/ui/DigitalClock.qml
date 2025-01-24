@@ -42,12 +42,15 @@ Item {
     property bool milestone2Mode: root.milestone2Mode
 
     property var dateFormat: {
-        if (Plasmoid.configuration.dateFormat === "longDate") {
-            return Locale.LongFormat;//Qt.SystemLocaleLongDate;
-        } else if (Plasmoid.configuration.dateFormat === "isoDate") {
-            return Qt.ISODate;
+        if(Plasmoid.configuration.dateFormat == "custom") return Plasmoid.configuration.customFormat
+        else {
+            if (Plasmoid.configuration.dateFormat === "longDate") {
+                return Locale.LongFormat;//Qt.SystemLocaleLongDate;
+            } else if (Plasmoid.configuration.dateFormat === "isoDate") {
+                return Qt.ISODate;
+            }
+            return Qt.locale() //Locale.ShortFormat;//Qt.SystemLocaleShortDate;
         }
-        return Qt.locale() //Locale.ShortFormat;//Qt.SystemLocaleShortDate;
     }
 
     property string lastSelectedTimezone: Plasmoid.configuration.lastSelectedTimezone

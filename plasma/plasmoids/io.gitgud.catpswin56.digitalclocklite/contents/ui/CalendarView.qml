@@ -56,7 +56,7 @@ PlasmaCore.Dialog {
     onHeightChanged: {
         popupPosition();
     }
-    property int flyoutMargin: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing/2
+    // property int flyoutMargin: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing/2
 
     onWidthChanged: {
         popupPosition();
@@ -70,14 +70,14 @@ PlasmaCore.Dialog {
 		x = pos.x - calendar.width / 2 + root.width / 2
 		y = pos.y - calendar.height;
 
-		if(x <= 0) x += flyoutMargin;
+		// if(x <= 0) x += flyoutMargin;
 		if(x + calendar.width - screen.x >= availScreen.width) {
-			x = screen.x + availScreen.width - calendar.width - flyoutMargin;
+			x = screen.x + availScreen.width - calendar.width;
 
 		}
-		if(y <= 0) y += flyoutMargin;
+		// if(y <= 0) y += flyoutMargin;
 		if(y + calendar.height - screen.y >= availScreen.height) {
-			y = screen.y + availScreen.height - calendar.height - flyoutMargin;
+			y = screen.y + availScreen.height - calendar.height;
 		}
 
 

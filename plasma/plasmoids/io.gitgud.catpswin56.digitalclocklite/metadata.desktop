@@ -133,16 +133,16 @@ Comment[zh_TW]=以數位格式顯示時間
 
 Icon=preferences-system-time
 Type=Service
-X-KDE-ParentApp=
-X-KDE-PluginInfo-Author=Martin Klapetek - Intika MoD
-X-KDE-PluginInfo-Email=mklapetek@kde.org - Intika MoD
-X-KDE-PluginInfo-License=GPL-2.0+ 
-X-KDE-PluginInfo-Name=io.gitgud.wackyideas.digitalclocklite
-X-KDE-PluginInfo-Version=5.5
-X-KDE-PluginInfo-Website=plasma.kde.org
-X-KDE-ServiceTypes=Plasma/Applet
+X-TDE-ParentApp=
+X-TDE-PluginInfo-Author=Martin Klapetek - Intika MoD
+X-TDE-PluginInfo-Email=mklapetek@kde.org - Intika MoD
+X-TDE-PluginInfo-License=GPL-2.0+ 
+X-TDE-PluginInfo-Name=io.gitgud.wackyideas.digitalclocklite
+X-TDE-PluginInfo-Version=5.5
+X-TDE-PluginInfo-Website=plasma.kde.org
+X-TDE-ServiceTypes=Plasma/Applet
 X-Plasma-API=declarativeappletscript
-X-KDE-PluginInfo-Category=Date and Time
+X-TDE-PluginInfo-Category=Date and Time
 X-Plasma-Provides=org.kde.plasma.time,org.kde.plasma.date
 
 X-Plasma-MainScript=ui/main.qml

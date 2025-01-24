@@ -51,6 +51,7 @@ SimpleKCM {
     property alias cfg_showDate: showDate.checked
     property alias cfg_shortTaskbarHideDate: shortTaskbarHideDate.checked
     property string cfg_dateFormat: "shortDate"
+    property alias cfg_customFormat: customFormat.text
     property alias cfg_use24hFormat: use24hFormat.checkState
 
     property alias cfg_offsetClock: offsetClock.checked
@@ -181,6 +182,10 @@ SimpleKCM {
                             {
                                 'label': i18n("ISO Date"),
                                 'name': "isoDate"
+                            },
+                            {
+                                'label': i18n("Custom"),
+                                'name': "custom"
                             }
                         ]
                         onCurrentIndexChanged: cfg_dateFormat = model[currentIndex]["name"]
@@ -192,6 +197,19 @@ SimpleKCM {
                                 }
                             }
                         }
+                    }
+                }
+                QtLayouts.RowLayout {
+                    QtLayouts.Layout.fillWidth: true
+
+                    QtControls.Label {
+                        text: i18n("Custom format:")
+                    }
+
+                    QtControls.TextField {
+                        id: customFormat
+                        enabled: dateFormat.currentIndex == 3
+                        text: Plasmoid.configuration.customFormat
                     }
                 }
                 QtControls.CheckBox {

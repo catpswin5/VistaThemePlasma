@@ -87,5 +87,8 @@
       <label>Notify for update on startup</label>
       <default>true</default>
     </entry>
+    <entry name="customFormat" type="String">
+      <default>dd/MM/yyyy</default>
+    </entry>
   </group>
 </kcfg>

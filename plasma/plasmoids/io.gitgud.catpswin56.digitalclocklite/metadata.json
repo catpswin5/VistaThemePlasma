@@ -5,6 +5,13 @@
             {
                 "Email": "mklapetek@kde.org - Intika MoD",
                 "Name": "Martin Klapetek - Intika MoD"
+            },
+            {
+                "Email": "wackyideas@disroot.org",
+                "Name": "WackyIdeas"
+            },
+            {
+                "Name": "catpswin56"
             }
         ],
         "Category": "Date and Time",
@@ -54,7 +61,7 @@
         "Description[zh_CN]": "以数字格式显示的时间",
         "Description[zh_TW]": "以數位格式顯示時間",
         "Icon": "preferences-system-time",
-        "Id": "io.gitgud.wackyideas.digitalclocklite",
+        "Id": "io.gitgud.catpswin56.digitalclocklite",
         "License": "GPL-2.0+",
         "Name": "Digital Clock Lite",
         "Name[af]": "Digitale horlosie Lite",
