@@ -115,7 +115,7 @@
     </entry>
 
     <entry name="AlternativeButtonSizing" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
 
     <entry name="DecorationTheme" type="String">
