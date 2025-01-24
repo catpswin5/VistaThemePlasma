@@ -58,8 +58,8 @@ Item {
         visible: !hiddenItemsView.visible
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.bottomMargin: Kirigami.Units.largeSpacing
-        anchors.rightMargin: Kirigami.Units.largeSpacing
+        anchors.bottomMargin: container.activeApplet.Plasmoid.pluginName != "io.gitgud.catpswin56.volumemixer" ? Kirigami.Units.largeSpacing : Kirigami.Units.mediumSpacing
+        anchors.rightMargin: container.activeApplet.Plasmoid.pluginName != "io.gitgud.catpswin56.volumemixer" ? Kirigami.Units.largeSpacing : Kirigami.Units.smallSpacing/2
         width: Kirigami.Units.iconSizes.small+1;
         height: Kirigami.Units.iconSizes.small;
         checkable: true
@@ -174,8 +174,8 @@ Item {
 
         }
         property QtObject applet: systemTrayState.activeApplet || root
-        visible: trayHeading.applet && trayHeading.applet.plasmoid.internalAction("configure")
-        height: 40
+        visible: trayHeading.applet && trayHeading.applet.plasmoid.internalAction("configure") /*&& container.activeApplet.Plasmoid.pluginName != "io.gitgud.catpswin56.volumemixer"*/
+        height: 40 // We'll add our own footer to the volume plasmoid
 
         Item {
             id: paddingLeft

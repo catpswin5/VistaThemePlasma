@@ -259,7 +259,7 @@ ContainmentItem {
             sourceModel: Plasmoid.systemTrayModel
             filterRoleName: "effectiveStatus"
             function filterItemId(itemId) {
-                return !root.milestone2Mode && (itemId == "org.kde.plasma.battery" || itemId == "org.kde.plasma.networkmanagement" || itemId == "org.kde.plasma.volume")
+                return !root.milestone2Mode && (itemId == "org.kde.plasma.battery" || itemId == "org.kde.plasma.networkmanagement" || itemId == "io.gitgud.catpswin56.volumemixer")
             }
             filterRowCallback: (sourceRow, sourceParent) => {
                 let value = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), filterRole);
@@ -339,7 +339,7 @@ ContainmentItem {
                 filterRoleName: "effectiveStatus"
                 function filterItemId(itemId) {
                     if(root.milestone2Mode) return false
-                    else return itemId == "org.kde.plasma.battery" || itemId == "org.kde.plasma.networkmanagement" || itemId == "org.kde.plasma.volume"
+                    else return itemId == "org.kde.plasma.battery" || itemId == "org.kde.plasma.networkmanagement" || itemId == "io.gitgud.catpswin56.volumemixer"
                 }
                 filterRowCallback: (sourceRow, sourceParent) => {
                     let value = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), filterRole);
@@ -421,7 +421,7 @@ ContainmentItem {
                         case ("org.kde.plasma.networkmanagement"):
                             return Plasmoid.configuration.networkEnabled;
                             break;
-                        case ("org.kde.plasma.volume"):
+                        case ("io.gitgud.catpswin56.volumemixer"):
                             return Plasmoid.configuration.volumeEnabled;
                             break;
                     }

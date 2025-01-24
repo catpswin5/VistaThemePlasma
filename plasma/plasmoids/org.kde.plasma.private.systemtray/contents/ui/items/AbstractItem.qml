@@ -242,7 +242,7 @@ PlasmaCore.ToolTipArea {
 
                 source: itemIcon
 
-                visible: isPlasmoid && root.milestone2Mode
+                visible: isPlasmoid
             }
         }
         PlasmaComponents3.Label {

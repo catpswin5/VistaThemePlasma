@@ -1,0 +1,27 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "sitter@kde.org",
+                "Name": "Harald Sitter"
+            },
+            {
+                "Name": "catpswin56"
+            }
+        ],
+        "Category": "Multimedia",
+        "Description": "Sound plasmoid in the style of Vista's volume mixer",
+        "EnabledByDefault": true,
+        "FormFactors": [
+            "desktop"
+        ],
+        "Icon": "audio-volume-high",
+        "Id": "io.gitgud.catpswin56.volumemixer",
+        "License": "GPL",
+        "Name": "Volume Mixer",
+        "Website": "https://gitgud.io/catpswin56/vistathemeplasma"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-NotificationAreaCategory": "Hardware"
+}
