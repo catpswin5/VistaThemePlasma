@@ -4,13 +4,15 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-import QtQuick 2.15
+import QtQuick
+import QtQuick.Controls as QQC2
 import QtQuick.Layouts 1.2
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.networkmanagement as PlasmaNM
 import org.kde.networkmanager as NMQt
+import org.kde.ksvg as KSvg
 
 ColumnLayout {
     id: connectionListPage
@@ -43,19 +45,21 @@ ColumnLayout {
         }
     }
 
-    PlasmaComponents3.ScrollView {
+    QQC2.ScrollView {
         id: scrollView
 
         Layout.fillWidth: true
         Layout.fillHeight: true
         contentWidth: availableWidth - contentItem.leftMargin - contentItem.rightMargin
-        PlasmaComponents3.ScrollBar.horizontal.policy: PlasmaComponents3.ScrollBar.AlwaysOff
 
         contentItem: ListView {
             id: connectionView
 
             property int currentVisibleButtonIndex: -1
             property bool showSeparator: false
+
+            // anchors.top: parent.top
+            // anchors.topMargin:
 
             Keys.onDownPressed: event => {
                 connectionView.incrementCurrentIndex();
@@ -73,7 +77,7 @@ ColumnLayout {
 
             // We use the spacing around the connectivity message, if shown.
             //topMargin: connectivityMessage.visible ? 0 : Kirigami.Units.smallSpacing
-            bottomMargin: Kirigami.Units.smallSpacing * 2
+            topMargin: toolsbars.height
             //leftMargin: Kirigami.Units.smallSpacing * 2
             //rightMargin: Kirigami.Units.smallSpacing * 2
             spacing: Kirigami.Units.smallSpacing
@@ -90,6 +94,7 @@ ColumnLayout {
             delegate: ConnectionItem {
                 width: connectionView.width// - Kirigami.Units.smallSpacing * 4
             }
+            clip: true
 
             // Placeholder message
             Loader {

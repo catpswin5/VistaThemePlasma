@@ -27,7 +27,7 @@ ExpandableListItem {
     property bool passwordIsStatic: (SecurityType === PlasmaNM.Enums.StaticWep || SecurityType == PlasmaNM.Enums.WpaPsk ||
                                      SecurityType === PlasmaNM.Enums.Wpa2Psk || SecurityType == PlasmaNM.Enums.SAE)
     property bool predictableWirelessPassword: !Uuid && Type === PlasmaNM.Enums.Wireless && passwordIsStatic
-    property bool showSpeed: ConnectionState === PlasmaNM.Enums.Activated &&
+    property bool showSpeed: activated &&
                              (Type === PlasmaNM.Enums.Wired ||
                               Type === PlasmaNM.Enums.Wireless ||
                               Type === PlasmaNM.Enums.Gsm ||
@@ -37,18 +37,13 @@ ExpandableListItem {
     property real txSpeed: Plasmoid.configuration.txSpeed
 
     icon: {
-        if(Type === PlasmaNM.Enums.Wired) {
-            if(ConnectionState !== PlasmaNM.Enums.Activated) return "network-type-public";
-            else {
-                var details = model.ConnectionDetails;
-                var privateIp = details.length >= 1 ? details[1] : ""
-                if(privateIp.startsWith("192.168")) return "network-type-home";
-                else return "network-type-work";
-            }
-        } else {
-            return model.ConnectionIcon + "-flyout";
+        if(ConnectionState !== PlasmaNM.Enums.Activated) return model.ConnectionIcon + "-flyout";
+        else {
+            var details = model.ConnectionDetails;
+            var privateIp = details.length >= 1 ? details[1] : ""
+            if(privateIp.startsWith("192.168")) return "network-type-home";
+            else return "network-type-work";
         }
-
     }//model.ConnectionIcon
     title: model.ItemUniqueName
     subtitle: itemText()
@@ -165,10 +160,6 @@ ExpandableListItem {
 
     Accessible.description: `${model.AccessibleDescription} ${subtitle}`
 
-    Text {
-        text: Qt.binding(() => model.RxBytes);
-        color: "red"
-    }
 
     Component {
         id: passwordDialogComponent
@@ -181,8 +172,6 @@ ExpandableListItem {
                 id: passwordField
 
                 Layout.fillWidth: true
-                Layout.leftMargin: Kirigami.Units.iconSizes.small
-                Layout.rightMargin: Kirigami.Units.iconSizes.small
 
                 securityType: SecurityType
 

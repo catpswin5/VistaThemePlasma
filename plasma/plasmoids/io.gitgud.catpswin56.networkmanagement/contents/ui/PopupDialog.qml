@@ -35,76 +35,6 @@ PlasmaExtras.Representation {
         sourceModel: full.connectionModel
     }
 
-    header: PlasmaExtras.PlasmoidHeading {
-        focus: true
-        contentItem: ColumnLayout {
-            Layout.fillWidth: true
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                Toolbar {
-                    id: toolbar
-                    Layout.fillWidth: true
-                    hasConnections: connectionListPage.count > 0
-                    visible: stack.depth === 1
-                }
-
-                Loader {
-                    sourceComponent: stack.currentItem?.headerItems
-                    visible: !!item
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                MouseArea {
-                    id: cfgBtn
-
-                    property bool showConfig: false
-
-                    Layout.preferredWidth: 20
-                    Layout.preferredHeight: 20
-
-                    hoverEnabled: true
-                    onClicked: showConfig = !showConfig
-
-                    KSvg.FrameSvgItem {
-                        anchors.fill: parent
-
-                        imagePath: "widgets/button"
-                        prefix: parent.containsPress || parent.showConfig ? "toolbutton-pressed" : "toolbutton-hover"
-
-                        visible: parent.containsMouse || parent.showConfig
-                    }
-
-                    Kirigami.Icon {
-                        width: 16
-                        height: width
-
-                        anchors.centerIn: parent
-
-                        source: "configure"
-                    }
-                }
-            }
-
-            QQC2.CheckBox {
-                id: useAlternateIcon
-
-                Layout.fillWidth: true
-                Layout.leftMargin: 2
-
-                text: "Use alternate icon"
-                visible: cfgBtn.showConfig
-                checked: Plasmoid.configuration.useAlternateIcon
-
-                onCheckedChanged: Plasmoid.configuration.useAlternateIcon = checked
-            }
-        }
-    }
-
     Connections {
         target: full.nmHandler
         function onWifiCodeReceived(data, ssid) {
@@ -143,15 +73,88 @@ PlasmaExtras.Representation {
         }
     }
 
+    Rectangle {
+        id: toolsbars
+
+        property int rightMargin: 8
+
+        anchors {
+            right: parent.right
+            rightMargin: rightMargin
+            left: parent.left
+            leftMargin: -Kirigami.Units.smallSpacing
+            top: parent.top
+            topMargin: -Kirigami.Units.smallSpacing * 2
+        }
+
+        height: 25
+        color: "white"
+
+        ColumnLayout {
+            anchors.fill: parent
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                Toolbar {
+                    id: toolbar
+                    Layout.fillWidth: true
+                    hasConnections: connectionListPage.count > 0
+                    visible: stack.depth === 1
+                }
+
+                Loader {
+                    sourceComponent: stack.currentItem?.headerItems
+                    visible: !!item
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                MouseArea {
+                    id: cfgBtn
+
+                    Layout.preferredWidth: 24
+                    Layout.preferredHeight: 24
+
+                    hoverEnabled: true
+                    onClicked: handler.requestScan();
+
+                    KSvg.FrameSvgItem {
+                        anchors.fill: parent
+
+                        imagePath: "widgets/button"
+                        prefix: parent.containsPress ? "pressed" : "hover"
+
+                        visible: parent.containsMouse
+                    }
+
+                    Kirigami.Icon {
+                        width: 16
+                        height: width
+
+                        anchors.centerIn: parent
+
+                        source: "view-refresh"
+                    }
+                }
+            }
+        }
+    }
+
     contentItem: Item {
 
         QQC2.StackView {
             id: stack
             anchors.top: parent.top
+            anchors.topMargin: -Kirigami.Units.smallSpacing * 2
             anchors.left: parent.left
+            anchors.leftMargin: -Kirigami.Units.smallSpacing * 2
             anchors.right: parent.right
+            anchors.rightMargin: -Kirigami.Units.smallSpacing * 2
             anchors.bottom: backButton.visible ? backButton.top : parent.bottom
-            //anchors.bottomMargin: Kirigami.Units.smallSpacing
+            anchors.bottomMargin: -Kirigami.Units.smallSpacing/2
             initialItem: ConnectionListPage {
                 id: connectionListPage
                 model: appletProxyModel

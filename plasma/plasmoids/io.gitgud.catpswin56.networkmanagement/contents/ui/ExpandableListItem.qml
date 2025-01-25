@@ -16,75 +16,6 @@ import org.kde.plasma.extras as PlasmaExtras
 import org.kde.kirigami as Kirigami
 import QtQuick.Controls 2.15 as QQC2
 
-/**
- * A list item that expands when clicked to show additional actions and/or a
- * custom view.
- * The list item has a standardized appearance, with an icon on the left badged
- * with an optional emblem, a title and optional subtitle to the right, an
- * optional default action button, and a button to expand and collapse the list
- * item.
- *
- * When expanded, the list item shows a list of contextually-appropriate actions
- * if contextualActions has been defined.
- * If customExpandedViewContent has been defined, it will show a custom view.
- * If both have been defined, it shows both, with the actions above the custom
- * view.
- *
- * It is not valid to define neither; define one or both.
- *
- * Note: this component should only be used for lists where the maximum number
- * of items is very low, ideally less than 10. For longer lists, consider using
- * a different paradigm.
- *
- *
- * Example usage:
- *
- * @code
- * import QtQuick
- * import QtQuick.Controls as QQC2
- * import org.kde.kirigami as Kirigami
- * import org.kde.plasma.extras as PlasmaExtras
- * import org.kde.plasma.components as PlasmaComponents
- *
- * PlasmaComponents.ScrollView {
- *     ListView {
- *         anchors.fill: parent
- *         focus: true
- *         currentIndex: -1
- *         clip: true
- *         model: myModel
- *         highlight: PlasmaExtras.Highlight {}
- *         highlightMoveDuration: Kirigami.Units.shortDuration
- *         highlightResizeDuration: Kirigami.Units.shortDuration
- *         delegate: PlasmaExtras.ExpandableListItem {
- *             icon: model.iconName
- *             iconEmblem: model.isPaused ? "emblem-pause" : ""
- *             title: model.name
- *             subtitle: model.subtitle
- *             isDefault: model.isDefault
- *             defaultActionButtonAction: QQC2.Action {
- *                 icon.name: model.isPaused ? "media-playback-start" : "media-playback-pause"
- *                 text: model.isPaused ? "Resume" : "Pause"
- *                 onTriggered: {
- *                     if (model.isPaused) {
- *                         model.resume(model.name);
- *                     } else {
- *                         model.pause(model.name);
- *                     }
- *                 }
- *             }
- *             contextualActions: [
- *                 QQC2.Action {
- *                     icon.name: "configure"
- *                     text: "Configure…"
- *                     onTriggered: model.configure(model.name);
- *                 }
- *             ]
- *         }
- *     }
- * }
- * @endcode
- */
 Item {
     id: listItem
 
@@ -418,17 +349,21 @@ Item {
                 // Otherwise it becomes taller when the button appears
                 Layout.minimumHeight: defaultActionButton.height
 
+                Item {
+                    Layout.preferredWidth: 0
+                }
+
                 // Icon and optional emblem
                 Kirigami.Icon {
-                    id: listItemIcon
-
                     implicitWidth: Kirigami.Units.iconSizes.medium
                     implicitHeight: Kirigami.Units.iconSizes.medium
 
-                    Kirigami.Icon {
-                        id: iconEmblem
+                    source: listItemIcon.source
 
-                        visible: valid
+                    visible: listItem.isDefault
+
+                    Kirigami.Icon {
+                        visible: iconEmblem.source
 
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
@@ -445,43 +380,65 @@ Item {
 
                     spacing: 0
 
-                    Kirigami.Heading {
+                    Text {
                         id: listItemTitle
 
                         visible: text.length > 0
 
                         Layout.fillWidth: true
 
-                        level: 5
-
-                        textFormat: listItem.allowStyledText ? Text.StyledText : Text.PlainText
                         elide: Text.ElideRight
                         maximumLineCount: 1
+
+                        color: listItem.isDefault ? "black" : "#0061bd"
 
                         // Even if it's the default item, only make it bold when
                         // there's more than one item in the list, or else there's
                         // only one item and it's bold, which is a little bit weird
                         font.weight: listItem.isDefault && listItem.ListView.view.count > 1
-                                            ? Font.Bold
-                                            : Font.Normal
+                        ? Font.Bold
+                        : Font.Normal
                     }
 
-                    PlasmaComponents3.Label {
+                    Text {
                         id: listItemSubtitle
 
                         visible: text.length > 0
-                        font: Kirigami.Theme.smallFont
-
-                        // Otherwise colored text can be hard to see
-                        opacity: color === Kirigami.Theme.textColor ? 0.7 : 1.0
 
                         Layout.fillWidth: true
 
+                        color: "black"
                         textFormat: listItem.allowStyledText ? Text.StyledText : Text.PlainText
                         elide: Text.ElideRight
                         maximumLineCount: subtitleCanWrap ? 9999 : 1
                         wrapMode: subtitleCanWrap ? Text.WordWrap : Text.NoWrap
                     }
+                }
+
+                // Icon and optional emblem
+                Kirigami.Icon {
+                    id: listItemIcon
+
+                    implicitWidth: Kirigami.Units.iconSizes.medium
+                    implicitHeight: Kirigami.Units.iconSizes.medium
+
+                    visible: !listItem.isDefault
+
+                    Kirigami.Icon {
+                        id: iconEmblem
+
+                        visible: valid
+
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+
+                        implicitWidth: Kirigami.Units.iconSizes.small
+                        implicitHeight: Kirigami.Units.iconSizes.small
+                    }
+                }
+
+                Item {
+                    Layout.preferredWidth: 0
                 }
 
                 // Busy indicator
@@ -622,10 +579,12 @@ Item {
                     }
 
                     // Separator between the two items when both are shown
-                    KSvg.SvgItem {
+                    Rectangle {
                         Layout.fillWidth: true
-                        imagePath: "widgets/line"
-                        elementId: "horizontal-line"
+                        Layout.preferredHeight: 1
+
+                        color: "#cbcbcb"
+
                         visible: actionsListLoader.visible && customContentLoader.visible
                     }
 

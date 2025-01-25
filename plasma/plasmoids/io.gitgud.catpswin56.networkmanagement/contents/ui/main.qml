@@ -41,6 +41,9 @@ PlasmoidItem {
     }
 
     Plasmoid.title: "Open Network and Sharing Center"
+
+    toolTipItem: Tooltip {  }
+
     toolTipMainText: i18n("Networks")
     toolTipSubText: {
         const activeConnections = networkStatus.activeConnections;

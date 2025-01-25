@@ -6,7 +6,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-import QtQuick 2.1
+import QtQuick
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.ksvg 1.0 as KSvg
 
@@ -25,20 +25,31 @@ MouseArea {
     width: parent.width
 
     // Sections have spacing above but not below. Will use 2 of them below.
-    height: separator ? separatorLine.height + Kirigami.Units.smallSpacing * 3 : parent.height
+    height: separator ? 32 : parent.height
     hoverEnabled: true
 
-    KSvg.SvgItem {
+    Rectangle {
         id: separatorLine
         anchors {
-            horizontalCenter: parent.horizontalCenter
+            right: parent.right
+            left: parent.left
             top: parent.top
-            topMargin: Kirigami.Units.smallSpacing
         }
-        imagePath: "widgets/line"
-        elementId: "horizontal-line"
+        color: "#cbcbcb"
+        height: 1
         width: parent.width
         visible: separator
+    }
+
+    Text {
+        anchors.fill: parent
+
+        text: "Wireless Network Connection"
+        color: "#40555a"
+        verticalAlignment: Text.AlignVCenter
+        leftPadding: 10
+
+        visible: separatorLine.visible
     }
 
     KSvg.FrameSvgItem {
