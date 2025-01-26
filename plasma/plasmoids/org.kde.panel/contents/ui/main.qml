@@ -13,6 +13,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.ksvg 1.0 as KSvg
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kwindowsystem 1.0
 import org.kde.draganddrop 2.0 as DragDrop
 import org.kde.kirigami 2.20 as Kirigami
 
@@ -48,6 +49,12 @@ ContainmentItem {
     property bool dragAndDropping: false
     // True when e.g. the task manager is drag and dropping tasks.
     property bool appletRequestsInhibitDnD: false
+    property string hasCompositing: {
+        if(KWindowSystem.isPlatformX11) {
+            if(KX11Extras.compositingActive) return "";
+                else return "-nocomp";
+        } else return "";
+    }
 
 //END properties
 
@@ -77,6 +84,19 @@ ContainmentItem {
             return "east";
         case PlasmaCore.Types.BottomEdge:
             return "south";
+        }
+        return "";
+    }
+    function vistaSvgLocation(): string {
+        switch (Plasmoid.location) {
+            case PlasmaCore.Types.LeftEdge:
+                return "east";
+            case PlasmaCore.Types.TopEdge:
+                return "south";
+            case PlasmaCore.Types.RightEdge:
+                return "east";
+            case PlasmaCore.Types.BottomEdge:
+                return "south";
         }
         return "";
     }
@@ -132,14 +152,35 @@ ContainmentItem {
         // define a normal or a thick margin.
         KSvg.FrameSvgItem {
             id: panelSvg
-            imagePath: "widgets/panel-background"
+            imagePath: Qt.resolvedUrl("svgs/panel-background.svg")
             anchors {
                 fill: parent
 
                 leftMargin: milestone2Mode ? darkPart1.width - 4 : 0
                 rightMargin: milestone2Mode ? darkPart2.width + darkPart2.anchors.rightMargin - 4 : gradientRect.showDesktopItem
             }
-            prefix: milestone2Mode ? "supersouth" : "vista" + plasmoidLocationString()
+            prefix: milestone2Mode ? "supersouth" : "vista" + vistaSvgLocation() + hasCompositing
+
+            KSvg.FrameSvgItem {
+                id: shineLayer
+                imagePath: Qt.resolvedUrl("svgs/panel-background.svg")
+                anchors { // please find a better way to do this
+                    top: parent.top
+                    bottom: vistaSvgLocation() == "south" ? undefined : parent.bottom
+                    left: parent.left
+                    right: vistaSvgLocation() == "south" ? parent.right : undefined
+
+                    topMargin: vistaSvgLocation() == "south" ? 2 : -2
+                    bottomMargin: vistaSvgLocation() == "south" ? 0 : -2
+                    leftMargin: vistaSvgLocation() == "south" ? 0 : 2
+                }
+                height: vistaSvgLocation() == "south" ? 30 : undefined
+                width: vistaSvgLocation() == "south" ? undefined : 30
+
+                prefix: milestone2Mode ? "" : "shinevista-" + vistaSvgLocation()
+            }
+
+            visible: true
         }
         KSvg.FrameSvgItem {
             id: thickPanelSvg
@@ -424,7 +465,7 @@ ContainmentItem {
                 anchors.bottom: parent.bottom
                 anchors.top: parent.top
 
-                width: parent.clockItem + parent.sysTrayItem + parent.wmpToolbarItem + Kirigami.Units.smallSpacing*4
+                width: parent.clockItem + parent.userTileItem + parent.sysTrayItem + parent.wmpToolbarItem + Kirigami.Units.smallSpacing*4
 
                 imagePath: "widgets/panel-background"
                 visible: true
@@ -494,6 +535,15 @@ ContainmentItem {
                 }
                 return 0
             }
+            // User tile
+            property int userTileItem: {
+                for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
+                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.usertile") {
+                        return currentLayout.visibleChildren[i].applet.width + 6;
+                    }
+                }
+                return 0
+            }
             // System tray
             property int sysTrayItem: {
                 for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
@@ -524,7 +574,7 @@ ContainmentItem {
             // Sevenstart
             property int sevenstartItem: {
                 for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.vistastart") {
+                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.vistastart" || currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.startscreenpearl") {
                         return currentLayout.visibleChildren[i].applet.width;
                     }
                 }
