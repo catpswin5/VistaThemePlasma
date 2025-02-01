@@ -10,9 +10,4 @@ PlasmaCore.Dialog {
     hideOnWindowDeactivate: true
     backgroundHints: PlasmaCore.Types.NoBackground
     location: "Floating"
-
-    Image {
-        anchors.fill: parent
-        source: "png/frame.png"
-    }
 }

@@ -656,6 +656,17 @@ PlasmoidItem {
         mainItem: Image {
             source: "png/" + root.toolbarStyle + "/" + "frame.png"
 
+            Rectangle {
+                anchors.fill: parent
+
+                color: "gray"
+                topRightRadius: 1
+                topLeftRadius: 1
+
+                z: -1
+                visible: toolbarStyle == 1
+            }
+
             Item {
                 id: design1
 
@@ -666,12 +677,12 @@ PlasmoidItem {
                 Rectangle {
                     color: "black"
                     anchors.fill: parent
-                    anchors.margins: 5
+                    anchors.margins: 6
                 }
 
                 Image {
                     anchors.fill: parent
-                    anchors.margins: 5
+                    anchors.margins: 6
 
                     fillMode: Image.PreserveAspectCrop
                     source: root.albumArt
@@ -680,20 +691,21 @@ PlasmoidItem {
 
                 ColumnLayout {
                     anchors.right: parent.right
-                    anchors.rightMargin: 5
+                    anchors.rightMargin: 6
                     anchors.left: parent.left
-                    anchors.leftMargin: 5
+                    anchors.leftMargin: 6
                     anchors.top: parent.top
-                    anchors.topMargin: 3
+                    anchors.topMargin: 4
 
                     spacing: 0
 
                     Text {
-                        text: root.artist != "" ? root.artist : (root.track != "" ? "No album name" : "No media playing")
+                        text: root.artist != "" ? root.artist : "No media playing"
                         color: "lightgreen"
                         font.pointSize: 8
                         elide: Text.ElideRight
                         Layout.fillWidth: true
+                        visible: root.track != ""
                     }
                     Text {
                         text: root.track

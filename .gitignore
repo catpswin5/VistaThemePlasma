@@ -8,3 +8,4 @@ plasma/plasmoids/src/seventasks_src/build
 kwin/effects_cpp/smodglow/build-kf6
 "extras/Win7 M2/src/m2tasks_src/build"
 kwin/effects_cpp/aeroglide/build-kf6
+"extras/Extra apps/execbin/build"
