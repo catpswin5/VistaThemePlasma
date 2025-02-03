@@ -229,9 +229,14 @@ FocusScope {
         Text {
             id: text1
             text: {
-                if(Plasmoid.configuration.watermarkStyle === 0) return "Windows Vista™";
-                else if(Plasmoid.configuration.watermarkStyle === 1) return "VistaThemePlasma";
-                else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText1;
+                switch(Plasmoid.configuration.watermarkStyle) {
+                    case(0):
+                        return "Windows Vista™";
+                    case(1):
+                        return "VistaThemePlasma";
+                    case(2):
+                        return Plasmoid.configuration.customText1;
+                }
             }
             Layout.alignment: Qt.AlignRight
             color: "white"
@@ -240,9 +245,14 @@ FocusScope {
         Text {
             id: text2
             text: {
-                if(Plasmoid.configuration.watermarkStyle === 0) return "Build 6003";
-                else if(Plasmoid.configuration.watermarkStyle === 1) return "Build 3/2/2025";
-                else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText2;
+                switch(Plasmoid.configuration.watermarkStyle) {
+                    case(0):
+                        return "Build 6003";
+                    case(1):
+                        return "Build 3/2/2025";
+                    case(2):
+                        return Plasmoid.configuration.customText2;
+                }
             }
             Layout.alignment: Qt.AlignRight
             color: "white"
@@ -251,9 +261,14 @@ FocusScope {
         Text {
             id: text3
             text: {
-                if(Plasmoid.configuration.watermarkStyle === 0) return "This copy of Windows is not genuine";
-                else if(Plasmoid.configuration.watermarkStyle === 1) return "This copy of VistaThemePlasma is not genuine";
-                else if(Plasmoid.configuration.watermarkStyle === 2) return Plasmoid.configuration.customText3;
+                switch(Plasmoid.configuration.watermarkStyle) {
+                    case(0):
+                        return "This copy of Windows is not genuine";
+                    case(1):
+                        return "This copy of VistaThemePlasma is not genuine";
+                    case(2):
+                        return Plasmoid.configuration.customText3;
+                }
             }
             Layout.alignment: Qt.AlignRight
             visible: Plasmoid.configuration.watermarkGenuine && text != ""
