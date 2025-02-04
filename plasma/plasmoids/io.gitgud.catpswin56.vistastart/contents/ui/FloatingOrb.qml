@@ -20,8 +20,8 @@ import org.kde.kirigami as Kirigami
 
 Item {
     id: floatingOrb
-    width: buttonIconSizes.width
-    height: buttonIconSizes.height / 3
+    width: scaledWidth //buttonIconSizes.width
+    height: scaledHeight / 3 //buttonIconSizes.height / 3
     property alias buttonIconSizes: buttonIconSizes
     property alias buttonIcon: buttonIcon
     property alias buttonIconPressed: buttonIconPressed
@@ -30,14 +30,14 @@ Item {
 
     property string location: {
         switch (Plasmoid.location) {
-        case PlasmaCore.Types.LeftEdge:
-            return "middle";
-        case PlasmaCore.Types.RightEdge:
-            return "middle";
-        case PlasmaCore.Types.TopEdge:
-            return "top";
-        case PlasmaCore.Types.BottomEdge:
-            return "bottom";
+            case PlasmaCore.Types.LeftEdge:
+                return "middle";
+            case PlasmaCore.Types.RightEdge:
+                return "middle";
+            case PlasmaCore.Types.TopEdge:
+                return "top";
+            case PlasmaCore.Types.BottomEdge:
+                return "bottom";
         }
         return "";
     }
@@ -58,33 +58,48 @@ Item {
         opacity: 0;
     }
     clip: false
+
+    property real aspectRatio: buttonIconSizes.height === 0 ? 1 : (buttonIconSizes.width / buttonIconSizes.height)
+    property int scaledWidth: Plasmoid.configuration.orbWidth === 0 ? buttonIconSizes.width : Plasmoid.configuration.orbWidth
+    property int scaledHeight: scaledWidth / aspectRatio
+
     Image {
         id: buttonIcon
-        smooth: true
         anchors.centerIn: parent
-        source: orbTexture
+        smooth: true
+        source: floatingOrb.orbTexture
         sourceClipRect: Qt.rect(0, 0, buttonIconSizes.width, buttonIconSizes.height / 3);
+        fillMode: Image.PreserveAspectFit
+        width: floatingOrb.scaledWidth
+        height: floatingOrb.scaledHeight
     }
     Image {
         id: buttonIconPressed
+        anchors.centerIn: parent
         visible: dashWindow.visible
         smooth: true
-        anchors.centerIn: parent
-        source: orbTexture
-        verticalAlignment: Image.AlignBottom
+        source: floatingOrb.orbTexture
+        //verticalAlignment: Image.AlignBottom
         sourceClipRect: Qt.rect(0, 2*buttonIconSizes.height / 3, buttonIconSizes.width, buttonIconSizes.height / 3);
+        fillMode: Image.PreserveAspectFit
+        width: floatingOrb.scaledWidth
+        height: floatingOrb.scaledHeight
     }
     Image {
         id: buttonIconHovered
-        source: orbTexture
         anchors.centerIn: parent
+        source: floatingOrb.orbTexture
+        smooth: true
         opacity: mouseArea.containsMouse || mouseAreaCompositingOff.containsMouse
         visible:  !dashWindow.visible
         Behavior on opacity {
-            NumberAnimation { properties: "opacity"; easing.type: Easing.Linear; duration: opacityDuration  }
+            NumberAnimation { properties: "opacity"; easing.type: Easing.Linear; duration: floatingOrb.opacityDuration  }
         }
-        verticalAlignment: Image.AlignVCenter
+        //verticalAlignment: Image.AlignVCenter
         sourceClipRect: Qt.rect(0, buttonIconSizes.height / 3, buttonIconSizes.width, buttonIconSizes.height / 3);
+        fillMode: Image.PreserveAspectFit
+        width: floatingOrb.scaledWidth
+        height: floatingOrb.scaledHeight
     }
 
     MouseArea
@@ -96,7 +111,7 @@ Item {
         //propagateComposedEvents: true
         onPressed: mouse => {
             //if(mouse.button === Qt.LeftButton)
-                root.showMenu();
+            root.showMenu();
         }
 
     }

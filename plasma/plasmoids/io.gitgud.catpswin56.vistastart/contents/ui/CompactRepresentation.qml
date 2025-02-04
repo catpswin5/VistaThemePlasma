@@ -29,10 +29,10 @@ import org.kde.kirigami as Kirigami
 Item {
     id: root
 
-    Layout.minimumHeight: floatingOrbPanel.buttonIconSizes.height / 3;
-    Layout.maximumHeight: floatingOrbPanel.buttonIconSizes.height / 3;
-    Layout.minimumWidth: floatingOrbPanel.buttonIconSizes.width;
-    Layout.maximumWidth: floatingOrbPanel.buttonIconSizes.width;
+    Layout.minimumHeight: floatingOrbPanel.scaledHeight / 3;
+    Layout.maximumHeight: floatingOrbPanel.scaledHeight / 3;
+    Layout.minimumWidth: floatingOrbPanel.scaledWidth;
+    Layout.maximumWidth: floatingOrbPanel.scaledWidth;
     width: Layout.maximumWidth
     height: Layout.maximumHeight
     property bool compositing: false
@@ -71,14 +71,12 @@ Item {
     }
     function positionOrb() {
         var pos = kicker.mapToGlobal(floatingOrbPanel.x, floatingOrbPanel.y);
-        if(!Plasmoid.configuration.offsetFloatingOrb) {
-            pos.y -= 5;
+        pos.y -= 5;
+        if(Plasmoid.configuration.offsetFloatingOrb && root.height != 40) {
+            pos.y += 5;
         }
-        orb.width = floatingOrbPanel.buttonIcon.implicitWidth
-        orb.height = floatingOrbPanel.buttonIcon.implicitHeight;
-        if(orb.height === 30) {
-            pos.y += 2;
-        }
+        orb.width = floatingOrbPanel.scaledWidth
+        orb.height = floatingOrbPanel.scaledHeight / 3;
 
         orb.x = pos.x;
         orb.y = pos.y;
@@ -155,6 +153,9 @@ Item {
     Connections {
         target: Plasmoid.configuration
         function onCustomButtonImageChanged() {
+            positionOrb();
+        }
+        function onOrbWidthChanged() {
             positionOrb();
         }
     }
