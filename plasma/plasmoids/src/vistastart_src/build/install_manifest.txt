@@ -1,1 +1,0 @@
-/usr/lib/qt6/plugins/plasma/applets/io.gitgud.catpswin56.vistastart.so

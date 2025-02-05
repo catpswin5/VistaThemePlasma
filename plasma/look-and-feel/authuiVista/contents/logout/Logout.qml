@@ -1,13 +1,13 @@
-import QtQuick 2.2
-import QtQuick.Layouts 1.2
-import QtQuick.Controls 2.12 as QQC2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as QQC2
 import Qt5Compat.GraphicalEffects
 
 import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
+import org.kde.kcmutils as KCMUtils
 import org.kde.plasma.plasma5support as Plasma5Support
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.private.sessions 2.0
+import org.kde.plasma.private.sessions
 
 Image {
     id: root
@@ -48,6 +48,13 @@ Image {
         signal exited(string cmd, int exitCode, int exitStatus, string stdout, string stderr)
     }
 
+    Connections {
+        target: executable
+        function onExited() {
+            root.cancelRequested();
+        }
+    }
+
     QQC2.Action {
         onTriggered: root.cancelRequested()
         shortcut: "Escape"
@@ -58,305 +65,143 @@ Image {
 
         ColumnLayout {
             id: mainColumn
+
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: Kirigami.Units.gridUnit*5 // use accurate values idk i just approximated this rq
+            anchors.verticalCenterOffset: Kirigami.Units.gridUnit*5
+
             spacing: 5
 
-            MouseArea {
-                Layout.preferredWidth: 190
-                Layout.preferredHeight: 30
+            Repeater {
+                id: list
 
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    lockArrow.source = "../images/command-hover.png"
-                }
-                onExited: {
-                    lockArrow.source = "../images/command.png"
-                }
-                onClicked: {
-                    root.lockScreenRequested()
-                }
-
-                KSvg.FrameSvgItem {
-                    anchors {
-                        right: lockcontent.right
-                        left: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
+                function trigger(modelIndex) {
+                    switch(modelIndex) {
+                        case(0):
+                            root.lockScreenRequested();
+                            break;
+                        case(1):
+                            sessMan.switchUser();
+                            root.cancelRequested();
+                            break;
+                        case(2):
+                            root.logoutRequested();
+                            break;
+                        case(3):
+                            KCMUtils.KCMLauncher.openSystemSettings("kcm_users");
+                            root.cancelRequested();
+                            break;
+                        case(4):
+                            executable.exec("ksysguard6 & disown");
+                            break;
                     }
-                    imagePath: Qt.resolvedUrl("../svgs/command.svg");
-                    prefix: parent.containsMouse ? (parent.containsPress ? "pressed" : "hover") : ""
                 }
-                RowLayout {
-                    id: lockcontent
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 5
 
-                    Image {
-                        id: lockArrow
-
-                        source: "../images/command.png"
-                    }
-                    QQC2.Label {
+                model: ListModel {
+                    ListElement {
                         text: "Lock this computer"
-                        color: "white"
-                        font.pointSize: 12
-                        renderType: Text.NativeRendering
-                        font.hintingPreference: Font.PreferFullHinting
-                        font.kerning: false
                     }
-                    Item {
-                        Layout.preferredWidth: 10
-                    }
-                }
-            }
-
-            MouseArea {
-                Layout.preferredWidth: 190
-                Layout.preferredHeight: 30
-
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    switchArrow.source = "../images/command-hover.png"
-                }
-                onExited: {
-                    switchArrow.source = "../images/command.png"
-                }
-                onClicked: {
-                    sessMan.switchUser()
-                    root.cancelRequested()
-                }
-
-                KSvg.FrameSvgItem {
-                    anchors {
-                        right: switchcontent.right
-                        left: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    imagePath: Qt.resolvedUrl("../svgs/command.svg");
-                    prefix: parent.containsMouse ? (parent.containsPress ? "pressed" : "hover") : ""
-                }
-                RowLayout {
-                    id: switchcontent
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 5
-
-                    Image {
-                        id: switchArrow
-
-                        source: "../images/command.png"
-                    }
-                    QQC2.Label {
-                        color: "white"
+                    ListElement {
                         text: "Switch User"
-                        font.pointSize: 12
-                        renderType: Text.NativeRendering
-                        font.hintingPreference: Font.PreferFullHinting
-                        font.kerning: false
                     }
-                    Item {
-                        Layout.preferredWidth: 10
-                    }
-                }
-            }
-
-            MouseArea {
-                Layout.preferredWidth: 190
-                Layout.preferredHeight: 30
-
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    logArrow.source = "../images/command-hover.png"
-                }
-                onExited: {
-                    logArrow.source = "../images/command.png"
-                }
-                onClicked: {
-                    root.logoutRequested()
-                }
-
-                KSvg.FrameSvgItem {
-                    anchors {
-                        right: logcontent.right
-                        left: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    imagePath: Qt.resolvedUrl("../svgs/command.svg");
-                    prefix: parent.containsMouse ? (parent.containsPress ? "pressed" : "hover") : ""
-                }
-                RowLayout {
-                    id: logcontent
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 5
-
-                    Image {
-                        id: logArrow
-
-                        source: "../images/command.png"
-                    }
-                    QQC2.Label {
-                        color: "white"
+                    ListElement {
                         text: "Log off"
-                        font.pointSize: 12
-                        renderType: Text.NativeRendering
-                        font.hintingPreference: Font.PreferFullHinting
-                        font.kerning: false
                     }
-                    Item {
-                        Layout.preferredWidth: 10
-                    }
-                }
-            }
-
-            MouseArea {
-                Layout.preferredWidth: 190
-                Layout.preferredHeight: 30
-
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    changeArrow.source = "../images/command-hover.png"
-                }
-                onExited: {
-                    changeArrow.source = "../images/command.png"
-                }
-                onClicked: {
-                    executable.exec("systemsettings kcm_users & disown")
-                    root.cancelRequested()
-                }
-
-                KSvg.FrameSvgItem {
-                    anchors {
-                        right: changecontent.right
-                        left: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    imagePath: Qt.resolvedUrl("../svgs/command.svg");
-                    prefix: parent.containsMouse ? (parent.containsPress ? "pressed" : "hover") : ""
-                }
-                RowLayout {
-                    id: changecontent
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 5
-
-                    Image {
-                        id: changeArrow
-
-                        source: "../images/command.png"
-                    }
-                    QQC2.Label {
-                        color: "white"
+                    ListElement {
                         text: "Change a password..."
-                        font.pointSize: 12
-                        renderType: Text.NativeRendering
-                        font.hintingPreference: Font.PreferFullHinting
-                        font.kerning: false
                     }
-                    Item {
-                        Layout.preferredWidth: 10
-                    }
-                }
-            }
-            MouseArea {
-                Layout.preferredWidth: 190
-                Layout.preferredHeight: 30
-
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    taskmgrArrow.source = "../images/command-hover.png"
-
-                }
-                onExited: {
-                    taskmgrArrow.source = "../images/command.png"
-                }
-                onClicked: {
-                    executable.exec("ksysguard & disown")
-                    root.cancelRequested()
-                }
-
-                KSvg.FrameSvgItem {
-                    anchors {
-                        right: taskmgrcontent.right
-                        left: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    imagePath: Qt.resolvedUrl("../svgs/command.svg");
-                    prefix: parent.containsMouse ? (parent.containsPress ? "pressed" : "hover") : ""
-                }
-                RowLayout {
-                    id: taskmgrcontent
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 5
-
-                    Image {
-                        id: taskmgrArrow
-
-                        source: "../images/command.png"
-                    }
-                    QQC2.Label {
-
-                        color: "white"
+                    ListElement {
                         text: "Start Task Manager"
-                        font.pointSize: 12
-                        renderType: Text.NativeRendering
-                        font.hintingPreference: Font.PreferFullHinting
-                        font.kerning: false
                     }
-                    Item {
-                        Layout.preferredWidth: 10
+                }
+                delegate: Item {
+                    Layout.preferredWidth: delegateContent.implicitWidth
+                    Layout.preferredHeight: 30
+
+                    KSvg.FrameSvgItem {
+                        anchors.fill: parent
+
+                        imagePath: Qt.resolvedUrl("../svgs/command.svg");
+                        prefix: delegateMa.containsMouse ? (delegateMa.containsPress ? "pressed" : "hover") : ""
+                    }
+
+                    MouseArea {
+                        id: delegateMa
+
+                        anchors.fill: parent
+
+                        hoverEnabled: true
+                        propagateComposedEvents: true
+
+                        onClicked: list.trigger(model.index);
+                    }
+
+                    RowLayout {
+                        id: delegateContent
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 5
+
+                        Image {
+                            id: delegateArrow
+
+                            source: "../images/command-" + (delegateMa.containsMouse ? "hover" : "normal") + ".png"
+                        }
+                        QQC2.Label {
+                            text: model.text
+                            color: "white"
+                            font.pointSize: 12
+                            renderType: Text.NativeRendering
+                            font.hintingPreference: Font.PreferFullHinting
+                            font.kerning: false
+                        }
+                        Item {
+                            Layout.preferredWidth: 10
+                        }
                     }
                 }
             }
 
-            MouseArea {
-                Layout.preferredWidth: 115
-                Layout.preferredHeight: 25
-                Layout.topMargin: 35
+            KSvg.FrameSvgItem {
+                id: cancel
+
+                property string state: {
+                    if(cancelMa.containsMouse) return "hover"
+                    else if(cancelMa.containsPress) return "pressed"
+                    else return "normal"
+                }
+
+                Layout.preferredWidth: cancelText.implicitWidth + (Kirigami.Units.gridUnit * 3)
+                Layout.preferredHeight: 28
+
                 Layout.alignment: Qt.AlignHCenter
 
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    cancelBackground.source = "../images/cancel-hover.png"
-                }
-                onExited: {
-                    cancelBackground.source = "../images/cancel.png"
-                }
-                onClicked: {
-                    root.cancelRequested()
-                }
-                onPressed: {
-                    cancelBackground.source = "../images/cancel-pressed.png"
-                }
-                Image {
-                    id: cancelBackground
+                Layout.topMargin: 35
+
+                imagePath: Qt.resolvedUrl("../svgs/button.svg")
+                prefix: (activeFocus ? "focus-" : "") + state
+
+                QQC2.Label {
+                    id: cancelText
 
                     anchors.centerIn: parent
-                    source: "../images/cancel.png"
 
-                    QQC2.Label {
-                        anchors.centerIn: parent
+                    text: "Cancel"
+                    color: "white"
+                    font.pointSize: 12
+                    renderType: Text.NativeRendering
+                    font.hintingPreference: Font.PreferFullHinting
+                    font.kerning: false
+                }
 
-                        color: "white"
-                        text: "Cancel"
-                        font.pointSize: 12
-                        renderType: Text.NativeRendering
-                        font.hintingPreference: Font.PreferFullHinting
-                        font.kerning: false
-                    }
+                MouseArea {
+                    id: cancelMa
+
+                    anchors.fill: parent
+
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+
+                    onClicked: root.cancelRequested()
                 }
             }
         }
@@ -367,126 +212,108 @@ Image {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.bottomMargin: Kirigami.Units.gridUnit*2 // Same goes for here I just used Kirigami Units
+            anchors.bottomMargin: Kirigami.Units.gridUnit + (Kirigami.Units.smallSpacing * 4)
 
-            MouseArea {
+            KSvg.FrameSvgItem {
+                id: access
+
+                property string state: {
+                    if(accessMa.containsPress) return "pressed"
+                    else if(accessMa.containsMouse) return "hover"
+                    else return "normal"
+                }
+
                 Layout.preferredWidth: 40
-                Layout.preferredHeight: 25
-                Layout.topMargin: 35
-                Layout.alignment: Qt.AlignHCenter
+                Layout.preferredHeight: 28
 
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    accessButton.source = "../images/accessButton-hover.png"
-                }
-                onExited: {
-                    accessButton.source = "../images/accessButton.png"
-                }
-                onClicked: {
-                    root.cancelRequested()
-                    executable.exec("systemsettings kcm_access")
-                }
-                onPressed: {
-                    accessButton.source = "../images/accessButton-pressed.png"
-                }
-                Image {
-                    id: accessButton
+                imagePath: Qt.resolvedUrl("../svgs/button.svg")
+                prefix: (activeFocus ? "focus-" : "") + state
 
-                    width: 38
-                    source: "../images/accessButton.png"
+                Image { anchors.centerIn: parent; source: "../images/access-glyph.png" }
 
-                    Image {
-                        anchors.centerIn: parent
+                MouseArea {
+                    id: accessMa
 
-                        source: "../images/access.png"
+                    anchors.fill: parent
+
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+
+                    onClicked: {
+                        KCMUtils.KCMLauncher.openSystemSettings("kcm_access");
+                        root.cancelRequested();
                     }
+
+                    z: 1
                 }
             }
 
             Item {
                 Layout.fillWidth: true
-            }
-            Item {
-                Layout.preferredWidth: 40
             }
 
             Image {
-                Layout.bottomMargin: -33
-                Layout.alignment: Qt.AlignRight
+                id: power
 
-                source: "../images/watermark.png"
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            MouseArea {
-                Layout.preferredWidth: 36
-                Layout.preferredHeight: 28
-                Layout.bottomMargin: -35
-                Layout.rightMargin: -3
-
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    power.source = "../images/halt-hover.png"
+                property string state: {
+                    if(powerMa.containsMouse) return "hover"
+                    else if(powerMa.containsPress) return "pressed"
+                    else return "normal"
                 }
-                onExited: {
-                    power.source = "../images/halt.png"
-                }
-                onClicked: {
-                    root.haltRequested()
-                }
-                onPressed: {
-                    power.source = "../images/halt-pressed.png"
-                }
-                Image {
-                    id: power
 
-                    Layout.rightMargin: -5
+                Layout.rightMargin: -Kirigami.Units.smallSpacing - 1
 
-                    source: "../images/halt.png"
+                source: "../images/power-" + state + ".png"
 
-                    Image {
-                        anchors.centerIn: parent
+                Image { anchors.centerIn: parent; source: "../images/power-glyph.png" }
 
-                        source: "../images/halt-glyph.png"
-                    }
+                MouseArea {
+                    id: powerMa
+
+                    anchors.fill: parent
+
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+
+                    onClicked: root.haltRequested()
                 }
             }
-            MouseArea {
-                Layout.preferredWidth: 33
-                Layout.preferredHeight: 28
-                Layout.bottomMargin: -35
 
-                hoverEnabled: true
-                propagateComposedEvents: true
-                onEntered: {
-                    powerRIGHT.source = "../images/reboot-hover.png"
-                }
-                onExited: {
-                    powerRIGHT.source = "../images/reboot.png"
-                }
-                onClicked: {
-                    root.rebootRequested()
-                }
-                onPressed: {
-                    powerRIGHT.source = "../images/reboot-pressed.png"
-                }
-                Image {
-                    id: powerRIGHT
+            Image {
+                id: powerRight
 
-                    source: "../images/reboot.png"
+                property string state: {
+                    if(powerRightMa.containsMouse) return "hover"
+                    else if(powerRightMa.containsPress) return "pressed"
+                    else return "normal"
+                }
 
-                    Image {
-                        anchors.centerIn: parent
+                source: "../images/powerRight-" + state + ".png"
 
-                        source: "../images/reboot-glyph.png"
-                    }
+                Image { anchors.centerIn: parent; source: "../images/powerRight-glyph.png" }
+
+                MouseArea {
+                    id: powerRightMa
+
+                    anchors.fill: parent
+
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+
+                    onClicked: root.rebootRequested()
                 }
             }
         }
+    }
+
+    Image {
+        anchors {
+            bottom: parent.bottom
+            bottomMargin: Kirigami.Units.gridUnit + (Kirigami.Units.smallSpacing * 3)
+
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        source: "../images/watermark.png"
     }
 }
