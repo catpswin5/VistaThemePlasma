@@ -136,18 +136,16 @@ Item {
             sidePanelDelegate.focus = false;
         }
         onClicked: {
-            if(itemText != "Recent Items") {
-                root.visible = false;
-                if(executeProgram)
-                    executable.exec(executableString);
-                else {
-                    if(KWindowSystem.isPlatformX11)
-                        Qt.callLater(Qt.openUrlExternally, executableString);
-                    else // Workaround for Wayland to prevent crashing
-                        executable.exec("xdg-open " + executableString);
+            root.visible = false;
+            if(executeProgram)
+                executable.exec(executableString);
+            else {
+                if(KWindowSystem.isPlatformX11)
+                    Qt.callLater(Qt.openUrlExternally, executableString);
+                else // Workaround for Wayland to prevent crashing
+                    executable.exec("xdg-open " + executableString);
 
-                }
-            } else fileUsageMenu.openRelative();
+            }
         }
         hoverEnabled: true
         anchors.fill: parent

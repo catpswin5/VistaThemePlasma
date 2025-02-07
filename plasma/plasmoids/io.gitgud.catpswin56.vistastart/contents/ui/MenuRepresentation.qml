@@ -1147,6 +1147,7 @@ PlasmaCore.Dialog {
 					id: recentsItem
 					itemText: i18n("Recent Items")
 					itemIcon: "document-open-recent"
+					executableString: folderDialog.getPath(11)
 					visible: Plasmoid.configuration.showRecentItemsSidepanel
 					onVisibleChanged: {
 						separator1.updateVisibility();

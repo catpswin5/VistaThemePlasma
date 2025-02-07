@@ -38,7 +38,6 @@ Item {
   property string text: ""
   property string icon: ""
 
-  property var itemSection: model.group
   property bool highlighted: false
   property bool isDraging: false
   property bool canDrag: true
@@ -46,33 +45,11 @@ Item {
   signal highlightChanged
   signal aboutToShowActionMenu(variant actionMenu)
 
-  property bool hasActionList: ((model.favoriteId !== null)
-      || (("hasActionList" in model) && (model.hasActionList !== null)))
-
-  property var triggerModel
-
-  onAboutToShowActionMenu: actionMenu => {
-    var actionList = allItem.hasActionList ? model.actionList : [];
-    Tools.fillActionMenu(i18n, actionMenu, actionList, ListView.view.model.favoritesModel, model.favoriteId);
-  }
-
   function openActionMenu(x, y) {
     aboutToShowActionMenu(actionMenu);
     if(actionMenu.actionList.length === 0) return;
     actionMenu.visualParent = allItem;
     actionMenu.open(x, y);
-  }
-  function actionTriggered(actionId, actionArgument) {
-      var close = (Tools.triggerAction(triggerModel, index, actionId, actionArgument) === true);
-      if (close) {
-          //root.toggle();
-        kicker.expanded = false;
-      }
-  }
-  function trigger() {
-    triggerModel.trigger(index, "", null);
-    kicker.expanded = false;
-    root.visible = false;
   }
   function updateHighlight() {
     if (navGrid.currentIndex == index){
