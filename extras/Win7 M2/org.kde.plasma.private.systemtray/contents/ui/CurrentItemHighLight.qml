@@ -37,6 +37,14 @@ KSvg.FrameSvgItem {
     imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
     prefix: "active-tab"
 
+    MouseArea {
+        id: highlightMa
+
+        anchors.fill: parent
+
+        propagateComposedEvents: true
+    }
+
     // update when System Tray is expanded - applet activated or hidden icons shown
     Connections {
         target: systemTrayState
@@ -83,12 +91,20 @@ KSvg.FrameSvgItem {
     }
 
     function updateHighlightedItem() {
-        if (systemTrayState.activeApplet && systemTrayState.activeApplet.parent) {
-            changeHighlightedItem(systemTrayState.activeApplet.parent.container, false);
-        } else { // 'Show hidden items' popup
-            changeHighlightedItem(parent, true);
-            width = 0;
-            height = 0;
+        if (systemTrayState.expanded) {
+            if(root.milestone2Mode) {
+                if (systemTrayState.activeApplet && systemTrayState.activeApplet.parent && systemTrayState.activeApplet.parent.inVisibleLayout) {
+                    changeHighlightedItem(systemTrayState.activeApplet.parent.container, /*forceEdgeHighlight*/false);
+                } else { // 'Show hidden items' popup
+                    changeHighlightedItem(parent, /*forceEdgeHighlight*/true);
+                    width = 0;
+                    height = 0;
+                }
+            } else {
+                changeHighlightedItem(systemTrayState.activeApplet.parent.container, /*forceEdgeHighlight*/false);
+            }
+        } else {
+            highlightedItem = null;
         }
     }
 

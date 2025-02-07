@@ -10,6 +10,9 @@
       <label>Whether the timezone should be displayed when the clock is showing the local timezone.</label>
       <default>false</default>
     </entry>
+    <entry name="disablePin" type="Bool">
+      <default>false</default>
+    </entry>
     <entry name="showSeconds" type="Bool">
       <label>Whether seconds should be shown in the clock.</label>
       <default>false</default>

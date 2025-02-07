@@ -19,16 +19,20 @@ PlasmaCore.ToolTipArea {
 
     property var model: itemModel
 
-    required property string modelStr
+    property bool isPlasmoid: model.applet.Plasmoid.pluginName != ""
+    property string itemIcon: model.applet.plasmoid.icon
 
-    property string text: ""
     property alias mouseArea: mouseArea
     property string itemId
+    property alias text: label.text
+    property alias labelHeight: label.implicitHeight
     property alias iconContainer: iconContainer
-    property int status: model.status || PlasmaCore.Types.UnknownStatus
-    property int effectiveStatus: model.effectiveStatus || PlasmaCore.Types.UnknownStatus
+    property int /*PlasmaCore.Types.ItemStatus*/ status: model.status || PlasmaCore.Types.UnknownStatus
+    property int /*PlasmaCore.Types.ItemStatus*/ effectiveStatus: model.effectiveStatus || PlasmaCore.Types.UnknownStatus
     property bool effectivePressed: false
-    property alias held: mouseArea.held
+    property real minLabelHeight: 0
+    readonly property bool inHiddenLayout: effectiveStatus === PlasmaCore.Types.PassiveStatus && root.milestone2Mode
+    readonly property bool inVisibleLayout: effectiveStatus === PlasmaCore.Types.ActiveStatus
 
     // input agnostic way to trigger the main action
     signal activated(var pos)
@@ -46,8 +50,49 @@ PlasmaCore.ToolTipArea {
 
 
 
-    location: Plasmoid.location
+    location: {
+        if (inHiddenLayout) {
+            if (LayoutMirroring.enabled && Plasmoid.location !== PlasmaCore.Types.RightEdge) {
+                return PlasmaCore.Types.LeftEdge;
+            } else if (Plasmoid.location !== PlasmaCore.Types.LeftEdge) {
+                return PlasmaCore.Types.RightEdge;
+            }
+        }
 
+        return Plasmoid.location;
+    }
+
+    /*PulseAnimation {
+        targetItem: iconContainer
+        running: (abstractItem.status === PlasmaCore.Types.NeedsAttentionStatus
+                || abstractItem.status === PlasmaCore.Types.RequiresAttentionStatus)
+            && Kirigami.Units.longDuration > 0
+    }*/
+
+    KSvg.FrameSvgItem {
+        id: itemHighLight
+        anchors.fill: parent
+        anchors.bottomMargin: 0
+        //property int location
+
+        property bool animationEnabled: true
+        property var highlightedItem: null
+
+        z: -1 // always draw behind icons
+        opacity: (mouseArea.containsMouse && !dropArea.containsDrag) ? 1 : 0
+
+        visible: root.milestone2Mode
+
+        imagePath: Qt.resolvedUrl("../svgs/tabbar.svgz")
+        //imagePath: "widgets/tabbar"
+        prefix: mouseArea.containsPress ? "pressed-tab" : "active-tab"
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Kirigami.Units.longDuration
+                easing.type: Easing.InOutQuad
+            }
+        }
+    }
     MouseArea {
         id: mouseArea
         propagateComposedEvents: true
@@ -76,7 +121,7 @@ PlasmaCore.ToolTipArea {
         anchors.fill: abstractItem
         hoverEnabled: true
         drag.filterChildren: true
-        drag.target: held ? icon : null
+        drag.target: held && !abstractItem.inHiddenLayout ? icon : null
         // Necessary to make the whole delegate area forward all mouse events
         acceptedButtons: Qt.AllButtons
         // Using onPositionChanged instead of onEntered because changing the
@@ -84,18 +129,30 @@ PlasmaCore.ToolTipArea {
         // onEntered will change the index while the items are scrolling,
         // making it harder to scroll.
 
-        onPositionChanged: {
-            if(mouseArea.containsPress) {
-                held = true;
+        onContainsMouseChanged: {
+            if(abstractItem.inHiddenLayout && !mouseArea.containsMouse) {
+                root.hiddenLayout.currentIndex = -1;
             }
+        }
+        onPositionChanged: {
+            if (abstractItem.inHiddenLayout) {
+                root.hiddenLayout.currentIndex = index
+            } else {
+                if(mouseArea.containsPress) {
+                    held = true;
+                }
+            }
+
         }
         onClicked: mouse => { abstractItem.clicked(mouse) }
         onReleased: {
             icon.Drag.drop();
             held = false;
-            notAllowedIndicator.visible = false;
         }
         onPressed: mouse => {
+            if (inHiddenLayout) {
+                root.hiddenLayout.currentIndex = index
+            }
             abstractItem.hideImmediately()
             abstractItem.pressed(mouse)
         }
@@ -117,7 +174,6 @@ PlasmaCore.ToolTipArea {
     ColumnLayout {
         id: icon
         anchors.fill: abstractItem
-        anchors.topMargin: 1
         spacing: 0
 
         Drag.active: mouseArea.drag.active// && abstractItem.inHiddenLayout
@@ -130,23 +186,28 @@ PlasmaCore.ToolTipArea {
 
                 ParentChange {
                     target: icon
-                    parent: root.activeIconsGrid
+                    parent: root.tasksGrid
                 }
 
                 PropertyChanges {
                     target: icon
-                    x: mouseArea.mapToItem(root.activeIconsGrid, mouseArea.mouseX, mouseArea.mouseY).x - iconContainer.width * 0.75
-                    y: mouseArea.mapToItem(root.activeIconsGrid, mouseArea.mouseX, mouseArea.mouseY).y - iconContainer.height / 2
+                    x: mouseArea.mapToItem(root.tasksGrid, mouseArea.mouseX, mouseArea.mouseY).x - iconContainer.width * 0.75
+                    y: mouseArea.mapToItem(root.tasksGrid, mouseArea.mouseX, mouseArea.mouseY).y - iconContainer.height / 2
                 }
+                /*AnchorChanges {
+                    target: icon
+                    anchors.horizontalCenter: undefined
+                    anchors.verticalCenter: undefined
+                }*/
             }
         ]
 
         FocusScope {
             id: iconContainer
-            property alias notAllowedIndicator: notAllowedIndicator.visible
-            Kirigami.Theme.colorSet: Kirigami.Theme.Window
+            Kirigami.Theme.colorSet: abstractItem.inHiddenLayout ? Kirigami.Theme.Tooltip : Kirigami.Theme.Window
             Kirigami.Theme.inherit: false
             activeFocusOnTab: true
+            focus: true // Required in HiddenItemsView so keyboard events can be forwarded to this item
             Accessible.name: abstractItem.text
             Accessible.description: abstractItem.subText
             Accessible.role: Accessible.Button
@@ -168,41 +229,49 @@ PlasmaCore.ToolTipArea {
             }
 
             property alias container: abstractItem
-            readonly property int size: root.itemSize
+            property alias inVisibleLayout: abstractItem.inVisibleLayout
+            readonly property int size: abstractItem.inVisibleLayout ? root.itemSize : Kirigami.Units.iconSizes.small
 
             Layout.alignment: Qt.Bottom | Qt.AlignHCenter
-            Layout.fillHeight: false
-            implicitWidth: abstractItem.width
-            implicitHeight: abstractItem.height
+            Layout.fillHeight: abstractItem.inHiddenLayout ? true : false
+            implicitWidth: root.vertical && abstractItem.inVisibleLayout ? abstractItem.width : size
+            implicitHeight: !root.vertical && abstractItem.inVisibleLayout ? abstractItem.height : size
             //Layout.topMargin: abstractItem.inHiddenLayout ? Kirigami.Units.mediumSpacing : 0
+            Kirigami.Icon {
+                anchors.fill: parent
 
-            Image {
-                id: notAllowedIndicator
+                source: itemIcon
 
-                Timer {
-                    running: !dropArea.hasDrag
-                    repeat: true
-                    interval: 1
-                    onTriggered: {
-                        if(icon.x == abstractItem.x && !dropArea.hasDrag) {
-                            icon.Drag.drop();
-                            notAllowedIndicator.visible = false;
-                        }
-                    }
+                visible: isPlasmoid
+            }
+        }
+        PlasmaComponents3.Label {
+            id: label
+            Layout.fillWidth: true
+            Layout.fillHeight: abstractItem.inHiddenLayout ? true : false
+            //! Minimum required height for all labels is used in order for all
+            //! labels to be aligned properly at all items. At the same time this approach does not
+            //! enforce labels with 3 lines at all cases so translations that require only one or two
+            //! lines will always look consistent with no too much padding
+            Layout.minimumHeight: abstractItem.inHiddenLayout ? abstractItem.minLabelHeight : 0
+            Layout.leftMargin: abstractItem.inHiddenLayout ? Kirigami.Units.smallSpacing : 0
+            Layout.rightMargin: abstractItem.inHiddenLayout ? Kirigami.Units.smallSpacing : 0
+            Layout.bottomMargin: abstractItem.inHiddenLayout ? Kirigami.Units.smallSpacing : 0
+
+            visible: false //abstractItem.inHiddenLayout
+
+            verticalAlignment: Text.AlignTop
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
+            wrapMode: Text.Wrap
+            maximumLineCount: 3
+
+            opacity: visible ? 1 : 0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Kirigami.Units.longDuration
+                    easing.type: Easing.InOutQuad
                 }
-
-                anchors {
-                    centerIn: parent
-
-                    verticalCenterOffset: 4
-                    horizontalCenterOffset: 2
-                }
-
-                source: "../imgs/notallowed.png"
-
-                z: 1
-
-                visible: false
             }
         }
     }
@@ -236,18 +305,15 @@ PlasmaCore.ToolTipArea {
             z: -1
         }
         onEntered: drag => {
-            if(drag.source.modelStr == abstractItem.modelStr) {
-                drag.source.canMove = true;
 
-                if(drag.source.visualIndex < abstractItem.parent.visualIndex) {
-                    rightBar.visible = true;
-                    leftBar.visible = false;
-                } else {
-                    rightBar.visible = false;
-                    leftBar.visible = true;
-                }
-                hasDrag = true;
-            } else drag.source.canMove = false;
+            if(drag.source.visualIndex < abstractItem.parent.visualIndex) {
+                rightBar.visible = true;
+                leftBar.visible = false;
+            } else {
+                rightBar.visible = false;
+                leftBar.visible = true;
+            }
+            hasDrag = true;
         }
         onExited: drag => {
             hasDrag = false;
@@ -255,18 +321,7 @@ PlasmaCore.ToolTipArea {
             leftBar.visible = false;
         }
         onDropped: drag => {
-            notAllowedIndicator.visible = false;
-            switch(abstractItem.modelStr) {
-                case("hidden"):
-                    if(drag.source.modelStr == "hidden") root.hiddenModel.items.move(drag.source.visualIndex, abstractItem.parent.visualIndex);
-                    break;
-                case("active"):
-                    if(drag.source.modelStr == "active") root.activeModel.items.move(drag.source.visualIndex, abstractItem.parent.visualIndex);
-                    break;
-                case("system"):
-                    if(drag.source.modelStr == "system") root.systemModel.items.move(drag.source.visualIndex, abstractItem.parent.visualIndex);
-                    break;
-            }
+            root.activeModel.items.move(drag.source.visualIndex, abstractItem.parent.visualIndex);
             //orderingManager.setItemOrder(itemId, abstractItem.parent.visualIndex);
             //orderingManager.setItemOrder(drag.source.itemId, drag.source.visualIndex);
             hasDrag = false;

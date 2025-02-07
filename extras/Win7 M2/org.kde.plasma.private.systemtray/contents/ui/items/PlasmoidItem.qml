@@ -5,48 +5,34 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick
-import QtQml
+import QtQuick 2.15
+import QtQml 2.15
 
-import org.kde.plasma.plasmoid
-import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 
 AbstractItem {
     id: plasmoidContainer
 
     property Item applet: model.applet || null
-    property bool canMove: parent.canMove
-    onCanMoveChanged: {
-        iconContainer.notAllowedIndicator = !canMove;
-    }
+    text: applet ? applet.plasmoid.title : ""
 
-    modelStr: parent.modelStr
+    isPlasmoid: true
 
-    itemId: applet ? applet.Plasmoid.pluginName : ""
+    itemId: applet ? applet.plasmoid.pluginName : ""
     mainText: applet ? applet.toolTipMainText : ""
     subText: applet ? applet.toolTipSubText : ""
     mainItem: applet && applet.toolTipItem ? applet.toolTipItem : null
     textFormat: applet ? applet.toolTipTextFormat : 0 /* Text.AutoText, the default value */
     active: systemTrayState.activeApplet !== applet
 
-    // Fixes issue with KDE Connect not being able to get dragged and dropped
-    onHeldChanged: {
-        if(applet) {
-            var appletItem = applet.compactRepresentationItem ?? applet.fullRepresentationItem;
-            if(appletItem) {
-                if(typeof appletItem.containsDrag !== "undefined") {
-                    appletItem.enabled = !held;
-                }
-            }
-        }
-    }
     // FIXME: Use an input type agnostic way to activate whatever the primary
     // action of a plasmoid is supposed to be, even if it's just expanding the
     // Plasmoid. Not all plasmoids are supposed to expand and not all plasmoids
     // do anything with onActivated.
     onActivated: {
         if (applet) {
-            applet.Plasmoid.activated()
+            applet.plasmoid.activated()
         }
     }
 
@@ -62,7 +48,7 @@ AbstractItem {
             var temp = applet.expanded;
             mouseArea.clicked(mouse);
 
-            if(mouse.button === Qt.LeftButton && applet.expanded && temp) {
+            if(mouse.button === Qt.LeftButton && inVisibleLayout && applet.expanded && temp) {
                 applet.expanded = false;
             }
         } else if (mouse.button === Qt.LeftButton) {//fallback
@@ -82,7 +68,7 @@ AbstractItem {
     }
     onContextMenu: if (applet) {
         effectivePressed = false;
-        Plasmoid.showPlasmoidMenu(applet, 0, 0);
+        Plasmoid.showPlasmoidMenu(applet, 0, inHiddenLayout ? applet.height : 0);
     }
     onWheel: (wheel) => {
         if (!applet) {
@@ -184,6 +170,12 @@ AbstractItem {
             }
         }
     }
+
+    /*PlasmaComponents3.BusyIndicator {
+        anchors.fill: parent
+        z: 999
+        running: plasmoidContainer.applet?.plasmoid.busy ?? false
+    }*/
 
     Binding {
         property: "hideOnWindowDeactivate"

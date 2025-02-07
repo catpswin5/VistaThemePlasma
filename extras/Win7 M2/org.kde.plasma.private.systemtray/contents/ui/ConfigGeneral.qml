@@ -24,9 +24,6 @@ KCM.SimpleKCM {
     property alias cfg_networkEnabled: networkEnabled.checked
     property alias cfg_volumeEnabled: volumeEnabled.checked
 
-    property alias cfg_flyoutMarginEnabled: flyoutMargin.checked
-    property alias cfg_disablePin: pinButton.checked
-
     component CustomGroupBox: QQC2.GroupBox {
         id: gbox
         label: QQC2.Label {
@@ -63,8 +60,6 @@ KCM.SimpleKCM {
             title: i18n("Icon size")
 
             ColumnLayout {
-                spacing: 0
-
                 QQC2.RadioButton {
                     enabled: !Kirigami.Settings.tabletMode
                     text: i18n("Small")
@@ -138,15 +133,13 @@ KCM.SimpleKCM {
             title: i18n("Icon settings")
 
             ColumnLayout {
-                spacing: 0
-
                 RowLayout {
                     Text {
                         text: i18n("Tray gap size:")
                     }
                     QQC2.SpinBox {
                         id: trayGapSize
-                        from: 6
+                        from: 0
                     }
                 }
                 QQC2.CheckBox {
@@ -161,11 +154,9 @@ KCM.SimpleKCM {
 
             Layout.fillWidth: true
 
-            title: i18n("System icons")
+            title: i18n("Enabled system icons")
 
             ColumnLayout {
-                spacing: 0
-
                 QQC2.CheckBox {
                     id: batteryEnabled
                     text: i18n("Battery")
@@ -177,27 +168,6 @@ KCM.SimpleKCM {
                 QQC2.CheckBox {
                     id: volumeEnabled
                     text: i18n("Volume")
-                }
-            }
-        }
-
-        CustomGroupBox {
-            id: flyoutSettings
-
-            Layout.fillWidth: true
-
-            title: i18n("Flyout settings")
-
-            ColumnLayout {
-                spacing: 0
-
-                QQC2.CheckBox {
-                    id: flyoutMargin
-                    text: i18n("Enable margins")
-                }
-                QQC2.CheckBox {
-                    id: pinButton
-                    text: i18n("Disable pin button")
                 }
             }
         }

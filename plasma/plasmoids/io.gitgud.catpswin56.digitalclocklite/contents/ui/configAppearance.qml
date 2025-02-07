@@ -45,6 +45,7 @@ SimpleKCM {
     property alias cfg_italicText: italicCheckBox.checked
 
     property alias cfg_showLocalTimezone: showLocalTimezone.checked
+    property alias cfg_disablePin: disablePin.checked
     property alias cfg_displayTimezoneAsCode: timezoneCodeRadio.checked
     property alias cfg_showSeconds: showSeconds.checked
 
@@ -134,6 +135,10 @@ SimpleKCM {
                     text: i18n("Display time zone as:")
                 }*/
 
+                QtControls.CheckBox {
+                    id: disablePin
+                    text: i18n("Disable pin button")
+                }
 
                 QtControls.ButtonGroup {
                     buttons: timezoneColumn.children

@@ -40,12 +40,6 @@
     <entry name="volumeEnabled" type="bool">
       <default>true</default>
     </entry>
-    <entry name="flyoutMarginEnabled" type="bool">
-      <default>false</default>
-    </entry>
-    <entry name="disablePin" type="bool">
-      <default>false</default>
-    </entry>
     <entry name="knownItems" type="StringList" hidden="true">
       <default></default>
     </entry>

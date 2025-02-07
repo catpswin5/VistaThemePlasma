@@ -23,17 +23,23 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.workspace.calendar 2.0 as PlasmaCalendar
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-
+import org.kde.kwindowsystem
 import org.kde.ksvg 1.0 as KSvg
 import org.kde.kirigami 2.20 as Kirigami
+
 import Qt5Compat.GraphicalEffects
 
 PlasmaCore.Dialog {
     id: calendar
+
+    property bool compositionEnabled: KWindowSystem.isPlatformX11 ? KX11Extras.compositingActive : true
+
     objectName: "popupWindow"
     flags: Qt.WindowStaysOnTopHint
     location: PlasmaCore.Types.Floating //To make the dialog float in the corner of the screen
     hideOnWindowDeactivate: !Plasmoid.configuration.pin
+
+    backgroundHints: compositionEnabled ? PlasmaCore.Dialog.SolidBackground : PlasmaCore.Dialog.NoBackground
 	
 	//Used for reading margin values 
     KSvg.FrameSvgItem {
@@ -44,7 +50,7 @@ PlasmaCore.Dialog {
     KSvg.FrameSvgItem {
 		id : dialogSvg
 		visible: false
-		imagePath: "solid/dialogs/background"
+		imagePath: calendar.compositionEnabled ? "solid/dialogs/background" : Qt.resolvedUrl("svgs/background.svg")
 	}
 
     onVisibleChanged: {
@@ -109,11 +115,21 @@ PlasmaCore.Dialog {
 
     FocusScope {
 
+		KSvg.FrameSvgItem {
+			anchors.fill: parent
+
+			imagePath: Qt.resolvedUrl("svgs/background.svg")
+
+			z: -10000
+
+			visible: !calendar.compositionEnabled
+		}
+
 
 		Kirigami.Theme.colorSet: Kirigami.Theme.View
 		Kirigami.Theme.inherit: false
         Layout.minimumWidth: _minimumWidth
-        Layout.minimumHeight: _minimumHeight
+        Layout.minimumHeight: _minimumHeight + (calendar.compositionEnabled ? 0 : 8)
         Layout.maximumWidth: _minimumWidth
         Layout.maximumHeight: _minimumHeight
         Layout.preferredWidth: _minimumWidth
@@ -121,6 +137,7 @@ PlasmaCore.Dialog {
 
 		//colorGroup: PlasmaCore.Theme.ToolTipColorGroup
 		anchors.fill: parent
+		// anchors.margins: calendar.compositionEnabled ? 0 : 8
 		//This is the long date that appears on top of the dialog, pressing on it will set the calendar to the current day.
 
 		ColumnLayout {
@@ -509,9 +526,9 @@ PlasmaCore.Dialog {
 				bottom: parent.bottom
 				left: parent.left
 				right: parent.right
-				leftMargin: dialogSvg.margins.left
-				rightMargin: dialogSvg.margins.right
-				bottomMargin: dialogSvg.margins.bottom
+				leftMargin: dialogSvg.margins.left + (calendar.compositionEnabled ? 0 : 2)
+				rightMargin: dialogSvg.margins.right + (calendar.compositionEnabled ? 0 : 2)
+				bottomMargin: dialogSvg.margins.bottom + (calendar.compositionEnabled ? 0 : 2)
 
 			}
 			//visible: container.appletHasFooter
@@ -575,6 +592,7 @@ PlasmaCore.Dialog {
 			height: Kirigami.Units.iconSizes.small;
 			checkable: true
 			checked: Plasmoid.configuration.pin
+			visible: !Plasmoid.configuration.disablePin
 
 			onClicked: (mouse) => {
 				Plasmoid.configuration.pin = !Plasmoid.configuration.pin;
@@ -586,8 +604,8 @@ PlasmaCore.Dialog {
 		}
 	}
 		Component.onCompleted: {
-		    calendar.backgroundHints = 2; //Sets the background type to 'Solid' in order to make use of the alternative dialog style.
-										  //The same is done to the system tray, giving the two plasmoids a consistent look and feel.
+		    // calendar.backgroundHints = 2; //Sets the background type to 'Solid' in order to make use of the alternative dialog style.
+						// 				  //The same is done to the system tray, giving the two plasmoids a consistent look and feel.
 		    popupPosition();
 		    //x = pos.x;
 		    //y = pos.y;

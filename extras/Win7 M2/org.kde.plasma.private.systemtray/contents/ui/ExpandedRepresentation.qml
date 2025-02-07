@@ -13,15 +13,15 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.plasmoid 2.0
-import org.kde.ksvg as KSvg
 import org.kde.kirigami 2.20 as Kirigami
 
 Item {
     id: popup
 
-    property int flyoutWidth: (intendedWidth != -1 ? intendedWidth : Math.max(Kirigami.Units.iconSizes.small * 19, container.flyoutImplicitWidth + dialog.margins.right + Kirigami.Units.smallSpacing*2)) + (root.compositionEnabled ? 0 : dialog.contentMargins * 2)
-    property int flyoutHeight: (container.flyoutImplicitHeight > (Kirigami.Units.iconSizes.small * 8 - trayHeading.height - Kirigami.Units.largeSpacing) ? container.flyoutImplicitHeight + container.headingHeight + container.footerHeight + trayHeading.height + Kirigami.Units.largeSpacing*4 : Kirigami.Units.iconSizes.small*19) + (root.compositionEnabled ? 0 : dialog.contentMargins * 2)
-
+    property int flyoutWidth: hiddenItemsView.visible ? hiddenItemsView.width + Kirigami.Units.smallSpacing*2 : (intendedWidth != -1 ? intendedWidth : Math.max(Kirigami.Units.iconSizes.small * 19, container.flyoutImplicitWidth + dialog.margins.right + Kirigami.Units.smallSpacing*2))
+    property int flyoutHeight: hiddenItemsView.visible ?
+    hiddenItemsView.implicitHeight + trayHeading.height + Kirigami.Units.largeSpacing  :
+    (container.flyoutImplicitHeight > (Kirigami.Units.iconSizes.small * 8 - trayHeading.height - Kirigami.Units.largeSpacing) ? container.flyoutImplicitHeight + container.headingHeight + container.footerHeight + trayHeading.height + Kirigami.Units.largeSpacing*4 : Kirigami.Units.iconSizes.small*19)
     //: Kirigami.Units.iconSizes.small * 19
     Layout.minimumWidth: flyoutWidth
     Layout.minimumHeight: flyoutHeight
@@ -30,7 +30,9 @@ Item {
     Layout.maximumHeight: flyoutHeight
 
     function updateHeight() {
-        flyoutHeight = Qt.binding(() => (container.flyoutImplicitHeight > (Kirigami.Units.iconSizes.small * 8 - trayHeading.height - Kirigami.Units.largeSpacing) ? container.flyoutImplicitHeight + container.headingHeight + container.footerHeight + trayHeading.height + Kirigami.Units.largeSpacing*4 : Kirigami.Units.iconSizes.small*19))
+        flyoutHeight = Qt.binding(() => hiddenItemsView.visible ?
+                                            hiddenItemsView.implicitHeight + trayHeading.height + Kirigami.Units.largeSpacing :
+                                            (container.flyoutImplicitHeight > (Kirigami.Units.iconSizes.small * 8 - trayHeading.height - Kirigami.Units.largeSpacing) ? container.flyoutImplicitHeight + container.headingHeight + container.footerHeight + trayHeading.height + Kirigami.Units.largeSpacing*4 : Kirigami.Units.iconSizes.small*19))
         popup.Layout.minimumHeight = Qt.binding(() => flyoutHeight);
         popup.Layout.maximumHeight = Qt.binding(() => flyoutHeight);
     }
@@ -39,12 +41,12 @@ Item {
     //property bool changedItems: false
     property int intendedWidth: container.activeApplet ? (typeof container.activeApplet.fullRepresentationItem.flyoutIntendedWidth !== "undefined" ? container.activeApplet.fullRepresentationItem.flyoutIntendedWidth : -1) : -1
 
-
     onShownDialogChanged: {
         //changedItems = false;
         updateHeight();
     }
 
+    property alias hiddenLayout: hiddenItemsView.layout
     property alias plasmoidContainer: container
 
     Kirigami.Theme.colorSet: Kirigami.Theme.View
@@ -53,15 +55,15 @@ Item {
     // Header
     ToolButton {
         id: pinButton
+        visible: !hiddenItemsView.visible
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.bottomMargin: (popup.flyoutWidth <= 68 ? 2 : Kirigami.Units.mediumSpacing) + (root.compositionEnabled ? 0 : 8)
-        anchors.rightMargin: (popup.flyoutWidth <= 68 ? 2 : Kirigami.Units.mediumSpacing) + (root.compositionEnabled ? 0 : 8)
+        anchors.bottomMargin: container.activeApplet.Plasmoid.pluginName != "io.gitgud.catpswin56.volumemixer" ? Kirigami.Units.largeSpacing : Kirigami.Units.mediumSpacing
+        anchors.rightMargin: container.activeApplet.Plasmoid.pluginName != "io.gitgud.catpswin56.volumemixer" ? Kirigami.Units.largeSpacing : Kirigami.Units.smallSpacing/2
         width: Kirigami.Units.iconSizes.small+1;
         height: Kirigami.Units.iconSizes.small;
         checkable: true
         checked: Plasmoid.configuration.pin
-        visible: !Plasmoid.configuration.disablePin
 
         onClicked: (mouse) => {
             Plasmoid.configuration.pin = !Plasmoid.configuration.pin;
@@ -91,10 +93,44 @@ Item {
         //anchors.top: parent.top
 
 
-        anchors.margins: root.compositionEnabled ? Kirigami.Units.smallSpacing : 8
+        anchors.margins: Kirigami.Units.smallSpacing
         // TODO: remove this so the scrollview fully touches the header;
         // add top padding internally
         spacing: Kirigami.Units.smallSpacing
+        // Grid view of all available items
+        HiddenItemsView {
+            id: hiddenItemsView
+            Layout.preferredWidth: hiddenItemsView.width
+            //Layout.minimumHeight: hiddenItemsView.flyoutHeight
+            //Layout.maximumHeight: hiddenItemsView.flyoutHeight
+
+            visible: !systemTrayState.activeApplet
+            /*property int previousItemCount: 0
+            onHiddenItemsCountChanged: {
+                if(shownDialog) {
+                    var itemCount = hiddenItemsView.hiddenItemsCount
+                    if(itemCount > previousItemCount) {
+                        if(itemCount % 3 == 1) {
+                            console.log("big change " + hiddenItemsView.flyoutHeight + " " + hiddenItemsView.implicitHeight)
+                            changedItems = true;
+                        }
+                    } else if(itemCount < previousItemCount) {
+                        if(itemCount % 3 == 0) {
+                           changedItems = true;
+                        }
+                    }
+                }
+
+                previousItemCount = hiddenItemsView.hiddenItemsCount;
+            }*/
+            onVisibleChanged: {
+
+                if (visible) {
+                    layout.forceActiveFocus();
+                    systemTrayState.oldVisualIndex = systemTrayState.newVisualIndex = -1;
+                }
+            }
+        }
         // Container for currently visible item
         PlasmoidPopupsContainer {
             id: container
@@ -126,31 +162,20 @@ Item {
 
     // Header content layout
 
-    KSvg.FrameSvgItem {
-        anchors.fill: parent
-
-        imagePath: Qt.resolvedUrl("svgs/background.svg")
-
-        z: -10000
-
-        visible: !root.compositionEnabled
-    }
-
     RowLayout {
         id: trayHeading
         anchors {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
-            margins: root.compositionEnabled ? 0 : 8
             /*leftMargin: dialogSvg.margins.left
-             *       rightMargin: dialogSvg.margins.right
-             *       bottomMargin: dialogSvg.margins.bottom*/
+            rightMargin: dialogSvg.margins.right
+            bottomMargin: dialogSvg.margins.bottom*/
 
         }
         property QtObject applet: systemTrayState.activeApplet || root
-        visible: trayHeading.applet && trayHeading.applet.plasmoid.internalAction("configure")
-        height: 40
+        visible: trayHeading.applet && trayHeading.applet.plasmoid.internalAction("configure") /*&& container.activeApplet.Plasmoid.pluginName != "io.gitgud.catpswin56.volumemixer"*/
+        height: 40 // We'll add our own footer to the volume plasmoid
 
         Item {
             id: paddingLeft
@@ -175,12 +200,6 @@ Item {
                     //enabled: parent.hoveredLink
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        if(container.activeApplet) {
-                            if(typeof container.activeApplet.fullRepresentationItem.overrideFunction === "function") {
-                                container.activeApplet.fullRepresentationItem.overrideFunction();
-                                return;
-                            }
-                        }
                         trayHeading.applet.plasmoid.internalAction("configure").trigger();
                     }
                     //z: 9999
@@ -201,10 +220,9 @@ Item {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
-            margins: root.compositionEnabled ? 0 : 8
             /*leftMargin: dialogSvg.margins.left
-             *       rightMargin: dialogSvg.margins.right
-             *       bottomMargin: dialogSvg.margins.bottom*/
+            rightMargin: dialogSvg.margins.right
+            bottomMargin: dialogSvg.margins.bottom*/
 
         }
 

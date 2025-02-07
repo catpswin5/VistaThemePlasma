@@ -17,6 +17,7 @@
  */
 import QtQuick 2.15
 import QtQuick.Layouts 1.1
+
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasma5support as P5Support

@@ -1,9 +1,9 @@
 /*
-    SPDX-FileCopyrightText: 2013 Sebastian Kügler <sebas@kde.org>
-    SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
-
-    SPDX-License-Identifier: LGPL-2.0-or-later
-*/
+ *    SPDX-FileCopyrightText: 2013 Sebastian Kügler <sebas@kde.org>
+ *    SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
+ *
+ *    SPDX-License-Identifier: LGPL-2.0-or-later
+ */
 
 import QtQuick 2.15
 import QtQuick.Layouts 1.1
@@ -15,9 +15,7 @@ import org.kde.ksvg as KSvg
 PlasmaCore.ToolTipArea {
     id: tooltip
 
-    readonly property int arrowAnimationDuration: Kirigami.Units.shortDuration
     property bool vertical: Plasmoid.formFactor === PlasmaCore.Types.Vertical
-    property int iconSize: Kirigami.Units.smallMedium
     property int expanderSize: Kirigami.Units.iconSizes.smallMedium - Kirigami.Units.smallSpacing / 2
     implicitWidth: expanderSize
     implicitHeight: expanderSize
@@ -25,11 +23,11 @@ PlasmaCore.ToolTipArea {
 
     Keys.onPressed: event => {
         switch (event.key) {
-        case Qt.Key_Space:
-        case Qt.Key_Enter:
-        case Qt.Key_Return:
-        case Qt.Key_Select:
-            systemTrayState.expanded = !systemTrayState.expanded;
+            case Qt.Key_Space:
+            case Qt.Key_Enter:
+            case Qt.Key_Return:
+            case Qt.Key_Select:
+                systemTrayState.expanded = !systemTrayState.expanded;
         }
     }
 
@@ -44,7 +42,7 @@ PlasmaCore.ToolTipArea {
 
         onClicked: {
             if (root.showHidden) root.showHidden = false
-            else root.showHidden = true
+                else root.showHidden = true
         }
     }
 
@@ -55,7 +53,7 @@ PlasmaCore.ToolTipArea {
 
         anchors.centerIn: parent
 
-        width: expanderSize +1
+        width: expanderSize + 1
         height: expanderSize
 
         KSvg.SvgItem {
@@ -64,13 +62,13 @@ PlasmaCore.ToolTipArea {
             anchors.fill: parent
             imagePath: Qt.resolvedUrl("svgs/systray.svg")
             elementId: {
-                if(arrowMa.containsPress || (systemTrayState.expanded && expandedRepresentation.hiddenLayout.visible)) return "vista-pressed";
-                if(arrowMa.containsMouse) return "vista-hover";
-                return "normal";
+                if(arrowMa.containsPress) return "pressed";
+                if(arrowMa.containsMouse) return "hover";
+                return "";
             }
         }
 
         imagePath: Qt.resolvedUrl("svgs/systray.svg")
-        elementId: root.showHidden ? "vista-arrow-right" : "vista-arrow-left"
+        elementId: root.showHidden ? "collapse" : "expand"
     }
 }

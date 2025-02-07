@@ -12,14 +12,8 @@ import org.kde.kirigami 2.20 as Kirigami
 AbstractItem {
     id: taskIcon
 
-    property bool canMove: parent.canMove
-    onCanMoveChanged: {
-        iconContainer.notAllowedIndicator = !canMove;
-    }
-
-    modelStr: parent.modelStr
-
     itemId: model.Id
+    text: model.Title || model.ToolTipTitle
     mainText: model.ToolTipTitle !== "" ? model.ToolTipTitle : model.Title
     subText: model.ToolTipSubTitle
     textFormat: Text.AutoText

@@ -10,13 +10,16 @@ Loader {
     id: itemLoader
 
     property real minLabelHeight: 0
-    property string modelStr: ""
-    property bool canMove: true
 
     z: x+1 // always be above what it's on top of, even for x==0
     property var itemModel: model
     property string itemId: model.itemId
 
+    Binding {
+        target: item
+        property: "minLabelHeight"
+        value: itemLoader.minLabelHeight
+    }
     source: {
         if (model.itemType === "Plasmoid" && model.hasApplet) {
             return Qt.resolvedUrl("PlasmoidItem.qml")
