@@ -249,7 +249,7 @@ FocusScope {
                     case(0):
                         return "Build 6003";
                     case(1):
-                        return "Build 3/2/2025";
+                        return "Build 7/2/2025";
                     case(2):
                         return Plasmoid.configuration.customText2;
                 }
