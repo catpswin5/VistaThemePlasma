@@ -63,8 +63,7 @@ This section relates to the directories found in the ```plasma``` folder.
     
 Make sure to compile the C++ components of plasmoids located in ```plasmoids/src/``` by running ```install.sh``` for every source folder. You can also use ```install_ninja.sh``` to build using Ninja.
 
-3. Move ```sddm-theme-mod``` to ```/usr/share/sddm/themes```, and then run ```install-services.sh``` found in ```sddm-theme-mod/Services```.
-    - **Some users have reported that this results in a blackscreen after boot for them. If you get a black screen, press ```Ctrl+Alt+F4```, then login with your username and password and disable the services you just installed (```sudo systemctl disable smod-stcw-before.service``` and ```sudo systemctl disable smod-stcw-after.service```). Restart after doing this.**
+3. Move ```sddm-theme-mod``` to ```/usr/share/sddm/themes```.
 4. Import and apply the color scheme through System Settings. 
 5. When applying the global theme, only apply the splash screen and uncheck everything else.
 
