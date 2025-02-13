@@ -124,7 +124,7 @@
 
 
     <entry name="InvertTextColor" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
 
   </group>

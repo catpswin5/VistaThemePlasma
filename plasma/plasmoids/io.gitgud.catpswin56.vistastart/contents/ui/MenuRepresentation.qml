@@ -54,6 +54,7 @@ PlasmaCore.Dialog {
     property int iconSizeSide: Kirigami.Units.iconSizes.smallMedium
     property int cellWidth: 254 // Width for all standard menu items.
     property int cellWidthSide: 139 // Width for sidebar menu items.
+    property int shutdownIndex: -1
     property int cellHeight: iconSize + Kirigami.Units.smallSpacing + (Math.max(highlightItemSvg.margins.top + highlightItemSvg.margins.bottom,
                                                     				   highlightItemSvg.margins.left + highlightItemSvg.margins.right)) - Kirigami.Units.smallSpacing/2
 	property int cellCount: Plasmoid.configuration.numberRows + faves.getFavoritesCount()
@@ -352,13 +353,17 @@ PlasmaCore.Dialog {
 				onClicked: filteredMenuItemsModel.trigger(index)
 			}
 			onObjectAdded: (index, object) => {
-				if(index == 3 || index == 5)
-					var separator = Qt.createQmlObject(`
-					import org.kde.plasma.extras as PlasmaExtras
+				if(object.model.decoration != "system-shutdown") {
+					if(index == 3 || index == 5)
+						var separator = Qt.createQmlObject(`
+						import org.kde.plasma.extras as PlasmaExtras
 
-					PlasmaExtras.MenuItem { separator: true }
-					`, contextMenu);
-				contextMenu.addMenuItem(object);
+						PlasmaExtras.MenuItem { separator: true }
+						`, contextMenu);
+					contextMenu.addMenuItem(object);
+				} else {
+					root.shutdownIndex = index;
+				}
 			}
 			onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
 		}
@@ -1362,8 +1367,12 @@ PlasmaCore.Dialog {
 						shutdown.focus = false;
 					}
 					onClicked: {
+						if(root.shutdownIndex !== -1 && Plasmoid.configuration.disableSleep) {
+							filteredMenuItemsModel.trigger(root.shutdownIndex)
+						} else {
+							pmEngine.performOperation("suspend");
+						}
 						root.visible = false;
-						pmEngine.performOperation(Plasmoid.configuration.disableSleep ? "requestShutDown" : "suspend");
 					}
 				}
 			}
