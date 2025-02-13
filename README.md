@@ -9,7 +9,7 @@ The look and feel of Windows 7 Milestone 2 is also available as an extra.
 It is still in heavy development and testing. VTP has been tested on:
 
 1. Arch Linux x64 and other Arch derivatives
-2. Plasma 6.2.4, KDE Frameworks 6.9.0, Qt 6.8.1
+2. Plasma 6.3.0, KDE Frameworks 6.10.0, Qt 6.8.2
 3. 96 DPI scaling, single monitor
 
 See [INSTALL.md](./INSTALL.md) for a quick (almost left unmodified from ATP repo) install guide.
