@@ -27,6 +27,7 @@ Item {
     property string cfg_customText3
 
     property alias cfg_fakeSidebar: fakeSidebar.checked
+    property alias cfg_sidebarSize: sidebarSize.text
 
     component CustomGroupBox: GroupBox {
         id: gbox
@@ -153,7 +154,7 @@ Item {
                 CheckBox {
                     id: trueNotGenuine
                     visible: genuineVisible.checked
-                    text: 'TRUE non-genuine copy'
+                    text: "TRUE non-genuine copy"
                 }
             }
         }
@@ -162,9 +163,31 @@ Item {
 
             title: "Fake Sidebar"
 
-            CheckBox {
-                id: fakeSidebar
-                text: "Enabled"
+            ColumnLayout {
+                anchors.fill: parent
+
+                spacing: 0
+
+                CheckBox {
+                    id: fakeSidebar
+                    text: "Enabled"
+                }
+                RowLayout {
+                    Text {
+                        text: i18n("Sidebar size:")
+
+                        opacity: fakeSidebar.checked ? 1.0 : 0.2
+                    }
+                    TextField {
+                        id: sidebarSize
+
+                        enabled: fakeSidebar.checked
+                        text: Plasmoid.configuration.sidebarSize
+                        onTextChanged: {
+                            if(isNaN(Number(sidebarSize.text))) sidebarSize.text = Plasmoid.configuration.sidebarSize;
+                        }
+                    }
+                }
             }
         }
     }

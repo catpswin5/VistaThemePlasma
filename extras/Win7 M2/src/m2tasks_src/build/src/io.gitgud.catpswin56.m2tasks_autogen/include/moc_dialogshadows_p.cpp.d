@@ -1,5 +1,5 @@
-/home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/include/moc_dialogshadows_p.cpp: /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows_p.h \
-  /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/moc_predefs.h \
+/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/include/moc_dialogshadows_p.cpp: /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows_p.h \
+  /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/moc_predefs.h \
   /usr/include/KF6/KConfig/kconfig_version.h \
   /usr/include/KF6/KConfigCore/KSharedConfig \
   /usr/include/KF6/KConfigCore/kconfig.h \
@@ -14,9 +14,17 @@
   /usr/include/KF6/KSvg/ksvg/svg.h \
   /usr/include/KF6/KSvg/ksvg_version.h \
   /usr/include/alloca.h \
+  /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/int-ll64.h \
+  /usr/include/asm-generic/posix_types.h \
+  /usr/include/asm-generic/types.h \
+  /usr/include/asm/bitsperlong.h \
   /usr/include/asm/errno.h \
+  /usr/include/asm/posix_types.h \
+  /usr/include/asm/posix_types_64.h \
+  /usr/include/asm/types.h \
   /usr/include/assert.h \
   /usr/include/bits/atomic_wide_counter.h \
   /usr/include/bits/byteswap.h \
@@ -257,6 +265,9 @@
   /usr/include/limits.h \
   /usr/include/linux/errno.h \
   /usr/include/linux/limits.h \
+  /usr/include/linux/posix_types.h \
+  /usr/include/linux/stddef.h \
+  /usr/include/linux/types.h \
   /usr/include/locale.h \
   /usr/include/pthread.h \
   /usr/include/qt6/QtCore/QByteArray \

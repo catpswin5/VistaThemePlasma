@@ -37,10 +37,6 @@
         <default></default>
     </entry>
 
-    <entry name="fakeSidebar" type="bool">
-      <default>true</default>
-    </entry>
-
     <entry name="url" type="String">
       <label>URL of the file system location being shown.</label>
       <default>desktop:/</default>
@@ -172,6 +168,13 @@
     </entry>
     <entry name="customText3" type="String">
       <default></default>
+    </entry>
+
+    <entry name="fakeSidebar" type="bool">
+      <default>true</default>
+    </entry>
+    <entry name="sidebarSize" type="int">
+      <default>150</default>
     </entry>
 
   </group>

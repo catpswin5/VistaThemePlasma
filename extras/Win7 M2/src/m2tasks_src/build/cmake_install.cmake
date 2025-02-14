@@ -1,4 +1,4 @@
-# Install script for directory: /home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src
+# Install script for directory: /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,13 +44,13 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/cmake_install.cmake")
+  include("/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/cmake_install.cmake")
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/install_local_manifest.txt"
+  file(WRITE "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
 if(CMAKE_INSTALL_COMPONENT)
@@ -66,6 +66,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

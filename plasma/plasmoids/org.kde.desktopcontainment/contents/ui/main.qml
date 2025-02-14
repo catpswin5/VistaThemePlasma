@@ -348,7 +348,7 @@ ContainmentItem {
                 bottom: parent.bottom
             }
 
-            width: 150
+            width: Plasmoid.configuration.sidebarSize
             gradient: Gradient {
                 orientation: Gradient.Horizontal
                 GradientStop { position: 0.0; color: "transparent" }

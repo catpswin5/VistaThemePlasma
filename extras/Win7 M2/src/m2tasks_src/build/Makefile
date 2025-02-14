@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
+CMAKE_SOURCE_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
+CMAKE_BINARY_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -142,9 +142,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build//CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build//CMakeFiles/progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target

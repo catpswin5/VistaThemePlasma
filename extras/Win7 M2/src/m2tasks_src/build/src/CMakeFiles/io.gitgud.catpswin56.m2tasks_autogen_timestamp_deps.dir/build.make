@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
+CMAKE_SOURCE_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
+CMAKE_BINARY_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build"
 
 # Utility rule file for io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.
 
@@ -77,10 +77,10 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/build: io
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/build
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/clean:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -P CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/cmake_clean.cmake
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -P CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/cmake_clean.cmake
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/clean
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/depend:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen_timestamp_deps.dir/depend
 

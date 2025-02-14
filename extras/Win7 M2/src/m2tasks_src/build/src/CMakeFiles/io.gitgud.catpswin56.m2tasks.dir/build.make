@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
+CMAKE_SOURCE_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
+CMAKE_BINARY_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build"
 
 # Include any dependencies generated for this target.
 include src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/depend.make
@@ -71,9 +71,9 @@ include src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/flags.make
 
 src/io.gitgud.catpswin56.m2tasks_autogen/timestamp: /usr/lib/qt6/moc
 src/io.gitgud.catpswin56.m2tasks_autogen/timestamp: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target io.gitgud.catpswin56.m2tasks"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E cmake_autogen "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/AutogenInfo.json" ""
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E touch "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/timestamp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target io.gitgud.catpswin56.m2tasks"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E cmake_autogen "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/AutogenInfo.json" ""
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E touch "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/timestamp"
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/codegen:
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/codegen
@@ -81,44 +81,44 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/codegen:
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/flags.make
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o: src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o -MF CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o.d -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o -c "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o -MF CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o.d -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o -c "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp"
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp" > CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp" > CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.i
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.s
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/flags.make
-src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o: /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/seventasks.cpp
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o: /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/src/seventasks.cpp
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o -MF CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o.d -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o -c "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o -MF CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o.d -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.o -c "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp"
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.i"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp" > CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.i
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp" > CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.i
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src/seventasks.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/seventasks.cpp.s
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/flags.make
-src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows.cpp
+src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows.cpp
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o -MF CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o.d -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o -c "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o -MF CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o.d -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o -c "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp"
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp" > CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp" > CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.i
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src/dialogshadows.cpp" -o CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.s
 
 # Object files for target io.gitgud.catpswin56.m2tasks
 io_gitgud_catpswin56_m2tasks_OBJECTS = \
@@ -137,18 +137,18 @@ src/io.gitgud.catpswin56.m2tasks.so: /usr/lib/libX11.so
 src/io.gitgud.catpswin56.m2tasks.so: /usr/lib/libGLX.so
 src/io.gitgud.catpswin56.m2tasks.so: /usr/lib/libOpenGL.so
 src/io.gitgud.catpswin56.m2tasks.so: src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared module io.gitgud.catpswin56.m2tasks.so"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared module io.gitgud.catpswin56.m2tasks.so"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build: src/io.gitgud.catpswin56.m2tasks.so
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/build
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/clean:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -P CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/cmake_clean.cmake
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -P CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/cmake_clean.cmake
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/clean
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/depend: src/io.gitgud.catpswin56.m2tasks_autogen/timestamp
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/depend
 

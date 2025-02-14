@@ -12,7 +12,7 @@ It is still in heavy development and testing. VTP has been tested on:
 2. Plasma 6.3.0, KDE Frameworks 6.10.0, Qt 6.8.2
 3. 96 DPI scaling, single monitor
 
-See [INSTALL.md](./INSTALL.md) for a quick (almost left unmodified from ATP repo) install guide.
+See [INSTALL.md](./INSTALL.md) for a quick install guide.
 
 For the sidebar gadgets, go [here](https://gitgud.io/catpswin56/win-gadgets).
 

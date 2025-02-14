@@ -1,8 +1,8 @@
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp.o: \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/mocs_compilation.cpp \
  /usr/include/stdc-predef.h \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/moc_seventasks.cpp \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/../../../../src/seventasks.h \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/moc_seventasks.cpp \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/../../../../src/seventasks.h \
  /usr/include/qt6/QtGui/QGuiApplication \
  /usr/include/qt6/QtGui/qguiapplication.h \
  /usr/include/qt6/QtGui/qtguiglobal.h /usr/include/qt6/QtCore/qglobal.h \
@@ -32,7 +32,7 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_aut
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdbool.h \
  /usr/include/qt6/QtCore/qtversionchecks.h \
  /usr/include/qt6/QtCore/qtconfiginclude.h \
- /usr/include/qt6/QtCore/qconfig.h \
+ /usr/include/c++/14.2.1/version /usr/include/qt6/QtCore/qconfig.h \
  /usr/include/qt6/QtCore/qtcore-config.h \
  /usr/include/qt6/QtCore/qtconfigmacros.h \
  /usr/include/qt6/QtCore/qtdeprecationdefinitions.h \
@@ -40,7 +40,6 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_aut
  /usr/include/qt6/QtCore/qcompilerdetection.h \
  /usr/include/qt6/QtCore/qprocessordetection.h \
  /usr/include/qt6/QtCore/qsystemdetection.h \
- /usr/include/c++/14.2.1/version \
  /usr/include/qt6/QtCore/qtdeprecationmarkers.h \
  /usr/include/qt6/QtCore/qtclasshelpermacros.h \
  /usr/include/qt6/QtCore/qtpreprocessorsupport.h \
@@ -91,7 +90,7 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_aut
  /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/floatn.h /usr/include/bits/floatn-common.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
- /usr/include/bits/fp-fast.h \
+ /usr/include/bits/fp-fast.h /usr/include/bits/mathcalls-macros.h \
  /usr/include/bits/mathcalls-helper-functions.h \
  /usr/include/bits/mathcalls.h /usr/include/bits/mathcalls-narrow.h \
  /usr/include/bits/iscanonical.h /usr/include/c++/14.2.1/bits/std_abs.h \
@@ -198,6 +197,12 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_aut
  /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/gthr.h \
  /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/gthr-default.h \
  /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
+ /usr/include/linux/sched/types.h /usr/include/linux/types.h \
+ /usr/include/asm/types.h /usr/include/asm-generic/types.h \
+ /usr/include/asm-generic/int-ll64.h /usr/include/asm/bitsperlong.h \
+ /usr/include/asm-generic/bitsperlong.h /usr/include/linux/posix_types.h \
+ /usr/include/linux/stddef.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/posix_types_64.h /usr/include/asm-generic/posix_types.h \
  /usr/include/bits/types/struct_sched_param.h /usr/include/bits/cpu-set.h \
  /usr/include/time.h /usr/include/bits/time.h /usr/include/bits/timex.h \
  /usr/include/bits/types/struct_tm.h \
@@ -448,7 +453,7 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/io.gitgud.catpswin56.m2tasks_aut
  /usr/include/KF6/KWindowSystem/kwindowsystem_export.h \
  /usr/include/qt6/QtGui/QWidgetList /usr/include/qt6/QtGui/qwindowdefs.h \
  /usr/include/qt6/QtGui/QRegion /usr/include/qt6/QtGui/qregion.h \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/../../../../src/dialogshadows_p.h \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/EWIEGA46WW/../../../../src/dialogshadows_p.h \
  /usr/include/qt6/QtCore/QSet /usr/include/qt6/QtCore/qset.h \
  /usr/include/KF6/KSvg/KSvg/FrameSvg \
  /usr/include/KF6/KSvg/ksvg/framesvg.h \

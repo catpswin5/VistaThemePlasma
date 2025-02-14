@@ -1,7 +1,7 @@
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows.cpp \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows.cpp \
  /usr/include/stdc-predef.h \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows_p.h \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/src/dialogshadows_p.h \
  /usr/include/qt6/QtCore/QSet /usr/include/qt6/QtCore/qset.h \
  /usr/include/qt6/QtCore/qhash.h /usr/include/qt6/QtCore/qalgorithms.h \
  /usr/include/qt6/QtCore/qglobal.h /usr/include/c++/14.2.1/type_traits \
@@ -30,7 +30,7 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: \
  /usr/lib/gcc/x86_64-pc-linux-gnu/14.2.1/include/stdbool.h \
  /usr/include/qt6/QtCore/qtversionchecks.h \
  /usr/include/qt6/QtCore/qtconfiginclude.h \
- /usr/include/qt6/QtCore/qconfig.h \
+ /usr/include/c++/14.2.1/version /usr/include/qt6/QtCore/qconfig.h \
  /usr/include/qt6/QtCore/qtcore-config.h \
  /usr/include/qt6/QtCore/qtconfigmacros.h \
  /usr/include/qt6/QtCore/qtdeprecationdefinitions.h \
@@ -38,7 +38,6 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: \
  /usr/include/qt6/QtCore/qcompilerdetection.h \
  /usr/include/qt6/QtCore/qprocessordetection.h \
  /usr/include/qt6/QtCore/qsystemdetection.h \
- /usr/include/c++/14.2.1/version \
  /usr/include/qt6/QtCore/qtdeprecationmarkers.h \
  /usr/include/qt6/QtCore/qtclasshelpermacros.h \
  /usr/include/qt6/QtCore/qtpreprocessorsupport.h \
@@ -89,7 +88,7 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: \
  /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/floatn.h /usr/include/bits/floatn-common.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
- /usr/include/bits/fp-fast.h \
+ /usr/include/bits/fp-fast.h /usr/include/bits/mathcalls-macros.h \
  /usr/include/bits/mathcalls-helper-functions.h \
  /usr/include/bits/mathcalls.h /usr/include/bits/mathcalls-narrow.h \
  /usr/include/bits/iscanonical.h /usr/include/c++/14.2.1/bits/std_abs.h \
@@ -159,6 +158,12 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: \
  /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/gthr.h \
  /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/gthr-default.h \
  /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
+ /usr/include/linux/sched/types.h /usr/include/linux/types.h \
+ /usr/include/asm/types.h /usr/include/asm-generic/types.h \
+ /usr/include/asm-generic/int-ll64.h /usr/include/asm/bitsperlong.h \
+ /usr/include/asm-generic/bitsperlong.h /usr/include/linux/posix_types.h \
+ /usr/include/linux/stddef.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/posix_types_64.h /usr/include/asm-generic/posix_types.h \
  /usr/include/bits/types/struct_sched_param.h /usr/include/bits/cpu-set.h \
  /usr/include/time.h /usr/include/bits/time.h /usr/include/bits/timex.h \
  /usr/include/bits/types/struct_tm.h \
@@ -364,6 +369,6 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks.dir/dialogshadows.cpp.o: \
  /usr/include/qt6/QtGui/qsurfaceformat.h /usr/include/qt6/QtGui/qicon.h \
  /usr/include/qt6/QtGui/qpixmap.h /usr/include/qt6/QtGui/qcursor.h \
  /usr/include/qt6/QtGui/qbitmap.h \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/include/moc_dialogshadows_p.cpp \
- /home/pswin56/Escritorio/otras\ cosas/VistaThemePlasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/include/../../../../src/dialogshadows_p.h \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/include/moc_dialogshadows_p.cpp \
+ /home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7\ M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/include/../../../../src/dialogshadows_p.h \
  /usr/include/qt6/QtCore/qtmochelpers.h

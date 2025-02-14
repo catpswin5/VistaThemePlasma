@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src"
+CMAKE_SOURCE_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build"
+CMAKE_BINARY_DIR = "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build"
 
 # Utility rule file for io.gitgud.catpswin56.m2tasks_autogen.
 
@@ -70,9 +70,9 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen: src/io.gitgud.catpswin56.m2
 
 src/io.gitgud.catpswin56.m2tasks_autogen/timestamp: /usr/lib/qt6/moc
 src/io.gitgud.catpswin56.m2tasks_autogen/timestamp: src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target io.gitgud.catpswin56.m2tasks"
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E cmake_autogen "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/AutogenInfo.json" ""
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E touch "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/timestamp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir="/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target io.gitgud.catpswin56.m2tasks"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E cmake_autogen "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/AutogenInfo.json" ""
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && /usr/bin/cmake -E touch "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/io.gitgud.catpswin56.m2tasks_autogen/timestamp"
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/codegen:
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/codegen
@@ -87,10 +87,10 @@ src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build: io.gitgud.catpswi
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/build
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/clean:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -P CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/cmake_clean.cmake
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" && $(CMAKE_COMMAND) -P CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/cmake_clean.cmake
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/clean
 
 src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/depend:
-	cd "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src" "/home/pswin56/Escritorio/otras cosas/VistaThemePlasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src" "/home/catpswin56/Escritorio/Repositories/vistathemeplasma/extras/Win7 M2/src/m2tasks_src/build/src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : src/CMakeFiles/io.gitgud.catpswin56.m2tasks_autogen.dir/depend
 
