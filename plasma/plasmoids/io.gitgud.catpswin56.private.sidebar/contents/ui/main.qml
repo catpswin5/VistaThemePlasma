@@ -45,6 +45,8 @@ ContainmentItem {
     }
 
     SystemTrayIcon {
+        id: trayIcon
+
         icon.name: "gadgets-sidebar"
         menu: Menu {
             MenuItem {
@@ -56,8 +58,11 @@ ContainmentItem {
                 onTriggered: Plasmoid.internalAction("configure").trigger()
             }
         }
+        tooltip: "Windows Sidebar"
 
         visible: true
+
+        Component.onCompleted: menu.visible = false;
     }
 
     ListModel { id: appletsModel }
@@ -643,7 +648,7 @@ ContainmentItem {
                 anchors.centerIn: addTextBg
                 anchors.horizontalCenterOffset: -Kirigami.Units.smallSpacing/2
 
-                text: "Gadgets"
+                text: i18n("Gadgets")
                 color: "white"
 
                 opacity: addMa.containsMouse
