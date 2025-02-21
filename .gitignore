@@ -1,12 +1,13 @@
 misc/defaulttooltip/build
 misc/plymouth/plymouth-theme-smod/build
-kwin/decoration/build
-kwin/effects_cpp/kwin-effect-smodsnap-v2/build-kf6
-kwin/effects_cpp/kde-effects-aeroglassblur/build
 plasma/plasmoids/src/vistadesktop_src/build
 plasma/plasmoids/src/vistastart_src/build
 plasma/plasmoids/src/vistatasks_src/build
+kwin/decoration/build
+kwin/effects_cpp/kwin-effect-smodsnap-v2/build-kf6
+kwin/effects_cpp/kde-effects-aeroglassblur/build
 kwin/effects_cpp/smodglow/build-kf6
-extras/win7-m2/src/m2tasks_src/build
 kwin/effects_cpp/aeroglide/build-kf6
+kwin/effects_cpp/startupfeedback/build-kf6
+extras/win7-m2/src/m2tasks_src/build
 extras/extra-apps/execbin/build
