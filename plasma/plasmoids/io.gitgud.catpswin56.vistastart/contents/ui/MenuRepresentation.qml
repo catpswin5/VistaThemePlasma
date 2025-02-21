@@ -58,7 +58,8 @@ PlasmaCore.Dialog {
                                                     				   highlightItemSvg.margins.left + highlightItemSvg.margins.right)) - Kirigami.Units.smallSpacing/2
 	property int cellCount: Plasmoid.configuration.numberRows + faves.getFavoritesCount()
 
-	property int powerIndex: -1
+	property int shutdownIndex: -1
+	property int sleepIndex: -1
     property bool searching: (searchField.text != "")
     property bool showingAllPrograms: false
     property bool firstTimePopup: false // To make sure the user icon is displayed properly.
@@ -354,8 +355,8 @@ PlasmaCore.Dialog {
 				onClicked: filteredMenuItemsModel.trigger(index)
 			}
 			onObjectAdded: (index, object) => {
-				if(object.model.decoration == "system-shutdown" && Plasmoid.configuration.disableSleep) root.powerIndex = index;
-				else if(object.model.decoration == "system-suspend") root.powerIndex = index;
+				if(object.model.decoration == "system-shutdown") root.shutdownIndex = index;
+				if(object.model.decoration == "system-suspend") root.sleepIndex = index;
 				if(index == 3 || index == 5)
 					var separator = Qt.createQmlObject(`
 					import org.kde.plasma.extras as PlasmaExtras
@@ -1366,7 +1367,7 @@ PlasmaCore.Dialog {
 						shutdown.focus = false;
 					}
 					onClicked: {
-						filteredMenuItemsModel.trigger(root.powerIndex)
+						filteredMenuItemsModel.trigger(Plasmoid.configuration.disableSleep ? shutdownIndex : sleepIndex)
 						root.visible = false;
 					}
 				}
