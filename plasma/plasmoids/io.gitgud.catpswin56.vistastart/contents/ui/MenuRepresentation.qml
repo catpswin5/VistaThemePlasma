@@ -60,6 +60,7 @@ PlasmaCore.Dialog {
 
 	property int shutdownIndex: -1
 	property int sleepIndex: -1
+	property int lockIndex: -1
     property bool searching: (searchField.text != "")
     property bool showingAllPrograms: false
     property bool firstTimePopup: false // To make sure the user icon is displayed properly.
@@ -357,6 +358,7 @@ PlasmaCore.Dialog {
 			onObjectAdded: (index, object) => {
 				if(object.model.decoration == "system-shutdown") root.shutdownIndex = index;
 				if(object.model.decoration == "system-suspend") root.sleepIndex = index;
+				if(object.model.decoration == "system-lock-screen") root.lockIndex = index;
 				if(index == 3 || index == 5)
 					var separator = Qt.createQmlObject(`
 					import org.kde.plasma.extras as PlasmaExtras
@@ -1432,8 +1434,8 @@ PlasmaCore.Dialog {
 						lock.focus = false;
 					}
 					onClicked: {
+						filteredMenuItemsModel.trigger(lockIndex)
 						root.visible = false;
-						pmEngine.performOperation("lockScreen");
 					}
 				}
 			}
