@@ -91,10 +91,6 @@
       <label>Whether to request the window manager highlight windows when hovering corresponding task tooltips.</label>
       <default>true</default>
     </entry>
-    <entry name="launchers" type="StringList">
-      <label>The list of launcher tasks on the widget. Usually .desktop file or executable URLs. Special URLs such as preferred://browser that expand to default applications are supported.</label>
-      <default></default>
-    </entry>
     <entry name="middleClickAction" type="Enum">
       <label>What to do on middle-mouse click on a task button.</label>
       <choices>

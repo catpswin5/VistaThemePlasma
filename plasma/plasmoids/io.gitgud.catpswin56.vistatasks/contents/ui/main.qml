@@ -223,10 +223,6 @@ PlasmoidItem {
         groupingWindowTasksThreshold: (Plasmoid.configuration.onlyGroupWhenFull && !tasks.iconsOnly
             ? LayoutMetrics.optimumCapacity(width, height) + 1 : -1)
 
-        onLauncherListChanged: {
-            Plasmoid.configuration.launchers = launcherList;
-        }
-
         onGroupingAppIdBlacklistChanged: {
             Plasmoid.configuration.groupingAppIdBlacklist = groupingAppIdBlacklist;
         }

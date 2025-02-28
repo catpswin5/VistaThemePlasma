@@ -50,9 +50,7 @@ PlasmaCore.Dialog {
     property bool firstCreation: false
     property bool compositionEnabled: tasks.compositionEnabled
 
-    onTaskXChanged: {
-        correctScreenLocation();
-    }
+    onTaskXChanged: correctScreenLocation();
 
     backgroundHints: PlasmaCore.Types.NoBackground
     type: PlasmaCore.Dialog.Dock // for blur region and animation to work properly
@@ -89,13 +87,8 @@ PlasmaCore.Dialog {
         if(mainItem == groupThumbnails) Plasmoid.setDashWindow(tooltip, groupThumbnailsBg.mask, groupThumbnailsBg.imagePath);
     }
 
-    onMainItemChanged: {
-        refreshBlur();
-    }
 
-    onVisibleChanged: {
-        correctScreenLocation();
-    }
+    onVisibleChanged: correctScreenLocation();
 
     onWidthChanged: {
         correctScreenLocation();

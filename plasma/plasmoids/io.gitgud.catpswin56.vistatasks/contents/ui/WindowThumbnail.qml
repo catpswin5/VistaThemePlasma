@@ -18,13 +18,6 @@ MouseArea {
 
     property QtObject root
 
-    Connections { // Update the window thumbnail whenever the bindings are updated
-        target: thumbnailRoot.root
-        function onBindingsUpdated() {
-            thumbnailLoader.item.winId = windows[0];
-        }
-    }
-
     property var display: root.display
     property var icon: root.icon
     property var active: root.active
@@ -32,8 +25,11 @@ MouseArea {
     property var windows: root.windows
     property var minimized: root.minimized
 
-    width: thumbnailLoader.sourceComponent == appIcon ? 174 + Kirigami.Units.smallSpacing * 3 : dummyThumbnail.paintedWidth + Kirigami.Units.smallSpacing * 3
-    height: thumbnailLoader.sourceComponent == appIcon ? 92 + Kirigami.Units.smallSpacing * 3 : dummyThumbnail.paintedHeight + Kirigami.Units.smallSpacing * 3
+    property real x11ThumbnailWidth: 0
+    property real x11ThumbnailHeight: 0
+
+    width: thumbnailLoader.sourceComponent == appIcon || KWindowSystem.isPlatformWayland ? 174 + (Kirigami.Units.smallSpacing * 3) : x11ThumbnailWidth + (Kirigami.Units.smallSpacing * 3)
+    height: thumbnailLoader.sourceComponent == appIcon || KWindowSystem.isPlatformWayland ? 92 + (Kirigami.Units.smallSpacing * 3) : x11ThumbnailHeight + (Kirigami.Units.smallSpacing * 3)
 
     hoverEnabled: true
     propagateComposedEvents: true
@@ -42,18 +38,14 @@ MouseArea {
         id: primaryCloseTimer
         interval: 0
         running: !root.taskHovered && root.mainItem == thumbnailRoot
-        onTriggered: {
-            root.destroy();
-        }
+        onTriggered: root.destroy();
     }
 
     Timer {
         id: secondaryCloseTimer
         interval: 0
         running: root.parentTask.contextMenu || root.parentTask.jumpList
-        onTriggered: {
-            root.destroy();
-        }
+        onTriggered: root.destroy();
     }
 
     Item {
@@ -64,24 +56,13 @@ MouseArea {
         width: 172 - (Kirigami.Units.smallSpacing / 2)
         height: 172 - (Kirigami.Units.smallSpacing * 2)
 
-        PlasmaCore.WindowThumbnail {
-            id: dummyThumbnail
-
-            height: 172
-            width: 172
-
-            opacity: 0
-
-            winId: windows[0]
-        }
-
         Loader {
             id: thumbnailLoader
 
             anchors.centerIn: parent
 
-            height: sourceComponent != appIcon ? 172 : 92
-            width: sourceComponent != appIcon ? 172 : 174
+            height: sourceComponent != appIcon && !KWindowSystem.isPlatformWayland ? 172 : 92
+            width: sourceComponent != appIcon && !KWindowSystem.isPlatformWayland ? 172 : 174
 
             active: true
             asynchronous: true
@@ -96,6 +77,11 @@ MouseArea {
                     id: windowThumbnailX11
 
                     winId: windows[0]
+
+                    onPaintedSizeChanged: {
+                        thumbnailRoot.x11ThumbnailWidth = paintedWidth;
+                        thumbnailRoot.x11ThumbnailHeight = paintedHeight;
+                    }
 
                     Rectangle {
                         anchors.centerIn: parent
@@ -138,22 +124,28 @@ MouseArea {
 
                     TaskManager.ScreencastingRequest {
                         id: waylandItem
+
                         uuid: windows[0]
                     }
 
                     Rectangle {
-                        anchors.fill: parent
+                        anchors.centerIn: parent
+                        width: 174
+                        height: 92
 
-                        color: "transparent"
+                        color: "black"
 
                         border.width: 1
                         border.color: "black"
 
                         opacity: 0.5
+                        z: -1
                     }
                     Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: 1
+                        anchors.centerIn: parent
+
+                        width: 176
+                        height: 94
 
                         color: "transparent"
 
@@ -161,6 +153,7 @@ MouseArea {
                         border.color: "white"
 
                         opacity: 0.5
+                        z: -1
                     }
                 }
             }
@@ -224,8 +217,6 @@ MouseArea {
                 function onWindowsChanged() {
                     thumbnailLoader.active = false;
                     thumbnailLoader.active = true;
-                    dummyThumbnail.visible = false;
-                    dummyThumbnail.visible = true;
                 }
             }
         }

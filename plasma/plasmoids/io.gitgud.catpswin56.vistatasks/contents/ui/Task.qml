@@ -282,8 +282,6 @@ TaskManagerApplet.SmartLauncherItem { }
         toolTip.taskHeight = task.height;
         toolTip.taskX = task.x;
         toolTip.taskY = task.y;
-
-        toolTip.bindingsUpdated(); // used to refresh thumbnail
     }
 
     function showFallbackContextMenu(args) {
@@ -1485,16 +1483,18 @@ TaskManagerApplet.SmartLauncherItem { }
             currentDrag = Qt.point(containerRect.x, containerRect.y);
         }
         function sendItemBack() {
-            beginDrag = Qt.point(task.x, task.y);
-            backAnimX.from = currentDrag.x //- taskList.contentX;
-            backAnimX.to = beginDrag.x - taskList.contentX;
-            backAnimY.from = currentDrag.y// - taskList.contentY;
-            backAnimY.to = beginDrag.y - taskList.contentY;
-            backAnim.start();
-            dragThreshold = Qt.point(-1,-1);
+            if(Plasmoid.configuration.draggingEnabled) {
+                beginDrag = Qt.point(task.x, task.y);
+                backAnimX.from = currentDrag.x //- taskList.contentX;
+                backAnimX.to = beginDrag.x - taskList.contentX;
+                backAnimY.from = currentDrag.y// - taskList.contentY;
+                backAnimY.to = beginDrag.y - taskList.contentY;
+                backAnim.start();
+                dragThreshold = Qt.point(-1,-1);
+            } else dragArea.held = false;
         }
         onReleased: event => {
-            if(held && Plasmoid.configuration.draggingEnabled) {
+            if(held) {
                 sendItemBack();
             } else {
                 leftTapHandler.leftClick();
