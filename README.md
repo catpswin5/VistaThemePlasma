@@ -148,3 +148,6 @@ Many thanks to the people who helped out by testing and providing some suggestio
 
 <img src="screenshots/jumplist-m2.png">
 <img src="screenshots/window_preview-m2.png">
+
+### Plymouth Theme
+<img src="screenshots/boot.gif">
