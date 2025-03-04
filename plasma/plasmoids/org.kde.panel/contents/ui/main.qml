@@ -21,6 +21,7 @@ import "LayoutManager.js" as LayoutManager
 
 ContainmentItem {
     id: root
+
     width: 640
     height: 40
 
@@ -565,7 +566,7 @@ ContainmentItem {
             // Sevenstart
             property int sevenstartItem: {
                 for(var i = 0; i < currentLayout.visibleChildren.length-1; i++) {
-                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.vistastart") {
+                    if(currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.startscreenpearl" || currentLayout.visibleChildren[i].applet.Plasmoid.pluginName === "io.gitgud.catpswin56.vistastart") {
                         return currentLayout.visibleChildren[i].applet.width;
                     }
                 }
@@ -580,8 +581,8 @@ ContainmentItem {
                 delegate: appletContainerComponent
             }
 
-            rowSpacing: Kirigami.Units.smallSpacing
-            columnSpacing: Kirigami.Units.smallSpacing
+            rowSpacing: 0
+            columnSpacing: 0
 
             x: Qt.application.layoutDirection === Qt.RightToLeft && isHorizontal ? toolBoxSize : 0;
             readonly property int toolBoxSize: !toolBox || !Plasmoid.containment.corona.editMode || Qt.application.layoutDirection === Qt.RightToLeft ? 0 : (isHorizontal ? toolBox.width : toolBox.height)

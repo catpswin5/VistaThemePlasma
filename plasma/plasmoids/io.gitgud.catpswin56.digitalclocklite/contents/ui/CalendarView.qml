@@ -566,7 +566,7 @@ PlasmaCore.Dialog {
 				}
 
 				horizontalAlignment: Text.AlignHCenter
-				text: "Change date and time settings..."
+				text: i18n("Change date and time settings...")
 				color: "#4465a2" //heading_ma.containsPress ? "#90e7ff" : (heading_ma.containsMouse ? "#b6ffff" : Kirigami.Theme.textColor)
 				font.underline: link_ma.containsMouse
 				level: 5

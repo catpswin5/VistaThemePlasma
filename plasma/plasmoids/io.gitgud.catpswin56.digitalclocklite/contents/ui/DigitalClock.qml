@@ -18,13 +18,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.6
-import QtQuick.Layouts 1.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Layouts
+
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.private.digitalclock 1.0
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.private.digitalclock
+import org.kde.plasma.extras as PlasmaExtras
+
 import org.kde.ksvg as KSvg
 import org.kde.kirigami as Kirigami
 
@@ -63,11 +65,6 @@ Item {
 
     // This is the index in the list of user selected timezones
     property int tzIndex: 0
-
-    // if the date/timezone cannot be fit with the smallest font to its designated space
-    readonly property bool oneLineMode: Plasmoid.formFactor == PlasmaCore.Types.Horizontal &&
-                                        main.height <= 2 * Kirigami.Theme.smallestFont.pixelSize &&
-                                        (main.showDate || timezoneLabel.visible)
                                         
     property QtObject dashWindow: null
 
@@ -105,6 +102,67 @@ Item {
     onShowDateChanged:             { timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)) }
     onUse24hFormatChanged:         { timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)) }
 
+    // TODO: add vertical panels support
+    states: [
+        State {
+            name: "horizontalBig"
+            when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && main.height >= 47
+
+            PropertyChanges {
+                target: main
+
+                Layout.fillHeight: true
+                Layout.minimumWidth: mainContent.width
+                Layout.maximumWidth: Layout.minimumWidth
+            }
+
+            PropertyChanges {
+                target: mainContent
+
+                width: 0 + Math.max(timeLabel.implicitWidth, dayLabel.implicitWidth, dateLabel.implicitWidth) + ((Kirigami.Units.smallSpacing * 2) + 2)
+                height: main.height
+            }
+        },
+        State {
+            name: "horizontal"
+            when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && (main.height < 47 && main.height >= 37)
+
+            PropertyChanges {
+                target: main
+
+                Layout.fillHeight: true
+                Layout.minimumWidth: mainContent.width
+                Layout.maximumWidth: Layout.minimumWidth
+            }
+
+            PropertyChanges {
+                target: mainContent
+
+                width: 0 + Math.max(timeLabel.implicitWidth, dateLabel.implicitWidth) + ((Kirigami.Units.smallSpacing * 2) + 2)
+                height: main.height
+            }
+        },
+        State {
+            name: "horizontalSmall"
+            when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && main.height < 40
+
+            PropertyChanges {
+                target: main
+
+                Layout.fillHeight: true
+                Layout.minimumWidth: mainContent.width
+                Layout.maximumWidth: Layout.minimumWidth
+            }
+
+            PropertyChanges {
+                target: mainContent
+
+                width: 0 + Math.max(timeLabel.implicitWidth, 0) + ((Kirigami.Units.smallSpacing * 2) + 2)
+                height: main.height
+            }
+        }
+    ]
+
     Connections {
         target: Plasmoid.configuration
         function onSelectedTimeZonesChanged() {
@@ -119,406 +177,6 @@ Item {
             setTimezoneIndex();
         }
     }
-
-    states: [
-        State {
-            name: "horizontalPanel"
-            when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && !main.oneLineMode && main.milestone2Mode
-
-            PropertyChanges {
-                target: main
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.minimumWidth: contentItem.width + Kirigami.Units.smallSpacing*2
-                Layout.maximumWidth: Layout.minimumWidth
-            }
-
-            PropertyChanges {
-                target: contentItem
-
-                height: timeLabel.height + (main.showDate || timezoneLabel.visible ? 0.8 * timeLabel.height : 0)
-                width: Math.max(labelsGrid.width, timezoneLabel.paintedWidth, dateLabel.paintedWidth)
-            }
-
-            PropertyChanges {
-                target: labelsGrid
-
-                rows: main.showDate ? 1 : 2
-            }
-
-            AnchorChanges {
-                target: labelsGrid
-
-                anchors.horizontalCenter: contentItem.horizontalCenter
-            }
-
-            PropertyChanges {
-                target: timeLabel
-
-                height: sizehelper.height
-                //rightPadding: 1
-                //width: sizehelper.contentWidth
-                //width: contentItem.width
-                //width: !showDate ? timeMetrics.advanceWidth(dateLabel.text) : timeLabel.paintedWidth
-                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(timeLabel.height * 72 / 96))
-            }
-
-            PropertyChanges {
-                target: timezoneLabel
-
-                //height: main.showDate ? 0.7 * timeLabel.height : 0.8 * timeLabel.height
-                //width: main.showDate ? timezoneLabel.paintedWidth : timeLabel.width
-
-                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(timezoneLabel.height * 72 / 96))
-            }
-
-            PropertyChanges {
-                target: dateLabel
-
-                height: 0.8 * timeLabel.height
-                width: dateLabel.paintedWidth
-
-                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(dateLabel.height * 72 / 96))
-            }
-
-            AnchorChanges {
-                target: dateLabel
-
-                anchors.top: labelsGrid.bottom
-                anchors.horizontalCenter: labelsGrid.horizontalCenter
-            }
-
-            PropertyChanges {
-                target: sizehelper
-
-                /*
-                 * The value 0.71 was picked by testing to give the clock the right
-                 * size (aligned with tray icons).
-                 * Value 0.56 seems to be chosen rather arbitrary as well such that
-                 * the time label is slightly larger than the date or timezone label
-                 * and still fits well into the panel with all the applied margins.
-                 */
-                height: Math.min(main.showDate || timezoneLabel.visible ? main.height * 0.56 : main.height * 0.71,
-                                 3 * Kirigami.Theme.defaultFont.pixelSize)
-
-                font.pixelSize: sizehelper.height
-            }
-        },
-
-        State {
-            name: "horizontalPanel"
-            when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && !main.oneLineMode
-
-            PropertyChanges {
-                target: main
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.minimumWidth: contentItem.width + Kirigami.Units.smallSpacing*4
-                Layout.maximumWidth: Layout.minimumWidth
-            }
-
-            PropertyChanges {
-                target: contentItem
-
-                height: timeLabel.height + (main.showDate || timezoneLabel.visible ? 0.8 * timeLabel.height : 0)
-                width: Math.max(labelsGrid.width, timezoneLabel.paintedWidth, dateLabel.paintedWidth)
-            }
-
-            PropertyChanges {
-                target: labelsGrid
-
-                rows: main.showDate ? 1 : 2
-            }
-
-            AnchorChanges {
-                target: labelsGrid
-
-                anchors.horizontalCenter: contentItem.horizontalCenter
-            }
-
-            PropertyChanges {
-                target: timeLabel
-
-                height: sizehelper.height
-                //rightPadding: 1
-                //width: sizehelper.contentWidth
-                //width: contentItem.width
-                //width: !showDate ? timeMetrics.advanceWidth(dateLabel.text) : timeLabel.paintedWidth
-                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(timeLabel.height * 72 / 96))
-            }
-
-            PropertyChanges {
-                target: timezoneLabel
-
-                //height: main.showDate ? 0.7 * timeLabel.height : 0.8 * timeLabel.height
-                //width: main.showDate ? timezoneLabel.paintedWidth : timeLabel.width
-
-                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(timezoneLabel.height * 72 / 96))
-            }
-
-            PropertyChanges {
-                target: dateLabel
-
-                height: 0.8 * timeLabel.height
-                width: dateLabel.paintedWidth
-
-                font.pointSize: Math.min(Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize, Math.round(dateLabel.height * 72 / 96))
-            }
-
-            AnchorChanges {
-                target: dateLabel
-
-                anchors.top: labelsGrid.bottom
-                anchors.horizontalCenter: labelsGrid.horizontalCenter
-            }
-
-            PropertyChanges {
-                target: sizehelper
-
-                /*
-                 * The value 0.71 was picked by testing to give the clock the right
-                 * size (aligned with tray icons).
-                 * Value 0.56 seems to be chosen rather arbitrary as well such that
-                 * the time label is slightly larger than the date or timezone label
-                 * and still fits well into the panel with all the applied margins.
-                 */
-                height: Math.min(main.showDate || timezoneLabel.visible ? main.height * 0.56 : main.height * 0.71,
-                                 3 * Kirigami.Theme.defaultFont.pixelSize)
-
-                font.pixelSize: sizehelper.height
-            }
-        },
-
-        State {
-            name: "horizontalPanelSmall"
-            when: Plasmoid.formFactor == PlasmaCore.Types.Horizontal && main.oneLineMode
-
-            PropertyChanges {
-                target: main
-                Layout.fillHeight: true
-                Layout.fillWidth: false
-                Layout.minimumWidth: contentItem.width
-                Layout.maximumWidth: Layout.minimumWidth
-
-            }
-
-            PropertyChanges {
-                target: contentItem
-
-                height: sizehelper.height
-                width: dateLabel.width + dateLabel.anchors.rightMargin + labelsGrid.width
-            }
-
-            AnchorChanges {
-                target: labelsGrid
-
-                anchors.right: contentItem.right
-                anchors.left: contentItem.left
-            }
-
-            PropertyChanges {
-                target: dateLabel
-
-                height: timeLabel.height
-                width: dateLabel.paintedWidth
-
-                anchors.rightMargin: labelsGrid.columnSpacing
-
-                fontSizeMode: Text.VerticalFit
-            }
-
-            AnchorChanges {
-                target: dateLabel
-
-                anchors.right: labelsGrid.left
-                anchors.verticalCenter: labelsGrid.verticalCenter
-            }
-
-            PropertyChanges {
-                target: timeLabel
-
-                height: sizehelper.height
-                width: sizehelper.contentWidth
-
-                fontSizeMode: Text.VerticalFit
-            }
-
-            PropertyChanges {
-                target: timezoneLabel
-
-                height: 0.7 * timeLabel.height
-                width: timezoneLabel.paintedWidth
-
-                fontSizeMode: Text.VerticalFit
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            PropertyChanges {
-                target: sizehelper
-
-                height: Math.min(main.height, 3 * Kirigami.Theme.defaultFont.pixelSize)
-
-                fontSizeMode: Text.VerticalFit
-                font.pixelSize: 3 * Kirigami.Theme.defaultFont.pixelSize
-            }
-        },
-
-        State {
-            name: "verticalPanel"
-            when: Plasmoid.formFactor == PlasmaCore.Types.Vertical
-
-            PropertyChanges {
-                target: main
-                Layout.fillHeight: false
-                Layout.fillWidth: true
-                Layout.maximumHeight: contentItem.height
-                Layout.minimumHeight: Layout.maximumHeight
-            }
-
-            PropertyChanges {
-                target: contentItem
-
-                height: main.showDate ? labelsGrid.height + dateLabel.height : labelsGrid.height
-                width: main.width
-            }
-
-            PropertyChanges {
-                target: labelsGrid
-
-                rows: 2
-            }
-
-            PropertyChanges {
-                target: timeLabel
-
-                height: sizehelper.contentHeight
-                width: main.width
-
-                fontSizeMode: Text.HorizontalFit
-            }
-
-            PropertyChanges {
-                target: timezoneLabel
-
-                height: Math.max(0.7 * timeLabel.height, minimumPixelSize)
-                width: main.width
-
-                fontSizeMode: Text.Fit
-                minimumPixelSize: dateLabel.minimumPixelSize
-                elide: Text.ElideRight
-            }
-
-            PropertyChanges {
-                target: dateLabel
-
-                // this can be marginal bigger than contentHeight because of the horizontal fit
-                height: Math.max(0.8 * timeLabel.height, minimumPixelSize)
-                width: main.width
-
-                fontSizeMode: Text.Fit
-                minimumPixelSize: Math.min(0.7 * Kirigami.Theme.smallestFont.pixelSize, timeLabel.height)
-                elide: Text.ElideRight
-            }
-
-            AnchorChanges {
-                target: dateLabel
-
-                anchors.top: labelsGrid.bottom
-                anchors.horizontalCenter: labelsGrid.horizontalCenter
-            }
-
-            PropertyChanges {
-                target: sizehelper
-
-                width: main.width
-
-                fontSizeMode: Text.HorizontalFit
-                font.pixelSize: 3 * Kirigami.Theme.defaultFont.pixelSize
-            }
-        },
-
-        State {
-            name: "other"
-            when: Plasmoid.formFactor != PlasmaCore.Types.Vertical && Plasmoid.formFactor != PlasmaCore.Types.Horizontal
-
-            PropertyChanges {
-                target: main
-                Layout.fillHeight: false
-                Layout.fillWidth: false
-                Layout.minimumWidth: Kirigami.Units.iconSizes.small * 3
-                Layout.minimumHeight: Kirigami.Units.iconSizes.small * 3
-            }
-
-            PropertyChanges {
-                target: contentItem
-
-                height: main.height
-                width: main.width
-            }
-
-            PropertyChanges {
-                target: labelsGrid
-
-                rows: 2
-            }
-
-            PropertyChanges {
-                target: timeLabel
-
-                height: sizehelper.height
-                width: main.width
-
-                fontSizeMode: Text.Fit
-            }
-
-            PropertyChanges {
-                target: timezoneLabel
-
-                height: 0.7 * timeLabel.height
-                width: main.width
-
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-            }
-
-            PropertyChanges {
-                target: dateLabel
-
-                height: 0.8 * timeLabel.height
-                width: Math.max(timeLabel.contentWidth, Kirigami.Units.iconSizes.small * 3)
-
-                fontSizeMode: Text.Fit
-                minimumPixelSize: 1
-            }
-
-            AnchorChanges {
-                target: dateLabel
-
-                anchors.top: labelsGrid.bottom
-                anchors.horizontalCenter: labelsGrid.horizontalCenter
-            }
-
-            PropertyChanges {
-                target: sizehelper
-
-                height: {
-                    if (main.showDate) {
-                        if (timezoneLabel.visible) {
-                            return 0.4 * main.height
-                        }
-                        return 0.56 * main.height
-                    } else if (timezoneLabel.visible) {
-                        return 0.59 * main.height
-                    }
-                    return main.height
-                }
-                width: main.width
-
-                fontSizeMode: Text.Fit
-                font.pixelSize: 1024
-            }
-        }
-    ]
     
     Timer {
         id: tooltipTimer
@@ -528,27 +186,149 @@ Item {
         onTriggered: if(!dashWindow.visible) timeToolTip.showToolTip();
     }
 
+    KSvg.FrameSvgItem {
+       id: hoverIndicator
+
+       anchors.fill: parent
+       anchors.leftMargin: -Kirigami.Units.smallSpacing
+       anchors.rightMargin: -Kirigami.Units.smallSpacing
+
+       imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
+       prefix: mouseArea.containsPress ? "pressed-tab" : "active-tab";
+
+       z: -1
+       visible: mouseArea.containsMouse && main.milestone2Mode
+    }
+
+    Item {
+        id: mainContent
+
+        ColumnLayout {
+            id: timeDate
+
+            anchors.fill: parent
+
+            uniformCellSizes: true
+            spacing: 0
+
+            Text {
+                id: timeLabel
+
+                Layout.topMargin: Plasmoid.configuration.offsetClock && main.state == "horizontalSmall" ? -4 : 0
+
+                Layout.fillWidth: true
+
+                renderType: Text.NativeRendering
+                font {
+                    family: Plasmoid.configuration.fontFamily || Kirigami.Theme.defaultFont.family
+                    weight: Plasmoid.configuration.boldText ? Font.Bold : Kirigami.Theme.defaultFont.weight
+                    italic: Plasmoid.configuration.italicText
+                    pointSize: Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize
+                    hintingPreference: Font.PreferFullHinting
+                }
+                color: "white"
+                style: Text.Outline
+                styleColor: "transparent"
+                text: {
+                    // get the time for the given timezone from the dataengine
+                    var now = dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["DateTime"];
+                    // get current UTC time
+                    var msUTC = now.getTime() + (now.getTimezoneOffset() * 60000);
+                    // add the dataengine TZ offset to it
+                    var currentTime = new Date(msUTC + (dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Offset"] * 1000));
+
+                    main.currentTime = currentTime;
+
+                    var showTimezone = main.showLocalTimezone || (plasmoid.configuration.lastSelectedTimezone != "Local"
+                    && dataSource.data["Local"]["Timezone City"] != dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
+
+                    var timezoneString = "";
+                    var timezoneResult = "";
+
+                    if (showTimezone) {
+                        timezoneString = Plasmoid.configuration.displayTimezoneAsCode ? dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone Abbreviation"]
+                        : TimezonesI18n.i18nCity(dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
+                        timezoneResult = (main.showDate || main.oneLineMode) && Plasmoid.formFactor == PlasmaCore.Types.Horizontal ? timezoneString : timezoneString;
+                    } else {
+                        // this clears the label and that makes it hidden
+                        timezoneResult = timezoneString;
+                    }
+                    return (showTimezone ? "" : " ") + Qt.formatTime(currentTime, main.timeFormat) + " " + (showTimezone ? (" " + timezoneResult) : "");
+                }
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: main.showDate ? Text.AlignHCenter : Text.AlignLeft
+                leftPadding: !Plasmoid.configuration.offsetClock && !main.showDate ? Kirigami.Units.smallSpacing : 0
+            }
+            Text {
+                id: dayLabel
+
+                Layout.fillWidth: true
+
+                renderType: Text.NativeRendering
+                font {
+                    family: Plasmoid.configuration.fontFamily || Kirigami.Theme.defaultFont.family
+                    weight: Plasmoid.configuration.boldText ? Font.Bold : Kirigami.Theme.defaultFont.weight
+                    italic: Plasmoid.configuration.italicText
+                    pointSize: Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize
+                    hintingPreference: Font.PreferFullHinting
+                }
+                color: "white"
+                style: Text.Outline
+                styleColor: "transparent"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                text: {
+                    var now = dataSource.data[plasmoid.configuration.lastSelectedTimezone]["DateTime"];
+                    return Qt.formatDate(now, "dddd");
+                }
+
+                visible: main.state == "horizontalBig"
+            }
+            Text {
+                id: dateLabel
+
+                Layout.fillWidth: true
+
+                renderType: Text.NativeRendering
+                font {
+                    family: Plasmoid.configuration.fontFamily || Kirigami.Theme.defaultFont.family
+                    weight: Plasmoid.configuration.boldText ? Font.Bold : Kirigami.Theme.defaultFont.weight
+                    italic: Plasmoid.configuration.italicText
+                    pointSize: Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize
+                    hintingPreference: Font.PreferFullHinting
+                }
+                color: "white"
+                style: Text.Outline
+                styleColor: "transparent"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+
+                visible: main.showDate
+            }
+        }
+    }
+
     MouseArea {
         id: mouseArea
 
         property int wheelDelta: 0
-        
-        hoverEnabled: true
 
         anchors.fill: parent
+
+        hoverEnabled: true
 
         onClicked: {
             Plasmoid.expanded = !Plasmoid.expanded
             dashWindow.visible = !dashWindow.visible;
             if(dashWindow.visible) timeToolTip.hideImmediately();
         }
-        
-        onEntered: {
-            tooltipTimer.start();
-        }
-        onExited: {
-            tooltipTimer.stop();
-            timeToolTip.hideToolTip();
+
+        onContainsMouseChanged: {
+            if(containsMouse) tooltipTimer.start();
+            if(!containsMouse) {
+                tooltipTimer.stop();
+                timeToolTip.hideToolTip();
+            }
         }
         onWheel: wheel => {
             if (!Plasmoid.configuration.wheelChangesTimezone) {
@@ -583,153 +363,17 @@ Item {
                 setupLabels();
             }
         }
-        PlasmaCore.ToolTipArea {
-            id: timeToolTip
-
-            mainItem: ToolTipCompact {
-                time: {
-                    var now = dataSource.data[plasmoid.configuration.lastSelectedTimezone]["DateTime"];
-                    return Qt.formatDate(now, "dddd, MMMM dd, yyyy");
-                }
-            }
-        }
     }
 
-   /*
-    * Visible elements
-    *
-    */
-   KSvg.FrameSvgItem {
-       id: hoverIndicator
-       imagePath: Qt.resolvedUrl("svgs/tabbar.svgz")
-       anchors.fill: parent
-       anchors.leftMargin: -Kirigami.Units.smallSpacing
-       anchors.rightMargin: -Kirigami.Units.smallSpacing
-       z: -1
-       visible: mouseArea.containsMouse && main.milestone2Mode
-       prefix: mouseArea.containsPress ? "pressed-tab" : "active-tab";
-   }
+    PlasmaCore.ToolTipArea {
+        id: timeToolTip
 
-    Item {
-        id: contentItem
-        anchors.verticalCenter: main.verticalCenter
-        anchors.horizontalCenter: main.horizontalCenter
-        anchors.horizontalCenterOffset: main.milestone2Mode || !Plasmoid.configuration.offsetClock ? 0 : -Kirigami.Units.smallSpacing
-        anchors.verticalCenterOffset: Plasmoid.configuration.offsetClock ? -Kirigami.Units.smallSpacing/2 : 0
-
-        Grid {
-            id: labelsGrid
-
-            rows: 1
-            horizontalItemAlignment: Grid.AlignHCenter
-            verticalItemAlignment: Grid.AlignVCenter
-
-            flow: Grid.TopToBottom
-            columnSpacing: Kirigami.Units.smallSpacing
-
-            Rectangle {
-                height: 0.8 * sizehelper.height
-                width: 1
-                visible: main.showDate && main.oneLineMode
-
-                color: Kirigami.Theme.textColor
-                opacity: 0.4
-            }
-
-            PlasmaComponents3.Label  {
-                id: timeLabel
-
-                renderType: Text.NativeRendering
-                font {
-                    family: Plasmoid.configuration.fontFamily || Kirigami.Theme.defaultFont.family
-                    weight: Plasmoid.configuration.boldText ? Font.Bold : Kirigami.Theme.defaultFont.weight
-                    italic: Plasmoid.configuration.italicText
-                    pointSize: Plasmoid.configuration.fontSize || Kirigami.Theme.defaultFont.pointSize
-                    hintingPreference: Font.PreferFullHinting
-                }
-                minimumPixelSize: 1
-                style: Text.Outline
-                styleColor: "transparent"
-                text: {
-                    // get the time for the given timezone from the dataengine
-                    var now = dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["DateTime"];
-                    // get current UTC time
-                    var msUTC = now.getTime() + (now.getTimezoneOffset() * 60000);
-                    // add the dataengine TZ offset to it
-                    var currentTime = new Date(msUTC + (dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Offset"] * 1000));
-
-                    main.currentTime = currentTime;
-
-                    var showTimezone = main.showLocalTimezone || (plasmoid.configuration.lastSelectedTimezone != "Local"
-                    && dataSource.data["Local"]["Timezone City"] != dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
-
-                    var timezoneString = "";
-                    var timezoneResult = "";
-
-                    if (showTimezone) {
-                        timezoneString = Plasmoid.configuration.displayTimezoneAsCode ? dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone Abbreviation"]
-                        : TimezonesI18n.i18nCity(dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
-                        timezoneResult = (main.showDate || main.oneLineMode) && Plasmoid.formFactor == PlasmaCore.Types.Horizontal ? timezoneString : timezoneString;
-                    } else {
-                        // this clears the label and that makes it hidden
-                        timezoneResult = timezoneString;
-                    }
-                    return (showTimezone ? "" : " ") + Qt.formatTime(currentTime, main.timeFormat) + " " + (showTimezone ? (" " + timezoneResult) : "");
-                }
-                leftPadding: ((showDate && dateFormat === Qt.ISODate) ? 1 : 0)
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            PlasmaComponents3.Label {
-                id: timezoneLabel
-
-                renderType: Text.NativeRendering
-                font.weight: timeLabel.font.weight
-                font.italic: timeLabel.font.italic
-                font.pixelSize: timeLabel.font.pixelSize
-                font.hintingPreference: Font.PreferFullHinting
-                minimumPixelSize: 1
-
-                style: Text.Outline
-                styleColor: "transparent"
-                visible: false
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+        mainItem: ToolTipCompact {
+            time: {
+                var now = dataSource.data[plasmoid.configuration.lastSelectedTimezone]["DateTime"];
+                return Qt.formatDate(now, "dddd, MMMM dd, yyyy");
             }
         }
-
-        PlasmaComponents3.Label {
-            id: dateLabel
-
-            visible: main.showDate
-            renderType: Text.NativeRendering
-            font.family: timeLabel.font.family
-            font.weight: timeLabel.font.weight
-            font.italic: timeLabel.font.italic
-            font.pixelSize: timeLabel.font.pixelSize
-            font.hintingPreference: Font.PreferFullHinting
-            minimumPixelSize: 1
-            style: Text.Outline
-            styleColor: "transparent"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
-    }
-    /*
-     * end: Visible Elements
-     *
-     */
-
-    PlasmaComponents3.Label {
-        id: sizehelper
-
-        font.family: timeLabel.font.family
-        font.weight: timeLabel.font.weight
-        font.italic: timeLabel.font.italic
-        minimumPixelSize: 1
-
-        visible: false
     }
 
     FontMetrics {
@@ -740,13 +384,6 @@ Item {
         font.italic: timeLabel.font.italic
     }
 
-    // Qt's QLocale does not offer any modular time creating like Klocale did
-    // eg. no "gimme time with seconds" or "gimme time without seconds and with timezone".
-    // QLocale supports only two formats - Long and Short. Long is unusable in many situations
-    // and Short does not provide seconds. So if seconds are enabled, we need to add it here.
-    //
-    // What happens here is that it looks for the delimiter between "h" and "m", takes it
-    // and appends it after "mm" and then appends "ss" for the seconds.
     function timeFormatCorrection(timeFormatString) {
         var regexp = /(hh*)(.+)(mm)/i
         var match = regexp.exec(timeFormatString);
@@ -776,28 +413,8 @@ Item {
     }
 
     function setupLabels() {
-        /*var showTimezone = main.showLocalTimezone || (plasmoid.configuration.lastSelectedTimezone != "Local"
-                                                        && dataSource.data["Local"]["Timezone City"] != dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
-
-        var timezoneString = "";
-
-        if (showTimezone) {
-            timezoneString = Plasmoid.configuration.displayTimezoneAsCode ? dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone Abbreviation"]
-                                                                          : TimezonesI18n.i18nCity(dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
-            timezoneLabel.text = (main.showDate || main.oneLineMode) && Plasmoid.formFactor == PlasmaCore.Types.Horizontal ? "(" + timezoneString + ")" : timezoneString;
-        } else {
-            // this clears the label and that makes it hidden
-            timezoneLabel.text = timezoneString;
-        }*/
-
-
         dateLabel.text = Qt.formatDate(main.currentTime, main.dateFormat);
         if(!main.showDate) dateLabel.text = dateLabel.text.slice(1) + " ";
-        /*if (main.showDate) {
-        } else {
-            // clear it so it doesn't take space in the layout
-            dateLabel.text = "";
-        }*/
 
         // find widest character between 0 and 9
         var maximumWidthNumber = 0;
@@ -815,15 +432,6 @@ Item {
         var date = new Date(2000, 0, 1, 1, 0, 0);
         var timeAm = Qt.formatTime(date, format);
         var advanceWidthAm = timeMetrics.advanceWidth(timeAm);
-        date.setHours(13);
-        var timePm = Qt.formatTime(date, format);
-        var advanceWidthPm = timeMetrics.advanceWidth(timePm);
-        // set the sizehelper's text to the widest time string
-        if (advanceWidthAm > advanceWidthPm) {
-            sizehelper.text = timeAm;
-        } else {
-            sizehelper.text = timePm;
-        }
     }
 
     function dateTimeChanged()
