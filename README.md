@@ -130,14 +130,3 @@ Many thanks to the people who helped out by testing and providing some suggestio
 
 <img src="screenshots/contextmenu-vista.png">
 <img src="screenshots/window_preview-vista.png">
-<<<<<<< HEAD
-
-### Taskbar (Milestone 2)
-
-<img src="screenshots/jumplist-m2.png">
-<img src="screenshots/window_preview-m2.png">
-
-### Plymouth Theme
-<img src="screenshots/boot.gif">
-=======
->>>>>>> b5c35ab3a6294d01dad8f99322f44904ac547f8c
