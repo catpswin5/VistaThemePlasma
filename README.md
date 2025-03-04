@@ -33,6 +33,7 @@ Many thanks to the people who helped out by testing and providing some suggestio
 
 ### Forked code
 
+- blacklightpy's [PlymouthXP](https://github.com/blacklightpy/PlymouthXP) Plymouth theme
 - Intika's [Digital Clock Lite](https://store.kde.org/p/1225135/) plasmoid
 - [Adhe](https://store.kde.org/p/1386465/), [oKcerG](https://github.com/oKcerG/QuickBehaviors) and [SnoutBug](https://store.kde.org/p/1720532) for making SevenStart possible
 - Zren's [Win7 Show Desktop](https://store.kde.org/p/2151247) plasmoid
