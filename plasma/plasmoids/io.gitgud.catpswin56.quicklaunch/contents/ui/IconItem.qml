@@ -75,8 +75,8 @@ Item {
 
             anchors.fill: parent
 
-            imagePath: "widgets/button"
-            prefix: mouseArea.containsPress ? "keyboard-pressed" : "keyboard-hover"
+            imagePath: Qt.resolvedUrl("svgs/button.svg")
+            prefix: mouseArea.containsPress ? "pressed" : "hover"
 
             visible: mouseArea.containsMouse && !mouseArea.held
         }
@@ -129,12 +129,12 @@ Item {
             }
 
             PlasmaExtras.MenuItem {
-                text: i18nc("@action:inmenu", "Properties")
+                text: i18n("Properties")
                 onClicked: editLauncher()
             }
 
             PlasmaExtras.MenuItem {
-                text: i18nc("@action:inmenu", "Remove")
+                text: i18n("Remove")
                 onClicked: removeLauncher()
             }
 

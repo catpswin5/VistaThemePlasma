@@ -8,10 +8,12 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
-import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents3
+
+import org.kde.kirigami as Kirigami
 import org.kde.draganddrop as DragAndDrop
-import org.kde.plasma.private.quicklaunch 1.0
+
+import io.gitgud.catpswin56.private.quicklaunch
 
 import "layout.js" as LayoutManager
 
@@ -26,7 +28,7 @@ PlasmoidItem {
     readonly property bool horizontal : plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool dragging: false
 
-    Layout.minimumWidth: LayoutManager.minimumWidth() + (plasmoid.configuration.extraPadding ? plasmoid.configuration.extraPaddingSize : 0)
+    Layout.minimumWidth: !grid.visible ? 50 : LayoutManager.minimumWidth() + (plasmoid.configuration.extraPadding ? plasmoid.configuration.extraPaddingSize : 0)
     Layout.minimumHeight: LayoutManager.minimumHeight()
 
     preferredRepresentation: fullRepresentation
@@ -101,20 +103,6 @@ PlasmoidItem {
                     popup.mainItem.popupModel.insertUrl(popup.mainItem.popupModel.count, url);
                     popup.mainItem.listView.currentIndex = popup.mainItem.popupModel.count - 1;
                     iconItem.removeLauncher();
-                }
-            }
-
-            Kirigami.Icon {
-                id: defaultIcon
-                anchors.fill: parent
-                source: "fork"
-                visible: !grid.visible
-
-                PlasmaCore.ToolTipArea {
-                    anchors.fill: parent
-                    mainText: i18n("Quicklaunch")
-                    subText: i18nc("@info", "Add launchers by Drag and Drop or by using the context menu.")
-                    location: Plasmoid.location
                 }
             }
         }

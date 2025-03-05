@@ -47,9 +47,12 @@
                 "Name[x-test]": "xxDavid Roscaxx",
                 "Name[zh_CN]": "David Rosca",
                 "Name[zh_TW]": "David Rosca"
+            },
+            {
+                "Name": "catpswin56"
             }
         ],
-        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=kdeplasma-addons&component=Quicklaunch",
+        "BugReportUrl": "https://gitgud.io/catpswin56/vistathemeplasma/-/issues",
         "Category": "Application Launchers",
         "Description": "Launch your favourite applications",
         "Description[ar]": "تشغل تطبيقاتك المفضلة",
@@ -81,8 +84,8 @@
         "FormFactors": [
             "desktop"
         ],
-        "Icon": "fork",
-        "Id": "org.kde.plasma.quicklaunch",
+        "Icon": "preferences-desktop-plasma-theme",
+        "Id": "io.gitgud.catpswin56.quicklaunch",
         "License": "GPL-2.0+",
         "Name": "Quicklaunch",
         "Name[ar]": "الإطلاق السّريع",
@@ -127,7 +130,7 @@
         "Name[x-test]": "xxQuicklaunchxx",
         "Name[zh_CN]": "快速启动",
         "Name[zh_TW]": "快速啟動",
-        "Website": "https://kde.org/plasma-desktop/"
+        "Website": "https://gitgud.io/catpswin56/vistathemeplasma"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }
