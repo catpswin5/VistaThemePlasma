@@ -2,6 +2,7 @@ misc/defaulttooltip/build
 plasma/plasmoids/src/vistadesktop_src/build
 plasma/plasmoids/src/vistastart_src/build
 plasma/plasmoids/src/vistatasks_src/build
+plasma/plasmoids/src/quicklaunch_src/build
 kwin/decoration/build
 kwin/effects_cpp/kwin-effect-smodsnap-v2/build-kf6
 kwin/effects_cpp/kde-effects-aeroglassblur/build

@@ -23,11 +23,9 @@ Window {
         y = Screen.desktopAvailableHeight
     }
 
-    onClosing: {
-        mixer.destroy();
-    }
+    onClosing: mixer.destroy();
 
-    title: "Volume Mixer"
+    title: i18n("Volume Mixer")
 
     component CustomGroupBox: QQC2.GroupBox {
         id: gbox
@@ -65,7 +63,7 @@ Window {
         PlasmaExtras.MenuItem {
             id: raiseMaximumVolumeItem
 
-            text: "Raise maximum volume"
+            text: i18n("Raise maximum volume")
             checkable: true
             checked: config.raiseMaximumVolume
             onClicked: {
@@ -76,7 +74,7 @@ Window {
         PlasmaExtras.MenuItem {
             id: hideDefaultInputItem
 
-            text: "Hide default input device from flyout"
+            text: i18n("Hide default input device from flyout")
             checkable: true
             checked: Plasmoid.configuration.hideDefaultInput
             onClicked: Plasmoid.configuration.hideDefaultInput = checked;
@@ -119,7 +117,7 @@ Window {
 
                     Text {
                         id: deviceItem
-                        text: "Options"
+                        text: i18n("Options")
                         anchors.fill: parent
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -138,7 +136,7 @@ Window {
             CustomGroupBox {
                 id: speaker
 
-                title: "Device"
+                title: i18n("Device")
 
                 Layout.fillHeight: true
                 Layout.preferredWidth: sinkList.width +
@@ -200,7 +198,7 @@ Window {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
-                title: "Applications"
+                title: i18n("Applications")
 
                 QQC2.ScrollView {
                     anchors.fill: parent

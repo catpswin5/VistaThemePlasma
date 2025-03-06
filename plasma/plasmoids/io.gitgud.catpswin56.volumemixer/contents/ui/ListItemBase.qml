@@ -135,7 +135,7 @@ Item {
             Layout.preferredHeight: 32
             Layout.fillWidth: true
 
-            text: type == "sink-output" ? "Speaker" : (type == "sink-input" ? "Microphone" : item.name)
+            text: type == "sink-output" ? i18n("Speaker") : (type == "sink-input" ? i18n("Microphone") : item.name)
             elide: Text.ElideRight
             wrapMode: Text.WordWrap
             verticalAlignment: Text.AlignTop
@@ -328,7 +328,7 @@ Item {
 
                     anchors.fill: parent
                     interactive: false
-                    mainText: (muteButton.isMuted ? "Unmute" : "Mute") + " " + (item.type == "sink-output" ? "Speakers" : (item.type == "sink-input" ? "Microphone" : item.name))
+                    mainText: (muteButton.isMuted ? i18n("Unmute") : i18n("Mute")) + " " + (item.type == "sink-output" ? i18n("Speakers") : (item.type == "sink-input" ? i18n("Microphone") : item.name))
                 }
             }
         }

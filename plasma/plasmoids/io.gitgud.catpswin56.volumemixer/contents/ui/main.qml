@@ -49,7 +49,7 @@ PlasmoidItem {
     Plasmoid.icon: PreferredDevice.sink && !isDummyOutput(PreferredDevice.sink) ? AudioIcon.forVolume(volumePercent(PreferredDevice.sink.volume), PreferredDevice.sink.muted, "") : AudioIcon.forVolume(0, true, "")
     Plasmoid.title: "‎ "
 
-    toolTipItem: Tooltip {  }
+    toolTipItem: TrayToolTip {  }
 
     function nodeName(pulseObject) {
         const nodeNick = pulseObject.pulseProperties["node.nick"]
@@ -331,7 +331,7 @@ PlasmoidItem {
             color: "#3593ff"
             horizontalAlignment: Qt.AlignHCenter
             verticalAlignment: Qt.AlignVCenter
-            text: "Mixer"
+            text: i18n("Mixer")
             font.underline: ma.containsMouse
             wrapMode: Text.NoWrap
             elide: Text.ElideNone
