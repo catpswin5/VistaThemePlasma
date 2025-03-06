@@ -49,7 +49,7 @@ if (panel.formFactor === "horizontal") {
 }
 
 panel.addWidget("io.gitgud.catpswin56.vistastart")
-panel.addWidget("org.kde.plasma.quicklaunch")
+panel.addWidget("io.gitgud.catpswin56.quicklaunch")
 panel.addWidget("io.gitgud.catpswin56.vistatasks")
 
 /* Next up is determining whether to add the Input Method Panel
