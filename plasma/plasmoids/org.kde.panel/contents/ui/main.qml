@@ -201,6 +201,8 @@ ContainmentItem {
         }
 
         onDragEnter: event => {
+            // currentLayout.rowSpacing = 4;
+            // currentLayout.columnSpacing = 4;
             if (Plasmoid.immutable || root.appletRequestsInhibitDnD) {
                 event.ignore();
                 return;
@@ -216,6 +218,8 @@ ContainmentItem {
         }
 
         onDragLeave: event => {
+            // currentLayout.rowSpacing = 0;
+            // currentLayout.columnSpacing = 0;
             /*
             * When reordering task items, dragLeave signal will be emitted directly
             * without dragEnter, and in this case parent.index is undefined, so also
@@ -233,6 +237,8 @@ ContainmentItem {
             root.processMimeData(event.mimeData, event.x, event.y);
             event.accept(event.proposedAction);
             root.fixedWidth = root.fixedHeight = 0;
+            // currentLayout.rowSpacing = 0;
+            // currentLayout.columnSpacing = 0;
         }
 
 //BEGIN components
