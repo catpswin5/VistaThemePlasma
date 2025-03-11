@@ -21,6 +21,10 @@
     <entry name="extraPaddingSize" type="Int">
       <default>16</default>
     </entry>
+    <entry name="hoverFadeAnim" type="Bool">
+      <default>false</default>
+    </entry>
+
     <entry name="launcherUrls" type="StringList">
       <default></default>
     </entry>

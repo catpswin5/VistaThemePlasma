@@ -215,56 +215,20 @@ PlasmoidItem {
         filterNotMinimized: Plasmoid.configuration.showOnlyMinimized
 
         hideActivatedLaunchers: true //tasks.iconsOnly || Plasmoid.configuration.hideLauncherOnStart
-        sortMode: sortModeEnumValue(Plasmoid.configuration.sortingStrategy)
-        launchInPlace: tasks.iconsOnly && Plasmoid.configuration.sortingStrategy === 1
-        separateLaunchers: false
+        sortMode: TaskManager.TasksModel.SortManual
+        launchInPlace: false
+        separateLaunchers: true
         groupMode: Plasmoid.configuration.groupPopups ? TaskManager.TasksModel.GroupApplications : TaskManager.TasksModel.GroupDisabled
-        groupInline: !Plasmoid.configuration.groupPopups && !tasks.iconsOnly
-        groupingWindowTasksThreshold: (Plasmoid.configuration.onlyGroupWhenFull && !tasks.iconsOnly
-            ? LayoutMetrics.optimumCapacity(width, height) + 1 : -1)
+        groupInline: !Plasmoid.configuration.groupPopups
+        groupingWindowTasksThreshold: Plasmoid.configuration.onlyGroupWhenFull ? LayoutMetrics.optimumCapacity(width, height) + 1 : -1
 
-        onGroupingAppIdBlacklistChanged: {
-            Plasmoid.configuration.groupingAppIdBlacklist = groupingAppIdBlacklist;
-        }
-
-        onGroupingLauncherUrlBlacklistChanged: {
-            Plasmoid.configuration.groupingLauncherUrlBlacklist = groupingLauncherUrlBlacklist;
-        }
-
-        function sortModeEnumValue(index) {
-            switch (index) {
-                case 0:
-                    return TaskManager.TasksModel.SortDisabled;
-                case 1:
-                    return TaskManager.TasksModel.SortManual;
-                case 2:
-                    return TaskManager.TasksModel.SortAlpha;
-                case 3:
-                    return TaskManager.TasksModel.SortVirtualDesktop;
-                case 4:
-                    return TaskManager.TasksModel.SortActivity;
-                default:
-                    return TaskManager.TasksModel.SortDisabled;
-            }
-        }
-
-        function groupModeEnumValue(index) {
-            switch (index) {
-                case 0:
-                    return TaskManager.TasksModel.GroupDisabled;
-                case 1:
-                    return TaskManager.TasksModel.GroupApplications;
-            }
-        }
+        onGroupingAppIdBlacklistChanged: Plasmoid.configuration.groupingAppIdBlacklist = groupingAppIdBlacklist;
+        onGroupingLauncherUrlBlacklistChanged: Plasmoid.configuration.groupingLauncherUrlBlacklist = groupingLauncherUrlBlacklist;
 
         Component.onCompleted: {
             launcherList = Plasmoid.configuration.launchers;
             groupingAppIdBlacklist = Plasmoid.configuration.groupingAppIdBlacklist;
             groupingLauncherUrlBlacklist = Plasmoid.configuration.groupingLauncherUrlBlacklist;
-
-            // Only hook up view only after the above churn is done.
-            //taskRepeater.model = tasksModel;
-            //taskList.model = tasksModel;
         }
     }
 

@@ -4,25 +4,24 @@
  *    SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
-    readonly property bool iconOnly: false
-
-    property bool cfg_showLabels: true // TODO: remove this
-
     property alias cfg_showPreviews: showPreviews.checked
+
     property alias cfg_disableHottracking: disableHottracking.checked
     property alias cfg_disableJumplists: disableJumplists.checked
     property alias cfg_draggingEnabled: draggingEnabled.checked
     property alias cfg_showMore: showMore.checked
+    property alias cfg_showProgress: showProgress.checked
+    property alias cfg_hoverFadeAnim: hoverFadeAnim.checked
 
     component CustomGroupBox: GroupBox {
         id: gbox
@@ -60,26 +59,55 @@ KCM.SimpleKCM {
 
         spacing: 0
 
-        CheckBox {
-            id: showPreviews
-            text: i18n("Enable window previews")
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: "General"
+
+            CheckBox {
+                id: showPreviews
+                text: i18n("Enable window previews")
+            }
         }
-        CheckBox {
-            id: disableHottracking
-            text: i18n("Disable hot tracking")
-        }
-        CheckBox {
-            id: disableJumplists
-            text: i18n("Use traditional context menus instead of jumplists")
-        }
-        CheckBox {
-            id: showMore
-            enabled: disableJumplists.checked
-            text: i18n("Show more items in context menus")
-        }
-        CheckBox {
-            id: draggingEnabled
-            text: i18n("Enable dragging")
+
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: "Tweaks"
+
+            ColumnLayout {
+                Layout.fillWidth: true
+
+                spacing: 0
+
+                CheckBox {
+                    id: disableHottracking
+                    text: i18n("Disable hot tracking")
+                }
+                CheckBox {
+                    id: disableJumplists
+                    text: i18n("Use traditional context menus instead of jumplists")
+                }
+                CheckBox {
+                    id: showMore
+                    enabled: disableJumplists.checked
+                    text: i18n("Show more items in context menus")
+                }
+                CheckBox {
+                    id: draggingEnabled
+                    text: i18n("Enable dragging")
+                }
+
+                CheckBox {
+                    id: showProgress
+                    text: i18n("Show app progress bar")
+                }
+                CheckBox {
+                    id: hoverFadeAnim
+                    enabled: disableHottracking.checked
+                    text: i18n("Enable hover fade animation")
+                }
+            }
         }
     }
 }

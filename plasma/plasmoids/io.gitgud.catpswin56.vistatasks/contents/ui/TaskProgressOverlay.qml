@@ -37,8 +37,8 @@ T.ProgressBar {
             width: parent.width * control.position
             height: parent.height
 
-            imagePath: "widgets/tasks"
-            prefix: TaskTools.taskPrefix("progress", Plasmoid.location).concat(TaskTools.taskPrefix("hover", Plasmoid.location))
+            imagePath: Qt.resolvedUrl("svgs/tasks.svg")
+            prefix: "progress"
         }
     }
 

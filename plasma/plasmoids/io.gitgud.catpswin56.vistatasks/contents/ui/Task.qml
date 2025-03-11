@@ -4,16 +4,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Layouts
 
 import org.kde.plasma.core as PlasmaCore
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.private.taskmanager as TaskManagerApplet
+import org.kde.plasma.plasmoid
+
+import org.kde.ksvg as KSvg
+import org.kde.kirigami as Kirigami
+
 import Qt5Compat.GraphicalEffects
 
 import "code/layoutmetrics.js" as LayoutMetrics
@@ -1218,32 +1220,49 @@ TaskManagerApplet.SmartLauncherItem { }
         KSvg.FrameSvgItem {
             id: frame
 
-            anchors {
-                fill: parent
-
-                bottomMargin: 1
-                topMargin: 1
-            }
-            imagePath: Qt.resolvedUrl("svgs/tasks.svg")
-            property bool isHovered: (task.highlighted && Plasmoid.configuration.taskHoverEffect)
+            property bool isHovered: (task.highlighted && Plasmoid.configuration.taskHoverEffect) && !attentionIndicator.requiresAttention
             property bool isActive: model.IsActive || dragArea.containsPress || dragArea.held || task.wasActive
+            property bool doHoverFade: Plasmoid.configuration.hoverFadeAnim && Plasmoid.configuration.disableHottracking
             property string basePrefix: {
                 if(model.IsLauncher) return "";
                 if(attentionIndicator.requiresAttention && Plasmoid.configuration.disableHottracking) return "attention";
                 if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) return "active";
                 return "normal";
             }
-            prefix: (basePrefix + ((isHovered && !attentionIndicator.requiresAttention) ? "-hover" : ""))
+
+            anchors {
+                fill: parent
+
+                bottomMargin: 1
+                topMargin: 1
+            }
+
+            imagePath: Qt.resolvedUrl("svgs/tasks.svg")
+            prefix: basePrefix + (isHovered && (!Plasmoid.configuration.hoverFadeAnim && Plasmoid.configuration.disableHottracking) ? "-hover" : "")
+
+            KSvg.FrameSvgItem {
+                anchors.fill: parent
+
+                imagePath: Qt.resolvedUrl("svgs/tasks.svg")
+                prefix: "hoverglow"
+
+                visible: opacity > 0
+                opacity: frame.isHovered && frame.doHoverFade
+                Behavior on opacity {
+                    NumberAnimation { duration: 175 }
+                }
+
+                z: frame.isActive ? 0 : -1
+            }
         }
 
         Loader {
             id: taskProgressOverlayLoader
 
             anchors.fill: frame
-            anchors.margins: -1
-            asynchronous: true
-            active: model.IsWindow && task.smartLauncherItem && task.smartLauncherItem.progressVisible
 
+            asynchronous: true
+            active: (model.IsWindow && task.smartLauncherItem && task.smartLauncherItem.progressVisible) && Plasmoid.configuration.showProgress
             source: "TaskProgressOverlay.qml"
 
             z: -1
@@ -1256,9 +1275,8 @@ TaskManagerApplet.SmartLauncherItem { }
 
             property int rightMargin: Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
             property int leftMargin: {
-                if(model.IsActive) {
-                    return Kirigami.Units.smallSpacing*2 - Kirigami.Units.smallSpacing/4;
-                } else return Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
+                if(model.IsActive) return Kirigami.Units.smallSpacing*2 - Kirigami.Units.smallSpacing/4;
+                else return Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
             }
 
             anchors {

@@ -78,7 +78,12 @@ Item {
             imagePath: Qt.resolvedUrl("svgs/button.svg")
             prefix: mouseArea.containsPress ? "pressed" : "hover"
 
-            visible: mouseArea.containsMouse && !mouseArea.held
+            visible: opacity > 0
+            opacity: mouseArea.containsMouse && !mouseArea.held
+            Behavior on opacity {
+                enabled: Plasmoid.configuration.hoverFadeAnim
+                animation: NumberAnimation { duration: 175 }
+            }
         }
 
         Kirigami.Icon {

@@ -110,6 +110,12 @@
     <entry name="showPreviews" type="Bool">
       <default>true</default>
     </entry>
+    <entry name="showProgress" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="hoverFadeAnim" type="Bool">
+      <default>false</default>
+    </entry>
     <entry name="showLabels" type="Bool">
       <default>true</default>
     </entry>
@@ -117,7 +123,7 @@
       <default>true</default>
     </entry>
     <entry name="disableJumplists" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
     <entry name="showMore" type="Bool">
       <default>false</default>
