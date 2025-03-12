@@ -20,15 +20,16 @@ import "layout.js" as LayoutManager
 PlasmoidItem {
     id: root
 
-    readonly property int maxSectionCount: plasmoid.configuration.maxSectionCount
-    readonly property bool showLauncherNames : plasmoid.configuration.showLauncherNames
-    readonly property bool enablePopup : plasmoid.configuration.enablePopup
+    readonly property int maxSectionCount: Plasmoid.configuration.maxSectionCount
+    readonly property bool showLauncherNames : Plasmoid.configuration.showLauncherNames
+    readonly property bool enablePopup : Plasmoid.configuration.enablePopup
     readonly property string title : ""
-    readonly property bool vertical : plasmoid.formFactor == PlasmaCore.Types.Vertical || (plasmoid.formFactor == PlasmaCore.Types.Planar && height > width)
-    readonly property bool horizontal : plasmoid.formFactor == PlasmaCore.Types.Horizontal
+    readonly property bool vertical : Plasmoid.formFactor == PlasmaCore.Types.Vertical || (Plasmoid.formFactor == PlasmaCore.Types.Planar && height > width)
+    readonly property bool horizontal : Plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool dragging: false
+    onDraggingChanged: if(!dragging) saveConfiguration()
 
-    Layout.minimumWidth: !grid.visible ? 50 : LayoutManager.minimumWidth() + (plasmoid.configuration.extraPadding ? plasmoid.configuration.extraPaddingSize : 0)
+    Layout.minimumWidth: !grid.visible ? 50 : LayoutManager.minimumWidth() + (Plasmoid.configuration.extraPadding ? Plasmoid.configuration.extraPaddingSize : 0)
     Layout.minimumHeight: LayoutManager.minimumHeight()
 
     preferredRepresentation: fullRepresentation
@@ -40,7 +41,7 @@ PlasmoidItem {
         DragAndDrop.DropArea {
             anchors.fill: parent
             preventStealing: true
-            enabled: !plasmoid.immutable
+            enabled: !Plasmoid.immutable
 
             onDragEnter: drag => {
                 var item = grid.itemAt(drag.x, drag.y);
@@ -61,13 +62,6 @@ PlasmoidItem {
             }
         }
 
-        Text {
-            id: dfla
-            text: dorparea.containsDrag
-            color: "white"
-            z: 1
-        }
-
         Item {
             id: launcher
 
@@ -84,7 +78,7 @@ PlasmoidItem {
 
                 interactive: false
                 flow: horizontal ? GridView.FlowTopToBottom : GridView.FlowLeftToRight
-                cellWidth: plasmoid.configuration.showLauncherNames ? 160 : 24
+                cellWidth: Plasmoid.configuration.showLauncherNames ? 160 : 24
                 cellHeight: 26
                 visible: count
 
@@ -112,7 +106,7 @@ PlasmoidItem {
             type: PlasmaCore.Dialog.PopupMenu
             flags: Qt.WindowStaysOnTopHint
             hideOnWindowDeactivate: true
-            location: plasmoid.location
+            location: Plasmoid.location
             visualParent: vertical ? popupArrow : root
 
             mainItem: Popup {
@@ -167,11 +161,11 @@ PlasmoidItem {
                     }
 
                     source: {
-                        if (plasmoid.location == PlasmaCore.Types.TopEdge) {
+                        if (Plasmoid.location == PlasmaCore.Types.TopEdge) {
                             return "arrow-down";
-                        } else if (plasmoid.location == PlasmaCore.Types.LeftEdge) {
+                        } else if (Plasmoid.location == PlasmaCore.Types.LeftEdge) {
                             return "arrow-right";
-                        } else if (plasmoid.location == PlasmaCore.Types.RightEdge) {
+                        } else if (Plasmoid.location == PlasmaCore.Types.RightEdge) {
                             return "arrow-left";
                         } else if (vertical) {
                             return "arrow-right";
@@ -224,11 +218,11 @@ PlasmoidItem {
     ]
 
     Connections {
-        target: plasmoid.configuration
+        target: Plasmoid.configuration
        function onLauncherUrlsChanged() {
-            launcherModel.urlsChanged.disconnect(saveConfiguration);
-            launcherModel.setUrls(plasmoid.configuration.launcherUrls);
-            launcherModel.urlsChanged.connect(saveConfiguration);
+            launcherModel.urlsChanged.disconnect(root.saveConfiguration);
+            launcherModel.setUrls(Plasmoid.configuration.launcherUrls);
+            launcherModel.urlsChanged.connect(root.saveConfiguration);
         }
     }
 
@@ -241,14 +235,14 @@ PlasmoidItem {
     ]
 
     Component.onCompleted: {
-        launcherModel.setUrls(plasmoid.configuration.launcherUrls);
-        launcherModel.urlsChanged.connect(saveConfiguration);
+        launcherModel.setUrls(Plasmoid.configuration.launcherUrls);
+        launcherModel.urlsChanged.connect(root.saveConfiguration);
     }
 
     function saveConfiguration()
     {
-        if (!dragging) {
-            plasmoid.configuration.launcherUrls = launcherModel.urls();
+        if (!root.dragging) {
+            Plasmoid.configuration.launcherUrls = launcherModel.urls();
         }
     }
 
