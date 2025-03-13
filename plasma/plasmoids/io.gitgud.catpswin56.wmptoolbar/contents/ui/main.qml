@@ -18,6 +18,9 @@ PlasmoidItem {
     }
     readonly property bool wmp11Basic: Plasmoid.configuration.wmp11Basic
 
+    property int lastUsedIndex: -1
+    property string lastUsedName: ""
+
     Layout.minimumWidth: hideToolbar ? 0 : 170
     Layout.maximumHeight: 25
 
@@ -39,10 +42,17 @@ PlasmoidItem {
                 text: model.identity + "      "
                 icon: model.iconName == "emblem-favorite" ? "bookmark_add" : model.iconName
                 checkable: true
-                checked: mediaController.mpris2Model.currentIndex == index
-                onClicked: mediaController.mpris2Model.currentIndex = index
+                checked: mediaController.currentIndex == index
+                onClicked: {
+                    root.lastUsedIndex = index;
+                    root.lastUsedName = model.identity;
+                    mediaController.currentIndex = index;
+                }
             }
-            onObjectAdded: (index, object) => contextMenu.addMenuItem(object);
+            onObjectAdded: (index, object) => {
+                if(object.model.identity == root.lastUsedName) mediaController.currentIndex = root.lastUsedIndex;
+                contextMenu.addMenuItem(object);
+            }
             onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
         }
 
@@ -55,25 +65,29 @@ PlasmoidItem {
 
         WMPStyles.WMP10 { id: wmp10; anchors.fill: parent; visible: root.toolbarStyle == "wmp10" }
         WMPStyles.WMP11 { id: wmp11; anchors.fill: parent; visible: root.toolbarStyle == "wmp11" }
+
+        HoverHandler {
+            id: hoverHandler
+            enabled: root.toolbarStyle == "wmp11"
+            onHoveredChanged: tooltipTimer.restart();
+        }
+    }
+
+    Timer {
+        id: tooltipTimer
+        interval: hoverHandler.hovered ? 750 : 375
+        repeat: false
+        running: false
+        onTriggered: {
+            popup.isToolTip = true;
+            popup.opacity = hoverHandler.hovered ? 1 : 0;
+        }
     }
 
     PlasmaCore.Dialog {
         id: popup
 
-        /* Using an if statement that checks if the popup button contains a press.
-        *  Now, why am I checking for a press instead of making the MouseArea handle this?
-        *  Because for whatever reason the clicked() signal never happens.
-        */
-        property bool showPopup: {
-            if(root.toolbarStyle == "wmp10") {
-                if(wmp10.bgRightMa.containsPress && showPopup == false) return true
-                    else if(wmp10.bgRightMa.containsPress && showPopup == true) return false
-            }
-            else if(root.toolbarStyle == "wmp11") {
-                if(wmp11.rightTopMa.containsPress && showPopup == false) return true
-                    else if(wmp11.rightTopMa.containsPress && showPopup == true) return false
-            }
-        }
+        property bool isToolTip: false
 
         type: PlasmaCore.Dialog.Dock
         location: PlasmaCore.Types.Floating // to get rid of the slide animation
@@ -81,15 +95,24 @@ PlasmoidItem {
         flags: Qt.WindowStaysOnTopHint
         visualParent: root
 
-        visible: showPopup
+        visible: opacity > 0
+        opacity: 0
+
+        Behavior on opacity {
+            enabled: popup.isToolTip
+            animation: NumberAnimation { duration: 300 }
+        }
 
         mainItem: Image {
-            source: "styles/png/" + root.toolbarStyle + "/" + "frame.png"
+            width: implicitWidth
+            height: implicitHeight
+
+            source: popup.isToolTip ? "styles/png/wmp11/tooltip.png" : "styles/png/" + root.toolbarStyle + "/" + "frame.png"
 
             Rectangle {
                 anchors.fill: parent
 
-                color: "gray"
+                color: "black"
                 topRightRadius: 1
                 topLeftRadius: 1
 
@@ -102,23 +125,28 @@ PlasmoidItem {
 
                 anchors.fill: parent
 
-                visible: true
+                Item {
+                    id: bg
 
-                Rectangle {
                     anchors.fill: parent
                     anchors.margins: 6
 
-                    color: "black"
-                }
+                    visible: !popup.isToolTip
 
-                Image {
-                    anchors.fill: parent
-                    anchors.margins: 6
+                    Rectangle {
+                        anchors.fill: parent
 
-                    fillMode: Image.PreserveAspectCrop
-                    source: mediaController.albumArt
+                        color: "black"
+                    }
 
-                    opacity: 0.4
+                    Image {
+                        anchors.fill: parent
+
+                        fillMode: Image.PreserveAspectCrop
+                        source: mediaController.albumArt
+
+                        opacity: 0.4
+                    }
                 }
 
                 ColumnLayout {
@@ -137,17 +165,19 @@ PlasmoidItem {
                         Layout.fillWidth: true
 
                         text: mediaController.artist
-                        color: "lightgreen"
+                        color: popup.isToolTip ? "white" : "lightgreen"
                         font.pointSize: 8
                         elide: Text.ElideRight
 
-                        visible: mediaController.track != "" && mediaController.artist != ""
+                        visible: text != ""
+
                     }
+
                     Text {
                         Layout.fillWidth: true
 
                         text: mediaController.track != "" ? mediaController.track : i18n("No media playing")
-                        color: "lightgreen"
+                        color: popup.isToolTip ? "white" : "lightgreen"
                         font.pointSize: 8
                         elide: Text.ElideRight
                     }

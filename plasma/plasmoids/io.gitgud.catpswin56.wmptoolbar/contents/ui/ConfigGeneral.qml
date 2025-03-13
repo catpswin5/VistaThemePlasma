@@ -8,9 +8,10 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import org.kde.kirigami as Kirigami
-import org.kde.plasma.plasmoid
 import org.kde.kcmutils as KCM
+import org.kde.kirigami as Kirigami
+
+import org.kde.plasma.plasmoid
 
 KCM.SimpleKCM {
     id: root
@@ -124,7 +125,7 @@ KCM.SimpleKCM {
             ColumnLayout {
                 CheckBox {
                     id: hideToolbar
-                    text: i18n("Hide toolbar when there is no multimedia app running:")
+                    text: i18n("Hide toolbar when there is no multimedia app running")
                 }
             }
         }

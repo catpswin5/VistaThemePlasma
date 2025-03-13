@@ -3,8 +3,9 @@ import QtQuick
 import org.kde.plasma.private.mpris as Mpris
 
 Item {
-    id: root
+    id: mprisRoot
 
+    property alias currentIndex: mpris2Model.currentIndex
     readonly property alias mpris2Model: mpris2Model
 
     readonly property string track: mpris2Model.currentPlayer?.track ?? ""
@@ -20,7 +21,7 @@ Item {
     readonly property bool canPause: mpris2Model.currentPlayer?.canPause ?? false
     readonly property bool canStop: mpris2Model.currentPlayer?.canStop ?? false
     readonly property int playbackStatus: mpris2Model.currentPlayer?.playbackStatus ?? 0
-    readonly property bool isPlaying: root.playbackStatus === Mpris.PlaybackStatus.Playing
+    readonly property bool isPlaying: mprisRoot.playbackStatus === Mpris.PlaybackStatus.Playing
     readonly property bool canRaise: mpris2Model.currentPlayer?.canRaise ?? false
     readonly property bool canQuit: mpris2Model.currentPlayer?.canQuit ?? false
     readonly property int shuffle: mpris2Model.currentPlayer?.shuffle ?? 0
@@ -41,11 +42,8 @@ Item {
         mpris2Model.currentPlayer.Pause();
     }
     function togglePlaying() {
-        if (root.isPlaying) {
-            mpris2Model.currentPlayer.Pause();
-        } else {
-            mpris2Model.currentPlayer.Play();
-        }
+        if (mprisRoot.isPlaying) mpris2Model.currentPlayer.Pause();
+        else mpris2Model.currentPlayer.Play();
     }
     function stop() {
         mpris2Model.currentPlayer.Stop();

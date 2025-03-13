@@ -6,6 +6,7 @@ import Qt5Compat.GraphicalEffects
 import org.kde.kirigami as Kirigami
 
 import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
 Item {
     id: wmp11
@@ -51,10 +52,10 @@ Item {
             width: 13
             height: 12
 
-            source: rightTopMa.containsMouse ? (rightTopMa.containsPress ? "png/wmp11/bgRight-pressed.png" : "png/wmp11/bgRight-hover.png") : (popup.showPopup ? "png/wmp11/bgRight-pressed.png" : "png/wmp11/bgRight.png")
+            source: rightTopMa.containsMouse ? (rightTopMa.containsPress ? "png/wmp11/bgRight-pressed.png" : "png/wmp11/bgRight-hover.png") : (popup.visible && !popup.isToolTip? "png/wmp11/bgRight-pressed.png" : "png/wmp11/bgRight.png")
             sourceClipRect: Qt.rect(2, 0, 13, 12)
 
-            MouseArea { // does not send clicked signals for some reason only qt knows why
+            MouseArea {
                 id: rightTopMa
 
                 anchors.fill: parent
@@ -62,6 +63,22 @@ Item {
                 preventStealing: true
                 propagateComposedEvents: true
                 hoverEnabled: true
+
+                onClicked: {
+                    hoverHandler.enabled = false;
+                    tooltipTimer.stop();
+                    if(popup.isToolTip) {
+                        popup.isToolTip = false;
+                        popup.opacity = 1;
+                    }
+                    else {
+                        if(!popup.opacity) popup.opacity = 1;
+                        else if(!popup.isToolTip) {
+                            hoverHandler.enabled = root.toolbarStyle == "wmp11";
+                            popup.opacity = 0;
+                        }
+                    }
+                }
             }
         }
         Image {
@@ -91,15 +108,23 @@ Item {
         anchors.leftMargin: 6
         anchors.verticalCenter: parent.verticalCenter
 
-        width: 12
-        height: 12
+        width: 11
+        height: 11
+
+        Image {
+            anchors.fill: parent
+
+            source: "png/wmp11/icon.png"
+
+            visible: Plasmoid.configuration.toolbarIcon == 0 || (!root.multimediaOpen && Plasmoid.configuration.toolbarIcon < 3)
+        }
 
         Image {
             anchors.fill: parent
 
             source: Plasmoid.configuration.toolbarIcon == 3 ? Plasmoid.configuration.customIcon : mediaController.albumArt
 
-            visible: Plasmoid.configuration.toolbarIcon > 1
+            visible: Plasmoid.configuration.toolbarIcon > 1 && source != ""
         }
 
         Kirigami.Icon {
@@ -107,7 +132,7 @@ Item {
 
             source: mediaController.appIcon
 
-            visible: Plasmoid.configuration.toolbarIcon == 1
+            visible: Plasmoid.configuration.toolbarIcon == 1 && source != ""
         }
 
         MouseArea {

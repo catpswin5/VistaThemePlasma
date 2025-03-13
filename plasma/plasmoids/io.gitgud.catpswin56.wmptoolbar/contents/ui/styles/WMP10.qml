@@ -35,9 +35,9 @@ Item {
 
         visible: true
 
-        source: bgRightMa.containsMouse ? (bgRightMa.containsPress ? "png/wmp10/rightPressed.png" : "png/wmp10/rightToggled.png") : (popup.showPopup ? "png/wmp10/rightPressed.png" : "png/wmp10/rightNormal.png")
+        source: bgRightMa.containsMouse ? (bgRightMa.containsPress ? "png/wmp10/rightPressed.png" : "png/wmp10/rightToggled.png") : (popup.visible ? "png/wmp10/rightPressed.png" : "png/wmp10/rightNormal.png")
 
-        MouseArea { // does not send clicked signals for some reason only the Qt gods know why
+        MouseArea {
             id: bgRightMa
 
             anchors.fill: parent
@@ -46,8 +46,9 @@ Item {
             propagateComposedEvents: true
             hoverEnabled: true
 
-            onReleased: {
-                parent.showPopup == true
+            onClicked: {
+                popup.isToolTip = false; // Just in case.
+                popup.opacity = !popup.opacity;
             }
         }
     }
