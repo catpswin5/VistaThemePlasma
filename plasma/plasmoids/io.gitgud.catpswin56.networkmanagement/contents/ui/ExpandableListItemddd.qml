@@ -1,24 +1,90 @@
 /*
- *    SPDX-FileCopyrightText: 2020 Nate Graham <nate@kde.org>
- *
- *    SPDX-License-Identifier: LGPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2020 Nate Graham <nate@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.0-or-later
+*/
 
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import QtQuick.Templates as T
-
-import org.kde.ksvg as KSvg
-import org.kde.kirigami as Kirigami
-
 import org.kde.plasma.core as PlasmaCore
+import org.kde.ksvg as KSvg
 import org.kde.plasma.components as PlasmaComponents3
 import org.kde.plasma.extras as PlasmaExtras
-import org.kde.plasma.networkmanagement as PlasmaNM
+import org.kde.kirigami as Kirigami
+import QtQuick.Controls 2.15 as QQC2
 
+/**
+ * A list item that expands when clicked to show additional actions and/or a
+ * custom view.
+ * The list item has a standardized appearance, with an icon on the left badged
+ * with an optional emblem, a title and optional subtitle to the right, an
+ * optional default action button, and a button to expand and collapse the list
+ * item.
+ *
+ * When expanded, the list item shows a list of contextually-appropriate actions
+ * if contextualActions has been defined.
+ * If customExpandedViewContent has been defined, it will show a custom view.
+ * If both have been defined, it shows both, with the actions above the custom
+ * view.
+ *
+ * It is not valid to define neither; define one or both.
+ *
+ * Note: this component should only be used for lists where the maximum number
+ * of items is very low, ideally less than 10. For longer lists, consider using
+ * a different paradigm.
+ *
+ *
+ * Example usage:
+ *
+ * @code
+ * import QtQuick
+ * import QtQuick.Controls as QQC2
+ * import org.kde.kirigami as Kirigami
+ * import org.kde.plasma.extras as PlasmaExtras
+ * import org.kde.plasma.components as PlasmaComponents
+ *
+ * PlasmaComponents.ScrollView {
+ *     ListView {
+ *         anchors.fill: parent
+ *         focus: true
+ *         currentIndex: -1
+ *         clip: true
+ *         model: myModel
+ *         highlight: PlasmaExtras.Highlight {}
+ *         highlightMoveDuration: Kirigami.Units.shortDuration
+ *         highlightResizeDuration: Kirigami.Units.shortDuration
+ *         delegate: PlasmaExtras.ExpandableListItem {
+ *             icon: model.iconName
+ *             iconEmblem: model.isPaused ? "emblem-pause" : ""
+ *             title: model.name
+ *             subtitle: model.subtitle
+ *             isDefault: model.isDefault
+ *             defaultActionButtonAction: QQC2.Action {
+ *                 icon.name: model.isPaused ? "media-playback-start" : "media-playback-pause"
+ *                 text: model.isPaused ? "Resume" : "Pause"
+ *                 onTriggered: {
+ *                     if (model.isPaused) {
+ *                         model.resume(model.name);
+ *                     } else {
+ *                         model.pause(model.name);
+ *                     }
+ *                 }
+ *             }
+ *             contextualActions: [
+ *                 QQC2.Action {
+ *                     icon.name: "configure"
+ *                     text: "Configure…"
+ *                     onTriggered: model.configure(model.name);
+ *                 }
+ *             ]
+ *         }
+ *     }
+ * }
+ * @endcode
+ */
 Item {
     id: listItem
 
@@ -201,8 +267,6 @@ Item {
      */
     readonly property bool hasExpandableContent: customExpandedViewContent !== null || __enabledContextualActions.length > 0
 
-    property int securityType
-
     /*
      * expand()
      * Show the expanded view, growing the list item to its taller size.
@@ -236,6 +300,16 @@ Item {
             return;
         }
         expandedView.expanded ? listItem.collapse() : listItem.expand()
+        if(expandedView.expanded) {
+            if(ListView.view.expandedItem !== null && ListView.view.expandedItem !== listItem) {
+                ListView.view.expandedItem.toggleExpanded();
+            }
+            ListView.view.expandedItem = listItem;
+        } else {
+            if(ListView.view.expandedItem !== null && ListView.view.expandedItem === listItem) {
+                ListView.view.expandedItem = null;
+            }
+        }
     }
 
     signal itemExpanded()
@@ -244,16 +318,16 @@ Item {
     width: parent ? parent.width : undefined // Assume that we will be used as a delegate, not placed in a layout
     height: mainLayout.height
 
-    /* Behavior on height {
-     *        enabled: false //listItem.ListView.view.highlightResizeDuration > 0
-     *        SmoothedAnimation { // to match the highlight
-     *            id: heightAnimation
-     *            duration: listItem.ListView.view.highlightResizeDuration || -1
-     *            velocity: listItem.ListView.view.highlightResizeVelocity
-     *            easing.type: Easing.InOutCubic
-}
-}
-clip: heightAnimation.running || expandedItemOpacityFade.running*/
+   /* Behavior on height {
+        enabled: false //listItem.ListView.view.highlightResizeDuration > 0
+        SmoothedAnimation { // to match the highlight
+            id: heightAnimation
+            duration: listItem.ListView.view.highlightResizeDuration || -1
+            velocity: listItem.ListView.view.highlightResizeVelocity
+            easing.type: Easing.InOutCubic
+        }
+    }
+    clip: heightAnimation.running || expandedItemOpacityFade.running*/
 
     onEnabledChanged: if (!listItem.enabled) { collapse() }
 
@@ -278,8 +352,8 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
     }
 
     /*KeyNavigation.tab: defaultActionButtonVisible ? defaultActionButton : expandToggleButton
-     *    KeyNavigation.right: defaultActionButtonVisible ? defaultActionButton : expandToggleButton
-     *    KeyNavigation.down: expandToggleButton.KeyNavigation.down*/
+    KeyNavigation.right: defaultActionButtonVisible ? defaultActionButton : expandToggleButton
+    KeyNavigation.down: expandToggleButton.KeyNavigation.down*/
     Keys.onDownPressed: event => {
         if (!actionsListLoader.item || ListView.view.currentIndex < 0) {
             ListView.view.incrementCurrentIndex();
@@ -354,28 +428,28 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
                 Layout.margins: Kirigami.Units.smallSpacing
                 // Otherwise it becomes taller when the button appears
                 Layout.minimumHeight: defaultActionButton.height
-
-                Item {
-                    Layout.preferredWidth: 0
-                }
-
                 layoutDirection: listItem.deactivated ? Qt.RightToLeft : Qt.LeftToRight
 
                 // Icon and optional emblem
                 Kirigami.Icon {
                     id: listItemIcon
 
-                    implicitWidth: Kirigami.Units.iconSizes.medium
-                    implicitHeight: Kirigami.Units.iconSizes.medium
+                    implicitWidth: listItem.deactivated ? Kirigami.Units.iconSizes.smallMedium+2 : Kirigami.Units.iconSizes.medium
+                    implicitHeight: listItem.deactivated ? Kirigami.Units.iconSizes.smallMedium+2 : Kirigami.Units.iconSizes.medium
+                    roundToIconSize: false
 
                     Kirigami.Icon {
                         id: iconEmblem
 
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
+                        visible: valid
 
-                        implicitWidth: Kirigami.Units.iconSizes.small
-                        implicitHeight: Kirigami.Units.iconSizes.small
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.leftMargin: -1
+
+                        implicitWidth: Kirigami.Units.iconSizes.small - (listItem.deactivated ? Kirigami.Units.smallSpacing : 0)
+                        implicitHeight: Kirigami.Units.iconSizes.small - (listItem.deactivated ? Kirigami.Units.smallSpacing : 0)
+                        roundToIconSize: false
                     }
                 }
 
@@ -420,10 +494,53 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
                         wrapMode: subtitleCanWrap ? Text.WordWrap : Text.NoWrap
                     }
                 }
+                // Title and subtitle
+                /*ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignVCenter
 
-                Item {
-                    Layout.preferredWidth: 0
-                }
+                    spacing: 0
+
+                    Kirigami.Heading {
+                        id: listItemTitle
+
+                        visible: text.length > 0
+
+                        Layout.fillWidth: true
+
+                        level: 5
+
+                        textFormat: listItem.allowStyledText ? Text.StyledText : Text.PlainText
+                        elide: Text.ElideRight
+                        maximumLineCount: 1
+
+                        // Even if it's the default item, only make it bold when
+                        // there's more than one item in the list, or else there's
+                        // only one item and it's bold, which is a little bit weird
+                        font.weight: listItem.isDefault && listItem.ListView.view.count > 1
+                                            ? Font.Bold
+                                            : Font.Normal
+                    }
+
+                    //Kirigami.Heading {
+                    PlasmaComponents3.Label {
+                        id: listItemSubtitle
+
+                        visible: text.length > 0
+                        //font: Kirigami.Theme.smallFont
+                        //level: 5
+
+                        // Otherwise colored text can be hard to see
+                        opacity: 1 //color === Kirigami.Theme.textColor ? 0.7 : 1.0
+
+                        Layout.fillWidth: true
+
+                        textFormat: listItem.allowStyledText ? Text.StyledText : Text.PlainText
+                        elide: Text.ElideRight
+                        maximumLineCount: subtitleCanWrap ? 9999 : 1
+                        wrapMode: subtitleCanWrap ? Text.WordWrap : Text.NoWrap
+                    }
+                }*/
 
                 // Busy indicator
                 PlasmaComponents3.BusyIndicator {
@@ -441,12 +558,12 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
                     id: defaultActionButton
 
                     visible: defaultActionButtonAction
-                    && listItem.defaultActionButtonVisible
-                    && (!busyIndicator.visible || listItem.showDefaultActionButtonWhenBusy)
+                            && listItem.defaultActionButtonVisible
+                            && (!busyIndicator.visible || listItem.showDefaultActionButtonWhenBusy)
 
                     /*KeyNavigation.tab: expandToggleButton
-                     *                    KeyNavigation.right: expandToggleButton
-                     *                    KeyNavigation.down: expandToggleButton.KeyNavigation.down*/
+                    KeyNavigation.right: expandToggleButton
+                    KeyNavigation.down: expandToggleButton.KeyNavigation.down*/
                     Keys.onUpPressed: event => listItem.Keys.upPressed(event)
 
                     Accessible.name: action !== null ? action.text : ""
@@ -454,21 +571,21 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
 
                 // Expand/collapse button
                 /*PlasmaComponents3.ToolButton {
-                 *                    id: expandToggleButton
-                 *                    visible: listItem.hasExpandableContent
-                 *
-                 *                    display: PlasmaComponents3.AbstractButton.IconOnly
-                 *                    text: expandedView.expanded ? i18ndc("libplasma6", "@action:button", "Collapse") : i18ndc("libplasma6", "@action:button", "Expand")
-                 *                    icon.name: expandedView.expanded ? "collapse" : "expand"
-                 *
-                 *                    Keys.onUpPressed: event => listItem.Keys.upPressed(event)
-                 *
-                 *                    onClicked: listItem.toggleExpanded()
-                 *
-                 *                    PlasmaComponents3.ToolTip {
-                 *                        text: parent.text
-            }
-            }*/
+                    id: expandToggleButton
+                    visible: listItem.hasExpandableContent
+
+                    display: PlasmaComponents3.AbstractButton.IconOnly
+                    text: expandedView.expanded ? i18ndc("libplasma6", "@action:button", "Collapse") : i18ndc("libplasma6", "@action:button", "Expand")
+                    icon.name: expandedView.expanded ? "collapse" : "expand"
+
+                    Keys.onUpPressed: event => listItem.Keys.upPressed(event)
+
+                    onClicked: listItem.toggleExpanded()
+
+                    PlasmaComponents3.ToolTip {
+                        text: parent.text
+                    }
+                }*/
             }
 
 
@@ -478,20 +595,20 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
                 property bool expanded: false
 
                 Layout.preferredHeight: expanded ?
-                expandedViewLayout.implicitHeight + expandedViewLayout.anchors.topMargin + expandedViewLayout.anchors.bottomMargin : 0
+                    expandedViewLayout.implicitHeight + expandedViewLayout.anchors.topMargin + expandedViewLayout.anchors.bottomMargin : 0
                 Layout.fillWidth: true
 
                 opacity: expanded ? 1 : 0
-                /* Behavior on opacity {
-                 *                    enabled: false //listItem.ListView.view.highlightResizeDuration > 0
-                 *                    SmoothedAnimation { // to match the highlight
-                 *                        id: expandedItemOpacityFade
-                 *                        duration: listItem.ListView.view.highlightResizeDuration || -1
-                 *                        // velocity is divided by the default speed, as we're in the range 0-1
-                 *                        velocity: listItem.ListView.view.highlightResizeVelocity / 200
-                 *                        easing.type: Easing.InOutCubic
-            }
-            }*/
+               /* Behavior on opacity {
+                    enabled: false //listItem.ListView.view.highlightResizeDuration > 0
+                    SmoothedAnimation { // to match the highlight
+                        id: expandedItemOpacityFade
+                        duration: listItem.ListView.view.highlightResizeDuration || -1
+                        // velocity is divided by the default speed, as we're in the range 0-1
+                        velocity: listItem.ListView.view.highlightResizeVelocity / 200
+                        easing.type: Easing.InOutCubic
+                    }
+                }*/
                 visible: opacity > 0
 
                 ColumnLayout {
@@ -519,8 +636,6 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
                                 anchors.top: parent.top
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                //anchors.leftMargin: Kirigami.Units.iconSizes.small
-                                //anchors.rightMargin: Kirigami.Units.iconSizes.small
 
                                 spacing: Kirigami.Units.smallSpacing
                                 layoutDirection: Qt.RightToLeft
@@ -541,6 +656,13 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
                                         text: modelData.text
                                         icon.name: modelData.icon.name
 
+
+                                        Keys.onPressed: event => {
+                                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
+                                                modelData.trigger();
+                                                event.accepted = true;
+                                            }
+                                        }
                                         //KeyNavigation.up: index > 0 ? actionRepeater.itemAt(index - 1) : expandToggleButton
                                         Keys.onDownPressed: event => {
                                             if (index === actionRepeater.count - 1) {
@@ -554,7 +676,7 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
 
                                         onClicked: {
                                             modelData.trigger()
-                                            collapse()
+                                            //collapse()
                                         }
                                     }
                                 }
@@ -563,12 +685,10 @@ clip: heightAnimation.running || expandedItemOpacityFade.running*/
                     }
 
                     // Separator between the two items when both are shown
-                    Rectangle {
+                    KSvg.SvgItem {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-
-                        color: "#cbcbcb"
-
+                        imagePath: "widgets/line"
+                        elementId: "horizontal-line"
                         visible: actionsListLoader.visible && customContentLoader.visible
                     }
 

@@ -87,7 +87,9 @@ ColumnLayout {
             boundsBehavior: Flickable.StopAtBounds
             section.property: showSeparator ? "Section" : ""
             section.delegate: ListItem {
+                required property string section
                 separator: true
+                separatorText.text: section
             }
             highlight: PlasmaExtras.Highlight { }
             highlightMoveDuration: 0//Kirigami.Units.shortDuration

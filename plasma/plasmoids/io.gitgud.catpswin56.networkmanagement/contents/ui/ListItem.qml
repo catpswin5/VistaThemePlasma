@@ -7,78 +7,53 @@
 */
 
 import QtQuick
+import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg 1.0 as KSvg
 
-import org.kde.kirigami as Kirigami
-import org.kde.ksvg as KSvg
-
-import org.kde.plasma.networkmanagement as PlasmaNM
-
+/**
+ * Ignores the theme's listItem margins, and uses custom highlight(pressed) area.
+ * Could break some themes but the majority look fine.
+ * Also includes a separator to be used in sections.
+ */
 MouseArea {
     id: listItem
 
     property bool checked: false
     property bool separator: false
-    property bool wirelessSeparator: separator && (appletProxyModel.data(appletProxyModel.index(0, 0), PlasmaNM.NetworkModel.SectionRole) !== "Available connections")
     property rect highlightRect: Qt.rect(0, 0, width, height)
+    property alias separatorText: sepText
 
     width: parent.width
 
     // Sections have spacing above but not below. Will use 2 of them below.
-    height: separator ? (wirelessSeparator ? 32 : 16) : parent.height
+    height: separator ? /*separatorLine.height + Kirigami.Units.smallSpacing * 3*/ Kirigami.Units.iconSizes.medium + Kirigami.Units.largeSpacing : parent.height
     hoverEnabled: true
 
     Rectangle {
         id: separatorLine
         anchors {
-            right: parent.right
-            left: parent.left
+            horizontalCenter: parent.horizontalCenter
             top: parent.top
+            topMargin: Kirigami.Units.smallSpacing
         }
-
-        states: [
-            State {
-                name: "separator"
-                when: listItem.separator && !listItem.wirelessSeparator
-
-                AnchorChanges {
-                    target: separatorLine
-
-                    anchors.top: undefined
-                    anchors.right: listItem.right
-                    anchors.left: listItem.left
-                    anchors.verticalCenter: listItem.verticalCenter
-                }
-            },
-            State {
-                name: "wirelessSeparator"
-                when: listItem.wirelessSeparator
-
-                AnchorChanges {
-                    target: separatorLine
-
-                    anchors.top: listItem.top
-                    anchors.right: listItem.right
-                    anchors.left: listItem.left
-                    anchors.verticalCenter: undefined
-                }
-            }
-        ]
-        color: "#cbcbcb"
-        height: 1
         width: parent.width
+        visible: separator
+        height: 1
+        color: "#b1b1b1"
+    }
+    Text {
+        id: sepText
+        anchors.fill: parent
+        anchors.topMargin: Kirigami.Units.smallSpacing
+        anchors.leftMargin: Kirigami.Units.largeSpacing+2
+        //text: i18n("Wireless Network Connection")
+        color: "#40555a"
+        verticalAlignment: Text.AlignVCenter
+        //leftPadding: 10
+
         visible: separator
     }
 
-    Text {
-        anchors.fill: parent
-
-        text: i18n("Wireless Network Connection")
-        color: "#40555a"
-        verticalAlignment: Text.AlignVCenter
-        leftPadding: 10
-
-        visible: wirelessSeparator
-    }
 
     KSvg.FrameSvgItem {
         id: background
@@ -88,18 +63,4 @@ MouseArea {
         visible: separator ? false : true
     }
 
-    KSvg.FrameSvgItem {
-        id: pressed
-        imagePath: "widgets/listitem"
-        prefix: "pressed"
-        opacity: checked ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: Kirigami.Units.shortDuration } }
-
-        x: highlightRect.x
-        y: highlightRect.y
-        height: highlightRect.height
-        width: highlightRect.width
-    }
-
-    Component.onCompleted: console.log(appletProxyModel.data(appletProxyModel.index(0, 0), PlasmaNM.NetworkModel.SectionRole) + "\n\n\n\n\n");
 }

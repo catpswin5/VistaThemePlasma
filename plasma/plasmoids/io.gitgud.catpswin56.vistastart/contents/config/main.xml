@@ -117,53 +117,8 @@
       <default>true</default>
     </entry>
 
-    <entry name="showHomeSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showDocumentsSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showPicturesSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showMusicSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showVideosSidepanel" type="Bool">
-      <default>false</default>
-    </entry>
-    <entry name="showDownloadsSidepanel" type="Bool">
-      <default>false</default>
-    </entry>
-    <entry name="showRootSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showGamesSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showRecentItemsSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showNetworkSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showConnectToSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showSettingsSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showDevicesSidepanel" type="Bool">
-      <default>false</default>
-    </entry>
-    <entry name="showDefaultsSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showHelpSidepanel" type="Bool">
-      <default>true</default>
-    </entry>
-    <entry name="showRunSidepanel" type="Bool">
-      <default>false</default>
+    <entry name="sidePanelVisibility" type="String">
+      <default>{"Home directory":1,"Documents":1,"Pictures":1,"Music":1,"Games":1,"Recent Items":1,"Computer":1,"Network":1,"Connect To":1,"Control Panel":1,"Default Programs":1,"Help and Support":1}</default>
     </entry>
   </group>
 </kcfg>

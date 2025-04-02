@@ -17,6 +17,43 @@ import org.kde.config as KConfig
 PlasmoidItem {
     id: mainWindow
 
+    property alias windowManager: wm
+    property alias networkStatus: networkStatus
+    Item {
+        id: wm
+        property var windowObjects: {}
+        function getWindow(name) {
+            if(typeof windowObjects === "undefined")
+                windowObjects = {};
+            return windowObjects[name];
+        }
+        function addWindow(uuid, state, type, name, model, devicePath, index) {
+            if(typeof windowObjects === "undefined")
+                windowObjects = {};
+
+            var winComponent = Qt.createComponent("DetailsWindow.qml", mainWindow);
+            if(winComponent.status === Component.Error) {
+                console.log("Error loading component:", winComponent.errorString());
+                return null;
+            }
+            var winObj = winComponent.createObject(winComponent, { uuid: uuid, connectionState: state, type: type, networkName: name, connectionModel: model, devicePath: devicePath});
+            if(winObj == null) {
+                console.log("Error loading object");
+                return null;
+            }
+            winObj.tabBar.currentIndex = index;
+            //winObj.transientParent = null;
+
+            windowObjects[name+uuid] = winObj;
+            Qt.callLater(() => { windowObjects[name+uuid].show(); });
+            return windowObjects[name+uuid];
+        }
+        function removeWindow(name) {
+            delete windowObjects[name];
+        }
+    }
+
+    property PlasmaNM.NetworkModel connectionModel: null
     readonly property string kcm: "kcm_networkmanagement"
     readonly property bool kcmAuthorized: KConfig.KAuthorized.authorizeControlModule("kcm_networkmanagement")
     readonly property bool delayModelUpdates: fullRepresentationItem !== null
@@ -28,6 +65,9 @@ PlasmoidItem {
         || Plasmoid.location === PlasmaCore.Types.BottomEdge
         || Plasmoid.location === PlasmaCore.Types.LeftEdge)
     property alias planeModeSwitchAction: planeAction
+
+    property real txSpeed: 0
+    property real rxSpeed: 0
 
     Plasmoid.title: i18n("Open Network and Sharing Center")
 
@@ -49,8 +89,8 @@ PlasmoidItem {
         }
     }
 
-    property bool uploading: Plasmoid.configuration.txSpeed > 500
-    property bool downloading: Plasmoid.configuration.rxSpeed > 500
+    property bool uploading: txSpeed > 500
+    property bool downloading: rxSpeed > 500
 
     property string activityIcon: uploading && downloading ? "connected-activity" :
                                   uploading ? "connected-uploading" :

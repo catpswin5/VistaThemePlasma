@@ -1,6 +1,7 @@
-import QtQuick 2.4
+pragma ComponentBehavior: Bound
+import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts
 import QtQuick.Dialogs
 import QtQuick.Window 2.1
 
@@ -18,11 +19,16 @@ Item {
     property int iconSizeSide: Kirigami.Units.iconSizes.smallMedium
     property string itemText: ""
     property string itemIcon: ""
+    property string itemIconFallback: "unknown"
     property string executableString: ""
     property bool executeProgram: false
     property alias textLabel: label
+    //text: itemText
+    property var menuModel: null
 
+    //icon: itemIcon
     width: label.implicitWidth + Kirigami.Units.largeSpacing*2+1
+    //Layout.preferredWidth: label.implicitWidth
     height: 33
 
     KeyNavigation.backtab: findPrevious();
@@ -101,6 +107,7 @@ Item {
     PlasmaComponents.Label {
         id: label
         wrapMode: Text.NoWrap
+        //elide: Text.ElideRight
         anchors.left: parent.left
         anchors.leftMargin: Kirigami.Units.smallSpacing * 2
         anchors.verticalCenter: sidePanelDelegate.verticalCenter
@@ -112,6 +119,7 @@ Item {
     PlasmaComponents.Label {
         id: label_highlight
         wrapMode: Text.NoWrap
+        //elide: Text.ElideRight
         anchors.left: parent.left
         anchors.leftMargin: Kirigami.Units.smallSpacing * 2
         anchors.verticalCenter: sidePanelDelegate.verticalCenter
@@ -121,7 +129,25 @@ Item {
         opacity: 0.66
         text: itemText
     }
+    KSvg.SvgItem {
+        anchors.right: parent.right
+        anchors.rightMargin: Kirigami.Units.smallSpacing*2
+        anchors.verticalCenter: parent.verticalCenter
+
+        implicitWidth: 6
+        implicitHeight: 10
+
+        imagePath: Qt.resolvedUrl("svgs/arrows.svgz")
+        elementId: "group-expander-left"
+        visible: sidePanelDelegate.menuModel !== null
+    }
+
     onFocusChanged: {
+        /*if(focus) {
+            root.m_sidebarIcon.source = itemIcon;
+        } else {
+            root.m_sidebarIcon.source = "";
+        }*/
         if(root.m_delayTimer.running) root.m_delayTimer.restart();
         else root.m_delayTimer.start();
     }
@@ -141,9 +167,9 @@ Item {
                 executable.exec(executableString);
             else {
                 if(KWindowSystem.isPlatformX11)
-                    Qt.callLater(Qt.openUrlExternally, executableString);
+                    Qt.callLater(Qt.openUrlExternally, executableString)
                 else // Workaround for Wayland to prevent crashing
-                    executable.exec("xdg-open " + executableString);
+                    executable.exec("xdg-open " + executableString)
 
             }
         }
@@ -154,18 +180,47 @@ Item {
     Timer {
         id: recentsMenuTimer
         interval: 500
-        running: sidePanelMouseArea.containsMouse && itemText == i18n("Recent Items")
-        onTriggered: fileUsageMenu.openRelative();
+        running: sidePanelMouseArea.containsMouse && sidePanelDelegate.menuModel !== null
+        onTriggered: contextMenu.openRelative();
     }
 
     Connections {
-        target: fileUsageMenu
-        enabled: sidePanelDelegate.itemText == i18n("Recent Items")
+        target: contextMenu
+        enabled: sidePanelDelegate.menuModel !== null
         function onStatusChanged() {
-            if(fileUsageMenu.status === 3) {
+            if(contextMenu.status === 3) {
                 sidePanelDelegate.focus = false;
                 root.m_delayTimer.restart();
             }
         }
     }
+    PlasmaExtras.Menu {
+        id: contextMenu
+        visualParent: sidePanelDelegate
+        placement: {
+            switch (Plasmoid.location) {
+                case PlasmaCore.Types.LeftEdge:
+                case PlasmaCore.Types.RightEdge:
+                case PlasmaCore.Types.TopEdge:
+                    return PlasmaExtras.Menu.BottomPosedRightAlignedPopup;
+                case PlasmaCore.Types.BottomEdge:
+                default:
+                    return PlasmaExtras.Menu.RightPosedBottomAlignedPopup;
+            }
+        }
+    }
+    Instantiator {
+        model: sidePanelDelegate.menuModel
+        delegate: PlasmaExtras.MenuItem {
+            required property int index
+            required property var model
+
+            text: model.display + "      "
+            icon: model.decoration
+            onClicked: sidePanelDelegate.menuModel.trigger(index, "", null)
+        }
+        onObjectAdded: (index, object) =>   contextMenu.addMenuItem(object);
+        onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
+    }
+
 }

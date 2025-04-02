@@ -9,26 +9,26 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import org.kde.coreaddons 1.0 as KCoreAddons
+import org.kde.coreaddons as KCoreAddons
 import org.kde.kcmutils as KCMUtils
-
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.plasma.networkmanagement as PlasmaNM
-import org.kde.plasma.plasmoid 2.0
+import org.kde.kirigami as Kirigami
 
 import org.kde.networkmanager as NMQt
+
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.plasma.networkmanagement as PlasmaNM
+import org.kde.plasma.plasmoid
 
 ExpandableListItem {
     id: connectionItem
 
     property bool activating: ConnectionState === PlasmaNM.Enums.Activating
-    deactivated: ConnectionState === PlasmaNM.Enums.Deactivated
+    property bool deactivated: ConnectionState === PlasmaNM.Enums.Deactivated
     property bool passwordIsStatic: (SecurityType === PlasmaNM.Enums.StaticWep || SecurityType == PlasmaNM.Enums.WpaPsk ||
                                      SecurityType === PlasmaNM.Enums.Wpa2Psk || SecurityType == PlasmaNM.Enums.SAE)
     property bool predictableWirelessPassword: !Uuid && Type === PlasmaNM.Enums.Wireless && passwordIsStatic
-    property bool showSpeed: ConnectionState === PlasmaNM.Enums.Activated &&
+    property bool showSpeed: mainWindow.expanded &&
                              (Type === PlasmaNM.Enums.Wired ||
                               Type === PlasmaNM.Enums.Wireless ||
                               Type === PlasmaNM.Enums.Gsm ||
@@ -46,26 +46,17 @@ ExpandableListItem {
             else return "network-type-work";
         }
     }//model.ConnectionIcon
-
     iconEmblem: {
+        //return "stock_lock"
         if(SecurityType == PlasmaNM.Enums.UnknownSecurity) return "stock_lock"
         else if(Type == PlasmaNM.Enums.Bluetooth) return "bluetooth-active-symbolic"
         else return undefined;
     }
-    // Hotfix to "hide" undefined items
-    Component.onCompleted: {
-        if(typeof model.ItemUniqueName == "undefined") {
-            height = -connectionView.spacing;
-            visible = false;
-        }
-    }
-
+    securityType: SecurityType
     title: model.ItemUniqueName
     subtitle: itemText()
     isBusy: false
-    //isBusy: mainWindow.expanded && model.ConnectionState === PlasmaNM.Enums.Activating
     isDefault: ConnectionState === PlasmaNM.Enums.Activated
-    //defaultActionButtonAction:
     showDefaultActionButtonWhenBusy: false
 
     Keys.onPressed: event => {
@@ -123,12 +114,11 @@ ExpandableListItem {
             }
         }
         PlasmaExtras.MenuItem {
+            //text: i18n("Copy")
             text: i18n("Show Network's QR Code")
             icon: "view-barcode-qr"
-            visible: Uuid && Type === PlasmaNM.Enums.Wireless && passwordIsStatic && ConnectionState === PlasmaNM.Enums.Activated
-            onClicked: {
-                handler.requestWifiCode(ConnectionPath, Ssid, SecurityType);
-            }
+            visible: Uuid && Type === PlasmaNM.Enums.Wireless && passwordIsStatic
+            onClicked: handler.requestWifiCode(ConnectionPath, Ssid, SecurityType);
         }
         PlasmaExtras.MenuItem {
             text: i18n("Configure…")
@@ -152,13 +142,11 @@ ExpandableListItem {
                 return true;
             }
 
-            //icon.name: isDeactivated ? "network-connect" : "network-disconnect"
             text: isDeactivated ? i18n("Connect") : i18n("Disconnect")
             onTriggered: changeState()
         },
         Action {
             text: i18n("Details")
-            //icon.name: "configure"
             onTriggered: {
                 connectionItem.toggleExpanded();
                 var winHandler = mainWindow.windowManager.getWindow(model.ItemUniqueName+Uuid);
@@ -175,6 +163,7 @@ ExpandableListItem {
 
     Accessible.description: `${model.AccessibleDescription} ${subtitle}`
 
+
     Component {
         id: passwordDialogComponent
 
@@ -186,8 +175,6 @@ ExpandableListItem {
                 id: passwordField
 
                 Layout.fillWidth: true
-                Layout.leftMargin: Kirigami.Units.iconSizes.small
-                Layout.rightMargin: Kirigami.Units.iconSizes.small
 
                 securityType: SecurityType
 
@@ -208,17 +195,16 @@ ExpandableListItem {
         id: timer
         repeat: true
         interval: 2000
-        running: showSpeed
-        triggeredOnStart: true
+        running: true
         // property int can overflow with the amount of bytes.
         property double prevRxBytes: 0
         property double prevTxBytes: 0
         onTriggered: {
             rxSpeed = prevRxBytes === 0 ? 0 : (RxBytes - prevRxBytes) * 1000 / interval
             txSpeed = prevTxBytes === 0 ? 0 : (TxBytes - prevTxBytes) * 1000 / interval
-            prevRxBytes = RxBytes
-            prevTxBytes = TxBytes
-            mainWindow.rxSpeed = rxSpeed
+            if(RxBytes != undefined) prevRxBytes = RxBytes
+            if(TxBytes != undefined) prevTxBytes = TxBytes
+            mainWindow.rxSpeed = rxSpeed // Store the speed values to configuration for use in the icon. They remain in configuration until destruction
             mainWindow.txSpeed = txSpeed
         }
     }
@@ -278,7 +264,7 @@ ExpandableListItem {
             else
                 return "No Internet access";
         }
-        return ""
+        return "";
     }
 
     function setDelayModelUpdates(delay: bool) {
@@ -286,9 +272,7 @@ ExpandableListItem {
     }
 
     onShowSpeedChanged: {
-
-        var winHandler = mainWindow.windowManager.getWindow(model.ItemUniqueName+Uuid);
-        connectionModel.setDeviceStatisticsRefreshRateMs(DevicePath, (typeof winHandler !== "undefined" || showSpeed) ? 2000 : 0)
+        connectionModel.setDeviceStatisticsRefreshRateMs(DevicePath, showSpeed ? 2000 : 0)
     }
 
     onActivatingChanged: {
@@ -308,6 +292,7 @@ ExpandableListItem {
             return
         }
         connectionView.showSeparator = false
+        Plasmoid.configuration.connectionState = ConnectionState
         return
     }
 
