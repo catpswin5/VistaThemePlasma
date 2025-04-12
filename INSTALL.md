@@ -160,9 +160,9 @@ echo -e "Microsoft Windows [Version 6.0.6003]\nCopyright (c) 2006 Microsoft Corp
 
 ## Extras <a name="extras"></a>
 
-This sections relates to the directories found inside the ``extras`` folder
+This section relates to the directories found inside the ``extras`` folder and is completely optional.
 
-### Extra apps
+### Extra components
 
 **Execute Binary** 
 
@@ -174,3 +174,15 @@ Application written in QtWidgets that's meant to replicate Windows's run dialog.
 
 1. Run the install script. The program will get installed to ``/usr/bin/execbin``
 2. Optionally, make a shortcut for ``execbin`` inside system settings
+
+
+**UAC-like Polkit** 
+
+KDE Polkit Agent modification to make it look more like Windows' UAC dialog.
+
+<img src="screenshots/uac-polkitagent.png">
+
+**Installation**
+
+1. Run the install script.
+2. Restart your Plasma session.

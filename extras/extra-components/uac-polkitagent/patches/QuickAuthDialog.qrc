@@ -1,0 +1,14 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+ <qresource>
+    <file>qml/QuickAuthDialog.qml</file>
+    <file>qml/MobileQuickAuthDialog.qml</file>
+    <file>qml/RejectPasswordAnimation.qml</file>
+    <file>qml/RejectPasswordPathAnimation.qml</file>
+    <file>qml/MobileDialogWindow.qml</file>
+
+    <file>qml/res/frame.png</file>
+    <file>qml/res/viewitem.svg</file>
+    <file>qml/res/fallback.wav</file>
+ </qresource>
+</RCC>
