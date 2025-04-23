@@ -38,7 +38,7 @@ var dimScreenEffect = {
     loadConfig: function () {
         dimScreenEffect.duration = animationTime(0);
         dimScreenEffect.brightness = 0.30;
-        dimScreenEffect.saturation = 0.30;
+        dimScreenEffect.saturation = 1.00;
     },
     startAnimation: function (window) {
         if (!window.visible) {

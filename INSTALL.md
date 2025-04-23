@@ -53,7 +53,7 @@ This section relates to the directories found in the ```plasma``` folder.
 1. Run the following scripts:
 ```bash
 $ chmod +x install_plasmoids.sh && ./install_plasmoids.sh
-$ chmod +x install_plasma_components.sh && install_plasma_components.sh # Requires authorization for SMOD resources and SDDM themes
+$ chmod +x install_plasma_components.sh && ./install_plasma_components.sh # Requires authorization for SMOD resources and SDDM themes
 ```
 
 ### Manual
@@ -73,6 +73,15 @@ Make sure to compile the C++ components of plasmoids located in ```plasmoids/src
 4. Import and apply the color scheme through System Settings. 
 
 ## KWin components <a name="kwin"></a>
+
+### Install scripts
+
+1. Run the following script:
+```bash
+$ chmod +x install_kwin_components.sh && ./install_kwin_components.sh 
+```
+
+### Manual 
 
 This section relates to the directories found in the ```kwin``` folder.
 
@@ -104,6 +113,13 @@ This section relates to the directories found in the ```kwin``` folder.
     - Logout
 
 ## Miscellaneous components <a name="misc"></a>
+
+### Install scripts
+
+1. Run the following script:
+```bash
+$ chmod +x install_misc_components.sh && ./install_misc_components.sh 
+```
 
 This section relates to the directories found in the ```misc``` folder.
 
@@ -184,5 +200,14 @@ KDE Polkit Agent modification to make it look more like Windows' UAC dialog.
 
 **Installation**
 
-1. Run the install script
-2. Restart your Plasma session
+1. Navigate to the ```uac-polkitagent``` folder, and run ```install.sh``` (or ```install_ninja.sh``` if you have Ninja installed):
+
+```bash
+$ chmod +x install.sh && ./install.sh
+```
+
+2. To remove the minimize and maximize buttons from the window, run ```add_rule.sh``` which will generate the appropriate KWin rule: 
+
+```bash
+$ chmod +x add_rule.sh && ./add_rule.sh
+```

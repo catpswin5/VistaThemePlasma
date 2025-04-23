@@ -9,6 +9,5 @@
 
     <file>qml/res/frame.png</file>
     <file>qml/res/viewitem.svg</file>
-    <file>qml/res/fallback.wav</file>
  </qresource>
 </RCC>

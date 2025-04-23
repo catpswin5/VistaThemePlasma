@@ -11,7 +11,7 @@ if [[ -z "$(command -v tar)" ]]; then
     exit
 fi
 if [[ -z "$(command -v sddmthemeinstaller)" ]]; then
-    echo "kpackagetool6 not found. Stopping."
+    echo "sddmthemeinstaller not found. Stopping."
     exit
 fi
 
@@ -35,7 +35,7 @@ function install_component {
 # LNF
 install_component "$PWD/plasma/look-and-feel/authuiVista" "Plasma/LookAndFeel"
 # Layout template
-install_component "$PWD/plasma/layout-templates/io.gitgud.catpswin56.vistataskbar" "Plasma/LayoutTemplate"
+install_component "$PWD/plasma/layout-templates/io.gitgud.catpswin56.taskbar" "Plasma/LayoutTemplate"
 # Plasma Style
 install_component "$PWD/plasma/desktoptheme/Vista-Black" "Plasma/Theme"
 # Shell

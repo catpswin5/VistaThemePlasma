@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# IMPORTANT: This install script has only been tested on Fedora Linux.
+# IMPORTANT: This install script has only been tested on Fedora Linux and Arch Linux.
 # Installation procedure may vary from distribution-to-distribution.
 
 

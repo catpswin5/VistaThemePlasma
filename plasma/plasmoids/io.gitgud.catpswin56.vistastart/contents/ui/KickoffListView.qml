@@ -224,7 +224,6 @@ FocusScope {
                     listView: listView
                     isFavorites: listView.isFavorites
 
-                    onAddBreadcrumb: (model, title) => view.addBreadcrumb(model, title)
                     onReset: view.reset()
                 }
                 Column {

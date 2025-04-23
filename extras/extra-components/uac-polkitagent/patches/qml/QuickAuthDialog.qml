@@ -20,7 +20,7 @@ import org.kde.plasma.plasma5support as Plasma5Support
 
 Kirigami.AbstractApplicationWindow {
     id: root
-    title: i18n("Authentication Required")
+    title: i18n("User Account Control") //i18n("Authentication Required")
 
     maximumHeight: intendedWindowHeight
     minimumHeight: intendedWindowHeight
@@ -119,47 +119,6 @@ Kirigami.AbstractApplicationWindow {
         }
     }
 
-    // best code fr (thanks wacky ideal)
-    Plasma5Support.DataSource {
-        id: executable
-        engine: "executable"
-        connectedSources: []
-        onNewData: (sourceName, data) => {
-            var stdout = data["stdout"]
-            exited(stdout)
-            disconnectSource(sourceName) // cmd finished
-        }
-        function exec(cmd) {
-            if (cmd) {
-                connectSource(cmd)
-            }
-        }
-        signal exited(string stdout)
-    }
-    Connections {
-        target: executable
-        function onExited(stdout) {
-            soundsModel.theme = stdout.trim() ? stdout.trim() : "ocean";
-            for(var i = 0; i < soundsModel.rowCount(); i++) {
-                var str = soundsModel.initialSourceUrl(i);
-                if(str.includes("authentication-required") && !str.endsWith(".license")) {
-                    authSound.setSource(str);
-                    authSound.play();
-                } else {
-                    authSound.setSource("qrc:/qml/res/fallback.wav");
-                    authSound.play();
-                }
-            }
-        }
-    }
-    SoundsModel {
-        id: soundsModel
-    }
-    MediaPlayer {
-        id: authSound
-        audioOutput: AudioOutput {  }
-    }
-
     Column {
         id: mainContent
 
@@ -170,6 +129,8 @@ Kirigami.AbstractApplicationWindow {
         Rectangle {
             id: header
 
+            property bool isUnknown: descriptionActionId == "org.freedesktop.policykit.exec" || descriptionVendorName == ""
+
             anchors {
                 right: parent.right
                 left: parent.left
@@ -179,8 +140,8 @@ Kirigami.AbstractApplicationWindow {
 
             gradient: Gradient {
                 orientation: Gradient.Horizontal
-                GradientStop { position: 1.0; color: "#137798"}
-                GradientStop { position: 0.0; color: "#073f6e"}
+                GradientStop { position: 1.0; color: header.isUnknown ? "#ffcd4a" : "#137798"}
+                GradientStop { position: 0.0; color: header.isUnknown ? "#f4b200" : "#073f6e"}
             }
 
             RowLayout {
@@ -198,7 +159,7 @@ Kirigami.AbstractApplicationWindow {
                     implicitWidth: Kirigami.Units.iconSizes.medium
                     implicitHeight: Kirigami.Units.iconSizes.medium
 
-                    source: "dialog-password"
+                    source: header.isUnknown ? "firewall-applet-panic" : "dialog-password"
                 }
 
                 Kirigami.Heading {
@@ -210,7 +171,7 @@ Kirigami.AbstractApplicationWindow {
                     wrapMode: Text.Wrap
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    color: "white"
+                    color: header.isUnknown ? "black" : "white"
                 }
             }
         }
@@ -261,7 +222,7 @@ Kirigami.AbstractApplicationWindow {
                             visible: root.sevenLike
                         }
                         QQC2.Label {
-                            text: descriptionVendorName
+                            text: descriptionVendorName !== "" ? descriptionVendorName "Unknown Vendor"
                             font.bold: true
 
                             Kirigami.UrlButton {
@@ -269,6 +230,8 @@ Kirigami.AbstractApplicationWindow {
                                     left: parent.right
                                     leftMargin: -Kirigami.Units.mediumSpacing
                                 }
+                                height: parent.height
+                                width: Kirigami.Units.iconSizes.small
                                 text: " "
                                 url: descriptionVendorUrl
                                 font.underline: false
@@ -366,6 +329,7 @@ Kirigami.AbstractApplicationWindow {
                             Kirigami.PasswordField {
                                 id: passwordField
                                 Layout.alignment: Qt.AlignLeft
+                                Layout.preferredHeight: 25
                                 onAccepted: root.accept()
                                 placeholderText: i18n("Password…")
                             }
@@ -419,19 +383,30 @@ Kirigami.AbstractApplicationWindow {
 
             QQC2.Button {
                 implicitWidth: 73
-                implicitHeight: 23
-                text: i18n("OK")
-                icon.name: "dialog-ok"
+                implicitHeight: 21
+                bottomPadding: 2
+                topPadding: 0
                 onClicked: root.accept()
+                contentItem: Text {
+                    text: i18n("OK")
+                    font: parent.font
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
             }
             QQC2.Button {
                 implicitWidth: 73
-                implicitHeight: 23
-                text: i18n("Cancel")
-                icon.name: "dialog-cancel"
+                implicitHeight: 21
+                bottomPadding: 2
+                topPadding: 0
                 onClicked: root.reject()
+                contentItem: Text {
+                    text: i18n("Cancel")
+                    font: parent.font
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
             }
         }
     }
-    Component.onCompleted: executable.exec("kreadconfig6 --file ~/.config/kdeglobals --group Sounds --key Theme");
 }

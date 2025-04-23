@@ -7,10 +7,10 @@ URL="https://invent.kde.org/plasma/polkit-kde-agent-1/-/archive/master/polkit-kd
 ARCHIVE="polkit-kde-agent-1-master.tar.gz"
 SRCDIR="polkit-kde-agent-1-master"
 
-INSTALLDST="/usr/lib/x86_64-linux-gnu/libexec/polkit-kde-authentication-agent-1"
+INSTALLDST="/usr/lib/x86_64-linux-gnu/polkit-kde-authentication-agent-1"
 
 if [ ! -f ${INSTALLDST} ]; then
-	INSTALLDST="/usr/lib64/libexec/polkit-kde-authentication-agent-1"
+	INSTALLDST="/usr/lib64/polkit-kde-authentication-agent-1"
 fi
 
 if [ ! -d ./build/${SRCDIR} ]; then
@@ -28,6 +28,12 @@ mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 cmake --build .
+echo "Installing..."
+systemctl --user stop plasma-polkit-agent
+kwriteconfig6 --file ~/.config/plasmanotifyrc --group Services --group policykit1-kde --key ShowPopups --notify --type bool false # Disable notification popup
+kwriteconfig6 --file ~/.config/plasmanotifyrc --group Services --group policykit1-kde --key ShowInHistory --notify --type bool false # Disable notification in history
 sudo cp ./bin/polkit-kde-authentication-agent-1 $INSTALLDST
-
-echo "Done. Restart your session for changes to apply."
+echo "Restarting systemd service..."
+systemctl --user start plasma-polkit-agent
+echo "Done, refreshing plasmashell..."
+qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.refreshCurrentShell
