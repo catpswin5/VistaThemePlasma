@@ -53,6 +53,9 @@ PlasmoidItem {
     //fullRepresentation: compactRepresentation//menuRepresentation
     Plasmoid.constraintHints: Plasmoid.CanFillArea
 
+    toolTipMainText: i18n("Start")
+    toolTipSubText: ""
+
     // Runs KMenuEdit.
     function action_menuedit() {
         processRunner.runMenuEditor();

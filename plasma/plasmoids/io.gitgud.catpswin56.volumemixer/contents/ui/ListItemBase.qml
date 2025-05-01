@@ -56,9 +56,10 @@ Item {
             }
 
             Layout.alignment: Qt.AlignHCenter
-            Layout.leftMargin: iconMa.containsPress ? 1 : 0
+            Layout.leftMargin: (iconMa.containsPress ? 1 : 0) - 2
             Layout.preferredWidth: 32
             Layout.preferredHeight: 32
+            Layout.topMargin: -3
 
             source: type == "sink-output" ? "audio-speakers" : (type == "sink-input" ? "audio-input-microphone" : item.iconName)
 
@@ -225,7 +226,8 @@ Item {
 
             Layout.alignment: Qt.AlignHCenter
             Layout.fillHeight: true
-            Layout.maximumHeight: 115
+            Layout.preferredHeight: 121
+            Layout.rightMargin: Kirigami.Units.largeSpacing+2
 
             from: PulseAudio.MinimalVolume
             to: forceRaiseMaxVolume || item.model.Volume >= PulseAudio.NormalVolume * 1.01 ? PulseAudio.MaximalVolume : PulseAudio.NormalVolume
@@ -276,6 +278,7 @@ Item {
 
             Layout.preferredWidth: isMixer ? 28 : 24
             Layout.preferredHeight: isMixer ? 26 : 22
+            Layout.bottomMargin: -3
             Layout.alignment: Qt.AlignHCenter
 
             property bool isMuted: item.model.Muted
@@ -294,11 +297,8 @@ Item {
                 id: muteTooltipTimer
                 interval: Kirigami.Units.longDuration*2
                 onTriggered: {
-                    if(muteButton.containsMouse) {
-                        muteTooltip.showToolTip();
-                    } else {
-                        muteTooltip.hideToolTip();
-                    }
+                    if(muteButton.containsMouse) muteTooltip.showToolTip();
+                    else muteTooltip.hideToolTip();
                 }
             }
 

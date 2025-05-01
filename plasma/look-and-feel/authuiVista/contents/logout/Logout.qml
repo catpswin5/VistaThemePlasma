@@ -9,6 +9,9 @@ import org.kde.kcmutils as KCMUtils
 import org.kde.plasma.plasma5support as Plasma5Support
 import org.kde.plasma.private.sessions
 
+import org.kde.kitemmodels as KItemModels
+import org.kde.plasma.extras as PlasmaExtras
+
 Image {
     id: root
 
@@ -32,7 +35,7 @@ Image {
         id: executable
         engine: "executable"
         connectedSources: []
-        onNewData: {
+        onNewData: (sourceName, data) => {
             var exitCode = data["exit code"]
             var exitStatus = data["exit status"]
             var stdout = data["stdout"]
@@ -60,6 +63,14 @@ Image {
         shortcut: "Escape"
     }
 
+    Rectangle {
+        anchors.fill: parent
+
+        color: "#1D5F7A"
+
+        z: -1
+    }
+
     Item {
         anchors.fill: parent
 
@@ -68,6 +79,7 @@ Image {
 
             anchors.centerIn: parent
             anchors.verticalCenterOffset: Kirigami.Units.gridUnit*5
+            width: Math.max(190, mainColumn.implicitWidth)
 
             spacing: 5
 
@@ -91,7 +103,7 @@ Image {
                             root.cancelRequested();
                             break;
                         case(4):
-                            executable.exec("ksysguard6 & disown");
+                            executable.exec("kstart ksysguard");
                             break;
                     }
                 }
@@ -114,8 +126,10 @@ Image {
                     }
                 }
                 delegate: Item {
-                    Layout.preferredWidth: delegateContent.implicitWidth
+                    Layout.fillWidth: true
                     Layout.preferredHeight: 30
+
+                    width: delegateContent.implicitWidth
 
                     KSvg.FrameSvgItem {
                         anchors.fill: parent
@@ -165,9 +179,9 @@ Image {
                 id: cancel
 
                 property string state: {
+                    if(cancelMa.containsPress) return "pressed"
                     if(cancelMa.containsMouse) return "hover"
-                    else if(cancelMa.containsPress) return "pressed"
-                    else return "normal"
+                    return "normal"
                 }
 
                 Layout.preferredWidth: cancelText.implicitWidth + (Kirigami.Units.gridUnit * 3)
@@ -256,9 +270,9 @@ Image {
                 id: power
 
                 property string state: {
+                    if(powerMa.containsPress) return "pressed"
                     if(powerMa.containsMouse) return "hover"
-                    else if(powerMa.containsPress) return "pressed"
-                    else return "normal"
+                    return "normal"
                 }
 
                 Layout.rightMargin: -Kirigami.Units.smallSpacing - 1
@@ -283,15 +297,51 @@ Image {
                 id: powerRight
 
                 property string state: {
+                    if(powerRightMa.containsPress) return "pressed"
                     if(powerRightMa.containsMouse) return "hover"
-                    else if(powerRightMa.containsPress) return "pressed"
-                    else return "normal"
+                    return "normal"
                 }
 
                 source: "../images/powerRight-" + state + ".png"
 
                 Image { anchors.centerIn: parent; source: "../images/powerRight-glyph.png" }
 
+
+                Menu {
+                    id: powerMenu
+                    x: -powerMenu.width + parent.width
+                    y: -powerMenu.height
+
+                    Component.onCompleted: {
+                        if(maysd) {
+                            var menuitem = powerMenu.createMenuItem();
+                            menuitem.text = "Restart";
+                            menuitem.triggered.connect(() => { root.rebootRequested() });
+                            powerMenu.addAction(menuitem);
+                            powerMenu.addItem(powerMenu.createMenuSeparator());
+                        }
+                        if(spdMethods.SuspendState) {
+                            menuitem = powerMenu.createMenuItem();
+                            menuitem.text = "Sleep";
+                            menuitem.triggered.connect(() => { root.sleepRequested() });
+                            powerMenu.addAction(menuitem);
+                        }
+                        if(spdMethods.HibernateState) {
+                            menuitem = powerMenu.createMenuItem();
+                            menuitem.text = "Hibernate";
+                            menuitem.triggered.connect(() => { root.hibernateRequested() });
+                            powerMenu.addAction(menuitem);
+                        }
+                        if(maysd) {
+                            menuitem = powerMenu.createMenuItem();
+                            menuitem.text = "Shut down";
+                            menuitem.triggered.connect(() => { root.haltRequested() });
+                            powerMenu.addAction(menuitem);
+                        }
+                    }
+
+
+                }
                 MouseArea {
                     id: powerRightMa
 
@@ -300,7 +350,11 @@ Image {
                     hoverEnabled: true
                     propagateComposedEvents: true
 
-                    onClicked: root.rebootRequested()
+                    enabled: !powerMenu.visible
+                    onClicked: {
+                        if(powerMenu.visible) powerMenu.close();
+                        else powerMenu.open();
+                    }
                 }
             }
         }

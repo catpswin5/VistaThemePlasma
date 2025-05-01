@@ -33,8 +33,8 @@ Item {
         {
             name: "Documents",
             itemText: i18n("Documents"),
-            itemIcon: "library-txt",
-            itemIconFallback: "folder-library",
+            itemIcon: "folder-documents",
+            itemIconFallback: "folder-documents",
             executableString: StandardPaths.writableLocation(StandardPaths.DocumentsLocation),
             menuModel: null,
             executeProgram: false
@@ -42,7 +42,7 @@ Item {
         {
             name: "Pictures",
             itemText: i18n("Pictures"),
-            itemIcon: "library-images",
+            itemIcon: "folder-image",
             itemIconFallback: "folder-image",
             executableString: StandardPaths.writableLocation(StandardPaths.PicturesLocation),
             menuModel: null,
@@ -51,7 +51,7 @@ Item {
         {
             name: "Music",
             itemText: i18n("Music"),
-            itemIcon: "library-music",
+            itemIcon: "folder-music",
             itemIconFallback: "folder-music",
             executableString: StandardPaths.writableLocation(StandardPaths.MusicLocation),
             menuModel: null,
@@ -60,7 +60,7 @@ Item {
         {
             name: "Videos",
             itemText: i18n("Videos"),
-            itemIcon: "library-video",
+            itemIcon: "folder-videos",
             itemIconFallback: "folder-videos",
             executableString: StandardPaths.writableLocation(StandardPaths.MoviesLocation),
             menuModel: null,

@@ -225,7 +225,7 @@ PlasmoidItem {
     fullRepresentation: Item {
         id: fullRep
 
-        property int flyoutIntendedWidth: mainLayout.width
+        property int flyoutIntendedWidth: defaultOutput.count == 0 && defaultInput.count == 0 ? 128 : mainLayout.width
 
         implicitHeight: 181
 
@@ -252,6 +252,14 @@ PlasmoidItem {
             color: "white"
 
             z: -1
+        }
+
+        Text {
+            anchors.centerIn: mainLayout
+
+            text: i18n("No devices to show.")
+
+            visible: defaultOutput.count == 0 && defaultInput.count == 0
         }
 
         RowLayout {
