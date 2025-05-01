@@ -227,7 +227,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             Layout.fillHeight: true
             Layout.preferredHeight: 121
-            Layout.rightMargin: Kirigami.Units.largeSpacing-2
+            Layout.rightMargin: Kirigami.Units.largeSpacing-4
 
             from: PulseAudio.MinimalVolume
             to: forceRaiseMaxVolume || item.model.Volume >= PulseAudio.NormalVolume * 1.01 ? PulseAudio.MaximalVolume : PulseAudio.NormalVolume
