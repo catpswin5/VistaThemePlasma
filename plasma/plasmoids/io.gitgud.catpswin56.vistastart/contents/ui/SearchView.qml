@@ -34,14 +34,10 @@ Item {
     property bool queryFinished: false
     property int repeaterModelIndex: 0
 
-    function inhibitMouse() {
-        runnerGrid.inhibitMouseEvents = 2;
-    }
     function activateCurrentIndex() {
         runnerGrid.tryActivate();
     }
     function decrementCurrentIndex() {
-        inhibitMouse();
         var listView = runnerGrid.flickableItem;
         if(listView.currentIndex-1 < 0) {
             listView.currentIndex = listView.count - 1;
@@ -50,7 +46,6 @@ Item {
         }
     }
     function incrementCurrentIndex() {
-        inhibitMouse();
         var listView = runnerGrid.flickableItem;
         if(listView.currentIndex+1 >= listView.count) {
             listView.currentIndex = 0;
