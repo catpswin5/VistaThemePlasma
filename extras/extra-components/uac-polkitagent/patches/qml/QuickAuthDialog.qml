@@ -222,7 +222,7 @@ Kirigami.AbstractApplicationWindow {
                             visible: root.sevenLike
                         }
                         QQC2.Label {
-                            text: descriptionVendorName !== "" ? descriptionVendorName "Unknown Vendor"
+                            text: descriptionVendorName !== "" ? descriptionVendorName : "Unknown Vendor"
                             font.bold: true
 
                             Kirigami.UrlButton {
