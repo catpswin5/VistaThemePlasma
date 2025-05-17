@@ -44,8 +44,6 @@ PlasmoidItem {
     preferredRepresentation: null
     compactRepresentation: compactRepresentation
     fullRepresentation: menuRepresentation
-    compactRepresentation: compactRepresentation
-    fullRepresentation: menuRepresentation
     Plasmoid.constraintHints: Plasmoid.CanFillArea
     activationTogglesExpanded: false
 

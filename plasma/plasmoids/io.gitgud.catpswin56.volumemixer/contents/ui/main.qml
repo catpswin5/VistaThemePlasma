@@ -238,7 +238,7 @@ PlasmoidItem {
                 mixerWindow.requestActivate();
             } else {
                 mixerWindow.visibility = Window.AutomaticVisibility;
-                mixerWindow.raise();}
+                mixerWindow.raise();
                 mixerWindow.requestActivate();
             }
         }
@@ -419,7 +419,7 @@ PlasmoidItem {
             text: i18n("Show virtual devices")
             icon.name: "audio-card"
             checkable: true
-            checked: plasmoid.configuration.showVirtualDevices
+            checked: Plasmoid.configuration.showVirtualDevices
             onTriggered: Plasmoid.configuration.showVirtualDevices = !Plasmoid.configuration.showVirtualDevices
         },
         PlasmaCore.Action {
