@@ -82,10 +82,22 @@ if [ "$answer" != "${answer#[Yy]}" ] ;then
 fi
 echo "Done."
 
-echo "Do you want to install the Plymouth theme? Requires Lucida Console installed as a system-wide font (y/N)"
+echo "Do you want to install the Plymouth theme? (y/N) Requires Lucida Console and Segoe UI as system wide fonts."
 read answer
 if [ "$answer" != "${answer#[Yy]}" ] ;then
-    cd "$PWD/misc/plymouth/PlymouthVista/"
-    sudo sh "install.sh"
+    if [[ -z "$(command -v git)" ]]; then
+        echo "Git not found. Cannot install Plymouth theme automatically!"
+        echo "Please download the repository from https://github.com/furkrn/PlymouthVista as a zip file by clicking the green code button."
+        echo "Then extract the zip file and run './compile.sh ; sudo ./install.sh' from the extracted directory."
+    else
+        git clone https://github.com/furkrn/PlymouthVista
+        cd PlymouthVista
+        chmod +x ./compile.sh
+        chmod +x ./install.sh
+        ./compile.sh
+        pkexec ./install.sh
+        echo "For more details, check out the project at https://github.com/furkrn/PlymouthVista"
+    fi
 fi
+
 echo "Done."

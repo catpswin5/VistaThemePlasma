@@ -130,7 +130,7 @@ This section relates to the directories found in the ```misc``` folder.
 5. Move the files located in ```mimetype``` into ```~/.local/share/mime/packages``` and then run ```update-mime-database ~/.local/share/mime``` to fix DLLs and EXE files sharing the same icons.
 6. Segoe UI, Segoe UI Bold, and Segoe UI Italic are required for this theme and they should be installed as system-wide fonts.
 7. Optionally, to install custom branding at the Info Center, move ```kcm-about-distrorc``` from the ```branding``` folder to ```~/.config/kdedefaults/```, then edit the file's ```LogoPath``` entry to point to the absolute path of ```kcminfo.png```.
-8. Optionally, install the Plymouth theme inside the ``plymouth`` folder using the included install script (only tested in Arch Linux and Fedora Linux). This theme requires Lucida Console installed as a system-wide font.
+8. Optionally, install the [Plymouth theme](https://github.com/furkrn/PlymouthVista). This theme requires Lucida Console and Segoe UI installed as a system-wide font.
 
 If SDDM fails to pick up on the cursor theme, go to System Settings -> Startup and Shutdown -> Login Screen (SDDM), and click on Apply Plasma Settings to enforce your current cursor theme, and other relevant settings. Do this *after* installing everything else. If even that fails, change the default cursor theme in ```/usr/share/icons/default/index.theme``` to say ```aero-drop```.
 
