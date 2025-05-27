@@ -36,7 +36,7 @@ Item {
         property alias fallbackIcon: imgAuthorIcon.fallback
 
         BorderImage {
-            source: "svgs/user-frame.png"
+            source: "svgs/" + startStyles.currentStyle.styleName + "/" + "user-frame.png"
             smooth: true
             z: 1
 			opacity: imgAuthorIcon.source === ""

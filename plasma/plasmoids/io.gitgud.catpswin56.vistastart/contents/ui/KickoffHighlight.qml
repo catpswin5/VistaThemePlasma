@@ -56,7 +56,7 @@ Item {
 
     KSvg.FrameSvgItem {
          id: background
-         imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+         imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
          prefix: {
              if (pressed)
                  return hover ? "selected+hover" : "selected";

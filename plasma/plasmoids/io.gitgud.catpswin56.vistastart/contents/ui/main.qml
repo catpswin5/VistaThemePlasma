@@ -37,6 +37,7 @@ PlasmoidItem {
     property Item dragSource: null
 
     property alias rootModel: rootModel
+    property QtObject dashWindow: null
     property QtObject globalFavorites: rootModel.favoritesModel
     property QtObject systemFavorites: rootModel.systemFavoritesModel
     property bool compositingEnabled: KWindowSystem.isPlatformX11 ? KX11Extras.compositingActive : true
@@ -84,6 +85,9 @@ PlasmoidItem {
 
     SidePanelModels {
         id: sidePanelModels
+    }
+    Styles {
+        id: startStyles
     }
 
     Kicker.WindowSystem {
@@ -197,7 +201,7 @@ PlasmoidItem {
     KSvg.FrameSvgItem {
         id : highlightItemSvg
         visible: false
-        imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
         prefix: "hover"
     }
     KSvg.FrameSvgItem {
@@ -207,12 +211,12 @@ PlasmoidItem {
     }
     KSvg.Svg {
         id: arrowsSvg
-        imagePath: Qt.resolvedUrl("svgs/arrows.svgz")
+        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "arrows.svgz")
         size: "16x16"
     }
     KSvg.Svg {
         id: separatorSvg
-        imagePath: Qt.resolvedUrl("svgs/sidebarseparator.svg")
+        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "sidebarseparator.svg")
     }
     KSvg.Svg {
         id: lockScreenSvg

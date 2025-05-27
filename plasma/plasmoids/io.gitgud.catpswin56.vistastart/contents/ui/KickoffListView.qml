@@ -170,6 +170,7 @@ FocusScope {
             id: listView
             property bool isFavorites: false
             property bool inhibitMouseEvents: false
+            property int delegateHeight: 0
             cacheBuffer: 2500
             move: Transition {}
             moveDisplaced: Transition {}
@@ -202,6 +203,8 @@ FocusScope {
                 readonly property bool expanded: delegateItem.expanded
                 readonly property int childCount: colRepeater.count
                 spacing: 0
+
+                onHeightChanged: listView.delegateHeight = delegateItem.implicitHeight
 
                 property int childIndex: -1
                 property var childItem: null

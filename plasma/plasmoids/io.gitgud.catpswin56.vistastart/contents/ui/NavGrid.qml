@@ -76,7 +76,9 @@ FocusScope {
     anchors.fill: parent
     anchors.topMargin: 13
     horizontalAlignment: Text.AlignHCenter
+    wrapMode: Text.WordWrap
     visible: listView.count === 0 && searching
+    color: startStyles.currentStyle.searchView.itemTextColor
   }
   ScrollView {
     id: scrollView

@@ -33,7 +33,7 @@ Item {
     property alias delegate: baseView.delegate
     property alias currentIndex: baseView.currentIndex;
     property alias count: baseView.count;
-    height: baseView.contentHeight
+    height: (listView.delegateHeight * Plasmoid.configuration.numberRows) + (listView.spacing * (listView.count - 1))
 
     objectName: "OftenUsedView"
     property ListView listView: baseView.listView

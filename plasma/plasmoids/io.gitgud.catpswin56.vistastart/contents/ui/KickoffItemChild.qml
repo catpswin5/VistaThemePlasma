@@ -141,7 +141,7 @@ Item {
         text: model.display
         elide: Text.ElideRight
         horizontalAlignment: Text.AlignLeft
-        color: "#000000"
+        color: startStyles.currentStyle.leftPanel.itemTextColor
     }
 
     PlasmaComponents.Label {
@@ -153,7 +153,7 @@ Item {
             top: titleElement.bottom
         }
         height: implicitHeight
-        color: "#000000"
+        color: startStyles.currentStyle.leftPanel.itemTextColor
         text: ""//model.description || ""
         opacity: listItem.isCurrent ? 0.8 : 0.6
         font: Kirigami.Theme.smallFont
@@ -173,7 +173,7 @@ Item {
 
     KSvg.FrameSvgItem {
         id: background
-        imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
         prefix: "hover"
         opacity: {
             if(ma.containsMouse) return 1;

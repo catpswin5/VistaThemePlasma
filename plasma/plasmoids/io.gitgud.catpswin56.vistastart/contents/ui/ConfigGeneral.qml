@@ -63,6 +63,8 @@ KCM.SimpleKCM {
     property string cfg_defaultInternetApp
     property string cfg_defaultEmailApp
 
+    property alias cfg_startStyle: startStyle.currentIndex
+
     component CustomGroupBox: GroupBox {
         id: gbox
         label: Label {
@@ -234,6 +236,29 @@ KCM.SimpleKCM {
                         onTextChanged: {
                             configGeneral.cfg_defaultEmailApp = text;
                         }
+                    }
+                }
+            }
+        }
+
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: i18n("Style")
+
+            ColumnLayout {
+                RowLayout {
+                    Label {
+                        text: i18n("Style to be used:")
+                    }
+
+                    ComboBox {
+                        id: startStyle
+
+                        model: [
+                            i18n("Vista"),
+                            i18n("Longhorn-like")
+                        ]
                     }
                 }
             }

@@ -38,30 +38,6 @@ Item {
   property string text: ""
   property string icon: ""
 
-  property bool highlighted: false
-  property bool isDraging: false
-  property bool canDrag: true
-  property bool canNavigate: false
-  signal highlightChanged
-  signal aboutToShowActionMenu(variant actionMenu)
-
-  function openActionMenu(x, y) {
-    aboutToShowActionMenu(actionMenu);
-    if(actionMenu.actionList.length === 0) return;
-    actionMenu.visualParent = allItem;
-    actionMenu.open(x, y);
-  }
-  function updateHighlight() {
-    if (navGrid.currentIndex == index){
-      highlighted = true
-    } else {
-      highlighted = false
-    }
-  }
-  function deselect(){
-    highlighted = false
-    listView.currentIndex = -1
-  }
   Kirigami.Icon {
     id: appicon
     anchors.left: parent.left
@@ -81,7 +57,7 @@ Item {
     text: parent.text
     font.underline: ma.containsMouse
     elide: Text.ElideRight
-    color: "#003963"
+    color: startStyles.currentStyle.searchView.linksColor
   }
   
   KickoffHighlight {
@@ -93,28 +69,6 @@ Item {
     z: -1
   }
 
-  Timer {
-    id: toolTipTimer
-    interval: Kirigami.Units.longDuration*4
-    onTriggered: {
-      toolTip.showToolTip();
-    }
-  }
-  PlasmaCore.ToolTipArea {
-    id: toolTip
-
-    anchors {
-      fill: parent
-    }
-
-    active: appname.truncated
-    interactive: false
-    /*location: (((Plasmoid.location === PlasmaCore.Types.RightEdge)
-     *   || (Qt.application.layoutDirection === Qt.RightToLeft))
-     *   ? PlasmaCore.Types.RightEdge : PlasmaCore.Types.LeftEdge)*/
-
-    mainText: appname.text
-  }
   MouseArea {
       id: ma
       anchors.fill: parent
@@ -123,61 +77,5 @@ Item {
       acceptedButtons: Qt.LeftButton | Qt.RightButton
       cursorShape: Qt.PointingHandCursor
       hoverEnabled: true
-      onClicked: mouse => {
-          if (mouse.button == Qt.RightButton) {
-            if (allItem.hasActionList) {
-              var mapped = mapToItem(allItem, mouse.x, mouse.y);
-              allItem.openActionMenu(mapped.x, mapped.y);
-            }
-          } else {
-            trigger()
-          }
-        
-      }
-      onReleased: {
-        isDraging: false
-      }
-      // to prevent crashing
-      onEntered: {
-        if(parent.parent) {
-          listView.currentIndex = index;
-
-        }
-        toolTipTimer.start();
-      }
-      onExited: {
-        if(parent.parent)  {
-          listView.currentIndex = -1;
-          toolTipTimer.stop();
-          toolTip.hideToolTip();
-        }
-
-      }
-      onPositionChanged: {
-        isDraging = pressed
-        if (pressed && canDrag){
-          if ("pluginName" in model) {
-            dragHelper.startDrag(kicker, model.url, model.decoration,
-                "text/x-plasmoidservicename", model.pluginName);
-          } else {
-            dragHelper.startDrag(kicker, model.url, model.icon);
-          }
-        }
-        listView.currentIndex = containsMouse ? index : -1
-        /*if (containsMouse) {
-          if (canNavigate) {
-            listView.currentIndex = index
-            //listView.focus = true
-          }
-        }*/
-      }
-  }
-  ActionMenu {
-      id: actionMenu
-
-      onActionClicked: (actionId, actionArgument) => {
-          visualParent.actionTriggered(actionId, actionArgument);
-          //root.toggle()
-      }
   }
 }

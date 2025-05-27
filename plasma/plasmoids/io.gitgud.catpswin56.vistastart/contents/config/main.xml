@@ -109,6 +109,11 @@
       <default>false</default>
     </entry>
 
+    <entry name="startStyle" type="int">
+      <label>Which style will be used. 0 = Vista, 1 = Longhorn-like</label>
+      <default>0</default>
+    </entry>
+
     <entry name="favoritesPortedToKAstats" type="Bool">
       <label>Are the favorites ported to use KActivitiesStats to allow per-activity favorites</label>
       <default>false</default>
