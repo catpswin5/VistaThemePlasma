@@ -45,7 +45,7 @@ QtObject {
             rightPanel: {
                 textureVisible: false,
 
-                topMargin: (kicker.compositingEnabled && !kicker.dashWindow.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 + Kirigami.Units.smallSpacing : 0) + Kirigami.Units.mediumSpacing,
+                topMargin: (kicker.compositingEnabled && !kicker.dashWindow.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 + Kirigami.Units.smallSpacing : 0) + (Kirigami.Units.smallSpacing - 1),
                 rightMargin: 5,
 
                 itemTextColor: "white",

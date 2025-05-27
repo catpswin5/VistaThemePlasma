@@ -95,6 +95,8 @@ PlasmaCore.Dialog {
 	property alias m_delayTimer: delayTimer
 	property alias dialogBackgroundTexture: dialogBackground
 
+	property SidePanelItemDelegate m_recentsSidePanelItem
+
 	function setFloatingAvatarPosition()  {
 		// It's at this point where everything actually gets properly initialized and we don't have to worry about
 		// random unpredictable values, so we can safely allow the popup icon to show up.
@@ -211,7 +213,7 @@ PlasmaCore.Dialog {
 		: nonCompositingIcon.height); // no compositing
 
 		property int mainPanelHeight: leftSidebar.height + bottomControls.height
-		property int sidePanelHeight: 45 + columnItems.height + extraPadding
+		property int sidePanelHeight: /*45 + */columnItems.height + extraPadding
 
         Layout.minimumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377) + Kirigami.Units.smallSpacing/2 + Kirigami.Units.mediumSpacing*2
         Layout.maximumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377) + Kirigami.Units.smallSpacing/2 + Kirigami.Units.mediumSpacing*2
@@ -409,33 +411,13 @@ PlasmaCore.Dialog {
         PlasmaExtras.Menu {
 			id: contextMenu
 			visualParent: moreBtn
-			placement: {
-				switch (Plasmoid.location) {
-					case PlasmaCore.Types.LeftEdge:
-					case PlasmaCore.Types.RightEdge:
-					case PlasmaCore.Types.TopEdge:
-						return PlasmaExtras.Menu.BottomPosedRightAlignedPopup;
-					case PlasmaCore.Types.BottomEdge:
-					default:
-						return PlasmaExtras.Menu.RightPosedBottomAlignedPopup;
-				}
-			}
+			placement: PlasmaExtras.Menu.RightPosedTopAlignedPopup
 		}
 
 		PlasmaExtras.Menu {
 			id: fileUsageMenu
-			visualParent: recentsItem
-			placement: {
-				switch (Plasmoid.location) {
-					case PlasmaCore.Types.LeftEdge:
-					case PlasmaCore.Types.RightEdge:
-					case PlasmaCore.Types.TopEdge:
-						return PlasmaExtras.Menu.BottomPosedRightAlignedPopup;
-					case PlasmaCore.Types.BottomEdge:
-					default:
-						return PlasmaExtras.Menu.RightPosedBottomAlignedPopup;
-				}
-			}
+			visualParent: m_recentsSidePanelItem
+			placement: PlasmaExtras.Menu.RightPosedTopAlignedPopup
 		}
 
 		KSvg.FrameSvgItem {
@@ -1132,6 +1114,7 @@ PlasmaCore.Dialog {
 					model: sidePanelModels.secondCategory.length
 					visible: false // Messes with separator visibility checks
 					delegate: SidePanelItemDelegate {
+						id: delgate
 						required property int index
 						itemText: sidePanelModels.secondCategory[index].itemText
 						itemIcon: sidePanelModels.secondCategory[index].itemIcon
@@ -1144,6 +1127,7 @@ PlasmaCore.Dialog {
 							separator2.updateVisibility();
 						}
 						Layout.fillWidth: true
+						Component.onCompleted: if(itemText == i18n("Recent Items")) m_recentsSidePanelItem = delgate;
 					}
 
 				}
