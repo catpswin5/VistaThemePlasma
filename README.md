@@ -34,7 +34,7 @@ Many thanks to the people who helped out by testing and providing some suggestio
 - [AngelBruni](https://github.com/angelbruni) for the SVG Vista taskbar texture
 - [ThePhantom](https://github.com/ThePhantom6314) for remaking the task item textures and power button glyphs in SVG
 - [aeoe](https://gitgud.io/aeoe) for fixing a minor issue with the VistaStart dialog texture
-- [furkrn](https://gitgud.io/furkrn) for the Vista version of [PlymouthXP](https://github.com/blacklightpy/PlymouthXP)
+- [furkrn](https://gitgud.io/furkrn) for creating a [Vista version](https://github.com/furkrn/PlymouthVista) of [PlymouthXP](https://github.com/blacklightpy/PlymouthXP) and maintaining it
 - [xodus2002](https://github.com/xodus2002) for the Glass, Pearl and Tinker sound themes from Windows Ultimate Extras
 
 

@@ -263,7 +263,7 @@ FocusScope {
                     case(0):
                         return "Build 6003";
                     case(1):
-                        return "Build 1/5/2025";
+                        return "Build 27/5/2025";
                     case(2):
                         return Plasmoid.configuration.customText2;
                 }
@@ -784,7 +784,7 @@ FocusScope {
                             listItemSvg.margins.top + listItemSvg.margins.bottom)) / 2) * 2;
                     } else {
                         // the smallSpacings are for padding
-                        var iconHeight = iconSize + (Kirigami.Units.iconSizes.small * Plasmoid.configuration.textLines) + (Kirigami.Units.smallSpacing * 2);
+                        var iconHeight = iconSize + (Kirigami.Units.iconSizes.small * Plasmoid.configuration.textLines) + Kirigami.Units.smallSpacing;
                         if (root.isContainment && isRootView && scrollArea.viewportHeight > 0) {
                             var extraHeight = calcExtraSpacing(iconHeight, scrollArea.viewportHeight);
                             return iconHeight + extraHeight;

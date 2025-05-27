@@ -362,6 +362,7 @@ ContainmentItem {
                 id: folderViewLayer
 
                 anchors.fill: parent
+                anchors.topMargin: root.availableScreenRect.y > 0 ? -4 : 0
 
                 property bool ready: status === Loader.Ready
                 property Item view: item?.view ?? null
