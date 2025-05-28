@@ -208,12 +208,12 @@ PlasmaCore.Dialog {
 		Layout.maximumWidth: Math.max(397, root.cellWidth + Kirigami.Units.mediumSpacing + columnItems.width) + startStyles.currentStyle.panelSpacing
 
 		property int extraPadding: (compositingEnabled
-		? (Plasmoid.location != PlasmaCore.Types.TopEdge ? Kirigami.Units.iconSizes.huge / 2 - Kirigami.Units.smallSpacing*4
-		: nonCompositingIcon.height) // top panel
+		? (!root.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 - Kirigami.Units.smallSpacing*4
+		: nonCompositingIcon.height-15) // top panel
 		: nonCompositingIcon.height); // no compositing
 
 		property int mainPanelHeight: leftSidebar.height + bottomControls.height
-		property int sidePanelHeight: /*45 + */columnItems.height + extraPadding
+		property int sidePanelHeight: 45 + columnItems.height + extraPadding
 
         Layout.minimumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377) + Kirigami.Units.smallSpacing/2 + Kirigami.Units.mediumSpacing*2
         Layout.maximumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377) + Kirigami.Units.smallSpacing/2 + Kirigami.Units.mediumSpacing*2

@@ -218,7 +218,7 @@ ContainmentItem {
         height: parent.height
 
         visible: yAnimation.duration == 125 && y != Screen.height
-        y: root.sidebarCollapsed ? Screen.height : root.availableScreenRect.y
+        y: root.sidebarCollapsed ? Screen.height : 0
         Behavior on y {
             NumberAnimation { id: yAnimation; duration: 125 }
         }
