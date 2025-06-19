@@ -30,23 +30,16 @@ function adjustMargin(height, margin) {
     return margin;
 }
 
-function maxStripes() {
-    const length = tasks.vertical ? tasks.width : tasks.height;
-    const minimum = tasks.vertical ? preferredMinWidth() : preferredMinHeight();
-
-    return Math.min(tasks.plasmoid.configuration.maxStripes, Math.max(1, Math.floor(length / minimum)));
-}
-
 function optimumCapacity(width, height) {
     const length = tasks.vertical ? height : width;
     const maximum = tasks.vertical ? preferredTaskHeight() : preferredMaxWidth();
 
     if (!tasks.vertical) {
         //  Fit more tasks in this case, that is possible to cut text, before combining tasks.
-        return Math.ceil(length / maximum) * maxStripes() + 1;
+        return Math.ceil(length / maximum) + 1;
     }
 
-    return Math.floor(length / maximum) * maxStripes();
+    return Math.floor(length / maximum);
 }
 
 function preferredMinWidth() {

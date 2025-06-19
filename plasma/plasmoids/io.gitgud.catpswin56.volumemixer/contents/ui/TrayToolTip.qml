@@ -57,6 +57,7 @@ RowLayout {
             }
             opacity: 0.75
             visible: text !== ""
+            color: "black"
             maximumLineCount: 8
         }
     }
