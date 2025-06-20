@@ -5,10 +5,11 @@
 ## Introduction
 
 This is a fork of [WackyIdeas](https://gitgud.io/wackyideas/)' [AeroThemePlasma](https://gitgud.io/wackyideas/aerothemeplasma) which aims to recreate the look and feel of Windows Vista as much as possible on KDE Plasma, whilst adapting the design to fit in with modern features provided by KDE Plasma and Linux.
-It is still in heavy development and testing. VTP has been tested on:
+
+VTP is in constant development and testing. So far it has been tested on:
 
 1. Arch Linux x64 and other Arch derivatives
-2. Plasma 6.3.5, KDE Frameworks 6.14.0, Qt 6.9.0
+2. Plasma 6.4.0, KDE Frameworks 6.15.0, Qt 6.9.1
 3. 96 DPI scaling, single monitor
 4. X11, Wayland*
 
