@@ -87,70 +87,70 @@ Many thanks to the people who helped out by testing and providing some suggestio
 
 ### Desktop
 
-<img src="screenshots/desktop.png">
+![desktop](screenshots/desktop.png)
 
 ### Start Menu
 
-<img src="screenshots/start_menu.png">
-<img src="screenshots/start_menu_search.png">
-<img src="screenshots/start_menu_apps.png">
-<img src="screenshots/start_menu_openshell.png">
+![start_menu](screenshots/start_menu.png)
+![start_menu_search](screenshots/start_menu_search.png)
+![start_menu_apps](screenshots/start_menu_apps.png)
+![start_menu_openshell](screenshots/start_menu_openshell.png)
 
 ### Clock
 
-<img src="screenshots/clock.png">
+![clock](screenshots/clock.png)
 
 ### System Tray
 
-<img src="screenshots/battery.png">
-<img src="screenshots/network.png">
-<img src="screenshots/system_tray.png">
+![battery](screenshots/battery.png)
+![network](screenshots/network.png)
+![system_tray](screenshots/system_tray.png)
 
 ### Sound Mixer
 
-<img src="screenshots/volume.png">
-<img src="screenshots/volumemixer.png">
+![volume](screenshots/volume.png)
+![volumemixer](screenshots/volumemixer.png)
 
 ### Notifications 
 
-<img src="screenshots/notification.png">
-<img src="screenshots/notification-progress.png">
+![notification](screenshots/notification.png)
+![notification](screenshots/notification-progress.png)
 
 ### Desktop Icons 
 
-<img src="screenshots/icons.png">
+![icons](screenshots/icons.png)
 
 ### Lockscreen 
 
-<img src="screenshots/lockscreen.png">
+![lockscreen](screenshots/lockscreen.png)
 
 ### Alt-Tab Switcher
 
-<img src="screenshots/alt-tab.png">
+![alt-tab](screenshots/alt-tab.png)
 
 ### Colorization 
 
-<img src="screenshots/colorization.png">
+![colorization](screenshots/colorization.png)
 Regular colorization:
-<img src="screenshots/aeroblur.png">
+![aeroblur](screenshots/aeroblur.png)
 Basic colorization:
-<img src="screenshots/aeroblursimple.png">
+![aeroblursimple](screenshots/aeroblursimple.png)
 Maximized opaque colorization:
-<img src="screenshots/aeroblur_opaque.png">
+![aeroblur_opaque](screenshots/aeroblur_opaque.png)
 
 ### Decorations
 
-<img src="screenshots/decorations.png">
+![decorations](screenshots/decorations.png)
 
 ### Gadgets 
 
-<img src="screenshots/gadgets.png">
+![gadgets](screenshots/gadgets.png)
 
 ### Floorp
 
-<img src="screenshots/geckium.png">
+![geckium](screenshots/geckium.png)
 
 ### Taskbar
 
-<img src="screenshots/vistatasks-contextmenu.png">
-<img src="screenshots/vistatasks-window_preview.png">
+![vistatasks-contextmenu](screenshots/vistatasks-contextmenu.png)
+![vistatasks-contextmenu](screenshots/vistatasks-window_preview.png)

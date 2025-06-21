@@ -179,7 +179,7 @@ If SDDM fails to pick up on the cursor theme, go to System Settings -> Startup a
 7. In System Settings -> Keyboard -> Shortcuts, under KWin, disable the "Peek at Desktop" shortcut, and remap the "MinimizeAll" to Meta+D
 8. In System Settings -> Fonts, configure the fonts as shown here:
 
-<img src="screenshots/fontconfig.png">
+![fontconfig](screenshots/fontconfig.png)
 
 9. To add the gadgets sidebar, drag and drop the "Windows Sidebar" plasmoid from the "Add Widgets" menu into the desktop.
 
@@ -207,7 +207,7 @@ This section relates to the directories found inside the ``extras`` folder and i
 
 Application written in QtWidgets that's meant to replicate Windows's run dialog.
 
-<img src="screenshots/execbin.png">
+![execbin](screenshots/execbin.png)
 
 **Installation**
 
@@ -217,9 +217,13 @@ Application written in QtWidgets that's meant to replicate Windows's run dialog.
 
 **UAC-like Polkit** 
 
+# WARNING:
+
+## Installing random modifications to programs that deal with privilege escalation (giving sudo or root access to users) from unknown or untrustworthy sources is reckless and a giant security risk. Even though this modification to KDE's polkit authentication UI is purely cosmetic (and even hotfixes a [longstanding](https://bugs.kde.org/show_bug.cgi?id=448554) [issue](https://bugs.kde.org/show_bug.cgi?id=502763)), it's generally not recommended to modify sensitive applications such as this. If you don't know what you're doing, or do not trust the modified source code, do not install this particular component of VistaThemePlasma.
+
 KDE Polkit Agent modification to make it look more like Windows' UAC dialog.
 
-<img src="screenshots/uac-polkitagent.png">
+![uac-polkitagent](screenshots/uac-polkitagent.png)
 
 **Installation**
 
