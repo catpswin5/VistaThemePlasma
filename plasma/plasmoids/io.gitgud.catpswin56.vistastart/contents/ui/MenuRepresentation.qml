@@ -597,14 +597,7 @@ PlasmaCore.Dialog {
 					NumberAnimation { easing.type: Easing.Linear; duration: animationDuration }
 				}
 				opacity: !searching
-				// CrossFadeBehavior on textLabel {
-				// 	fadeDuration: Plasmoid.configuration.enableAnimations ? 200 : 0
-				// 	easingType: "Linear"
-				// }
-				// CrossFadeBehavior on svgArrow {
-				// 	fadeDuration: Plasmoid.configuration.enableAnimations ? 200 : 0
-				// 	easingType: "Linear"
-				// }
+
 				Layout.fillWidth: true
 				Layout.leftMargin: Kirigami.Units.smallSpacing
 				Layout.rightMargin: Kirigami.Units.smallSpacing
@@ -658,12 +651,19 @@ PlasmaCore.Dialog {
 				Layout.preferredHeight: allProgsBtn.implicitHeight + startStyles.currentStyle.allProgramsBtn.padding
 
 				KSvg.FrameSvgItem {
+					id: allPBNew
+
 					anchors.fill: parent
 
 					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
 					prefix: "new"
 
 					visible: root.newItemsCount > 0
+					opacity: !showingAllPrograms
+
+					Behavior on opacity {
+						NumberAnimation { easing.type: Easing.Linear; duration: animationDuration }
+					}
 				}
 
 				KSvg.FrameSvgItem {

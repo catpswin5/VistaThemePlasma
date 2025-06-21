@@ -191,6 +191,14 @@ Item {
                     completed = true;
                     if(visible) root.newItemsCount += 1
                 }
+
+                Rectangle {
+                    anchors.fill: parent
+
+                    color: "#ffe599"
+
+                    visible: listItem.smallIcon
+                }
             }
 
             KSvg.FrameSvgItem {
@@ -198,8 +206,6 @@ Item {
 
                 anchors {
                     fill: parent
-                    leftMargin: listItem.smallIcon ? Kirigami.Units.smallSpacing/2+1 : Kirigami.Units.smallSpacing
-                    rightMargin: listItem.smallIcon ? Kirigami.Units.smallSpacing/2+1 : Kirigami.Units.smallSpacing
                 }
 
                 imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")

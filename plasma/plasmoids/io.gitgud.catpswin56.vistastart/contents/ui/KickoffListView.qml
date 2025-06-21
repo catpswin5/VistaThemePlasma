@@ -168,7 +168,8 @@ FocusScope {
         id: scrollView
 
         anchors.fill: parent
-        anchors.rightMargin: scrollView.ScrollBar.vertical.visible ? 3 : 0
+        anchors.leftMargin: small ? 3 : 4
+        anchors.rightMargin: small ? 3 : 4
 
         ListView {
             id: listView
