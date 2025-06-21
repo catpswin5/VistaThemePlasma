@@ -174,7 +174,7 @@ Item {
 
                     color: "#ffe599"
 
-                    visible: listItem.smallIcon
+                    visible: listItem.smallIcon && startStyles.currentStyle.styleName === "Vista"
                 }
             }
 

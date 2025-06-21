@@ -77,17 +77,16 @@ Item {
     readonly property bool isDefaultEmailApp: isFavorites && Plasmoid.configuration.defaultEmailApp == model?.display
 
     readonly property string title: {
-        // return listView.currentIndex + "root : " + listItem.index + " childindex : " + listItem.childIndex
-        if(model) {
-            if(isDefaultInternetApp)
-                return i18n("Internet");
-            else if(isDefaultEmailApp)
-                return i18n("E-mail");
-            else
-                return model.display;
-        }
+        if(isDefaultInternetApp)
+            return i18n("Internet");
+        else if(isDefaultEmailApp)
+            return i18n("E-mail");
+        else
+            return model?.display ?? "";
     }
-    readonly property string subtitle: model?.display
+    readonly property string subtitle: model?.display ?? ""
+
+    readonly property bool isNew: model?.isNewlyInstalled ?? false
 
     onAboutToShowActionMenu: (actionMenu) => {
         var actionList = hasActionList ? model.actionList : [];
@@ -177,27 +176,14 @@ Item {
                 imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
                 prefix: "new"
 
-                visible: model?.isNewlyInstalled ?? false
-                onVisibleChanged: {
-                    if(completed) {
-                        if(visible)
-                            root.newItemsCount += 1;
-                        else
-                            root.newItemsCount -= 1;
-                    }
-                }
-
-                Component.onCompleted: {
-                    completed = true;
-                    if(visible) root.newItemsCount += 1
-                }
+                visible: listItem.isNew
 
                 Rectangle {
                     anchors.fill: parent
 
                     color: "#ffe599"
 
-                    visible: listItem.smallIcon
+                    visible: listItem.smallIcon && startStyles.currentStyle.styleName === "Vista"
                 }
             }
 

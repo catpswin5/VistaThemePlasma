@@ -97,7 +97,13 @@ PlasmaCore.Dialog {
 
 	property SidePanelItemDelegate m_recentsSidePanelItem
 
-	property int newItemsCount: 0
+	readonly property bool newItemsAvailable: {
+		for(var i = 0; i < appsView.count; i++) {
+			var item = appsView.listView.itemAtIndex(i);
+			if(item?.isNew) return true;
+		}
+		return false;
+	}
 
 	function setFloatingAvatarPosition()  {
 		// It's at this point where everything actually gets properly initialized and we don't have to worry about
@@ -658,7 +664,7 @@ PlasmaCore.Dialog {
 					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
 					prefix: "new"
 
-					visible: root.newItemsCount > 0
+					visible: root.newItemsAvailable
 					opacity: !showingAllPrograms
 
 					Behavior on opacity {
