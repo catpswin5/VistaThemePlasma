@@ -173,7 +173,7 @@ Item {
 
                 anchors.fill: background
 
-                imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
+                imagePath: Qt.resolvedUrl("svgs/" + (startStyles.currentStyle?.styleName ?? "Vista") + "/" + "menuitem.svg")
                 prefix: "new"
 
                 visible: listItem.isNew
@@ -183,7 +183,7 @@ Item {
 
                     color: "#ffe599"
 
-                    visible: listItem.smallIcon && startStyles.currentStyle.styleName === "Vista"
+                    visible: listItem.smallIcon && (startStyles.currentStyle?.styleName ?? "Vista") === "Vista"
                 }
             }
 
@@ -194,7 +194,7 @@ Item {
                     fill: parent
                 }
 
-                imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
+                imagePath: Qt.resolvedUrl("svgs/" + (startStyles.currentStyle?.styleName ?? "Vista") + "/" + "menuitem.svg")
                 prefix: "hover"
 
                 opacity: {
@@ -209,7 +209,7 @@ Item {
 
                 anchors {
                     left: parent.left
-                    leftMargin: listItem.appView ? (Kirigami.Units.mediumSpacing-1) : Kirigami.Units.smallSpacing*2-1
+                    leftMargin: listItem.appView ? (Kirigami.Units.mediumSpacing-1) : Kirigami.Units.smallSpacing
                     verticalCenter: parent.verticalCenter
                 }
 
@@ -242,14 +242,14 @@ Item {
                         || listItem.isDefaultEmailApp
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignLeft
-                    color: startStyles.currentStyle.leftPanel.itemTextColor
+                    color: startStyles.currentStyle?.leftPanel.itemTextColor ??  "black"
                 }
 
                 PlasmaComponents.Label {
                     id: subTitleElement
 
                     height: implicitHeight
-                    color: startStyles.currentStyle.leftPanel.itemTextColor
+                    color: startStyles.currentStyle?.leftPanel.itemTextColor ?? "black"
                     text: isDefaultEmailApp || isDefaultInternetApp ? listItem.subtitle : listItem.title
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignLeft

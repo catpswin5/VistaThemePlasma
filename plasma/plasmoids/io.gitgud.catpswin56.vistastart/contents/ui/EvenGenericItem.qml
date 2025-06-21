@@ -32,7 +32,7 @@ import "code/tools.js" as Tools
 Item {
   id: allItem
 
-  width: scrollView.availableWidth - Kirigami.Units.mediumSpacing
+  width: parent.width - Kirigami.Units.mediumSpacing
   height: Kirigami.Units.iconSizes.smallMedium
 
   property string text: ""
