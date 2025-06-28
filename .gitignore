@@ -6,10 +6,14 @@ plasma/plasmoids/src/quicklaunch_src/build
 plasma/plasmoids/src/volume_src/build
 kwin/decoration/build
 kwin/effects_cpp/kwin-effect-smodsnap-v2/build
+kwin/effects_cpp/kwin-effect-smodsnap-v2/build-wl
 kwin/effects_cpp/kde-effects-aeroglassblur/build
+kwin/effects_cpp/kde-effects-aeroglassblur/build-wl
 kwin/effects_cpp/smodglow/build
+kwin/effects_cpp/smodglow/build-wl
 kwin/effects_cpp/aeroglide/build
+kwin/effects_cpp/aeroglide/build-wl
 kwin/effects_cpp/startupfeedback/build
-extras/deprecated/win7-m2/src/m2tasks_src/build
+kwin/effects_cpp/startupfeedback/build-wl
 extras/extra-components/execbin/build
 extras/extra-components/uac-polkitagent/build
