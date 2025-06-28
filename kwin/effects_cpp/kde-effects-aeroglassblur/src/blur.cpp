@@ -149,10 +149,10 @@ BlurEffect::BlurEffect() : m_sharedMemory("kwinaero")
     }
 
     m_glowPass.sideGlowTexture = GLTexture::upload(QPixmap(QStringLiteral(":/effects/aeroblur/framecornereffect.png")));
-    m_glowPass.sideGlowTexture->setFilter(GL_LINEAR);
+    m_glowPass.sideGlowTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_glowPass.sideGlowTexture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_glowPass.sideGlowTexture_unfocus = GLTexture::upload(QPixmap(QStringLiteral(":/effects/aeroblur/framecornereffect-unfocus.png")));
-    m_glowPass.sideGlowTexture_unfocus->setFilter(GL_LINEAR);
+    m_glowPass.sideGlowTexture_unfocus->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_glowPass.sideGlowTexture_unfocus->setWrapMode(GL_CLAMP_TO_EDGE);
 
     initBlurStrengthValues();
@@ -499,7 +499,6 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
 {
     SurfaceInterface *surf = w->surface();
 
-    printf("Title: %s\n", w->caption().toStdString().c_str());
     if (surf) {
         windowBlurChangedConnections[w] = connect(surf, &SurfaceInterface::blurChanged, this, [this, w]() {
             if (w) {
@@ -693,6 +692,15 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     m_currentBlur = QRegion();
     m_currentScreen = effects->waylandDisplay() ? data.screen : nullptr;
 
+    // We can avoid checking for every window by evaluating the condition here
+    auto maximizedWindowsOnCurrentActivity = [&]() -> bool {
+        return std::find_if(m_maximizedWindows.begin(), m_maximizedWindows.end(),
+                            [](const EffectWindow *a) { return a->isOnCurrentDesktop() && a->isOnCurrentActivity(); }) != m_maximizedWindows.end();
+    };
+    if(m_maximizeColorization) {
+        m_maximizedWindowsInCurrentActivity = maximizedWindowsOnCurrentActivity();
+    }
+
     effects->prePaintScreen(data, presentTime);
 }
 
@@ -758,11 +766,11 @@ bool BlurEffect::scaledOrTransformed(const EffectWindow *w, int mask, const Wind
 bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
     QString windowClass = w->windowClass().split(' ')[0];
-    //printf("%d %s\n", w->windowType(), windowClass.toStdString().c_str());
+    //qCWarning(KWIN_BLUR) << w->windowClass();
+    //printf("%d %s %s %s\n", w->windowType(), windowClass.toStdString().c_str(), w->isSpecialWindow() ? "specil true" : "specil false", w->caption().toStdString().c_str());
     if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool()) {
         return false;
     }
-
 
     if (w->isOutline() || w->isDesktop() || (!w->isManaged() && !(windowClass == "plasmashell" || windowClass == "kwin_x11" || windowClass == "kwin_wayland"))) {
         return false;
@@ -783,6 +791,12 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 bool BlurEffect::shouldForceBlur(const EffectWindow *w) const
 {
     if ((!m_blurDocks && w->isDock()) || (!m_blurMenus && (w->isMenu() || w->isDropdownMenu() || w->isPopupMenu()))) {
+        return false;
+    }
+    // For some reason, the Alt+Tab window on Wayland is made up of two windows, one of which is completely empty
+    // and has an empty window class, and.. isn't a Wayland client???'
+    if(effects->waylandDisplay() && !w->isWaylandClient() && w->window()->resourceName() == "")
+    {
         return false;
     }
 
@@ -816,7 +830,7 @@ void BlurEffect::ensureReflectTexture()
 	}
 
 	m_reflectPass.reflectTexture = GLTexture::upload(textureImage);
-	m_reflectPass.reflectTexture->setFilter(GL_LINEAR);
+	m_reflectPass.reflectTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
 	m_reflectPass.reflectTexture->setWrapMode(GL_REPEAT);
 }
 
@@ -901,7 +915,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         renderInfo.textures.clear();
 
         for (size_t i = 0; i <= m_iterationCount; ++i) {
-            const QSize textureSize(std::max(1, deviceBackgroundRect.width() / (1 << i)), std::max(1, deviceBackgroundRect.height() / (1 << i)));
+            const QSize textureSize(std::max(1, backgroundRect.width() / (1 << i)), std::max(1, backgroundRect.height() / (1 << i)));
             auto texture = GLTexture::allocate(textureFormat, textureSize);
             if (!texture) {
                 qCWarning(KWIN_BLUR) << "Failed to allocate an offscreen texture";
@@ -1107,10 +1121,6 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
         projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
-        /*if(!winData.isNull())
-        {
-            projectionMatrix *= transformedMatrix;
-        }*/
 
         /*********************
          * COLORIZATION PASS *
@@ -1133,10 +1143,6 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         float g = m_aeroColorG;
         float b = m_aeroColorB;
 
-        if(w->isOnScreenDisplay())
-        {
-            bb *= 0.66;
-        }
 
         AeroPasses selectedPass = AeroPasses::AERO;
 
@@ -1145,8 +1151,22 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         bool basicCol = m_basicColorization;
         bool useTransparency = m_transparencyEnabled;
 
+        auto maximizedWindowsShareScreen = [&]() -> bool {
+            return std::find_if(m_maximizedWindows.begin(), m_maximizedWindows.end(),
+                                [&](const EffectWindow *a) { return a->screen() == w->screen(); }) != m_maximizedWindows.end();
+        };
         QString windowClass = w->windowClass().split(' ')[1];
-        bool opaqueMaximize = (maximizeState == MaximizeMode::MaximizeFull || (m_maximizedWindows.size() != 0 && w->isDock())) && m_maximizeColorization && windowClass != "kwin";
+        bool opaqueMaximize = false;
+        if(m_maximizeColorization) {
+            if(maximizeState != MaximizeMode::MaximizeFull && !w->isDock()) opaqueMaximize = false;
+            else if(!m_maximizedWindowsInCurrentActivity) opaqueMaximize = false;
+            else if (w->isDock()) {
+                if(maximizedWindowsShareScreen()) opaqueMaximize = true;
+            }
+            else opaqueMaximize = maximizeState == MaximizeMode::MaximizeFull && windowClass != "kwin" && w->caption() != "sevenstart-menurepresentation";
+        }
+
+        if(w->isOnScreenDisplay()) opaqueMaximize = true;
 
         if(opaqueMaximize)
         {
@@ -1224,12 +1244,12 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
             QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
             projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
-			
+            const auto scale = viewport.scale();
 
             m_reflectPass.shader->setUniform(m_reflectPass.mvpMatrixLocation, projectionMatrix);
-			m_reflectPass.shader->setUniform(m_reflectPass.screenResolutionLocation, QVector2D(screenSize.width(), screenSize.height()));
-			m_reflectPass.shader->setUniform(m_reflectPass.windowPosLocation, QVector2D(windowPos.x(), windowPos.y()));
-			m_reflectPass.shader->setUniform(m_reflectPass.windowSizeLocation, QVector2D(windowSize.width(), windowSize.height()));
+			m_reflectPass.shader->setUniform(m_reflectPass.screenResolutionLocation, QVector2D(screenSize.width() * scale, screenSize.height() * scale));
+			m_reflectPass.shader->setUniform(m_reflectPass.windowPosLocation, QVector2D(deviceBackgroundRect.x(), deviceBackgroundRect.y()));
+			m_reflectPass.shader->setUniform(m_reflectPass.windowSizeLocation, QVector2D(backgroundRect.width(), backgroundRect.height()));
 			m_reflectPass.shader->setUniform(m_reflectPass.opacityLocation, float(finalOpacity));
 			m_reflectPass.shader->setUniform(m_reflectPass.translateTextureLocation, m_translateTexture ? float(1.0) : float(0.0));
             m_reflectPass.shader->setUniform(m_reflectPass.colorMatrixLocation, colorMat);
@@ -1254,12 +1274,12 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
                 const auto scale = viewport.scale();
 
                 bool scaleY = false;
-                if(deviceBackgroundRect.height() != windowSize.height() && !scaledOrTransformed(w, mask, data)) scaleY = true;
+                if(backgroundRect.height() != windowSize.height() && !scaledOrTransformed(w, mask, data)) scaleY = true;
                 const QRectF pixelGeometry = snapToPixelGridF(scaledRect(QRectF(0, 0, glowTex->width(), glowTex->height()), scale));
                 m_glowPass.shader->setUniform(m_glowPass.mvpMatrixLocation, projectionMatrix);
             	m_glowPass.shader->setUniform(m_glowPass.opacityLocation, float(opacity*0.8));
-            	m_glowPass.shader->setUniform(m_glowPass.windowPosLocation, QVector2D(windowPos.x(), windowPos.y()));
-            	m_glowPass.shader->setUniform(m_glowPass.windowSizeLocation, QVector2D(windowSize.width(), windowSize.height()));
+            	m_glowPass.shader->setUniform(m_glowPass.windowPosLocation, QVector2D(deviceBackgroundRect.x(), deviceBackgroundRect.y()));
+            	m_glowPass.shader->setUniform(m_glowPass.windowSizeLocation, QVector2D(backgroundRect.width(), backgroundRect.height()));
             	m_glowPass.shader->setUniform(m_glowPass.textureSizeLocation, QVector2D(pixelGeometry.width(), pixelGeometry.height()));
             	m_glowPass.shader->setUniform(m_glowPass.scaleYLocation, scaleY);
                 m_glowPass.shader->setUniform(m_glowPass.colorMatrixLocation, colorMat);
@@ -1300,7 +1320,7 @@ QMatrix4x4 BlurEffect::colorMatrix(const float &brightness, const float &saturat
 bool BlurEffect::shouldHaveCornerGlow(const EffectWindow *w) const
 {
 	QString windowClass = w->windowClass().split(' ')[1];
-    if(w->isTooltip() || w->isSplash()) return false;
+    if(w->isOnScreenDisplay() || w->isTooltip() || w->isSplash()) return false;
     if(w->caption() == "sevenstart-menurepresentation" || (windowClass != "kwin" && w->isDock())) return false; // Disables panels and start menu
     return true;
 }

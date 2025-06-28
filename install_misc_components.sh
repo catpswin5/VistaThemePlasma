@@ -2,6 +2,11 @@
 
 CUR_DIR=$(pwd)
 
+if [[ -z "$(command -v tar)" ]]; then
+    echo "tar not found. Stopping."
+    exit
+fi
+
 TMP_DIR="/tmp/vtp"
 mkdir -p "$TMP_DIR"
 
@@ -82,7 +87,7 @@ if [ "$answer" != "${answer#[Yy]}" ] ;then
 fi
 echo "Done."
 
-echo "Do you want to install the Plymouth theme? (y/N) Requires Lucida Console and Segoe UI as system wide fonts."
+echo "Do you want to install the Plymouth theme? (y/N)"
 read answer
 if [ "$answer" != "${answer#[Yy]}" ] ;then
     if [[ -z "$(command -v git)" ]]; then
