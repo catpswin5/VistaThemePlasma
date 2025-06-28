@@ -449,11 +449,10 @@ MouseArea {
 
                     readonly property QtObject root: thumbnailRoot.root
 
+                    // center it instead due to the parent item rect being a little weird in height
                     anchors {
-                        bottom: parent.bottom
-                        bottomMargin: 2
-
-                        horizontalCenter: parent.horizontalCenter
+                        centerIn: parent
+                        verticalCenterOffset: (thumbnailHeight / 2) - (height / 2)
                     }
 
                     width: thumbnailWidth
@@ -477,7 +476,8 @@ MouseArea {
                     z: 1
                 }
 
-                Connections { // Reload the component when thumbnailRoot's windows property changes. This fixes a bug in which the thumbnail shows the wrong window.
+                // Reload the component when thumbnailRoot's windows property changes. This fixes a bug in which the thumbnail shows the wrong window.
+                Connections {
                     target: thumbnailRoot
                     function onWindowsChanged() {
                         thumbnailLoader.active = false;
