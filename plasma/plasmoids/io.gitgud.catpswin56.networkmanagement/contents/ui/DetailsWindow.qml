@@ -15,7 +15,7 @@ Window {
     id: detailsWindow
     title: networkName + " Status"
     color: "#f0f0f0"
-    property color borderColor: "#b4b4b4"
+    property color borderColor: "#898c95"
     property alias tabBar: tabs
     minimumWidth: 360
     maximumWidth: 360
@@ -78,8 +78,6 @@ Window {
         TabButton {
             width: contentItem.implicitWidth + Kirigami.Units.largeSpacing*2
             height: 21
-            bottomPadding: 2
-            topPadding: isCurrentIndex ? 0 : Kirigami.Units.smallSpacing+1
             spacing: 0
             property bool isCurrentIndex: (TabBar.index === tabs.currentIndex)
             contentItem: Text { // All this just to make the sizing correct
@@ -100,10 +98,9 @@ Window {
         TabButton {
             width: contentItem.implicitWidth + Kirigami.Units.largeSpacing*2
             height: 21
-            bottomPadding: 2
-            topPadding: isCurrentIndex ? 0 : Kirigami.Units.smallSpacing+1
-            property bool isCurrentIndex: (TabBar.index === tabs.currentIndex)
+            bottomPadding: 0
             spacing: 0
+            property bool isCurrentIndex: (TabBar.index === tabs.currentIndex)
             visible: detailsWindow.speedVisible
             Rectangle {
                 anchors.left: parent.left
@@ -130,7 +127,7 @@ Window {
         anchors.leftMargin: Kirigami.Units.mediumSpacing
         anchors.rightMargin: Kirigami.Units.mediumSpacing
         anchors.bottomMargin: Kirigami.Units.mediumSpacing+1
-        anchors.topMargin: Kirigami.Units.smallSpacing
+        anchors.topMargin: Kirigami.Units.smallSpacing/2
         z: -1
         border.color: detailsWindow.borderColor
         border.width: 1

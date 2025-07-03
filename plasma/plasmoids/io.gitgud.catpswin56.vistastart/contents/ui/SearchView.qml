@@ -91,7 +91,7 @@ Item {
         id: runnerGrid
         anchors.fill: parent
         property alias model: runnerGrid.triggerModel
-        triggerModel: kicker.runnerModel.count ? kicker.runnerModel.modelForRow(0) : null
+        triggerModel: kicker.runnerModel?.count ? kicker.runnerModel.modelForRow(0) : null
         MouseArea {
             id: mouseInhibitor
             anchors.fill: parent

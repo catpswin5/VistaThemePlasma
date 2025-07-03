@@ -95,6 +95,10 @@ PlasmaCore.Dialog {
 	property alias m_delayTimer: delayTimer
 	property alias dialogBackgroundTexture: dialogBackground
 
+	property SidePanelItemDelegate m_recentsSidePanelItem
+
+	readonly property bool newItemsAvailable: filteredNewItems.count > 0
+
 	function setFloatingAvatarPosition()  {
 		// It's at this point where everything actually gets properly initialized and we don't have to worry about
 		// random unpredictable values, so we can safely allow the popup icon to show up.
@@ -206,8 +210,8 @@ PlasmaCore.Dialog {
 		Layout.maximumWidth: Math.max(397, root.cellWidth + Kirigami.Units.mediumSpacing + columnItems.width) + startStyles.currentStyle.panelSpacing
 
 		property int extraPadding: (compositingEnabled
-		? (Plasmoid.location != PlasmaCore.Types.TopEdge ? Kirigami.Units.iconSizes.huge / 2 - Kirigami.Units.smallSpacing*4
-		: nonCompositingIcon.height) // top panel
+		? (!root.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 - Kirigami.Units.smallSpacing*4
+		: nonCompositingIcon.height-15) // top panel
 		: nonCompositingIcon.height); // no compositing
 
 		property int mainPanelHeight: leftSidebar.height + bottomControls.height
@@ -234,6 +238,17 @@ PlasmaCore.Dialog {
 			onTriggered: root.hideOnWindowDeactivate = true;
 		}
 
+		KItemModels.KSortFilterProxyModel {
+			id: filteredNewItems
+			sourceModel: kicker.rootModel
+
+			function containsNewItem(sourceRow, sourceParent) {
+				const isNewlyInstalledRole = sourceModel.KItemModels.KRoleNames.role("isNewlyInstalled");
+				const isNewlyInstalled = sourceModel.data(sourceModel.index(sourceRow, 0, sourceParent), isNewlyInstalledRole);
+				return isNewlyInstalled === true;
+			}
+			filterRowCallback: (sourceRow, sourceParent) => containsNewItem(sourceRow, sourceParent)
+		}
 
         KCoreAddons.KUser {   id: kuser  }  // Used for getting the username and icon.
         
@@ -409,33 +424,13 @@ PlasmaCore.Dialog {
         PlasmaExtras.Menu {
 			id: contextMenu
 			visualParent: moreBtn
-			placement: {
-				switch (Plasmoid.location) {
-					case PlasmaCore.Types.LeftEdge:
-					case PlasmaCore.Types.RightEdge:
-					case PlasmaCore.Types.TopEdge:
-						return PlasmaExtras.Menu.BottomPosedRightAlignedPopup;
-					case PlasmaCore.Types.BottomEdge:
-					default:
-						return PlasmaExtras.Menu.RightPosedBottomAlignedPopup;
-				}
-			}
+			placement: PlasmaExtras.Menu.RightPosedTopAlignedPopup
 		}
 
 		PlasmaExtras.Menu {
 			id: fileUsageMenu
-			visualParent: recentsItem
-			placement: {
-				switch (Plasmoid.location) {
-					case PlasmaCore.Types.LeftEdge:
-					case PlasmaCore.Types.RightEdge:
-					case PlasmaCore.Types.TopEdge:
-						return PlasmaExtras.Menu.BottomPosedRightAlignedPopup;
-					case PlasmaCore.Types.BottomEdge:
-					default:
-						return PlasmaExtras.Menu.RightPosedBottomAlignedPopup;
-				}
-			}
+			visualParent: m_recentsSidePanelItem
+			placement: PlasmaExtras.Menu.RightPosedTopAlignedPopup
 		}
 
 		KSvg.FrameSvgItem {
@@ -613,14 +608,7 @@ PlasmaCore.Dialog {
 					NumberAnimation { easing.type: Easing.Linear; duration: animationDuration }
 				}
 				opacity: !searching
-				// CrossFadeBehavior on textLabel {
-				// 	fadeDuration: Plasmoid.configuration.enableAnimations ? 200 : 0
-				// 	easingType: "Linear"
-				// }
-				// CrossFadeBehavior on svgArrow {
-				// 	fadeDuration: Plasmoid.configuration.enableAnimations ? 200 : 0
-				// 	easingType: "Linear"
-				// }
+
 				Layout.fillWidth: true
 				Layout.leftMargin: Kirigami.Units.smallSpacing
 				Layout.rightMargin: Kirigami.Units.smallSpacing
@@ -674,11 +662,29 @@ PlasmaCore.Dialog {
 				Layout.preferredHeight: allProgsBtn.implicitHeight + startStyles.currentStyle.allProgramsBtn.padding
 
 				KSvg.FrameSvgItem {
-					id: allProgramsButton
-					anchors.fill: parent
-					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
+					id: allPBNew
 
+					anchors.fill: parent
+
+					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
+					prefix: "new"
+
+					visible: root.newItemsAvailable
+					opacity: !showingAllPrograms
+
+					Behavior on opacity {
+						NumberAnimation { easing.type: Easing.Linear; duration: animationDuration }
+					}
+				}
+
+				KSvg.FrameSvgItem {
+					id: allProgramsButton
+
+					anchors.fill: parent
+
+					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
 					prefix: "hover"
+
 					opacity: {
 						if(allButtonsArea.containsMouse) return 1.0;
 						else if(allButtonsArea.focus) return 0.5;
@@ -1132,6 +1138,7 @@ PlasmaCore.Dialog {
 					model: sidePanelModels.secondCategory.length
 					visible: false // Messes with separator visibility checks
 					delegate: SidePanelItemDelegate {
+						id: delgate
 						required property int index
 						itemText: sidePanelModels.secondCategory[index].itemText
 						itemIcon: sidePanelModels.secondCategory[index].itemIcon
@@ -1144,6 +1151,7 @@ PlasmaCore.Dialog {
 							separator2.updateVisibility();
 						}
 						Layout.fillWidth: true
+						Component.onCompleted: if(itemText == i18n("Recent Items")) m_recentsSidePanelItem = delgate;
 					}
 
 				}

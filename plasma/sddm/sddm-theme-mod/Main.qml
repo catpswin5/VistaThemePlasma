@@ -1,19 +1,19 @@
-import QtQuick 2.15
-import SddmComponents 2.0
-import QtQuick.Layouts 1.15
-import Qt5Compat.GraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import QtQuick.Controls as QQC2
-import "SMOD" as SMOD
-//import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.plasma5support as Plasma5Support
+
+import org.kde.kirigami as Kirigami
 import org.kde.kitemmodels as KItemModels
 
-//import org.kde.plasma.workspace.components 2.0 as PW
-//import org.kde.plasma.private.keyboardindicator as KeyboardIndicator
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.plasma.plasma5support as Plasma5Support
+
+import SddmComponents
 import QtMultimedia
+
+import "SMOD" as SMOD
 
 Item
 {
@@ -23,11 +23,8 @@ Item
     LayoutMirroring.childrenInherit : true
 
     property bool m_forceUserSelect: config.boolValue("forceUserSelect")
-    property bool m_biggerUserFrame: config.boolValue("biggerUserFrame")
-    property bool m_biggerMultiUserFrame: config.boolValue("biggerMultiUserFrame")
 
-    enum LoginPage
-    {
+    enum LoginPage {
         Startup,
         SelectUser,
         Login,
@@ -36,8 +33,7 @@ Item
 
     // copied from sddm/src/greeter/UserModel.h because
     // it doesn't seem accessible via e.g. SDDM.UserModel.NameRole
-    enum UserRoles
-    {
+    enum UserRoles {
         NameRole = 257,
         RealNameRole,
         HomeDirRole,
@@ -45,232 +41,109 @@ Item
         NeedsPasswordRole
     }
 
-    Connections
-    {
+    Connections {
         target: sddm
 
-        function onLoginFailed()
-        {
+        function onLoginFailed() {
             password.text = ""
             pages.currentIndex = Main.LoginPage.LoginFailed
         }
     }
 
-    Keys.onEscapePressed:
-    {
-        if (pages.currentIndex === Main.LoginPage.Login && switchuser.enabled)
-        {
+    Keys.onEscapePressed: {
+        if(pages.currentIndex === Main.LoginPage.Login && switchuser.enabled) {
             password.text = ""
             pages.currentIndex = Main.LoginPage.SelectUser
-        }
-        else if (pages.currentIndex === Main.LoginPage.LoginFailed)
-        {
+        } else if(pages.currentIndex === Main.LoginPage.LoginFailed)
             pages.currentIndex = Main.LoginPage.Login
-        }
     }
 
-    Background
-    {
+    Background {
         id: background
+
         anchors.fill: parent
+
         fillMode: Image.Stretch
         source: Qt.resolvedUrl(config.stringValue("background"))
     }
+
     Timer {
         id: startupSoundDelay
+
         interval: config.boolValue("enableStartup") ? 250 : 20
         running: startupSound.playSound
-        onTriggered: {
-            startupSound.play()
-        }
+        onTriggered: startupSound.play()
     }
 
     MediaPlayer {
         id: startupSound
+
         property bool playSound: !executable.fileExists && config.boolValue("playSound")
+
         audioOutput: AudioOutput {}
-        //autoPlay: false
         source: "Assets/session-start.wav"
     }
-    Component
-    {
+
+    Component {
         id: userDelegate
 
-        Column
-        {
-            id: delegateColumn
-            width: listView.cellWidth
-            height: listView.cellHeight
-
-            Item
-            {
-                id: avatarparent
-                width: m_biggerMultiUserFrame ? 100 : 80
-                height: width
-
-                anchors.centerIn: parent
-
-                Item
-                {
-                    width: m_biggerMultiUserFrame ? 60 : 48
-                    height: width
-
-                    anchors.centerIn: parent
-
-                    Rectangle
-                    {
-                        id: maskmini
-
-                        anchors.fill: parent
-                        anchors.centerIn: parent
-                        radius: 2
-                        visible: false
-                    }
-
-                    LinearGradient {
-                        id: gradient
-                        anchors.fill: parent
-                        anchors.centerIn: parent
-                        z: -1
-                        start: Qt.point(0,0)
-                        end: Qt.point(gradient.width, gradient.height)
-                        gradient: Gradient {
-                            GradientStop { position: 0.0; color: "#eeecee" }
-                            GradientStop { position: 1.0; color: "#a39ea3" }
-                        }
-                    }
-                    Image
-                    {
-                        id: avatarmini
-
-                        property string m_fallbackPicture: "Assets/user.png"
-
-                        onStatusChanged:
-                        {
-                            if (avatarmini.status == Image.Error)
-                            {
-                                avatarmini.source = avatarmini.m_fallbackPicture;
-                            }
-                        }
-
-                        source: model.icon
-
-                        fillMode: Image.PreserveAspectCrop
-
-                        anchors.fill: parent
-                        anchors.centerIn: parent
-
-                        layer.enabled: true
-                        layer.effect: OpacityMask
-                        {
-                            maskSource: maskmini
-                        }
-                    }
-                }
-
-                Image
-                {
-                    id: avatarminiframe
-
-                    property bool m_hovered: false
-
-                    source:
-                    {
-                        if (m_biggerMultiUserFrame)
-                        {
-                            if (m_hovered && delegateColumn.focus)   return "Assets/12235.png"
-                            if (m_hovered && !delegateColumn.focus)  return "Assets/12233.png"
-                            if (!m_hovered && delegateColumn.focus)  return "Assets/12234.png"
-                            if (!m_hovered && !delegateColumn.focus) return "Assets/12237.png"
-                        }
-                        else
-                        {
-                            if (m_hovered && delegateColumn.focus)   return "Assets/12220.png"
-                            if (m_hovered && !delegateColumn.focus)  return "Assets/12218.png"
-                            if (!m_hovered && delegateColumn.focus)  return "Assets/12219.png"
-                            if (!m_hovered && !delegateColumn.focus) return "Assets/12222.png"
-                        }
-                    }
-                    anchors.fill: parent
-                    anchors.centerIn: parent
-                }
-            }
-
-            Text
-            {
-                text: (model.realName === "") ? model.name : model.realName
-                color: "white"
-                font.pixelSize: 12
-                //font.family: mainfont.name
-
-                renderType: Text.NativeRendering
-                font.hintingPreference: Font.PreferFullHinting
-                font.kerning: false
-                anchors.top: avatarparent.bottom
-                //anchors.topMargin: -3
-                anchors.horizontalCenter: avatarparent.horizontalCenter
-            }
-
-            MouseArea
-            {
-                anchors.fill: delegateColumn
-                hoverEnabled: true
-
-                onEntered:
-                {
-                    avatarminiframe.m_hovered = true
-                }
-                onExited:
-                {
-                    avatarminiframe.m_hovered = false
-                }
-            }
-
-            Keys.onReturnPressed:
-            {
-                if (focus)
-                {
+        SMOD.UserDelegate {
+            Keys.onReturnPressed: {
+                if(focus) {
                     let username = model.name
 
-                    if (username != null)
-                    {
+                    if(username != null) {
                         let realname = model.realName
                         let pic = model.icon
                         let needspassword = model.needsPassword
 
-                        if (needspassword)
-                        {
+                        if(needspassword) {
                             userNameLabel.text = realname
                             avatar.source = pic
 
                             listView.currentIndex = index
                             pages.currentIndex = Main.LoginPage.Login
                         }
-                        else
-                        {
-                            sddm.login(username, password.text, session.index)
-                        }
+                        else sddm.login(username, password.text, session.index)
                     }
                 }
             }
         }
     }
+
     Loader {
         id: inputPanel
-        state: "hidden"
+
         property bool active: false
-        readonly property bool keyboardActive: item ? item.active : false
+        readonly property bool keyboardActive: item?.active ?? false
+
         anchors {
             left: parent.left
             right: parent.right
-            bottom: background.bottom
+            bottom: parent.bottom
             leftMargin: Kirigami.Units.gridUnit*12
             rightMargin: Kirigami.Units.gridUnit*12
         }
+
+        state: "hidden"
+
+        onKeyboardActiveChanged: {
+            if (keyboardActive) {
+                inputPanel.z = 99;
+                Qt.inputMethod.show();
+                active = true;
+            } else {
+                //inputPanel.item.activated = false;
+                Qt.inputMethod.hide();
+                active = false;
+            }
+        }
+
         function showHide() {
             active = !active;
             inputPanel.item.activated = Qt.binding(() => { return active });
         }
+
         Component.onCompleted: {
             inputPanel.source = Qt.platform.pluginName.includes("wayland") ? "SMOD/VirtualKeyboard_wayland.qml" : "SMOD/VirtualKeyboard.qml"
 
@@ -289,97 +162,73 @@ Item
                 session.addAction(menuitem);
             }
         }
-        onKeyboardActiveChanged: {
-            if (keyboardActive) {
-                inputPanel.z = 99;
-                Qt.inputMethod.show();
-                active = true;
-            } else {
-                //inputPanel.item.activated = false;
-                Qt.inputMethod.hide();
-                active = false;
-            }
-        }
-
     }
 
-    StackLayout
-    {
+    StackLayout {
         id: pages
+
         anchors.fill: parent
         anchors.bottomMargin: inputPanel.active ? inputPanel.height : 0
 
-        onCurrentIndexChanged:
-        {
+        onCurrentIndexChanged: {
             if (currentIndex == Main.LoginPage.SelectUser)
-            {
                 listView.forceActiveFocus()
-            }
             else if (currentIndex == Main.LoginPage.Login)
-            {
                 password.forceActiveFocus()
-            }
             else if (currentIndex == Main.LoginPage.LoginFailed)
-            {
                 dismissButton.forceActiveFocus()
-            }
         }
 
-    Plasma5Support.DataSource {
-        id: executable
-        engine: "executable"
-        connectedSources: []
-        property bool read: false
-        property bool startupEnabled: !fileExists && config.boolValue("enableStartup");
-        property bool fileExists: false
-        onNewData: (sourceName, data) => {
-            var stdout = data["stdout"]
-            exited(stdout)
-            disconnectSource(sourceName) // cmd finished
-        }
-        function exec(cmd, r) {
-            executable.read = r;
-            if (cmd) {
-                connectSource(cmd)
+        Plasma5Support.DataSource {
+            id: executable
+            engine: "executable"
+            connectedSources: []
+            property bool read: false
+            property bool startupEnabled: !fileExists && config.boolValue("enableStartup");
+            property bool fileExists: false
+            onNewData: (sourceName, data) => {
+                var stdout = data["stdout"]
+                exited(stdout)
+                disconnectSource(sourceName) // cmd finished
             }
+            function exec(cmd, r) {
+                executable.read = r;
+                if (cmd) {
+                    connectSource(cmd)
+                }
+            }
+            signal exited(string stdout)
         }
-        signal exited(string stdout)
-    }
 
-    Connections {
-        target: executable
-        function onExited(stdout) {
-            if(executable.read) {
-                if(stdout.trim() !== "") { // If the file exists, do not play Vista boot animation
-                    executable.fileExists = true;
-                } else {
-                    executable.exec("touch /tmp/sddm.startup", false); // Create it to prevent multiple boot animations from happening
-                    if(startupSound.playSound) {
-                        startupSoundDelay.start()
+        Connections {
+            target: executable
+            function onExited(stdout) {
+                if(executable.read) {
+                    if(stdout.trim() !== "") { // If the file exists, do not play Vista boot animation
+                        executable.fileExists = true;
+                    } else {
+                        executable.exec("touch /tmp/sddm.startup", false); // Create it to prevent multiple boot animations from happening
+                        if(startupSound.playSound) {
+                            startupSoundDelay.start()
+                        }
+                        if(executable.startupEnabled) seqanimation.start();
+
                     }
-                    if(executable.startupEnabled) seqanimation.start();
-
                 }
             }
         }
-    }
 
         // for testing failed login
-        currentIndex: {
-            return executable.startupEnabled ? Main.LoginPage.Startup : Main.LoginPage.SelectUser
-        }
+        currentIndex: executable.startupEnabled ? Main.LoginPage.Startup : Main.LoginPage.SelectUser
 
         function startSingleUserMode() {
-
             let singleusermode = userModel.count < 2 && !m_forceUserSelect
 
-            if (singleusermode)
-            {
+            if (singleusermode) {
                 let index = 0;
                 let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole)
 
-                if (username != null)
-                {
+                if (username != null) {
                     let userDisplayName = userModel.data(userModel.index(index, 0), Main.UserRoles.RealNameRole)
                     let userPicture = userModel.data(userModel.index(index, 0), Main.UserRoles.IconRole)
 
@@ -394,202 +243,143 @@ Item
             return false;
         }
 
-        Component.onCompleted:
-        {
+        Component.onCompleted: {
             executable.exec("ls /tmp/sddm.startup", true); // Check if sddm.startup exists
             startSingleUserMode();
         }
-        Item
-        {
-            id: startupPage
-        }
 
-        Item
-        {
+        Item { id: startupPage }
+
+        Item {
             id: userlistpage
+
             anchors.fill: parent
 
-            GridView
-            {
+            GridView {
                 id: listView
+
                 anchors.centerIn: parent
+                anchors.verticalCenterOffset: count < 5 ? 72 : 0
 
-                anchors.verticalCenterOffset:
-                {
-                    if (count < 5)
-                    {
-                        return 72
-                    }
-                    else
-                    {
-                        return 0
-                    }
-                }
+                width: count < 5 ? cellWidth * count : cellWidth * 5
+                height: count > 5 ? cellHeight * 2 : cellHeight
 
-                width:
-                {
-                    if (count < 5)
-                    {
-                        return cellWidth * count
-                    }
-                    else
-                    {
-                        return cellWidth * 5
-                    }
-                }
-
-                height:
-                {
-                    if (count > 5)
-                    {
-                        return 200 * 2
-                    }
-                    else
-                    {
-                        return 200
-                    }
-                }
-
+                cellWidth: 200
+                cellHeight: 200
                 clip: true
                 interactive: true
                 keyNavigationEnabled: true
                 keyNavigationWraps: false
                 focus: true
                 boundsBehavior: Flickable.StopAtBounds
-
-                QQC2.ScrollBar.vertical: QQC2.ScrollBar {}
-
-                cellWidth: 200
-                cellHeight: 200
-
                 model: userModel
                 delegate: userDelegate
                 currentIndex: userModel.lastIndex
 
+                QQC2.ScrollBar.vertical: QQC2.ScrollBar {}
+
                 KeyNavigation.backtab: rebootButton
                 KeyNavigation.tab: accessbutton
 
-                MouseArea
-                {
+                MouseArea {
                     anchors.fill: parent
 
-                    onClicked: (mouse) =>
-                    {
+                    onClicked: (mouse) => {
                         let posInGridView = Qt.point(mouse.x, mouse.y)
                         let posInContentItem = mapToItem(listView.contentItem, posInGridView)
                         let index = listView.indexAt(posInContentItem.x, posInContentItem.y)
 
                         let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole)
 
-                        if (username != null)
-                        {
+                        if (username != null) {
                             let realname = userModel.data(userModel.index(index, 0), Main.UserRoles.RealNameRole)
                             let pic = userModel.data(userModel.index(index, 0), Main.UserRoles.IconRole)
                             let needspassword = userModel.data(userModel.index(index, 0), Main.UserRoles.NeedsPasswordRole)
 
-                            if (needspassword)
-                            {
+                            if (needspassword) {
                                 userNameLabel.text = realname == "" ? username : realname;
                                 avatar.source = pic
 
                                 listView.currentIndex = index
                                 pages.currentIndex = Main.LoginPage.Login
                             }
-                            else
-                            {
-                                sddm.login(username, password.text, session.index)
-                            }
+                            else sddm.login(username, password.text, session.index)
                         }
                     }
                 }
             }
         }
 
-        Item
-        {
+        Item {
             id: loginpage
 
-            Column
-            {
+            Column {
                 id: mainColumn
+
                 anchors.centerIn: parent
 
-                Item
-                {
+                Item {
                     id: userpic
 
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.horizontalCenterOffset: -1
                     anchors.bottom: parent.verticalCenter
-                    anchors.bottomMargin: m_biggerUserFrame ? -64 : -56
+                    anchors.bottomMargin: -56
 
-                    width: m_biggerUserFrame ? 238 : 190
+                    width: 190
                     height: width
 
-                    Item
-                    {
-                        width: m_biggerUserFrame ? 158 : 126
-                        height: width
-
+                    Item {
                         anchors.centerIn: parent
 
-                        Rectangle
-                        {
+                        width: 126
+                        height: width
+
+                        Rectangle {
                             id: mask
 
                             anchors.fill: parent
                             anchors.centerIn: parent
+
                             radius: 2
                             visible: false
                         }
 
                         LinearGradient {
                             id: gradient
+
                             anchors.fill: parent
                             anchors.centerIn: parent
-                            z: -1
+
                             start: Qt.point(0,0)
                             end: Qt.point(gradient.width, gradient.height)
                             gradient: Gradient {
                                 GradientStop { position: 0.0; color: "#eeecee" }
                                 GradientStop { position: 1.0; color: "#a39ea3" }
                             }
+
+                            z: -1
                         }
-                        Image
-                        {
+
+                        Image {
                             id: avatar
-
-                            fillMode: Image.PreserveAspectCrop
-
-                            source: ""
-
-                            property string defaultPic: "Assets/user.png"
-
-                            onStatusChanged:
-                            {
-                                if (avatar.status == Image.Error)
-                                {
-                                    avatar.source = avatar.defaultPic;
-                                }
-                            }
 
                             anchors.fill: parent
                             anchors.centerIn: parent
 
+                            fillMode: Image.PreserveAspectCrop
+                            source: ""
+
+                            onStatusChanged: if (avatar.status == Image.Error) avatar.source = "Assets/user/normal.png";
+
                             layer.enabled: true
-                            layer.effect: OpacityMask
-                            {
+                            layer.effect: OpacityMask {
                                 maskSource: mask
                             }
                         }
                     }
 
-                    Image
-                    {
-                        source: m_biggerUserFrame ? "Assets/12238.png" : "Assets/12223.png"
-                        anchors.fill: parent
-                        anchors.centerIn: parent
-                    }
+                    Image { anchors.fill: parent; source: "Assets/user/normal.png" }
                 }
 
 
@@ -601,25 +391,19 @@ Item
                     anchors.top: userpic.bottom
                     anchors.topMargin: 4
 
-                    QQC2.Label
-                    {
+                    QQC2.Label {
                         id: userNameLabel
 
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         text: ""
                         color: "white"
-
-                        //font.family: mainfont.name
                         font.pixelSize: 23
                         font.kerning: false
                         renderType: Text.NativeRendering
                         font.hintingPreference: Font.PreferVerticalHinting
-                        //font.weight: Font.Medium
                     }
-
-                    QQC2.TextField
-                    {
+                    QQC2.TextField {
                         id: password
 
                         anchors.top: userNameLabel.bottom
@@ -631,29 +415,21 @@ Item
 
                         leftPadding: 7
 
-                        font.pointSize:
-                        {
-                            if (password.length > 0)
-                            {
-                                return 7
-                            }
-
-                            return 9
-                        }
-                        //font.family: mainfont.name
-
+                        font.pointSize: password.length > 0 ? 7 : 9
                         placeholderTextColor: "#555"
-
-                        background: Image
-                        {
-                            source:
-                            {
-                                if (password.focus) return "Assets/input-focus.png"
-                                if (password.hovered) return "Assets/input-hover.png"
-                                return "Assets/input.png"
+                        background: BorderImage {
+                            border {
+                                top: 3
+                                bottom: 3
+                                left: 3
+                                right: 3
+                            }
+                            source: {
+                                if (password.focus) return "Assets/input/focus.png"
+                                if (password.hovered) return "Assets/input/hover.png"
+                                return "Assets/input/normal.png"
                             }
                         }
-
                         placeholderText: "Password"
                         selectByMouse: true
                         echoMode : TextInput.Password
@@ -661,29 +437,15 @@ Item
 
                         KeyNavigation.backtab: switchLayoutButton
                         KeyNavigation.tab: loginButton
-                        KeyNavigation.down:
-                        {
-                            if (switchuser.enabled)
-                            {
-                                return switchuser
-                            }
-                            else
-                            {
-                                return accessbutton
-                            }
-                        }
+                        KeyNavigation.down: switchuser.enabled ? switchuser : accessbutton
+
 
                         Keys.onPressed : (event) => {
-                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
-                            {
+                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 let index = listView.currentIndex
                                 let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole)
 
-                                if (username != null)
-                                {
-                                    sddm.login(username, password.text, session.index)
-                                }
-
+                                if (username != null) sddm.login(username, password.text, session.index)
                                 event.accepted = true
                             }
                             else if (
@@ -700,11 +462,14 @@ Item
                         }
                     }
                     RowLayout {
-                        spacing: 2
                         anchors.top: password.bottom
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.topMargin: 2
+
+                        spacing: 2
+
                         visible: keyboard.capsLock && password.visible
+
                         Image {
                             id: iconSmall
                             width: Kirigami.Units.iconSizes.small;
@@ -714,6 +479,7 @@ Item
                             sourceSize.width: iconSmall.width
                             sourceSize.height: iconSmall.height
                         }
+
                         QQC2.Label {
                             id: notificationsLabel
                             font.pointSize: 9
@@ -724,8 +490,7 @@ Item
                         }
                     }
 
-                    QQC2.Button
-                    {
+                    QQC2.Button {
                         id: loginButton
 
                         anchors.left: password.right
@@ -736,212 +501,165 @@ Item
                         width: 30
                         height: 30
 
-                        background: Image
-                        {
-                            source: loginButton.pressed ? "Assets/gopressed.png" : (loginButton.focus || loginButton.hovered ? "Assets/gohover.png" : "Assets/go.png")
+                        background: Image {
+                            source: loginButton.pressed ? "Assets/go/pressed.png" : (loginButton.focus || loginButton.hovered ? "Assets/go/hover.png" : "Assets/go/normal.png")
                         }
 
-                        onClicked:
-                        {
+                        onClicked: {
                             let index = listView.currentIndex
                             let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole)
 
-                            if (username != null)
-                            {
-                                sddm.login(username, password.text, session.index)
-                            }
+                            if (username != null) sddm.login(username, password.text, session.index)
                         }
 
                         KeyNavigation.backtab: password
-                        KeyNavigation.tab:
-                        {
-                            if (switchuser.enabled)
-                            {
-                                return switchuser
-                            }
-                            else
-                            {
-                                return accessbutton
-                            }
-                        }
-
-                        KeyNavigation.down:
-                        {
-                            if (switchuser.enabled)
-                            {
-                                return switchuser
-                            }
-                            else
-                            {
-                                return accessbutton
-                            }
-                        }
+                        KeyNavigation.tab: switchuser.enabled ? switchuser : accessbutton
+                        KeyNavigation.down: switchuser.enabled ? switchuser : accessbutton
                     }
                 }
-                QQC2.Button
-            {
-                id: switchuser
+                QQC2.Button {
+                    id: switchuser
 
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: userpic.bottom
-                anchors.topMargin: 124
-                //anchors.bottom: parent.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: userpic.bottom
+                    anchors.topMargin: 124
 
-                //anchors.bottomMargin: 332
+                    width: contentItem.width < 108 ? 108 : contentItem.width
+                    height: 28
 
-                width: 108
-                height: 28
+                    onClicked: {
+                        password.text = ""
+                        pages.currentIndex = Main.LoginPage.SelectUser
+                    }
 
-                background: Image
-                {
-                    source:
-                    {
-                        if (switchuser.pressed) return "Assets/switch-user-button-active.png"
-                        if (switchuser.hovered && switchuser.focus) return "Assets/switch-user-button-hover-focus.png"
-                        if (switchuser.hovered && !switchuser.focus) return "Assets/switch-user-button-hover.png"
-                        if (!switchuser.hovered && switchuser.focus) return "Assets/switch-user-button-focus.png"
-                        return "Assets/switch-user-button.png"
+                    background: BorderImage {
+                        border {
+                            top: 3
+                            bottom: 3
+                            left: 3
+                            right: 3
+                        }
+                        source: {
+                            if(switchuser.pressed) return "Assets/switchuser/pressed.png"
+                            if(switchuser.hovered && switchuser.focus) return "Assets/switchuser/hover-focus.png"
+                            if(switchuser.hovered && !switchuser.focus) return "Assets/switchuser/hover.png"
+                            if(!switchuser.hovered && switchuser.focus) return "Assets/switchuser/normal-focus.png"
+                            return "Assets/switchuser/normal.png"
+                        }
+                    }
+
+                    contentItem: Text {
+                        text: "Switch User"
+                        color: "white"
+                        font.pointSize: 11
+                        font.kerning: false
+                        renderType: Text.NativeRendering
+                        font.hintingPreference: Font.PreferFullHinting
+                        horizontalAlignment : Text.AlignHCenter
+                        verticalAlignment : Text.AlignVCenter
+                        bottomPadding: 3
+                        rightPadding: 6
+                        leftPadding: 6
+                    }
+
+                    KeyNavigation.backtab: password
+                    KeyNavigation.up: password
+                    KeyNavigation.tab: accessbutton
+                    KeyNavigation.down: accessbutton
+                    Keys.onReturnPressed: {
+                        clicked()
+                        event.accepted = true
                     }
                 }
-
-                contentItem: Text
-                {
-                    text: "Switch User"
-                    color: "white"
-
-                    //font.family: mainfont.name
-                    font.pointSize: 11
-                    font.kerning: false
-                    renderType: Text.NativeRendering
-                    font.hintingPreference: Font.PreferFullHinting
-
-
-                    horizontalAlignment : Text.AlignHCenter
-                    verticalAlignment : Text.AlignVCenter
-
-                    bottomPadding: 3
-                }
-
-                KeyNavigation.backtab: password
-                KeyNavigation.up: password
-                KeyNavigation.tab: accessbutton
-                KeyNavigation.down: accessbutton
-
-                onClicked:
-                {
-                    password.text = ""
-                    pages.currentIndex = Main.LoginPage.SelectUser
-                }
-
-                Keys.onReturnPressed:
-                {
-                    clicked()
-                    event.accepted = true
-                }
-            }
             }
 
 
         }
 
 
-        Item
-        {
+        Item {
             id: loginfailedpage
 
-            Keys.onEscapePressed:
-            {
+            Keys.onEscapePressed: {
                 pages.currentIndex = Main.LoginPage.Login
             }
 
-            Image
-            {
+            Image {
                 id: currentMessageIcon
 
                 anchors.right: currentMessage.left
-                anchors.verticalCenter: currentMessage.verticalCenter
-
-                anchors.verticalCenterOffset: -2
                 anchors.rightMargin: 11
+                anchors.verticalCenter: currentMessage.verticalCenter
+                anchors.verticalCenterOffset: -2
 
-                source: "Assets/dialog-error.png"
                 width: 32
                 height: 32
 
+                source: "Assets/dialog-error.png"
                 focus: false
-
                 smooth: false
             }
 
-            QQC2.Label
-            {
+            QQC2.Label {
                 id: currentMessage
 
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-
                 anchors.verticalCenterOffset: 126
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.horizontalCenterOffset: 14
+
+                width: implicitWidth
 
                 text: "The user name or password is incorrect."
                 renderType: Text.NativeRendering
                 Layout.alignment: Qt.AlignHCenter
                 font.pointSize: 9
-
                 focus: false
-
-                width: implicitWidth
                 color: "white"
                 horizontalAlignment: Text.AlignCenter
             }
 
-            QQC2.Button
-            {
+            QQC2.Button {
                 id: dismissButton
 
                 anchors.top: currentMessage.bottom
+                anchors.topMargin: 46
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                anchors.topMargin: 46
-
-                width: 93
+                width: contentItem.width < 93 ? 93 : contentItem.width
                 height: 28
 
-                background: Image
-                {
-                    source:
-                    {
-                        if (dismissButton.pressed) return "Assets/button-active.png"
-                        if (dismissButton.hovered && dismissButton.focus) return "Assets/button-hover-focus.png"
-                        if (dismissButton.hovered && !dismissButton.focus) return "Assets/button-hover.png"
-                        if (!dismissButton.hovered && dismissButton.focus) return "Assets/button-focus.png"
-                        return "Assets/button.png"
+                onClicked: pages.currentIndex = Main.LoginPage.Login
+
+                background: BorderImage {
+                    border {
+                        top: 3
+                        bottom: 3
+                        left: 3
+                        right: 3
+                    }
+                    source: {
+                        if(dismissButton.pressed) return "Assets/switchuser/pressed.png"
+                        if(dismissButton.hovered && dismissButton.focus) return "Assets/switchuser/hover-focus.png"
+                        if(dismissButton.hovered && !dismissButton.focus) return "Assets/switchuser/hover.png"
+                        if(!dismissButton.hovered && dismissButton.focus) return "Assets/switchuser/normal-focus.png"
+                        return "Assets/switchuser/normal.png"
                     }
                 }
 
-                contentItem: Text
-                {
+                contentItem: Text {
                     text: "OK"
                     color: "white"
-
-                    //font.family: mainfont.name
                     font.pointSize: 11
-
                     horizontalAlignment : Text.AlignHCenter
                     verticalAlignment : Text.AlignVCenter
                     renderType: Text.NativeRendering
-
                     bottomPadding: 3
-                    rightPadding: 1
+                    rightPadding: 6
+                    leftPadding: 6
                 }
 
-                onClicked:
-                {
-                    pages.currentIndex = Main.LoginPage.Login
-                }
-
-                Keys.onReturnPressed:
-                {
+                Keys.onReturnPressed: {
                     clicked()
                     event.accepted = true
                 }
@@ -949,48 +667,43 @@ Item
         }
     }
 
-    Image
-    {
+    Image {
         id: branding
+
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 23
         anchors.horizontalCenter: parent.horizontalCenter
+
         source: config.stringValue("branding")
         visible: pages.currentIndex != Main.LoginPage.Startup
     }
+
     SMOD.GenericButton {
-            id: switchLayoutButton
+        id: switchLayoutButton
 
-            property int currentIndex: keyboard.currentLayout
-            onCurrentIndexChanged: keyboard.currentLayout = currentIndex
+        property int currentIndex: keyboard.currentLayout
+        onCurrentIndexChanged: keyboard.currentLayout = currentIndex
 
-            anchors {
-                top: parent.top
-                topMargin: 5
-                left: parent.left
-                leftMargin: 7
-            }
-            implicitWidth: 35
-            implicitHeight: 28
-            label.font.pointSize: 9
-            label.font.capitalization: Font.AllUppercase
-            //focusPolicy: Qt.TabFocus
-            Accessible.description: i18ndc("plasma_lookandfeel_org.kde.lookandfeel", "Button to change keyboard layout", "Switch layout")
-            KeyNavigation.backtab: rebootButton
-            KeyNavigation.tab: pages.currentIndex === Main.LoginPage.SelectUser ? listView : password
-            KeyNavigation.down: pages.currentIndex === Main.LoginPage.SelectUser ? listView : password
-            /*PW.KeyboardLayoutSwitcher {
-                id: keyboardLayoutSwitcher
-
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton
-            }*/
-
-            text: keyboard.layouts[currentIndex].shortName
-            onClicked: currentIndex = (currentIndex + 1) % keyboard.layouts.length
-
-            visible: keyboard.layouts.length > 1 && pages.currentIndex != Main.LoginPage.Startup
+        anchors {
+            top: parent.top
+            topMargin: 5
+            left: parent.left
+            leftMargin: 7
         }
+        implicitWidth: 35
+        implicitHeight: 28
+        label.font.pointSize: 9
+        label.font.capitalization: Font.AllUppercase
+        Accessible.description: i18ndc("plasma_lookandfeel_org.kde.lookandfeel", "Button to change keyboard layout", "Switch layout")
+        KeyNavigation.backtab: rebootButton
+        KeyNavigation.tab: pages.currentIndex === Main.LoginPage.SelectUser ? listView : password
+        KeyNavigation.down: pages.currentIndex === Main.LoginPage.SelectUser ? listView : password
+
+        text: keyboard.layouts[currentIndex].shortName
+        onClicked: currentIndex = (currentIndex + 1) % keyboard.layouts.length
+
+        visible: keyboard.layouts.length > 1 && pages.currentIndex != Main.LoginPage.Startup
+    }
     QQC2.CheckBox
     {
         id: accessbutton
@@ -1008,137 +721,121 @@ Item
         indicator.width: 0
         indicator.height: 0
 
-        background: Image
-        {
-            source:
-            {
-                if (accessbutton.pressed) return "Assets/access-button-active.png"
-                if (accessbutton.hovered && accessbutton.focus) return "Assets/access-button-hover-focus.png"
-                if (accessbutton.hovered && !accessbutton.focus) return "Assets/access-button-hover.png"
-                if (!accessbutton.hovered && accessbutton.focus) return "Assets/access-button-focus.png"
-                return "Assets/access-button.png"
+        background: BorderImage {
+            border {
+                top: 3
+                bottom: 3
+                left: 3
+                right: 3
+            }
+            source: {
+                if(accessbutton.pressed) return "Assets/switchuser/pressed.png"
+                if(accessbutton.hovered && accessbutton.focus) return "Assets/switchuser/hover-focus.png"
+                if(accessbutton.hovered && !accessbutton.focus) return "Assets/switchuser/hover.png"
+                if(!accessbutton.hovered && accessbutton.focus) return "Assets/switchuser/normal-focus.png"
+                return "Assets/switchuser/normal.png"
             }
         }
 
-        contentItem: Item
-        {
+        contentItem: Item {
             anchors.centerIn: parent
 
             width: 24
             height: 24
 
-            Image
-            {
+            Image {
                 anchors.centerIn: parent
                 width: 24
                 height: 24
-                source: "Assets/12213.png"
+                source: "Assets/access-glyph.png"
                 smooth: false
             }
         }
 
         enabled: !session.visible
-        onToggled:
-        {
+        onToggled: {
             if(session.visible) session.close();
             else session.open();
-            //session.visible = !session.visible
-            //session.enabled = session.visible
         }
 
-        Keys.onReturnPressed:
-        {
+        Keys.onReturnPressed: {
             clicked()
             event.accepted = true
         }
 
-        KeyNavigation.backtab:
-        {
+        KeyNavigation.backtab: {
             if (pages.currentIndex === Main.LoginPage.SelectUser)
-            {
                 return listView
-            }
             else if (switchuser.enabled)
-            {
                 return switchuser
-            }
-
             return password
         }
 
-        KeyNavigation.up:
-        {
+        KeyNavigation.up: {
             if (pages.currentIndex === Main.LoginPage.Login && switchuser.enabled)
-            {
                 return switchuser
-            }
-
             return accessbutton
         }
 
         KeyNavigation.tab: shutdownButton
         KeyNavigation.right: shutdownButton
-        Item
-    {
-        anchors.bottom: parent.top
-        anchors.left: parent.left
-        //anchors.bottom: parent.bottom
-        anchors.bottomMargin: -32
-        //anchors.leftMargin: 94
 
-        visible: pages.currentIndex != Main.LoginPage.LoginFailed
-        enabled: visible
+        Item {
+            anchors.bottom: parent.top
+            anchors.left: parent.left
+            anchors.bottomMargin: -32
 
-        width: 128
-        height: 64
+            width: 128
+            height: 64
 
-        SMOD.Menu {
-            id: session
-            x: 0
-            y: -session.height + accessbutton.height + session.verticalPadding
-            index: sessionModel.lastIndex
+            visible: pages.currentIndex != Main.LoginPage.LoginFailed
+            enabled: visible
 
-            function changeVal() {
-                session.valueChanged(this.index);
-                session.index = this.index;
-            }
-            function isIndex() {
-                return session.index === this.index
-            }
-            Component.onCompleted: {
-                for(var i = 0; i < sessionModel.count; i++) {
-                    const NameRole = sessionModel.KItemModels.KRoleNames.role("name");
-                    const name = sessionModel.data(sessionModel.index(i, 0), NameRole);
-                    var menuitem = createMenuItem();
-                    menuitem.text = name;
-                    menuitem.index = i;
-                    var func = isIndex.bind({index: i});
-                    menuitem.checkable = true;
-                    menuitem.checked = Qt.binding(func);
-                    menuitem.triggered.connect(changeVal.bind({index: i}));
-                    session.addAction(menuitem);
+            SMOD.Menu {
+                id: session
+                x: 0
+                y: -session.height + accessbutton.height + session.verticalPadding
+                index: sessionModel.lastIndex
+
+                function changeVal() {
+                    session.valueChanged(this.index);
+                    session.index = this.index;
                 }
-            }
+                function isIndex() {
+                    return session.index === this.index
+                }
+                Component.onCompleted: {
+                    for(var i = 0; i < sessionModel.count; i++) {
+                        const NameRole = sessionModel.KItemModels.KRoleNames.role("name");
+                        const name = sessionModel.data(sessionModel.index(i, 0), NameRole);
+                        var menuitem = createMenuItem();
+                        menuitem.text = name;
+                        menuitem.index = i;
+                        var func = isIndex.bind({index: i});
+                        menuitem.checkable = true;
+                        menuitem.checked = Qt.binding(func);
+                        menuitem.triggered.connect(changeVal.bind({index: i}));
+                        session.addAction(menuitem);
+                    }
+                }
 
+            }
         }
     }
-    }
 
-    Item
-    {
+    Item {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.bottomMargin: 34
         anchors.rightMargin: 30
 
-        visible: pages.currentIndex != Main.LoginPage.LoginFailed && pages.currentIndex != Main.LoginPage.Startup
-        enabled: pages.currentIndex != Main.LoginPage.Startup
-
         width: 62
         height: 28
 
-        QQC2.Button
-        {
+        visible: pages.currentIndex != Main.LoginPage.LoginFailed && pages.currentIndex != Main.LoginPage.Startup
+        enabled: pages.currentIndex != Main.LoginPage.Startup
+
+        QQC2.Button {
             id: shutdownButton
 
             anchors.bottom: parent.bottom
@@ -1147,31 +844,27 @@ Item
             width: 38
             height: 28
 
-            background: Image
-            {
-                source:
-                {
-                    if (shutdownButton.pressed) return "Assets/power-active.png"
-                    if (shutdownButton.hovered && shutdownButton.focus) return "Assets/power-hover-focus.png"
-                    if (shutdownButton.hovered && !shutdownButton.focus) return "Assets/power-hover.png"
-                    if (!shutdownButton.hovered && shutdownButton.focus) return "Assets/power-focus.png"
-                    return "Assets/power.png"
+            background: Image {
+                source: {
+                    if (shutdownButton.pressed) return "Assets/power/left-pressed.png"
+                    if (shutdownButton.hovered && shutdownButton.focus) return "Assets/power/left-hover-focus.png"
+                    if (shutdownButton.hovered && !shutdownButton.focus) return "Assets/power/left-hover.png"
+                    if (!shutdownButton.hovered && shutdownButton.focus) return "Assets/power/left-normal-focus.png"
+                    return "Assets/power/left-normal.png"
                 }
             }
 
-            contentItem: Item
-            {
+            contentItem: Item {
                 anchors.centerIn: parent
 
                 width: 24
                 height: 24
 
-                Image
-                {
+                Image {
                     anchors.centerIn: parent
                     width: 24
                     height: 24
-                    source: "Assets/power-glyph.png"
+                    source: "Assets/power/power-glyph.png"
                     smooth: false
                 }
             }
@@ -1215,34 +908,33 @@ Item
             width: 20
             height: 28
 
-            background: Image
-            {
-                source:
-                {
-                    if (rebootButton.pressed) return "Assets/12301.png"
-                    if (rebootButton.hovered && rebootButton.focus) return "Assets/12298.png"
-                    if (rebootButton.hovered && !rebootButton.focus) return "Assets/12300.png"
-                    if (!rebootButton.hovered && rebootButton.focus) return "Assets/12299.png"
-                    return "Assets/12302.png"
+            background: Image {
+                source: {
+                    if (rebootButton.pressed) return "Assets/power/right-pressed.png"
+                    if (rebootButton.hovered && rebootButton.focus) return "Assets/power/right-hover-focus.png"
+                    if (rebootButton.hovered && !rebootButton.focus) return "Assets/power/right-hover.png"
+                    if (!rebootButton.hovered && rebootButton.focus) return "Assets/power/right-normal-focus.png"
+                    return "Assets/power/right-normal.png"
                 }
             }
 
-            contentItem: Item
-            {
+            contentItem: Item {
                 anchors.centerIn: parent
 
                 width: 9
                 height: 6
 
-                Image
-                {
+                Image {
                     anchors.centerIn: parent
+
                     width: 9
                     height: 6
-                    source: "Assets/power-glyph-arrow.png"
+
+                    source: "Assets/power/power-glyph-arrow.png"
                     smooth: false
                 }
             }
+
             enabled: !powerMenu.visible
             onClicked: {
                 if(powerMenu.visible) powerMenu.close();
@@ -1294,25 +986,20 @@ Item
 
             KeyNavigation.backtab: shutdownButton
             KeyNavigation.left: shutdownButton
-            KeyNavigation.up:
-            {
-                if (pages.currentIndex === Main.LoginPage.Login && switchuser.enabled)
-                {
-                    return switchuser
-                }
-
-                return rebootButton
-            }
-
+            KeyNavigation.up: pages.currentIndex === Main.LoginPage.Login && switchuser.enabled ? switchuser : rebootbutton
             KeyNavigation.tab: switchLayoutButton
         }
     }
-    Item
-    {
+
+    Item {
         id: startuppage
 
-        z: 99
         anchors.fill: parent
+
+        visible: executable.startupEnabled
+        opacity: 1
+        z: 99
+
         SequentialAnimation {
             id: seqanimation
             NumberAnimation { target: startuppage; property: "opacity"; to: 1;   duration: 220; easing.type: Easing.Linear }
@@ -1333,60 +1020,61 @@ Item
             NumberAnimation { target: startupanimation; property: "opacity"; to: 0; duration: 650; easing.type: Easing.OutQuad }
             PropertyAction { target: executable; property: "startupEnabled"; value: false }
         }
-        visible: executable.startupEnabled
-        opacity: 1
-        Rectangle
-        {
+
+        Rectangle {
             color: "black"
             anchors.fill: parent
         }
 
-        Item
-        {
+        Item {
             id: startupanimation
+
             property int progress: 0
+
             anchors.centerIn: parent
 
-            Image
-            {
+            Image {
                 id: startupimage
+
                 anchors.centerIn: parent
-                source: Qt.resolvedUrl("./Assets/17000")
+
+                source: Qt.resolvedUrl("./Assets/startup/1")
                 opacity: 0
             }
 
-            Image
-            {
+            Image {
                 id: startupimage2
+
                 anchors.centerIn: parent
-                source: Qt.resolvedUrl("./Assets/17001")
+
+                source: Qt.resolvedUrl("./Assets/startup/2")
                 opacity: 0
             }
 
-            Image
-            {
+            Image {
                 id: startupimage3
+
                 anchors.centerIn: parent
-                source: Qt.resolvedUrl("./Assets/17002")
+
+                source: Qt.resolvedUrl("./Assets/startup/3")
                 opacity: 0
             }
 
-            Image
-            {
+            Image {
                 id: startupimage4
+
                 anchors.centerIn: parent
-                source: Qt.resolvedUrl("./Assets/17003")
+
+                source: Qt.resolvedUrl("./Assets/startup/4")
                 opacity: 0
             }
 
         }
 
         // to hide the cursor
-        MouseArea
-        {
+        MouseArea {
             anchors.fill: parent
             cursorShape: Qt.BlankCursor
         }
     }
-
 }

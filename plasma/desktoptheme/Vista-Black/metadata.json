@@ -2,6 +2,9 @@
     "KPlugin": {
         "Authors": [
             {
+                "Name": "catpswin56"
+            },
+            {
                 "Email": "mirkogen@hotmail.it",
                 "Name": "Mirko Gennari"
             }
@@ -9,7 +12,7 @@
         "Category": "Plasma Theme",
         "Description": "Vista Black theme with glass effect and reflections",
         "EnabledByDefault": true,
-        "Id": "Vista Black",
+        "Id": "Vista-Black",
         "License": "GPL",
         "Name": "Vista Black",
         "Version": "1.0.88"

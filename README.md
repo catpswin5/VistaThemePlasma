@@ -5,14 +5,19 @@
 ## Introduction
 
 This is a fork of [WackyIdeas](https://gitgud.io/wackyideas/)' [AeroThemePlasma](https://gitgud.io/wackyideas/aerothemeplasma) which aims to recreate the look and feel of Windows Vista as much as possible on KDE Plasma, whilst adapting the design to fit in with modern features provided by KDE Plasma and Linux.
-It is still in heavy development and testing. VTP has been tested on:
+
+VTP is in constant development and testing. So far it has been tested on:
 
 1. Arch Linux x64 and other Arch derivatives
-2. Plasma 6.3.2, KDE Frameworks 6.11.0, Qt 6.8.2
+2. Plasma 6.4.0, KDE Frameworks 6.15.0, Qt 6.9.1
 3. 96 DPI scaling, single monitor
 4. X11, Wayland*
 
 *VistaThemePlasma currently lacks full Wayland support, which may result in Wayland-specific issues. 
+
+## This project overwrites a small number of [system](https://gitgud.io/catpswin56/vistathemeplasma/-/tree/master/misc/defaulttooltip) [files](https://gitgud.io/catpswin56/vistathemeplasma/-/tree/master/extras/extra-components/uac-polkitagent), it's always recommended to make backups of your system just in case. I am not responsible for broken systems, please proceed with caution.
+
+## Installation
 
 See [INSTALL.md](./INSTALL.md) for a quick install guide.
 
@@ -34,7 +39,7 @@ Many thanks to the people who helped out by testing and providing some suggestio
 - [AngelBruni](https://github.com/angelbruni) for the SVG Vista taskbar texture
 - [ThePhantom](https://github.com/ThePhantom6314) for remaking the task item textures and power button glyphs in SVG
 - [aeoe](https://gitgud.io/aeoe) for fixing a minor issue with the VistaStart dialog texture
-- [furkrn](https://gitgud.io/furkrn) for the Vista version of [PlymouthXP](https://github.com/blacklightpy/PlymouthXP)
+- [furkrn](https://gitgud.io/furkrn) for creating a [Vista version](https://github.com/furkrn/PlymouthVista) of [PlymouthXP](https://github.com/blacklightpy/PlymouthXP) and maintaining it
 - [xodus2002](https://github.com/xodus2002) for the Glass, Pearl and Tinker sound themes from Windows Ultimate Extras
 
 
@@ -82,70 +87,70 @@ Many thanks to the people who helped out by testing and providing some suggestio
 
 ### Desktop
 
-<img src="screenshots/desktop.png">
+![desktop](screenshots/desktop.png)
 
 ### Start Menu
 
-<img src="screenshots/start_menu.png">
-<img src="screenshots/start_menu_search.png">
-<img src="screenshots/start_menu_apps.png">
-<img src="screenshots/start_menu_openshell.png">
+![start_menu](screenshots/start_menu.png)
+![start_menu_search](screenshots/start_menu_search.png)
+![start_menu_apps](screenshots/start_menu_apps.png)
+![start_menu_openshell](screenshots/start_menu_openshell.png)
 
 ### Clock
 
-<img src="screenshots/clock.png">
+![clock](screenshots/clock.png)
 
 ### System Tray
 
-<img src="screenshots/battery.png">
-<img src="screenshots/network.png">
-<img src="screenshots/system_tray.png">
+![battery](screenshots/battery.png)
+![network](screenshots/network.png)
+![system_tray](screenshots/system_tray.png)
 
 ### Sound Mixer
 
-<img src="screenshots/volume.png">
-<img src="screenshots/volumemixer.png">
+![volume](screenshots/volume.png)
+![volumemixer](screenshots/volumemixer.png)
 
 ### Notifications 
 
-<img src="screenshots/notification.png">
-<img src="screenshots/notification-progress.png">
+![notification](screenshots/notification.png)
+![notification](screenshots/notification-progress.png)
 
 ### Desktop Icons 
 
-<img src="screenshots/icons.png">
+![icons](screenshots/icons.png)
 
 ### Lockscreen 
 
-<img src="screenshots/lockscreen.png">
+![lockscreen](screenshots/lockscreen.png)
 
 ### Alt-Tab Switcher
 
-<img src="screenshots/alt-tab.png">
+![alt-tab](screenshots/alt-tab.png)
 
 ### Colorization 
 
-<img src="screenshots/colorization.png">
+![colorization](screenshots/colorization.png)
 Regular colorization:
-<img src="screenshots/aeroblur.png">
+![aeroblur](screenshots/aeroblur.png)
 Basic colorization:
-<img src="screenshots/aeroblursimple.png">
+![aeroblursimple](screenshots/aeroblursimple.png)
 Maximized opaque colorization:
-<img src="screenshots/aeroblur_opaque.png">
+![aeroblur_opaque](screenshots/aeroblur_opaque.png)
 
 ### Decorations
 
-<img src="screenshots/decorations.png">
+![decorations](screenshots/decorations.png)
 
 ### Gadgets 
 
-<img src="screenshots/gadgets.png">
+![gadgets](screenshots/gadgets.png)
 
 ### Floorp
 
-<img src="screenshots/geckium.png">
+![geckium](screenshots/geckium.png)
 
 ### Taskbar
 
-<img src="screenshots/vistatasks-contextmenu.png">
-<img src="screenshots/vistatasks-window_preview.png">
+![vistatasks-contextmenu](screenshots/vistatasks-contextmenu.png)
+![vistatasks-contextmenu](screenshots/vistatasks-window_preview.png)

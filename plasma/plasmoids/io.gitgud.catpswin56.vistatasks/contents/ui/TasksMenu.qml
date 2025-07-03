@@ -16,6 +16,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.private.mpris as Mpris
+import org.kde.kwindowsystem
 
 import org.kde.taskmanager as TaskManager
 
@@ -66,8 +67,9 @@ PlasmaCore.Dialog {
     property bool alsoCloseTask: false
     property bool secondaryColumn: false
 
-    property color backgroundColorStatic: "#f0f0f0"
-    property color backgroundColorStatic2: "white"
+    property color backgroundColorStatic: "#f1f6fb"
+    property color backgroundColorGradient: "white"
+    property color borderColor: "#ccd9ea"
     property alias sliderAnimation: sliderAnimation
 
     // Functions inherited from the original ContextMenu
@@ -151,23 +153,35 @@ PlasmaCore.Dialog {
             tasksMenu.x = xpos;
         }
     }
+    onHeightChanged: {
+        if(KWindowSystem.isPlatformWayland) setPopupPosition();
+    }
+    function setPopupPosition() {
+        var globalPos = parent.mapToGlobal(tasks.x, tasks.y);
+        var screen = tasks.screenGeometry;
+
+        tasksMenu.y = globalPos.y - tasksMenu.height - ((menuitems.isEmpty() && KWindowSystem.isPlatformWayland) ? Kirigami.Units.smallSpacing*3 : 0); // Wayland bugs out with small jumplists for some reason
+
+        var parentPos = parent.mapToGlobal(taskX, taskY);
+        xpos = parentPos.x + taskWidth / 2;
+        tasksMenu.x = parentPos.x + taskWidth / 2;
+        xpos = parentPos.x +  taskWidth / 2 - Kirigami.Units.largeSpacing + 1;
+        xpos -= menuWidth / 2;
+        if(xpos <= screen.x) {
+            xpos = screen.x + Kirigami.Units.largeSpacing;
+            tasksMenu.x = screen.x + Kirigami.Units.largeSpacing;
+        }
+        if((xpos+tasksMenu.menuWidth) > (screen.x+screen.width)) {
+            xpos = screen.x + screen.width - tasksMenu.menuWidth - Kirigami.Units.largeSpacing*3;
+            tasksMenu.x = screen.x + screen.width - tasksMenu.menuWidth - Kirigami.Units.largeSpacing*3;
+        }
+        tasksMenu.x = xpos;
+
+    }
     // If the context menu is no longer visible (most often when it loses focus), close the menu.
     onVisibleChanged: {
         if(visible) {
-            var globalPos = parent.mapToGlobal(tasks.x, tasks.y);
-            tasksMenu.y = globalPos.y - tasksMenu.height;
-            //var diff = parent.mapToGlobal(tasksMenu.x, tasksMenu.y).x - tasksMenu.x;
-
-            var parentPos = parent.mapToGlobal(taskX, taskY);
-            xpos = parentPos.x + taskWidth / 2;
-            tasksMenu.x = parentPos.x + taskWidth / 2;
-            xpos = parentPos.x +  taskWidth / 2 - Kirigami.Units.largeSpacing + 1;
-            xpos -= menuWidth / 2;
-            if(xpos <= 0) {
-               xpos = Kirigami.Units.largeSpacing;
-               tasksMenu.x = Kirigami.Units.largeSpacing;
-            }
-            tasksMenu.x = xpos;
+            setPopupPosition();
         }
         else if(!visible) {
             tasksMenu.closeMenu();
@@ -175,7 +189,7 @@ PlasmaCore.Dialog {
     }
 
     onActiveChanged: {
-        if(!active) tasksMenu.close();
+        if(!active) tasksMenu.closeMenu();
     }
     // Set to Floating so that the borders are visible all the time, even when it is right next to another object.
     location: PlasmaCore.Types.Floating;
@@ -183,7 +197,7 @@ PlasmaCore.Dialog {
     function show() {
         loadDynamicLauncherActions(get(atm.LauncherUrlWithoutIcon));
         visible = true;
-        tasksMenu.y -= slide;
+        if(KWindowSystem.isPlatformX11) tasksMenu.y -= slide;
         opacity = 1;
         Qt.callLater(() => {Plasmoid.setMouseGrab(true, tasksMenu); tasksMenu.x = xpos;});
         if(xpos !== tasksMenu.x) tasksMenu.x = xpos;
@@ -192,7 +206,7 @@ PlasmaCore.Dialog {
     // Closes the menu gracefully, by first showing a fade out animation before freeing the object from memory.
     function closeMenu() {
         Plasmoid.disableBlurBehind(tasksMenu);
-        tasksMenu.y += slide;
+        if(KWindowSystem.isPlatformX11) tasksMenu.y += slide;
         opacity = 0;
         closeTimer.start();
     }
@@ -268,6 +282,8 @@ PlasmaCore.Dialog {
         var playerData = mpris2Source.playerForLauncherUrl(launcherUrl, get(atm.AppPid));
 
         if (playerData && playerData.canControl && !(get(atm.WinIdList) !== undefined && get(atm.WinIdList).length > 1)) {
+            var sepHeader = tasksMenu.newSeparator(menuitems);
+            sepHeader.menuText = i18n("Media");
             var menuItem = tasksMenu.newMenuItem(menuitems);
             menuItem.text = i18nc("Play previous track", "Previous Track");
             menuItem.icon = "media-skip-backward";
@@ -461,7 +477,6 @@ PlasmaCore.Dialog {
                 text: get(atm.AppName) === "" ? get(atm.Decoration) : get(atm.AppName)
                 icon: menuDecoration
                 onClicked: tasksModel.requestNewInstance(modelIndex)
-                isDefault: true
             }
 
             TasksMenuItemWrapper {
@@ -479,7 +494,6 @@ PlasmaCore.Dialog {
                     alsoCloseTask = true;
                     closeMenu();
                 }
-                isDefault: true
             }
             /*TasksMenuItemWrapper {
              *                id: testItem
@@ -505,7 +519,11 @@ PlasmaCore.Dialog {
                 rightMargin: 0
                 topMargin: 0
             }
-            color: backgroundColorStatic2
+            gradient: Gradient {
+                GradientStop { position: 0; color: backgroundColorStatic }
+                GradientStop { position: 0.5; color: backgroundColorGradient }
+                GradientStop { position: 1; color: backgroundColorStatic }
+            }
             z: -2
         }
         Rectangle {
@@ -520,28 +538,40 @@ PlasmaCore.Dialog {
                 topMargin: -4
             }
             Rectangle {
-                id: plasmoidFooterBorder2
+                id: bgStaticBorderLine
                 anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
                 }
-                color: "#dde0e2"
-                height: 2
-            }
-            Rectangle {
-                id: plasmoidFooterBorder1
-                anchors {
-                    top: parent.top
-                    topMargin: 1
-                    left: parent.left
-                    right: parent.right
+                height: Kirigami.Units.smallSpacing
+                gradient: Gradient {
+                    GradientStop { position: 0; color: borderColor }
+                    GradientStop { position: 1; color: "transparent"}
                 }
-                color: "white"
-                height: 1
             }
             z: -1
             color: backgroundColorStatic
+            visible: !menuitems.isEmpty();
+        }
+        Rectangle {
+            id: bgStaticGradient
+            anchors {
+                top: staticMenuItems.top
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                leftMargin: 0
+                rightMargin: 0
+                topMargin: -4
+            }
+            z: -1
+            gradient: Gradient {
+                GradientStop { position: 0; color: backgroundColorStatic }
+                GradientStop { position: 0.5; color: backgroundColorGradient }
+                GradientStop { position: 1; color: backgroundColorStatic }
+            }
+            visible: menuitems.isEmpty();
         }
         function decreaseItemIndex() {
             currentItemIndex--;
@@ -596,6 +626,8 @@ PlasmaCore.Dialog {
             else if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
                 if(currentItem !== null) {
                     currentItem.clicked();
+                    tasksMenu.closeMenu();
+
                 }
             }
 

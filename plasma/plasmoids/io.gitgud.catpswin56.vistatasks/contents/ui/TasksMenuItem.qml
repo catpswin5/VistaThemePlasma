@@ -28,7 +28,6 @@ Item {
     property var menuText: ""
     property bool selected: false
     property QtObject wrapperItem: tasksMenuItem.parent
-    property bool isDefault: false
 
     KSvg.FrameSvgItem {
         id: texture
@@ -49,6 +48,7 @@ Item {
         onClicked: {
             tasksMenu.setCurrentItem(wrapperItem);
             tasksMenuItem.clicked();
+            tasksMenu.closeMenu();
         }
         onPositionChanged: {
             tasksMenu.setCurrentItem(wrapperItem);
@@ -94,7 +94,7 @@ Item {
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         opacity: parent.enabled ? 1 : 0.75
-        color: isDefault ? "#4465a2" : "black"
+        color: "black"
         style: Text.Sunken
         styleColor: "transparent"
     }

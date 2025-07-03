@@ -1,180 +1,320 @@
 import QtQuick
 import QtQuick.Layouts
+
 import Qt5Compat.GraphicalEffects
 
 import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
+import org.kde.pipewire as PipeWire
+import org.kde.taskmanager as TaskManager
+import org.kde.kwindowsystem
+
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 import org.kde.plasma.private.mpris as Mpris
-
-import org.kde.pipewire as PipeWire
-import org.kde.taskmanager as TaskManager
-
-import org.kde.kwindowsystem
 
 MouseArea {
     id: thumbnailRoot
 
     property QtObject root
 
-    property var display: root.display
-    property var icon: root.icon
-    property var active: root.active
-    property var modelIndex: root.modelIndex
-    property var windows: root.windows
-    property var minimized: root.minimized
+    property bool isGroupDelegate: false
+    readonly property var captionAlignment: {
+        if(Plasmoid.configuration.thmbnlCaptionAlignment == 0) return Text.AlignLeft
+        if(Plasmoid.configuration.thmbnlCaptionAlignment == 1) return Text.AlignHCenter
+        if(Plasmoid.configuration.thmbnlCaptionAlignment == 2) return Text.AlignRight
+    }
 
-    property real x11ThumbnailWidth: 0
-    property real x11ThumbnailHeight: 0
+    readonly property var display: isGroupDelegate ? model.display : root.display
+    readonly property var icon: isGroupDelegate ? model.decoration : root.icon
+    readonly property var active: isGroupDelegate ? model.IsActive : root.active
+    readonly property var modelIndex: isGroupDelegate ? (tasksModel.makeModelIndex(root.taskIndex, index)) : root.modelIndex
+    readonly property var windows: isGroupDelegate ? model.WinIdList : root.windows
+    readonly property var minimized: isGroupDelegate ? model.IsMinimized : root.minimized
+    readonly property var demandsAttention: isGroupDelegate ? model.IsDemandingAttention : root.demandsAttention
 
-    width: thumbnailLoader.sourceComponent == appIcon || KWindowSystem.isPlatformWayland ? 174 + (Kirigami.Units.smallSpacing * 3) : x11ThumbnailWidth + (Kirigami.Units.smallSpacing * 3)
-    height: thumbnailLoader.sourceComponent == appIcon || KWindowSystem.isPlatformWayland ? 92 + (Kirigami.Units.smallSpacing * 3) : x11ThumbnailHeight + (Kirigami.Units.smallSpacing * 3)
+    readonly property bool extendedFunctionality: Plasmoid.configuration.extPreviewFunc
+
+    property real thumbnailWidth: 164
+    property real thumbnailHeight: 94
+
+    readonly property int margins: Kirigami.Units.smallSpacing * 3.5
+
+    implicitWidth: thumbnailWidth + margins
+    implicitHeight: thumbnailHeight + margins + (header.visible ? header.height+4 : 0)
+
+    onImplicitHeightChanged: if(isGroupDelegate) ListView.view.updateMaxSize()
+
+    width: implicitWidth
+    height: {
+        if(isGroupDelegate && ListView.view.maxThumbnailItem !== thumbnailRoot) {
+            console.log("hfisgisfigjiasfgjasofgdsojfoasdifjsioj" + ListView.view.maxThumbnailHeight + "_" + implicitHeight)
+            return ListView.view.maxThumbnailHeight;
+        }
+        else
+            return implicitHeight;
+    }
 
     hoverEnabled: true
     propagateComposedEvents: true
 
-    Timer {
-        id: primaryCloseTimer
-        interval: 0
-        running: !root.taskHovered && root.mainItem == thumbnailRoot
-        onTriggered: root.destroy();
-    }
+    component Close: KSvg.FrameSvgItem {
+        id: thumbnailClose
 
-    Timer {
-        id: secondaryCloseTimer
-        interval: 0
-        running: root.parentTask.contextMenu || root.parentTask.jumpList
-        onTriggered: root.destroy();
+        width: 14
+        height: width
+
+        imagePath: Qt.resolvedUrl("svgs/button-close.svg")
+        prefix: thumbnailCloseMa.containsMouse ? (thumbnailCloseMa.containsPress ? "pressed" : "hover") : "normal"
+
+        visible: opacity && Plasmoid.configuration.showPreviewClose && extendedFunctionality
+        opacity: (contentMa.containsMouse || thumbnailCloseMa.containsMouse)
+
+        Behavior on opacity {
+            NumberAnimation { duration: 250 }
+        }
+
+        MouseArea {
+            id: thumbnailCloseMa
+
+            anchors.fill: parent
+
+            hoverEnabled: true
+            propagateComposedEvents: true
+
+            onClicked: {
+                thumbnailRoot.closeTask();
+            }
+        }
     }
 
     Item {
-        id: thumbnail
+        id: frames
+
+        anchors.fill: content
+        anchors.margins: -Kirigami.Units.smallSpacing
+
+        visible: isGroupDelegate
+
+        KSvg.FrameSvgItem {
+            id: attentionTexture
+
+            anchors.fill: parent
+
+            imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+            prefix: "attention"
+
+            visible: demandsAttention
+            opacity: root.parentTask?.attentionAnimOpacity
+        }
+
+        KSvg.FrameSvgItem {
+            id: activeTexture
+
+            anchors.fill: parent
+
+            imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+            prefix: "active"
+
+            visible: active
+        }
+
+        KSvg.FrameSvgItem {
+            id: hoverTexture
+
+            anchors.fill: parent
+
+            imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+            prefix: {
+                if(contentMa.containsPress) return "pressed";
+                else return "hover";
+            }
+
+            opacity: contentMa.containsMouse
+
+            Behavior on opacity {
+                NumberAnimation { duration: 250 }
+            }
+        }
+    }
+
+    function closeTask() {
+        tasksModel.requestClose(modelIndex);
+        if(!isGroupDelegate) root.parentTask?.hideImmediately();
+    }
+    DropArea {
+        signal urlsDropped(var urls)
+
+        anchors.fill: parent
+
+        onPositionChanged: activationTimer.restart();
+        onEntered: root.containsDrag = true;
+        onExited: {
+            activationTimer.stop();
+            root.containsDrag = false;
+        }
+        onDropped: event => {
+            if (event.hasUrls) {
+                urlsDropped(event.urls);
+                return;
+            }
+        }
+        onUrlsDropped: (urls) => {
+            tasksModel.requestOpenUrls(modelIndex, urls);
+            root.containsDrag = false;
+        }
+
+        Timer {
+            id: activationTimer
+
+            interval: 250
+            repeat: false
+
+            onTriggered: tasksModel.requestActivate(modelIndex);
+        }
+
+        visible: isGroupDelegate
+    }
+
+    MouseArea {
+        id: contentMa
+
+        anchors.fill: content
+        anchors.margins: -Kirigami.Units.smallSpacing
+
+        hoverEnabled: true
+        propagateComposedEvents: true
+        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+        onContainsMouseChanged: {
+            if(Plasmoid.configuration.windowPeek) {
+                if(containsMouse) windowPeek.start();
+                else {
+                    windowPeek.stop();
+                    root.isPeeking = false;
+                    tasks.windowsHovered(thumbnailRoot.windows, false)
+                }
+            }
+        }
+        onClicked: (mouse) => {
+            if(mouse.button == Qt.LeftButton) {
+                tasksModel.requestActivate(modelIndex);
+                tasks.windowsHovered(thumbnailRoot.windows, false)
+                root.parentTask?.hideImmediately();
+            }
+            if(mouse.button == Qt.MiddleButton) {
+                thumbnailRoot.closeTask();
+            }
+        }
+    }
+
+    Timer {
+        id: windowPeek
+
+        interval: root.isPeeking ? 1 : 800
+        repeat: false
+        onTriggered: {
+            if(!minimized) {
+                tasks.windowsHovered(thumbnailRoot.windows, true);
+                root.isPeeking = true;
+            }
+        }
+    }
+
+    ColumnLayout {
+        id: content
 
         anchors.centerIn: parent
+        anchors.verticalCenterOffset: mprisControls.active ? -(mprisControls.height / 4) - 2 : 0
 
-        width: 172 - (Kirigami.Units.smallSpacing / 2)
-        height: 172 - (Kirigami.Units.smallSpacing * 2)
+        width: parent.width - margins
+        height: parent.height - margins - (mprisControls.active ? (mprisControls.height - (Kirigami.Units.smallSpacing*2)) : 0)
 
-        Loader {
-            id: thumbnailLoader
+        spacing: Kirigami.Units.smallSpacing
 
-            anchors.centerIn: parent
+        RowLayout {
+            id: header
 
-            height: sourceComponent != appIcon && !KWindowSystem.isPlatformWayland ? 172 : 92
-            width: sourceComponent != appIcon && !KWindowSystem.isPlatformWayland ? 172 : 174
+            Layout.fillWidth: true
+            Layout.minimumHeight: 16
+            Layout.maximumHeight: 16
 
-            active: true
-            asynchronous: true
-            sourceComponent: minimized ? appIcon : (KWindowSystem.isPlatformWayland ? waylandThumbnail : x11Thumbnail)
+            spacing: Kirigami.Units.smallSpacing
 
-            visible: true
+            visible: isGroupDelegate && extendedFunctionality
 
-            Component {
-                id: x11Thumbnail
+            Kirigami.Icon {
+                Layout.preferredHeight: 16
+                Layout.preferredWidth: 16
 
-                PlasmaCore.WindowThumbnail {
-                    id: windowThumbnailX11
-
-                    winId: windows[0]
-
-                    onPaintedSizeChanged: {
-                        thumbnailRoot.x11ThumbnailWidth = paintedWidth;
-                        thumbnailRoot.x11ThumbnailHeight = paintedHeight;
-                    }
-
-                    Rectangle {
-                        anchors.centerIn: parent
-
-                        width: parent.paintedWidth+2
-                        height: parent.paintedHeight+2
-
-                        color: "transparent"
-
-                        border.width: 1
-                        border.color: "black"
-
-                        opacity: 0.5
-                    }
-
-                    Rectangle {
-                        anchors.centerIn: parent
-
-                        width: parent.paintedWidth+4
-                        height: parent.paintedHeight+4
-
-                        color: "transparent"
-
-                        border.width: 1
-                        border.color: "white"
-                        radius: 2
-
-                        opacity: 0.5
-                    }
-                }
+                source: icon
             }
 
-            Component {
-                id: waylandThumbnail
+            Text {
+                id: txt
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                PipeWire.PipeWireSourceItem {
-                    id: pipeWireSourceItem
-
-                    nodeId: waylandItem.nodeId
-
-                    TaskManager.ScreencastingRequest {
-                        id: waylandItem
-
-                        uuid: windows[0]
-                    }
-
-                    Rectangle {
-                        anchors.centerIn: parent
-                        width: 174
-                        height: 92
-
-                        color: "black"
-
-                        border.width: 1
-                        border.color: "black"
-
-                        opacity: 0.5
-                        z: -1
-                    }
-                    Rectangle {
-                        anchors.centerIn: parent
-
-                        width: 176
-                        height: 94
-
-                        color: "transparent"
-
-                        border.width: 1
-                        border.color: "white"
-
-                        opacity: 0.5
-                        z: -1
-                    }
-                }
+                verticalAlignment: Text.AlignVCenter
+                text: display
+                color: "white"
+                elide: Text.ElideRight
+                wrapMode: Text.NoWrap
+                style: Text.Outline
+                styleColor: "#02ffffff"
+                horizontalAlignment: captionAlignment
             }
+        }
 
-            // Used when there's no thumbnail available.
-            Component {
-                id: appIcon
+        Item {
+            id: thumbnail
 
-                Item {
-                    Rectangle {
-                        anchors.fill: parent
+            Layout.minimumWidth: thumbnailWidth
+            Layout.minimumHeight: thumbnailHeight
+            Layout.fillHeight: true
 
-                        gradient: Gradient {
-                            GradientStop { position: 0; color: "#ffffff" }
-                            GradientStop { position: 1; color: "#cccccc" }
+            Loader {
+                id: thumbnailLoader
+
+                anchors.centerIn: parent
+
+                width: 164
+                height: 94
+
+                active: true
+                asynchronous: true
+                sourceComponent: minimized ? appIcon : (KWindowSystem.isPlatformWayland ? (tasks.toolTipOpen ? waylandThumbnail : undefined) : x11Thumbnail)
+
+                onLoaded: {
+                    // It IS possible to make the thumbnail follow
+                    // the Wayland thumbnail size but I suck
+                    // at math too much to know how
+                    if(sourceComponent !== x11Thumbnail) thumbnailRoot.thumbnailWidth = thumbnailLoader.width;
+                    if(sourceComponent !== x11Thumbnail) thumbnailRoot.thumbnailHeight = thumbnailLoader.height;
+                    if(isGroupDelegate && ListView.view !== null) ListView.view.updateMaxSize()
+                }
+
+                Component {
+                    id: x11Thumbnail
+
+                    PlasmaCore.WindowThumbnail {
+                        winId: windows !== undefined ? windows[0] : undefined
+
+                        onPaintedSizeChanged: {
+                            thumbnailRoot.thumbnailWidth = paintedWidth;
+                            thumbnailRoot.thumbnailHeight = paintedHeight;
+                        }
+
+                        Close {
+                            anchors.centerIn: parent
+                            anchors.horizontalCenterOffset: parent.paintedWidth/2 - 8
+                            anchors.verticalCenterOffset: -parent.paintedHeight/2 + 8
                         }
 
                         Rectangle {
-                            anchors.fill: parent
-                            anchors.topMargin: -1
-                            anchors.leftMargin: -1
+                            anchors.centerIn: parent
+
+                            width: parent.paintedWidth+2
+                            height: parent.paintedHeight+2
 
                             color: "transparent"
 
@@ -185,11 +325,10 @@ MouseArea {
                         }
 
                         Rectangle {
-                            anchors.fill: parent
-                            anchors.topMargin: -2
-                            anchors.bottomMargin: -1
-                            anchors.rightMargin: -1
-                            anchors.leftMargin: -2
+                            anchors.centerIn: parent
+
+                            width: parent.paintedWidth+4
+                            height: parent.paintedHeight+4
 
                             color: "transparent"
 
@@ -200,27 +339,154 @@ MouseArea {
                             opacity: 0.5
                         }
                     }
+                }
 
-                    Kirigami.Icon {
-                        anchors.centerIn: parent
+                Component {
+                    id: waylandThumbnail
 
-                        width: Kirigami.Units.iconSizes.small
-                        height: Kirigami.Units.iconSizes.small
+                    PipeWire.PipeWireSourceItem {
+                        nodeId: waylandItem.nodeId
 
-                        source: icon
+                        TaskManager.ScreencastingRequest {
+                            id: waylandItem
+                            uuid: windows[0]
+                        }
+
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: -1
+
+                            color: "black"
+
+                            border.width: 1
+                            border.color: "black"
+                            radius: 2
+
+                            opacity: 0.5
+                            z: -1
+                        }
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: -2
+
+                            color: "transparent"
+
+                            border.width: 1
+                            border.color: "white"
+                            radius: 2
+
+                            opacity: 0.5
+                            z: -1
+                        }
+
+                        Close {
+                            anchors {
+                                top: parent.top
+                                topMargin: 4
+                                right: parent.right
+                                rightMargin: 4
+                            }
+                        }
                     }
                 }
-            }
 
-            Connections { // Reload the component when thumbnailRoot's windows property changes. This fixes a bug in which the thumbnail shows the wrong window.
-                target: thumbnailRoot
-                function onWindowsChanged() {
-                    thumbnailLoader.active = false;
-                    thumbnailLoader.active = true;
+                // Used when there's no thumbnail available.
+                Component {
+                    id: appIcon
+
+                    Item {
+                        Rectangle {
+                            anchors.fill: parent
+
+                            gradient: Gradient {
+                                GradientStop { position: 0; color: "#ffffff" }
+                                GradientStop { position: 1; color: "#cccccc" }
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.topMargin: -1
+                                anchors.leftMargin: -1
+
+                                color: "transparent"
+
+                                border.width: 1
+                                border.color: "black"
+
+                                opacity: 0.5
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.topMargin: -2
+                                anchors.bottomMargin: -1
+                                anchors.rightMargin: -1
+                                anchors.leftMargin: -2
+
+                                color: "transparent"
+
+                                border.width: 1
+                                border.color: "white"
+                                radius: 2
+
+                                opacity: 0.5
+                            }
+                        }
+
+                        Kirigami.Icon {
+                            anchors.centerIn: parent
+
+                            width: Kirigami.Units.iconSizes.small
+                            height: Kirigami.Units.iconSizes.small
+
+                            source: icon
+                        }
+                    }
+                }
+
+                Loader {
+                    id: mprisControls
+
+                    readonly property QtObject root: thumbnailRoot.root
+
+                    // center it instead due to the parent item rect being a little weird in height
+                    anchors {
+                        centerIn: parent
+                        verticalCenterOffset: (thumbnailHeight / 2) - (height / 2)
+                    }
+
+                    width: thumbnailWidth
+
+                    active: (Plasmoid.configuration.showPreviewMute && root.parentTask?.hasAudioStream)
+                        || (Plasmoid.configuration.showPreviewMpris && root.playerData !== null)
+                    asynchronous: true
+                    source: "PlayerController.qml"
+
+                    visible: mprisControls.item?.paintedWidth <= thumbnailWidth
+
+                    Rectangle {
+                        anchors.fill: parent
+
+                        color: "black"
+
+                        opacity: 0.5
+                        z: -1
+                    }
+
+                    z: 1
+                }
+
+                // Reload the component when thumbnailRoot's windows property changes. This fixes a bug in which the thumbnail shows the wrong window.
+                Connections {
+                    target: thumbnailRoot
+                    function onWindowsChanged() {
+                        thumbnailLoader.active = false;
+                        thumbnailLoader.active = true;
+                    }
                 }
             }
         }
     }
 
-    visible: root && root.mainItem == thumbnailRoot // only visible if tooltip exists and mainItem is set to the correct one
+    Component.onDestruction: if(isGroupDelegate) ListView.view.updateMaxSize()
 }

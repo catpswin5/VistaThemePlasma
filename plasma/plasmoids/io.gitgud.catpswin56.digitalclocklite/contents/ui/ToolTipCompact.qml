@@ -11,82 +11,34 @@ import org.kde.kirigami as Kirigami
 import org.kde.kwindowsystem 1.0
 import org.kde.ksvg as KSvg
 
-Item {
-    id: toolMain
+RowLayout {
+    id: mainLayout
 
-    property string time: ""
-    property int preferredTextWidth: Kirigami.Units.gridUnit * 10
-    property bool compositing: KWindowSystem.isPlatformX11 ? KX11Extras.compositingActive : true
-    //KWindowSystem { id: kwindowsystem }
+    property var time
 
-    // Used for margins
-    KSvg.FrameSvgItem {
-        id: tooltipSvg
-        imagePath: compositing ? "widgets/tooltip" : "opaque/widgets/tooltip"
-        visible: false
+    anchors.fill: parent
+    anchors.topMargin: 8
+
+    spacing: 8
+
+    Image {
+        source: "pngs/calendar.png"
+        Layout.preferredWidth: 32
+        Layout.preferredHeight: 32
+        Layout.leftMargin: 10
+        Layout.bottomMargin: 8
     }
 
-    implicitWidth: mainLayout.implicitWidth - tooltipSvg.margins.left + Kirigami.Units.smallSpacing*4
-    implicitHeight: mainLayout.implicitHeight - tooltipSvg.margins.left*2 + Kirigami.Units.smallSpacing*4
-
-    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
-    LayoutMirroring.childrenInherit: true
-
-    Kirigami.Theme.colorSet: Kirigami.Theme.View
-    Kirigami.Theme.inherit: false
-
-    KSvg.FrameSvgItem {
-        id: tooltipBackground
-        imagePath: "solid/widgets/tooltip"
-        prefix: ""
-        anchors {
-            //fill: parent
-            top: parent.top
-            left: parent.left
-            leftMargin: -tooltipSvg.margins.left
-            topMargin: -tooltipSvg.margins.top
-        }
-
-        width: mainLayout.width + tooltipSvg.margins.left + Kirigami.Units.smallSpacing*4
-        height: mainLayout.height + Kirigami.Units.smallSpacing*4
-    }
-    RowLayout {
-        id: mainLayout
-        anchors.centerIn: parent
-
-        spacing: 8
-
-        Image {
-            source: "pngs/calendar.png"
-            Layout.preferredWidth: 32
-            Layout.preferredHeight: 32
-            Layout.leftMargin: -Kirigami.Units.smallSpacing*2/1.6
-        }
-
-        ColumnLayout {
-            Layout.maximumWidth: preferredTextWidth
-            spacing: 0
-
-            Kirigami.Heading {
-                level: 3
-                Layout.fillWidth: true
-                elide: Text.ElideRight
-                wrapMode: Text.Wrap
-                text: ""
-                textFormat: Text.PlainText
-                color: "#003399"
-                visible: text !== ""
-            }
-
-            PlasmaComponents.Label {
-                Layout.fillWidth: true
-                wrapMode: Text.WordWrap
-                text: toolMain.time
-                opacity: 0.75
-                visible: text !== ""
-                maximumLineCount: 8
-            }
-        }
+    PlasmaComponents.Label {
+        Layout.fillWidth: true
+        wrapMode: Text.WordWrap
+        text: time
+        opacity: 0.75
+        visible: text !== ""
+        color: "black"
+        maximumLineCount: 1
+        Layout.rightMargin: 4
+        Layout.bottomMargin: 10
     }
 }
 

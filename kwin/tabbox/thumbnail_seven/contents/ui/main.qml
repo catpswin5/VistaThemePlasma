@@ -17,6 +17,7 @@ import org.kde.ksvg 1.0 as KSvg
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.plasma5support as Plasma5Support
 import org.kde.kwindowsystem 1.0
+import org.kde.plasma.workspace.dbus as DBus
 
 import Qt5Compat.GraphicalEffects
 
@@ -24,36 +25,42 @@ import Qt5Compat.GraphicalEffects
 // https://github.com/KDE/kwin/blob/master/tabbox/switcheritem.h
 KWin.TabBoxSwitcher {
     id: tabBox
-	MinimizeAllController {
-		id: minimizeAllController
-	}
-	onVisibleChanged: {
-        dialog.opacity = tabBox.visible && dialog.mainItem.count > 1;
-        dialog.visible = tabBox.visible && dialog.mainItem.count > 1;
+	function toggleMinimizeAll() {
+        const promise = new Promise((resolve, reject) => {
+            DBus.SessionBus.asyncCall({
+                service: "org.kde.kglobalaccel",
+                path: "/component/kwin",
+                iface: "org.kde.kglobalaccel.Component",
+                member: "invokeShortcut",
+                arguments: [new DBus.string("MinimizeAll")],
+                                      signature: "(s)"},
+                                      resolve, reject);
+        }).then((reply) => {
+            console.log(reply.value);
+        }).catch((reply) => {
+            console.log(reply.value);
+        });
     }
+
     PlasmaCore.Dialog {
         id: dialog
         location: PlasmaCore.Types.Floating
-        visible: true
+        visible: tabBox.visible && dialog.mainItem.count > 1
         opacity: 1
-        flags: Qt.X11BypassWindowManagerHint | Qt.WindowStaysOnTopHint | Qt.Popup
+        flags: Qt.BypassWindowManagerHint | Qt.WindowStaysOnTopHint | Qt.Popup
         x: tabBox.screenGeometry.x + tabBox.screenGeometry.width * 0.5 - dialogMainItem.width * 0.5
         y: tabBox.screenGeometry.y + tabBox.screenGeometry.height * 0.5 - dialogMainItem.height * 0.5
+        title: "aerothemeplasma-tabbox"
 
-        minimumWidth: dialogMainItem.intendedWidth
-        width: dialogMainItem.intendedWidth
-        onWidthChanged: {
-            if(width !== dialogMainItem.intendedWidth) width = dialogMainItem.intendedWidth // Because QML is sentient apparently
-        }
         onVisibleChanged: {
             if(!visible) {
                 if(mainItem.currentItem.isShowDesktop) {
-                    minimizeAllController.toggle();
+                    tabBox.toggleMinimizeAll();
                     KWindowSystem.showingDesktop = false;
                 }
             }
         }
-        mainItem: FocusScope {
+        FocusScope {
             id: dialogMainItem
 
             focus: true
@@ -70,11 +77,11 @@ KWin.TabBoxSwitcher {
             property int currentColumnCount: Math.min(7, count)
 
             property int intendedWidth: Math.max(360, thumbnailGridView.cellWidth*currentColumnCount + Kirigami.Units.largeSpacing*2)
-            onWidthChanged: {
-                if(dialog.width !== intendedWidth) dialog.width = dialogMainItem.intendedWidth // Because QML is sentient apparently
-            }
-            width: intendedWidth
-            height: columnLayout.implicitHeight
+            Layout.minimumWidth: intendedWidth
+            Layout.minimumHeight: windowTitle.Layout.preferredHeight + windowTitle.Layout.topMargin + windowTitle.Layout.bottomMargin
+                                    + thumbnailGridView.height + thumbnailGridView.Layout.bottomMargin;
+            Layout.maximumHeight: Layout.minimumHeight
+            Layout.maximumWidth: Layout.minimumWidth
 
             // Just to get the margin sizes
             KSvg.FrameSvgItem {
@@ -83,57 +90,12 @@ KWin.TabBoxSwitcher {
                 prefix: "hover"
                 visible: false
             }
-            KSvg.FrameSvgItem {
-                id: dialogSvg
-                imagePath: "dialogs/background"
-                visible: false
-
-            }
-            Item {
-                id: glowCorners
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.rightMargin: -dialogSvg.margins.right+1
-                //width: dialogMainItem.intendedWidth -dialogSvg.margins.right + 2 // idek why QML is just sentient sometimes
-                anchors.topMargin: -dialogSvg.margins.top+2
-                anchors.leftMargin: -dialogSvg.margins.left+2
-                anchors.bottomMargin: -dialogSvg.margins.bottom+2
-
-                Image {
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                    }
-                    source: StandardPaths.writableLocation(StandardPaths.GenericDataLocation) + "/smod/framecornereffect.png" //"~/.local/share/smod/reflections.png"
-                    smooth: true
-                }
-                Image {
-                    anchors {
-                        top: parent.top
-                        right: parent.right
-                    }
-                    source: StandardPaths.writableLocation(StandardPaths.GenericDataLocation) + "/smod/framecornereffect.png"
-                    mirror: true
-                    smooth: true
-                }
-
-                layer.enabled: true
-                layer.effect: OpacityMask {
-                    maskSource: Rectangle {
-                        x: glowCorners.x
-                        y: glowCorners.y
-                        width: glowCorners.width
-                        height: glowCorners.height
-                        radius: 4
-                    }
-                }
-            }
             ColumnLayout {
                 id: columnLayout
                 spacing: 0
-                anchors.fill: parent
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
                 Text {
                     id: windowTitle
                     Layout.fillWidth: true

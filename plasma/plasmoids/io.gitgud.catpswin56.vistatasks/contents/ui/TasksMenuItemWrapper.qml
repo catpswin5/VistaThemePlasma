@@ -27,7 +27,6 @@ Item {
     Layout.preferredHeight: implicitHeight
 
     property bool selected: false
-    property alias isDefault: renderItem.isDefault
     objectName: "menuitemwrapper"
     property string text
     property bool checkable
@@ -46,9 +45,11 @@ Item {
         sequence: tasksWrapper.Kirigami.MnemonicData.sequence
         onActivated: {
             renderItem.clicked();
+            tasksMenu.closeMenu();
         }
         onActivatedAmbiguously: {
             renderItem.clicked();
+            tasksMenu.closeMenu();
         }
     }
 

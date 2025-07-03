@@ -26,14 +26,14 @@
 #include <KSharedConfig>
 #include <KWindowSystem>
 // KWin
-#include <kwin/core/output.h>
-#include <kwin/core/pixelgrid.h>
-#include <kwin/core/rendertarget.h>
-#include <kwin/core/renderviewport.h>
-#include <kwin/cursor.h>
-#include <kwin/cursorsource.h>
-#include <kwin/effect/effecthandler.h>
-#include <kwin/opengl/glutils.h>
+#include "core/output.h"
+#include "core/pixelgrid.h"
+#include "core/rendertarget.h"
+#include "core/renderviewport.h"
+#include "cursor.h"
+#include "cursorsource.h"
+#include "effect/effecthandler.h"
+#include "opengl/glutils.h"
 
 // based on StartupId in KRunner by Lubos Lunak
 // SPDX-FileCopyrightText: 2001 Lubos Lunak <l.lunak@kde.org>
@@ -368,6 +368,8 @@ void StartupFeedbackEffect::start(const Startup &startup)
     m_cursorItem->setPosition(m_mouseCur->pos());
     connect(m_mouseCur, &Cursor::posChanged, m_cursorItem.get(), [this]() {
         m_cursorItem->setPosition(m_mouseCur->pos());
+        //if(effects->isEffectActive("shakecursor"))
+
         if(m_showBusyCursor) {
             effects->hideCursor();
         }
@@ -387,14 +389,12 @@ void StartupFeedbackEffect::toggleBusyCursor()
             while(!effects->isCursorHidden()) {
                 effects->hideCursor();
             }
-            qInfo() << "Hiding cursor";
             m_cursorItem->setOpacity(1.0);
         } else {
             m_showBusyCursor = false;
             while(effects->isCursorHidden()) {
                 effects->showCursor();
             }
-            qInfo() << "Showing cursor";
             m_cursorItem->setOpacity(0.0);
         }
     }

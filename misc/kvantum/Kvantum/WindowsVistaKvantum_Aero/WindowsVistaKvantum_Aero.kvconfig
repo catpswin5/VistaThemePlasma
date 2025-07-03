@@ -8,15 +8,16 @@ attach_active_tab=true
 active_tab_overlap=2
 group_toolbar_buttons=false
 spread_progressbar=false
-spread_header=false
+spread_header=true
+spread_menuitems=false
 #progressbar_thickness=1.0font
 composite=true
-menu_shadow_depth=5
+menu_shadow_depth=4
 tooltip_shadow_depth=4
 scroll_min_extent=32
 slider_width=1
-slider_handle_width=18
-slider_handle_length=10
+slider_handle_width=19
+slider_handle_length=11
 center_toolbar_handle=false
 center_scrollbar_indicator=false
 toolbar_interior_spacing=2
@@ -24,7 +25,7 @@ toolbar_item_spacing=2
 x11drag=menubar_and_primary_toolbar
 scroll_width=17
 menubar_mouse_tracking=true
-toolbutton_style=0
+toolbutton_style=3
 click_behavior=2
 vertical_spin_indicators=true
 translucent_windows=false
@@ -38,7 +39,7 @@ button_icon_size=16
 combo_as_lineedit=true
 combo_menu=false
 combo_focus_rect=false
-square_combo_button=true
+square_combo_button=false
 fill_rubberband=false
 groupbox_top_label=false
 inline_spin_indicators=false
@@ -56,12 +57,12 @@ scrollbar_in_view=true
 transient_scrollbar=false
 small_icon_size=16
 spin_button_width=16
-submenu_overlap=2
+submenu_overlap=6
 tooltip_delay=250
 tree_branch_line=true
 bold_active_tab=false
 contrast=1.00
-dialog_button_layout=0
+dialog_button_layout=4
 hide_combo_checkboxes=false
 intensity=1.00
 no_inactiveness=false
@@ -73,14 +74,14 @@ scrollable_menu=true
 shadowless_popup=false
 submenu_delay=250
 transient_groove=false
-check_size=13
+check_size=17
 #min_height=32
 splitter_width=6
 drag_from_buttons=false
 opaque=kaffeine,kmplayer,subtitlecomposer,kdenlive,vlc,smplayer,smplayer2,avidemux,avidemux2_qt4,avidemux3_qt4,avidemux3_qt5,kamoso,QtCreator,VirtualBox,VirtualBoxVM,trojita,dragon,digikam,lyx
 menu_blur_radius=0
 tooltip_blur_radius=0
-menu_separator_height=3
+menu_separator_height=6
 
 [GeneralColors]
 window.color=#f4f4f6
@@ -115,7 +116,7 @@ blur_translucent=true
 transparent_menutitle=false
 kcapacitybar_as_progressbar=true
 respect_darkness=false
-single_top_toolbar=false
+single_top_toolbar=true
 disabled_icon_opacity=50
 force_size_grip=false
 iconless_menu=false
@@ -133,7 +134,7 @@ middle_click_scroll=true
 noninteger_translucency=true
 scroll_jump_workaround=false
 blur_only_active_window=false
-style_vertical_toolbars=true
+style_vertical_toolbars=false
 tint_on_mouseover=0
 transparent_pcmanfm_sidepane=false
 
@@ -149,7 +150,7 @@ frame.top=3
 frame.bottom=3
 frame.left=3
 frame.right=3
-text.margin.top=0
+text.margin.top=1
 text.margin.bottom=0
 text.margin.left=0
 text.margin.right=0
@@ -158,22 +159,11 @@ interior.element=btn
 interior=true
 frame=true
 frame.element=btn
-indicator.size=8
+indicator.size=7
+indicator.element=default-arrow
 
 [PanelButtonTool]
-text.margin.top=2
-text.margin.bottom=2
-text.margin.left=2
-text.margin.right=2
-frame.top=3
-frame.bottom=3
-frame.left=3
-frame.right=3
-interior.element=tbaritem
-interior=true
-frame=true
-frame.element=tbaritem
-indicator.size=6
+inherits=PanelButtonCommand
 
 [Dock]
 inherits=PanelButtonCommand
@@ -203,13 +193,12 @@ frame=true
 interior=true
 frame.element=common
 interior.element=common
-frame.top=4
-frame.bottom=4
-frame.left=4
-frame.right=4
+frame.top=1
+frame.bottom=1
+frame.left=1
+frame.right=1
 
 [LineEdit]
-#inherits=PanelButtonCommand
 frame.element=ledit
 interior.element=ledit
 frame.top=3
@@ -221,6 +210,9 @@ text.margin.bottom=0
 text.margin.left=0
 text.margin.right=0
 
+[IndicatorArrow]
+inherits=PanelButtonCommand
+
 [IndicatorSpinBox]
 indicator.element=spind
 indicator.size=12
@@ -231,12 +223,7 @@ frame.right=0
 
 [DropDownButton]
 inherits=PanelButtonCommand
-interior.element=ddown
-frame.element=ddown
-frame.top=4
-frame.bottom=4
-frame.left=4
-frame.right=4
+indicator.element=default-arrow-down
 
 [ToolboxTab]
 inherits=PanelButtonCommand
@@ -248,10 +235,13 @@ text.margin.right=4
 [Tab]
 frame.top=4
 frame.bottom=0
-frame.left=4
-frame.right=4
+frame.left=2
+frame.right=2
 focusFrame=true
-text.margin.top=1
+text.margin.top=0
+text.margin.bottom=1
+text.margin.right=6
+text.margin.left=6
 frame.expansion=0
 indicator.size=12
 interior.element=tab
@@ -278,8 +268,8 @@ frame.top=2
 frame.bottom=2
 frame.left=2
 frame.right=2
-indicator.element=arrow
-indication.size=8
+indicator.element=header-arrow
+indication.size=7
 
 [GroupBox]
 interior=true
@@ -317,35 +307,49 @@ frame.left=2
 frame.right=2
 frame.top=2
 frame.bottom=2
-indicator.size=8
-frame.expansion=0
+indicator.size=7
+frame.expansion=4
 interior.element=tlbar
 interior=true
 frame=true
 frame.element=tlbar
 indicator.element=tbar
 text.normal.color=white
-text.margin.top=8
-text.margin.bottom=8
+text.margin.top=4
+text.margin.bottom=4
 text.margin.left=4
 text.margin.right=4
 
 [ToolbarButton]
-text.margin.top=8
-text.margin.bottom=8
-text.margin.left=4
-text.margin.right=4
+frame.top=3
+frame.bottom=3
+frame.left=3
+frame.right=3
+text.margin.top=6
+text.margin.bottom=6
+text.margin.left=6
+text.margin.right=6
+frame.expansion=0
+interior.element=toolbarbtn
+interior=true
+frame=true
+frame.element=toolbarbtn
+text.normal.color=white
+text.focus.color=white
+text.press.color=white
+text.toggle.color=white
+indicator.size=7
+indicator.element=toolbar-arrow
 
 [ToolbarComboBox]
-text.margin.top=8
-text.margin.bottom=8
-text.margin.left=4
-text.margin.right=4
+inherits=ToolbarButton
+indicator.element=toolbar-arrow-down
+text.margin.left=12
+
 [ToolbarLineEdit]
 text.margin.top=8
 text.margin.bottom=8
 text.margin.left=4
-text.margin.right=4
 
 [Scrollbar]
 indicator.size=17
@@ -388,6 +392,7 @@ frame.top=2
 frame.bottom=2
 frame.left=2
 frame.right=2
+min_height=12
 
 [ProgressbarContents]
 frame=false
@@ -401,26 +406,22 @@ frame.left=1
 frame.right=1
 
 [ItemView]
-text.toggle.color=black
-text.press.color=black
-text.normal.color=black
-text.focus.color=black
-text.toggle.inactive.color=black
+text.color=black
 frame.expansion=0
 interior=true
 interior.element=iview
 frame.element=iview
 frame=true
-frame.top=1
-frame.bottom=1
-frame.left=1
-frame.right=1
+frame.top=3
+frame.bottom=3
+frame.left=3
+frame.right=3
 
 [Menu]
-frame.top=1
-frame.bottom=1
-frame.left=1
-frame.right=1
+frame.top=4
+frame.bottom=4
+frame.left=4
+frame.right=4
 interior.element=mnu
 frame.element=mnu
 frame=true
@@ -434,19 +435,16 @@ interior=true
 interior.element=menuitem
 frame.top=1
 frame.bottom=1
-frame.left=1
-frame.right=1
+frame.left=3
+frame.right=3
 frame.expansion=0
-indicator.element=arrow
-indicator.size=8
+min_width=150
+indicator.element=menu-arrow
+indicator.size=7
 text.toggle.color=black
 text.press.color=black
 text.normal.color=black
 text.focus.color=black
-text.margin.top=0
-text.margin.bottom=0
-text.margin.left=2
-text.margin.right=2
 
 [MenuBarItem]
 interior=true
@@ -455,24 +453,26 @@ frame.element=mbaritem
 frame=true
 frame.top=0
 frame.bottom=0
-frame.left=0
-frame.right=0
+frame.left=3
+frame.right=3
 frame.expansion=0
 text.toggle.color=black
 text.press.color=black
 text.normal.color=black
 text.margin.top=0
-text.margin.bottom=0
+text.margin.bottom=1
+text.margin.left=3
+text.margin.right=3
 
 [MenuBar]
 interior=true
 frame=true
 interior.element=mubar
 frame.element=mubar
-frame.top=2
-frame.bottom=2
-frame.left=2
-frame.right=2
+frame.top=1
+frame.bottom=0
+frame.left=1
+frame.right=1
 frame.expansion=0
 text.margin.top=0
 text.margin.bottom=0
@@ -480,18 +480,18 @@ text.margin.left=0
 text.margin.right=0
 
 [TitleBar]
-inherits=PanelButtonCommand
+frame=true
+interior=true
+interior.element=mdititle
 text.margin.top=2
 text.margin.bottom=2
 text.margin.left=3
 text.margin.right=3
-text.bold=true
-text.italic=true
 text.normal.color=black
 
 [ComboBox]
 inherits=PanelButtonCommand
-frame.expandedElement=ebutton
+indicator.element=arrow
 
 [Splitter]
 indicator.size=16

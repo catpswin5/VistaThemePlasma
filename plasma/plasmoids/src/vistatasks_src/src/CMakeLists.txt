@@ -3,12 +3,11 @@ add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_io.gitgud.catpswin56.vistat
 
 
 
-set(seventasks_SRCS
+set(vistatasks_SRCS
     seventasks.cpp
-    dialogshadows.cpp
 )
 
-add_library(io.gitgud.catpswin56.vistatasks MODULE ${seventasks_SRCS})
+add_library(io.gitgud.catpswin56.vistatasks MODULE ${vistatasks_SRCS})
 
 target_link_libraries(io.gitgud.catpswin56.vistatasks
                       Qt6::Gui

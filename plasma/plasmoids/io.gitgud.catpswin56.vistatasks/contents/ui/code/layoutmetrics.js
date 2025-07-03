@@ -30,23 +30,16 @@ function adjustMargin(height, margin) {
     return margin;
 }
 
-function maxStripes() {
-    const length = tasks.vertical ? tasks.width : tasks.height;
-    const minimum = tasks.vertical ? preferredMinWidth() : preferredMinHeight();
-
-    return Math.min(tasks.plasmoid.configuration.maxStripes, Math.max(1, Math.floor(length / minimum)));
-}
-
 function optimumCapacity(width, height) {
     const length = tasks.vertical ? height : width;
-    const maximum = tasks.vertical ? preferredMaxHeight() : preferredMaxWidth();
+    const maximum = tasks.vertical ? preferredTaskHeight() : preferredMaxWidth();
 
     if (!tasks.vertical) {
         //  Fit more tasks in this case, that is possible to cut text, before combining tasks.
-        return Math.ceil(length / maximum) * maxStripes() + 1;
+        return Math.ceil(length / maximum) + 1;
     }
 
-    return Math.floor(length / maximum) * maxStripes();
+    return Math.floor(length / maximum);
 }
 
 function preferredMinWidth() {
@@ -76,39 +69,7 @@ function preferredMaxWidth() {
 }
 
 function preferredTaskHeight() {
-    if(tasks.vertical) return preferredMaxHeight();
-    else {
-        return tasks.height > 30 ? preferredMaxHeight() : preferredMinHeight();
-    }
-}
-
-function preferredMinHeight() {
-    // TODO FIXME UPSTREAM: Port to proper font metrics for descenders once we have access to them.
     return 30;
-}
-
-function preferredMaxHeight() {
-    return 40;
-    if (tasks.vertical) {
-        let taskPreferredSize = 0;
-        if (tasks.iconsOnly) {
-            taskPreferredSize = tasks.width / maxStripes();
-        } else {
-            taskPreferredSize = Math.max(Kirigami.Units.iconSizes.sizeForLabels,
-                                         Kirigami.Units.iconSizes.medium);
-        }
-        return verticalMargins() +
-            Math.min(
-                // Do not allow the preferred icon size to exceed the width of
-                // the vertical task manager.
-                tasks.width / maxStripes(),
-                taskPreferredSize);
-    } else {
-        return verticalMargins() +
-            Math.min(
-                Kirigami.Units.iconSizes.small * 3,
-                Kirigami.Units.iconSizes.sizeForLabels * 3);
-    }
 }
 
 function preferredHeightInPopup() {

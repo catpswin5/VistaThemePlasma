@@ -104,7 +104,7 @@ ContainmentItem {
         icon.name: "gadgets-sidebar"
         menu: Menu {
             MenuItem {
-                text: root.sidebarCollapsed ? i18n("Show sidebar") : i18n("Hide sidebar")
+                text: root.sidebarCollapsed ? i18n("Open sidebar") : i18n("Close sidebar")
                 onTriggered: Plasmoid.configuration.collapsed = !root.sidebarCollapsed;
             }
             MenuItem {
@@ -112,7 +112,7 @@ ContainmentItem {
                 onTriggered: Plasmoid.internalAction("configure").trigger()
             }
             MenuItem {
-                text: i18n("Close")
+                text: i18n("Exit")
                 onTriggered: root.wrapper.plasmoid.internalAction("remove").trigger();
             }
         }

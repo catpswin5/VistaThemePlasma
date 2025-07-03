@@ -12,29 +12,32 @@ import org.kde.kirigami 2.20 as Kirigami
 
 InputPanel {
     id: inputPanel
+
     property bool activated: false
-    active: activated && Qt.inputMethod.visible
+
     width: parent.width
+
+    active: activated && Qt.inputMethod.visible
 
     states: [
         State {
             name: "visible"
             when: inputPanel.active
+
             PropertyChanges {
                 target: inputPanel
-                y: inputPanel.parent.height - inputPanel.height
-                opacity: 1
+
                 visible: true
             }
         },
         State {
             name: "hidden"
             when: !inputPanel.active
+
             PropertyChanges {
                 target: inputPanel
-                y: inputPanel.parent.height
-                opacity: 0
-                visible:false
+
+                visible: false
             }
         }
     ]

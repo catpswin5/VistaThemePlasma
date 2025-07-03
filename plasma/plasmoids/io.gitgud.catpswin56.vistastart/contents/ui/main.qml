@@ -125,7 +125,7 @@ PlasmoidItem {
         showAllAppsCategorized: false
         showRecentApps: false
         showRecentDocs: false
-        //showRecentContacts: false
+        highlightNewlyInstalledApps: true
         showPowerSession: false
 
         onFavoritesModelChanged: {

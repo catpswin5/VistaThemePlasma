@@ -162,13 +162,8 @@ Item {
             root.visible = false;
             if(executeProgram)
                 executable.exec(executableString);
-            else {
-                if(KWindowSystem.isPlatformX11)
-                    Qt.callLater(Qt.openUrlExternally, executableString)
-                else // Workaround for Wayland to prevent crashing
-                    executable.exec("xdg-open " + executableString)
-
-            }
+            else
+                Qt.callLater(Qt.openUrlExternally, executableString)
         }
         hoverEnabled: true
         anchors.fill: parent

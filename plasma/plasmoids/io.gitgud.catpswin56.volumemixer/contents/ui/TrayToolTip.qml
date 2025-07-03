@@ -13,84 +13,52 @@ import org.kde.ksvg as KSvg
 
 import org.kde.plasma.private.volume
 
-Item {
-    property int preferredTextWidth: Kirigami.Units.gridUnit * 10
-    property bool compositing: KWindowSystem.isPlatformX11 ? KX11Extras.compositingActive : true
-    //KWindowSystem { id: kwindowsystem }
+RowLayout {
+    id: mainLayout
 
-    // Used for margins
-    KSvg.FrameSvgItem {
-        id: tooltipSvg
-        imagePath: compositing ? "widgets/tooltip" : "opaque/widgets/tooltip"
-        visible: false
+    anchors.fill: parent
+    anchors.topMargin: 8
+
+    Kirigami.Icon {
+        animated: false
+        source: "audio-speakers"
+        Layout.preferredWidth: 48
+        Layout.preferredHeight: 48
+        Layout.leftMargin: 10
+        Layout.bottomMargin: 8
     }
 
-    implicitWidth: mainLayout.implicitWidth - tooltipSvg.margins.left + Kirigami.Units.smallSpacing*4
-    implicitHeight: mainLayout.implicitHeight - tooltipSvg.margins.left*2 + Kirigami.Units.smallSpacing*4
+    ColumnLayout {
+        spacing: 0
 
-    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
-    LayoutMirroring.childrenInherit: true
+        Layout.rightMargin: 4
+        Layout.bottomMargin: 10
 
-    Kirigami.Theme.colorSet: Kirigami.Theme.View
-    Kirigami.Theme.inherit: false
-
-    KSvg.FrameSvgItem {
-        id: tooltipBackground
-        imagePath: "solid/widgets/tooltip"
-        prefix: ""
-        anchors {
-            //fill: parent
-            top: parent.top
-            left: parent.left
-            leftMargin: -tooltipSvg.margins.left
-            topMargin: -tooltipSvg.margins.top
+        Kirigami.Heading {
+            level: 3
+            Layout.fillWidth: true
+            elide: Text.ElideRight
+            wrapMode: Text.Wrap
+            text: i18n("Volume: %1%", main.volumePercent(PreferredDevice.sink.volume))
+            textFormat: Text.PlainText
+            color: "#003399"
+            visible: text !== ""
         }
 
-        width: mainLayout.width + tooltipSvg.margins.left + Kirigami.Units.smallSpacing*4
-        height: mainLayout.height + Kirigami.Units.smallSpacing*4
-    }
-    RowLayout {
-        id: mainLayout
-        anchors.centerIn: parent
-
-        Kirigami.Icon {
-            animated: false
-            source: "audio-speakers"
-            Layout.preferredWidth: 48
-            Layout.preferredHeight: 48
-            Layout.leftMargin: -Kirigami.Units.smallSpacing*2/1.6
-        }
-
-        ColumnLayout {
-            Layout.maximumWidth: preferredTextWidth
-            spacing: 0
-
-            Kirigami.Heading {
-                level: 3
-                Layout.fillWidth: true
-                elide: Text.ElideRight
-                wrapMode: Text.Wrap
-                text: i18n("Volume: %1%", main.volumePercent(PreferredDevice.sink.volume))
-                textFormat: Text.PlainText
-                color: "#003399"
-                visible: text !== ""
-            }
-
-            PlasmaComponents.Label {
-                Layout.fillWidth: true
-                wrapMode: Text.WordWrap
-                text: {
-                    let lines = [];
-                    if (PreferredDevice.sink && main.paSinkFilterModel.count > 1 && !isDummyOutput(PreferredDevice.sink)) {
-                        lines.push(nodeName(PreferredDevice.sink))
-                    }
-                    return lines.join("\n");
+        PlasmaComponents.Label {
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+            text: {
+                let lines = [];
+                if (PreferredDevice.sink && main.paSinkFilterModel.count > 1 && !isDummyOutput(PreferredDevice.sink)) {
+                    lines.push(nodeName(PreferredDevice.sink))
                 }
-                opacity: 0.75
-                visible: text !== ""
-                maximumLineCount: 8
+                return lines.join("\n");
             }
+            opacity: 0.75
+            visible: text !== ""
+            color: "black"
+            maximumLineCount: 1
         }
     }
 }
-

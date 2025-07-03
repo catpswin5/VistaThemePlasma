@@ -107,7 +107,7 @@ Item {
 
                     anchors.fill: parent
                     interactive: false
-                    mainText: model.Description
+                    mainText: model?.Description ?? ""
                 }
 
 

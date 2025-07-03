@@ -107,18 +107,14 @@
       <label>Whether to indicate applications that are playing audio including an option to mute them.</label>
       <default>true</default>
     </entry>
-    <entry name="showPreviews" type="Bool">
-      <default>true</default>
-    </entry>
+
     <entry name="showProgress" type="Bool">
       <default>false</default>
     </entry>
     <entry name="hoverFadeAnim" type="Bool">
       <default>false</default>
     </entry>
-    <entry name="showLabels" type="Bool">
-      <default>true</default>
-    </entry>
+
     <entry name="disableHottracking" type="Bool">
       <default>true</default>
     </entry>
@@ -128,26 +124,12 @@
     <entry name="showMore" type="Bool">
       <default>false</default>
     </entry>
+
     <entry name="draggingEnabled" type="Bool">
       <label>Whether to enable dragging on Vista taskbar.</label>
       <default>false</default>
     </entry>
-    <entry name="enableAnimations" type="Bool">
-      <label>Whether to enable animations on the taskbar.</label>
-      <default>false</default>
-    </entry>
-    <entry name="fill" type="Bool">
-      <label>Whether task manager should occupy all available space.</label>
-      <default>true</default>
-    </entry>
-    <entry name="taskHoverEffect" type="Bool">
-      <label>Whether task buttons should change in appearance when the mouse pointer is above them.</label>
-      <default>true</default>
-    </entry>
-    <entry name="maxTextLines" type="Int">
-      <label>The maximum number of text lines to show in a task button. 0 means no limit.</label>
-      <default>0</default>
-    </entry>
+
     <entry name="minimizeActiveTaskOnClick" type="Bool">
       <label>Whether to minimize the currently-active task when clicked. If false, clicking on the currently-active task will do nothing.</label>
       <default>true</default>
@@ -156,15 +138,37 @@
       <label>Whether to grow the tasks in according to system configuration or opposite to system configuration.</label>
       <default>false</default>
     </entry>
-    <entry name="iconSpacing" type="Int">
-      <label> Spacing between icons in task manager. Margin is multiplied by this value.</label>
-      <default>1</default>
-    </entry>
 
     <entry name="taskStyle" type="Int">
-      <label>0 = 7 Milestone 2, 1 = Vista (default), 2 = Plasma</label>
-      <default>1</default>
+      <label>0 = Vista (default), 1 = Plasma</label>
+      <default>0</default>
     </entry>
+  </group>
+
+  <group name="Previews">
+    <entry name="showPreviews" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="extPreviewFunc" type="Bool">
+      <default>false</default>
+    </entry>
+
+    <entry name="showPreviewClose" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="windowPeek" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showPreviewMpris" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showPreviewMute" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="previewGroupEnabled" type="Bool">
+      <default>false</default>
+    </entry>
+
   </group>
 
 </kcfg>

@@ -1,56 +1,45 @@
 import QtQuick
 import QtQuick.Layouts
+
 import Qt5Compat.GraphicalEffects
 
 import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
+
 import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents3
 import org.kde.plasma.plasmoid
 import org.kde.plasma.private.mpris as Mpris
+
+import "code/tools.js" as TaskTools
 
 MouseArea {
     id: thumbnailRoot
 
+    required property var model
+
     property QtObject root
-    property var captionAlignment: {
-        if(Plasmoid.configuration.thmbnlCaptionAlignment == 0) return Text.AlignLeft
-        if(Plasmoid.configuration.thmbnlCaptionAlignment == 1) return Text.AlignHCenter
-        if(Plasmoid.configuration.thmbnlCaptionAlignment == 2) return Text.AlignRight
+
+    property var modelIndex: tasksModel.makeModelIndex(root.taskIndex, model.index)
+
+    implicitWidth: iconBox.implicitWidth + label.implicitWidth + Kirigami.Units.smallSpacing + contentBox.leftMargin + contentBox.rightMargin
+    onImplicitWidthChanged: ListView.view.updateMaxSize()
+
+    implicitHeight: 27
+
+    width: {
+        if(ListView.view.maxThumbnailItem !== thumbnailRoot)
+            return ListView.view.maxThumbnailWidth;
+        else
+            return implicitWidth;
     }
-    property bool compositionEnabled
 
-    property var display: model.display
-    property var icon: model.decoration
-    property var active: model.IsActive
-    property var modelIndex: tasksModel.makeModelIndex(root.taskIndex, index)
-    property var windows: model.WinIdList
-    property var minimized: model.IsMinimized
-
-    width: 158
-    height: 26
-
+    function closeTask() {
+        tasksModel.requestClose(modelIndex);
+        if(!isGroupDelegate) root.parentTask?.hideImmediately();
+    }
     hoverEnabled: true
     propagateComposedEvents: true
-
-    KSvg.FrameSvgItem {
-        id: hoverTexture
-
-        anchors.fill: parent
-
-        imagePath: Qt.resolvedUrl("svgs/tasks.svg")
-        property string type: {
-            if(contentMa.containsPress) return "active"
-            else return "normal"
-        }
-        property string state: {
-            if(contentMa.containsMouse) return "-hover"
-            else return ""
-        }
-        prefix: type + state
-        enabledBorders: KSvg.FrameSvg.TopBorder | KSvg.FrameSvg.BottomBorder
-
-        visible: contentMa.containsMouse
-    }
 
     DropArea {
         signal urlsDropped(var urls)
@@ -62,12 +51,12 @@ MouseArea {
         }
 
         onEntered: {
-            groupThumbnails.containsDrag = true;
+            root.containsDrag = true;
         }
 
         onExited: {
             activationTimer.stop();
-            groupThumbnails.containsDrag = false;
+            root.containsDrag = false;
         }
 
         onDropped: event => {
@@ -79,7 +68,7 @@ MouseArea {
 
         onUrlsDropped: (urls) => {
             tasksModel.requestOpenUrls(modelIndex, urls);
-            groupThumbnails.containsDrag = false;
+            root.containsDrag = false;
         }
 
         Timer {
@@ -92,64 +81,139 @@ MouseArea {
                 tasksModel.requestActivate(modelIndex);
             }
         }
-
-        visible: isGroupDelegate
     }
 
     MouseArea {
         id: contentMa
 
-        anchors.fill: parent
+        anchors.fill: frame
 
         hoverEnabled: true
         propagateComposedEvents: true
-        enabled: root.opacity == 1
-
-        onClicked: {
-            tasksModel.requestActivate(modelIndex);
-            root.visible = false;
-        }
-    }
-
-    ColumnLayout {
-        id: content
-
-        anchors.fill: parent
-        anchors.rightMargin: Kirigami.Units.smallSpacing * 2
-        anchors.leftMargin: Kirigami.Units.smallSpacing * 2
-
-        spacing: Kirigami.Units.smallSpacing/2
-
-        RowLayout {
-            id: header
-
-            spacing: Kirigami.Units.smallSpacing
-
-            Kirigami.Icon {
-                id: captionIcon
-
-                Layout.preferredHeight: 16
-                Layout.preferredWidth: 16
-
-                source: icon
+        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+        onClicked: (mouse) => {
+            if(mouse.button == Qt.LeftButton) {
+                tasksModel.requestActivate(modelIndex);
+                root.parentTask?.hideImmediately();
             }
-
-            Text {
-                id: captionTitle
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                verticalAlignment: Text.AlignVCenter
-                text: display
-                color: "white"
-                elide: Text.ElideRight
-                wrapMode: Text.NoWrap
-                style: Text.Outline
-                styleColor: "#02ffffff"
-                horizontalAlignment: captionAlignment
-                rightPadding: captionAlignment == Text.AlignHCenter ? (close.visible ? 0 : close.width + header.spacing) : 0
+            if(mouse.button == Qt.MiddleButton) {
+                thumbnailRoot.closeTask();
             }
         }
     }
+
+    KSvg.FrameSvgItem {
+        id: frame
+
+        property bool isHovered: contentMa.containsMouse
+        property bool isActive: model.IsActive || contentMa.containsPress
+        property bool doHoverFade: Plasmoid.configuration.hoverFadeAnim && Plasmoid.configuration.disableHottracking
+        property string basePrefix: {
+            if(isActive) {
+                if(Plasmoid.configuration.taskStyle == 1) return "focus";
+                else return "active";
+            }
+            return "normal";
+        }
+
+        anchors {
+            fill: parent
+
+            leftMargin: 2
+            rightMargin: 2
+        }
+
+        imagePath: Plasmoid.configuration.taskStyle == 1 ? "widgets/tasks" : Qt.resolvedUrl("svgs/tasks.svg")
+        prefix: Plasmoid.configuration.taskStyle == 1 ?
+            (isHovered ? TaskTools.taskPrefixHovered(basePrefix, Plasmoid.location) : TaskTools.taskPrefix(basePrefix, Plasmoid.location)) :
+            basePrefix + (isHovered && !Plasmoid.configuration.hoverFadeAnim ? "-hover" : "")
+
+        enabledBorders: KSvg.FrameSvg.TopBorder | KSvg.FrameSvg.BottomBorder
+
+        KSvg.FrameSvgItem {
+            anchors.fill: parent
+
+            imagePath: Qt.resolvedUrl("svgs/tasks.svg")
+            prefix: "hoverglow"
+
+            visible: opacity > 0
+            opacity: frame.isHovered && frame.doHoverFade
+            Behavior on opacity {
+                NumberAnimation { duration: 175 }
+            }
+
+            z: frame.isActive ? 0 : -1
+        }
+    }
+
+    RowLayout {
+        id: contentBox
+
+        spacing: Kirigami.Units.smallSpacing
+
+        property int rightMargin: Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
+        property int leftMargin: {
+            if(model.IsActive) return Kirigami.Units.smallSpacing*2 - Kirigami.Units.smallSpacing/4;
+            else return Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
+        }
+
+        anchors {
+            fill: frame
+
+            bottomMargin: Kirigami.Units.smallSpacing
+            rightMargin: rightMargin
+            leftMargin: leftMargin
+            topMargin: model.IsActive ? Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2 : Kirigami.Units.smallSpacing
+        }
+
+
+        Kirigami.Icon {
+            id: iconBox
+            property int iconSize: Kirigami.Units.iconSizes.small
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Layout.minimumWidth: iconSize
+            Layout.maximumWidth: iconSize
+            Layout.minimumHeight: iconSize
+            Layout.maximumHeight: iconSize
+
+            Layout.leftMargin: (label.visible ? Kirigami.Units.smallSpacing : 0)
+
+            source: model.decoration
+            antialiasing: false
+        }
+
+        PlasmaComponents3.Label {
+            id: label
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            wrapMode: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
+            elide: Text.ElideRight
+            textFormat: Text.PlainText
+            verticalAlignment: Text.AlignVCenter
+            maximumLineCount: 1//Plasmoid.configuration.maxTextLines || undefined
+            style: Text.Outline
+            styleColor: "#02ffffff"
+            color: "white"
+
+            Accessible.ignored: true
+
+            // use State to avoid unnecessary re-evaluation when the label is invisible
+            states: State {
+                name: "labelVisible"
+                when: label.visible
+
+                PropertyChanges {
+                    target: label
+                    text: model.display
+                }
+            }
+        }
+
+    }
+
+    Component.onCompleted: ListView.view.updateMaxSize()
+    Component.onDestruction: ListView.view.updateMaxSize()
 }

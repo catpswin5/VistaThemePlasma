@@ -84,13 +84,81 @@ function activateTask(index, model, modifiers, task, plasmoid, tasks, windowView
         tasks.tasksModel.requestPublishDelegateGeometry(task.modelIndex(), tasks.backend.globalRect(task), task);
     }
 
-    if (model.IsMinimized) {
-        tasks.tasksModel.requestToggleMinimized(index);
-        tasks.tasksModel.requestActivate(index);
-    } else if (model.IsActive && plasmoid.configuration.minimizeActiveTaskOnClick) {
-        tasks.tasksModel.requestToggleMinimized(index);
+    if (model.IsGroupParent) {
+        // Option 1 (default): Cycle through this group's tasks
+        // ====================================================
+        // If the grouped task does not include the currently active task, bring
+        // forward the most recently used task in the group according to the
+        // Stacking order.
+        // Otherwise cycle through all tasks in the group without paying attention
+        // to the stacking order, which otherwise would change with every click
+        if (plasmoid.configuration.groupedTaskVisualization === 0) {
+            let childTaskList = [];
+            let highestStacking = -1;
+            let lastUsedTask = undefined;
+
+            // Build list of child tasks and get stacking order data for them
+            for (let i = 0; i < tasks.tasksModel.rowCount(task.modelIndex(index)); ++i) {
+                const childTaskModelIndex = tasks.tasksModel.makeModelIndex(task.index, i);
+                childTaskList.push(childTaskModelIndex);
+                const stacking = tasks.tasksModel.data(childTaskModelIndex, TaskManager.AbstractTasksModel.StackingOrder);
+                if (stacking > highestStacking) {
+                    highestStacking = stacking;
+                    lastUsedTask = childTaskModelIndex;
+                }
+            }
+
+            // If the active task is from a different app from the group that
+            // was clicked on switch to the last-used task from that app.
+            if (!childTaskList.some(index => tasks.tasksModel.data(index, TaskManager.AbstractTasksModel.IsActive))) {
+                tasks.tasksModel.requestActivate(lastUsedTask);
+            } else {
+                // If the active task is already among in the group that was
+                // activated, cycle through all tasks according to the order of
+                // the immutable model index so the order doesn't change with
+                // every click.
+                for (let j = 0; j < childTaskList.length; ++j) {
+                    const childTask = childTaskList[j];
+                        if (tasks.tasksModel.data(childTask, TaskManager.AbstractTasksModel.IsActive)) {
+                            // Found the current task. Activate the next one
+                            let nextTask = j + 1;
+                            if (nextTask >= childTaskList.length) {
+                                nextTask = 0;
+                            }
+                            tasks.tasksModel.requestActivate(childTaskList[nextTask]);
+                            break;
+                        }
+                }
+            }
+        }
+
+        // Option 2: show tooltips for all child tasks
+        // ===========================================
+        else if (plasmoid.configuration.groupedTaskVisualization === 1) {
+            if (task.toolTipVisible) {
+                task.hideImmediately();
+            } else {
+                task.showToolTip();
+                task.updateToolTipBindings();
+            }
+        }
+
+        // Option 3: show Window View for all child tasks
+        // ==================================================
+        // Make sure the Window View effect is  are actually enabled though;
+        // if not, fall through to the next option.
+        else if (plasmoid.configuration.groupedTaskVisualization === 2 && windowViewAvailable) {
+            tasks.activateWindowView(model.WinIdList);
+        }
     } else {
-        tasks.tasksModel.requestActivate(index);
+        if (model.IsMinimized) {
+            tasks.tasksModel.requestToggleMinimized(index);
+            tasks.tasksModel.requestActivate(index);
+        } else if (model.IsActive && plasmoid.configuration.minimizeActiveTaskOnClick) {
+            tasks.tasksModel.requestToggleMinimized(index);
+        } else {
+            tasks.tasksModel.requestActivate(index);
+        }
     }
 }
 

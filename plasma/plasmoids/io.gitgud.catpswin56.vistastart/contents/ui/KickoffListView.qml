@@ -70,10 +70,11 @@ FocusScope {
     function activateCurrentIndex() {
         if(listView.currentItem) {
             if(listView.currentItem.expanded && listView.currentItem.childIndex !== -1) {
+                console.log("hi")
                 listView.currentItem.childItem.activate();
                 return;
             }
-            listView.currentItem.delegateItem.activate();
+            listView.currentItem.activate();
         }
     }
     function openCurrentContextMenu() {
@@ -82,7 +83,7 @@ FocusScope {
                 listView.currentItem.childItem.openActionMenu();
                 return;
             }
-            listView.currentItem.delegateItem.openActionMenu();
+            listView.currentItem.openActionMenu();
         }
 
     }
@@ -94,6 +95,7 @@ FocusScope {
                     listView.inhibitMouseEvents = true;
                     if(temp <= -1) {
                         listView.currentItem.childItem = null;
+                        listView.currentItem.childIndex = -1;
                         positionView(false);
                         return;
                     } else {
@@ -109,6 +111,7 @@ FocusScope {
             if(itemAbove.expanded) {
                 listView.inhibitMouseEvents = true;
                 itemAbove.childItem = itemAbove.delegateRepeater.itemAt(itemAbove.childCount-1);
+                itemAbove.childIndex = itemAbove.childCount-1;
                 listView.decrementCurrentIndex();
                 positionView(true);
                 return;
@@ -163,14 +166,19 @@ FocusScope {
     }
     ScrollView {
         id: scrollView
+
         anchors.fill: parent
-        anchors.rightMargin: scrollView.ScrollBar.vertical.visible ? 3 : 0
+        anchors.leftMargin: small ? 3 : 4
+        anchors.rightMargin: small ? 3 : 4
 
         ListView {
             id: listView
+
             property bool isFavorites: false
             property bool inhibitMouseEvents: false
             property int delegateHeight: 0
+            property alias actualView: view
+
             cacheBuffer: 2500
             move: Transition {}
             moveDisplaced: Transition {}
@@ -183,81 +191,27 @@ FocusScope {
             highlightFollowsCurrentItem: false;
             keyNavigationWraps: true
             spacing: view.small ? 0 : Kirigami.Units.smallSpacing / 2
+            delegate: KickoffItem {
+                id: delegateItem
+
+                appView: view.appView
+                smallIcon: view.small
+
+                onReset: view.reset()
+
+                Component.onCompleted: listView.delegateHeight = implicitHeight;
+            }
+
             MouseArea {
                 id: mouseInhibitor
-                hoverEnabled: true
+
                 anchors.fill: parent
+
+                hoverEnabled: true
+                onPositionChanged: listView.inhibitMouseEvents = false;
+
                 visible: listView.inhibitMouseEvents
-                onPositionChanged: {
-                    listView.inhibitMouseEvents = false;
-                }
             }
-            delegate:
-            ColumnLayout {
-                id: delegateLayout
-                width: listView.width
-                required property var model
-                required property int index
-                property alias delegateItem: delegateItem
-                property alias delegateRepeater: colRepeater
-                readonly property bool expanded: delegateItem.expanded
-                readonly property int childCount: colRepeater.count
-                spacing: 0
-
-                onHeightChanged: listView.delegateHeight = delegateItem.implicitHeight
-
-                property int childIndex: -1
-                property var childItem: null
-                onChildItemChanged: {
-                    if(childItem) childIndex = childItem.itemIndex;
-                    else childIndex = -1;
-                }
-
-                KickoffItem {
-                    id: delegateItem
-
-                    Layout.preferredHeight: implicitHeight
-                    Layout.fillWidth: true
-                    Layout.rightMargin: scrollView.ScrollBar.vertical.visible ? -3 : 0
-                    property var model: delegateLayout.model
-                    property int index: delegateLayout.index
-                    appView: view.appView
-                    showAppsByName: view.showAppsByName
-                    smallIcon: view.small
-                    listView: listView
-                    isFavorites: listView.isFavorites
-
-                    onReset: view.reset()
-                }
-                Column {
-                    id: expandedColumn
-                    Layout.fillWidth: true
-                    Layout.rightMargin: scrollView.ScrollBar.vertical.visible ? -3 : 0
-                    Layout.preferredHeight: {
-                        if(!delegateItem.modelChildren) return 0;
-                        return delegateItem.expanded ? colRepeater.count * delegateItem.implicitHeight : 0
-                    }
-                    visible: delegateItem.expanded
-                    Repeater {
-                        id: colRepeater
-                        model: delegateItem.childModel
-                        delegate: KickoffItemChild {
-                            required property var model
-                            required property int index
-                            appView: view.appView
-                            showAppsByName: view.showAppsByName
-                            smallIcon: view.small
-                            onReset: view.reset()
-                            listView: listView
-                            childModel: delegateItem.childModel
-                            parentLayout: delegateLayout
-                            width: expandedColumn.width
-                        }
-                    }
-                }
-            }
-
-            //section.property: "group"
         }
     }
 }

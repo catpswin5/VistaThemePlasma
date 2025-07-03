@@ -23,7 +23,8 @@ var blacklist = [
 var blacklistNames = [
     "seventasks-floatingavatar",
     "aerothemeplasma-windowframe-special",
-    "sevenstart-menurepresentation"
+    "sevenstart-menurepresentation",
+    "aerothemeplasma-tabbox"
 ];
 
 function isPopupWindow(window) {
@@ -38,6 +39,12 @@ function isPopupWindow(window) {
     }
     //console.log(window.windowClass + " " + window.dialog);
     if(window.dialog && window.windowClass === "plasmashell plasmashell") {
+        return false;
+    }
+    if(window.dock && window.windowClass === "plasmashell plasmashell") {
+        return false;
+    }
+    if(window.desktop && window.windowClass === "plasmashell plasmashell") {
         return false;
     }
     if(blacklistNames.indexOf(window.caption) != -1) {

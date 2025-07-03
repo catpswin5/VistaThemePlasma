@@ -15,6 +15,11 @@ ConfigModel {
          source: "ConfigAppearance.qml"
     }
     ConfigCategory {
+        name: i18n("Window previews")
+        icon: "window"
+        source: "ConfigThumbnails.qml"
+    }
+    ConfigCategory {
          name: i18n("Behavior")
          icon: "preferences-desktop"
          source: "ConfigBehavior.qml"

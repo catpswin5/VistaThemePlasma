@@ -21,54 +21,72 @@
 
 //This is the generic item delegate used by FavoritesView, RecentlyUsedView and SearchView. 
 
-import QtQuick 2.0
-import org.kde.plasma.plasmoid
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components as PlasmaComponents
-import org.kde.draganddrop 2.0
+import QtQuick
+import QtQuick.Layouts
 
+import org.kde.draganddrop
 import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
+
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
 import "code/tools.js" as Tools
 
 Item {
     id: listItem
 
-    enabled: model ? (!model.disabled && !(model.display === "")) : false
-    visible: model ? (model.display !== "") : false
-    width: listView.width
-    implicitHeight: model ? (model.display === "" ? 0 : ((Kirigami.Units.smallSpacing / (small ? 2 : 1)) + Math.max(elementIcon.height, titleElement.implicitHeight) + (small ? 1 : 0))) : 0
-
-    property int pressX: -1
-    property int pressY: -1
     signal reset
     signal actionTriggered(string actionId, variant actionArgument)
     signal aboutToShowActionMenu(variant actionMenu)
     signal addBreadcrumb(var model, string title)
 
+    required property var model
+    required property int index
+
+    property int pressX: -1
+    property int pressY: -1
+
     property alias toolTip: toolTip
     property alias toolTipTimer: toolTipTimer
-	property bool smallIcon: false
-    readonly property int itemIndex: model ? model.index : -1
-    readonly property string url: model ? (typeof model.url !== "undefined" ? model.url : "") : ""
-    readonly property var decoration: model ? model.decoration : ""
+    property bool smallIcon: false
+    readonly property int itemIndex: model?.index ?? -1
+    readonly property string url: model?.url ?? ""
+    readonly property var decoration: model?.decoration ?? ""
 
     property bool dropEnabled: false
     property bool appView: false
-    property bool modelChildren: model ? (typeof model.hasChildren !== "undefined" ? model.hasChildren : false) : false
-    property bool isCurrent: listItem.listView.currentIndex === index;
-    property bool showAppsByName: Plasmoid.configuration.showAppsByName
+
+    property bool modelChildren: model?.hasChildren ?? false
+    property var childModel
+    property alias delegateRepeater: children
+    property int childCount: children.count
+    property int childIndex: -1
+    property var childItem: null
 
     property bool hasActionList: ((model?.favoriteId !== null)
         || (("hasActionList" in model) && (model?.hasActionList)))
     property Item menu: actionMenu
 
     property bool expanded: false
-    property var childModel
     property var listView: listItem.ListView.view
 
-    property bool isFavorites: false
+    readonly property bool isFavorites: listView?.isFavorites ?? false
+    readonly property bool isDefaultInternetApp: isFavorites && Plasmoid.configuration.defaultInternetApp == model?.display
+    readonly property bool isDefaultEmailApp: isFavorites && Plasmoid.configuration.defaultEmailApp == model?.display
+
+    readonly property string title: {
+        if(isDefaultInternetApp)
+            return i18n("Internet");
+        else if(isDefaultEmailApp)
+            return i18n("E-mail");
+        else
+            return model?.display ?? "";
+    }
+    readonly property string subtitle: model?.display ?? ""
+
+    readonly property bool isNew: model?.isNewlyInstalled ?? false
 
     onAboutToShowActionMenu: (actionMenu) => {
         var actionList = hasActionList ? model.actionList : [];
@@ -82,6 +100,12 @@ Item {
             kicker.expanded = false;
         }
     }
+
+    implicitWidth: listView.width
+    implicitHeight: !visible ? 0 : column.height
+
+    enabled: model ? (!model.disabled && title !== "") : false
+    visible: title !== ""
 
     function activate() {
         var view = listView;
@@ -105,70 +129,6 @@ Item {
         actionMenu.open(x, y);
     }
 
-    ActionMenu {
-        id: actionMenu
-
-        onActionClicked: (actionId, actionArgument) => {
-            actionTriggered(actionId, actionArgument);
-        }
-    }
-
-    Kirigami.Icon {
-        id: elementIcon
-
-        anchors {
-            left: parent.left
-            leftMargin: listItem.appView ? (Kirigami.Units.mediumSpacing-1) : Kirigami.Units.smallSpacing*2-1
-            verticalCenter: parent.verticalCenter
-        }
-		width: smallIcon ? Kirigami.Units.iconSizes.small : Kirigami.Units.iconSizes.medium
-        height: width
-
-        animated: false
-
-        source: (listItem.appView && Plasmoid.configuration.useGenericIcons && model.hasChildren) ? "folder" : (model ? model.decoration : "")
-    }
-
-    PlasmaComponents.Label {
-        id: titleElement
-
-        y: Math.round((parent.height - titleElement.height - ( (subTitleElement.text != "") ? subTitleElement.implicitHeight : 0) ) / 2)
-        anchors {
-            left: elementIcon.right
-            right: parent.right
-            leftMargin: listItem.appView ? Kirigami.Units.mediumSpacing-1 : Kirigami.Units.smallSpacing * 2
-            rightMargin: Kirigami.Units.smallSpacing * 2
-        }
-        height: implicitHeight //undo PC2 height override, remove when porting to PC3
-        // TODO: games should always show the by name!
-
-        text: model.display == Plasmoid.configuration.defaultInternetApp && listItem.isFavorites ? i18n("Internet") :
-             (model.display == Plasmoid.configuration.defaultEmailApp && listItem.isFavorites ? i18n("E-Mail") : model.display)
-
-        font.bold: listItem.isFavorites && !Plasmoid.configuration.disableBold ? true :
-                  (text == i18n("Internet") && listItem.isFavorites || text == i18n("E-Mail") && listItem.isFavorites ? true : false)
-
-        elide: Text.ElideRight
-        horizontalAlignment: Text.AlignLeft
-        color: startStyles.currentStyle.leftPanel.itemTextColor
-    }
-
-    PlasmaComponents.Label {
-        id: subTitleElement
-
-        anchors {
-            left: titleElement.left
-            right: parent.right
-            top: titleElement.bottom
-        }
-        height: implicitHeight
-        color: startStyles.currentStyle.leftPanel.itemTextColor
-        text: listItem.isFavorites && titleElement.text != model.display ? model.display : ""
-        opacity: 1
-        elide: Text.ElideRight
-        horizontalAlignment: Text.AlignLeft
-    }
-
     Keys.onPressed: event => {
         if (event.key === Qt.Key_Menu && hasActionList) {
             event.accepted = true;
@@ -179,96 +139,232 @@ Item {
         }
     }
 
-    KSvg.FrameSvgItem {
-        id: background
-        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
-        prefix: "hover"
-        opacity: {
-            if(ma.containsMouse) return 1;
-            if(listItem.listView.currentIndex === listItem.itemIndex && listItem.parent.childIndex === -1) return 0.5;
-            return 0;
+    ActionMenu {
+        id: actionMenu
+
+        onActionClicked: (actionId, actionArgument) => {
+            actionTriggered(actionId, actionArgument);
         }
-        z: -1
+    }
+
+    Column {
+        id: column
+
         anchors {
-            fill: parent
-            leftMargin: listItem.smallIcon ? Kirigami.Units.smallSpacing/2+1 : Kirigami.Units.smallSpacing
-            rightMargin: listItem.smallIcon ? Kirigami.Units.smallSpacing/2+1 : Kirigami.Units.smallSpacing
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
 
-        }
-    }
-    PlasmaCore.ToolTipArea {
-        id: toolTip
+        height: mainItem.height + childrenColumn.height
 
-        anchors.fill: parent
-        active: titleElement.truncated
-        interactive: false
-        mainText: model ? model.display : ""
-    }
-    Timer {
-        id: toolTipTimer
-        interval: Kirigami.Units.longDuration*2
-        onTriggered: {
-            toolTip.showToolTip();
-        }
-    }
+        Item {
+            id: mainItem
 
+            width: parent.width
+            height: title !== "" ?
+                (Kirigami.Units.smallSpacing / (small ? 2 : 1)) + Math.max(elementIcon.height, titleElement.implicitHeight) + (small ? 1 : 0)
+                : 0
 
-    MouseArea {
-        id: ma
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        cursorShape: listItem.modelChildren || !listItem.smallIcon ? undefined : Qt.PointingHandCursor
-        onEntered: {
-            if(listItem.listView.currentItem && listItem.listView.currentIndex !== model.index) {
-                listItem.listView.currentItem.delegateItem.toolTipTimer.stop();
-                listItem.listView.currentItem.delegateItem.toolTip.hideToolTip();
-            }
-            listItem.listView.currentIndex = model.index;
-            toolTipTimer.start();
+            KSvg.FrameSvgItem {
+                id: newHighlight
 
-        }
-        onExited: {
-             toolTipTimer.stop();
-             toolTip.hideToolTip();
-             listItem.listView.currentIndex = -1;
-             listItem.pressX = -1;
-             listItem.pressY = -1;
-        }
-        onPressed: mouse => {
-            if(mouse.button === Qt.LeftButton) {
-                listItem.pressX = mouse.x;
-                listItem.pressY = mouse.y;
-            }
+                property bool completed: false
 
-        }
-        onPositionChanged: mouse => {
-                if(listItem.pressX != -1 && model.url && dragHelper.isDrag(listItem.pressX, listItem.pressY, mouse.x, mouse.y)) {
-                    kicker.dragSource = listItem;
-                    dragHelper.dragIconSize = Kirigami.Units.iconSizes.small;
-                    dragHelper.startDrag(kicker, model.url, model.decoration);
-                }
-        }
-        onReleased: mouse => {
-            if(mouse.button === Qt.LeftButton) {
-                if (mouse.source == Qt.MouseEventSynthesizedByQt) {
-                    positionChanged(mouse);
-                }
-                listItem.pressX = -1;
-                listItem.pressY = -1;
-            }
-            mouse.accepted = false;
-        }
-        onClicked: mouse => {
-            if(mouse.button === Qt.LeftButton) {
-                listItem.activate();
-                if(!listItem.modelChildren) root.visible = false;
-            } else if(mouse.button === Qt.RightButton) {
-                if(listItem.hasActionList) {
-                    listItem.openActionMenu(mouse.x, mouse.y);
+                anchors.fill: background
+
+                imagePath: Qt.resolvedUrl("svgs/" + (startStyles.currentStyle?.styleName ?? "Vista") + "/" + "menuitem.svg")
+                prefix: "new"
+
+                visible: listItem.isNew
+
+                Rectangle {
+                    anchors.fill: parent
+
+                    color: "#ffe599"
+
+                    visible: listItem.smallIcon && (startStyles.currentStyle?.styleName ?? "Vista") === "Vista"
                 }
             }
+
+            KSvg.FrameSvgItem {
+                id: background
+
+                anchors {
+                    fill: parent
+                }
+
+                imagePath: Qt.resolvedUrl("svgs/" + (startStyles.currentStyle?.styleName ?? "Vista") + "/" + "menuitem.svg")
+                prefix: "hover"
+
+                opacity: {
+                    if(ma.containsMouse) return 1;
+                    if(listItem.listView.currentIndex === listItem.itemIndex && listItem.childIndex === -1) return 0.5;
+                    return 0;
+                }
+            }
+
+            Kirigami.Icon {
+                id: elementIcon
+
+                anchors {
+                    left: parent.left
+                    leftMargin: listItem.appView ? (Kirigami.Units.mediumSpacing-1) : Kirigami.Units.smallSpacing
+                    verticalCenter: parent.verticalCenter
+                }
+
+                width: smallIcon ? Kirigami.Units.iconSizes.small : Kirigami.Units.iconSizes.medium
+                height: width
+
+                animated: false
+
+                source: (listItem.appView && Plasmoid.configuration.useGenericIcons && model.hasChildren) ? "folder" : (model ? model.decoration : "")
+            }
+
+            ColumnLayout {
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: elementIcon.right
+                    right: parent.right
+                    leftMargin: listItem.appView ? Kirigami.Units.mediumSpacing-1 : Kirigami.Units.smallSpacing * 2
+                    rightMargin: Kirigami.Units.smallSpacing * 2
+                }
+
+                spacing: 0
+
+                PlasmaComponents.Label {
+                    id: titleElement
+
+                    text: listItem.title
+                    font.bold: listItem.isFavorites && !Plasmoid.configuration.disableBold
+                        || listItem.isDefaultInternetApp
+                        || listItem.isDefaultEmailApp
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignLeft
+                    color: startStyles.currentStyle?.leftPanel.itemTextColor ??  "black"
+                }
+
+                PlasmaComponents.Label {
+                    id: subTitleElement
+
+                    height: implicitHeight
+                    color: startStyles.currentStyle?.leftPanel.itemTextColor ?? "black"
+                    text: isDefaultEmailApp || isDefaultInternetApp ? listItem.subtitle : listItem.title
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignLeft
+
+                    visible: listItem.title !== model?.display && !listItem.smallIcon
+                }
+            }
+
+            PlasmaCore.ToolTipArea {
+                id: toolTip
+
+                anchors.fill: parent
+
+                active: titleElement.truncated
+                interactive: false
+                mainText: model?.display ?? ""
+            }
+
+            Timer {
+                id: toolTipTimer
+
+                interval: Kirigami.Units.longDuration*2
+                onTriggered: {
+                    toolTip.showToolTip();
+                }
+            }
+
+
+            MouseArea {
+                id: ma
+
+                anchors.fill: parent
+
+                hoverEnabled: true
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                cursorShape: listItem.modelChildren || !listItem.smallIcon ? undefined : Qt.PointingHandCursor
+                onEntered: {
+                    if(listItem.listView.currentItem && listItem.listView.currentIndex !== model.index) {
+                        listItem.listView.currentItem.toolTipTimer.stop();
+                        listItem.listView.currentItem.toolTip.hideToolTip();
+                    }
+                    listItem.listView.currentIndex = model.index;
+                    toolTipTimer.start();
+
+                }
+                onExited: {
+                    toolTipTimer.stop();
+                    toolTip.hideToolTip();
+                    listItem.listView.currentIndex = -1;
+                    listItem.pressX = -1;
+                    listItem.pressY = -1;
+                }
+                onPressed: mouse => {
+                    if(mouse.button === Qt.LeftButton) {
+                        listItem.pressX = mouse.x;
+                        listItem.pressY = mouse.y;
+                    }
+
+                }
+                onPositionChanged: mouse => {
+                    if(listItem.pressX != -1 && model.url && dragHelper.isDrag(listItem.pressX, listItem.pressY, mouse.x, mouse.y)) {
+                        kicker.dragSource = listItem;
+                        dragHelper.dragIconSize = Kirigami.Units.iconSizes.small;
+                        dragHelper.startDrag(kicker, model.url, model.decoration);
+                    }
+                }
+                onReleased: mouse => {
+                    if(mouse.button === Qt.LeftButton) {
+                        if (mouse.source == Qt.MouseEventSynthesizedByQt) {
+                            positionChanged(mouse);
+                        }
+                        listItem.pressX = -1;
+                        listItem.pressY = -1;
+                    }
+                    mouse.accepted = false;
+                }
+                onClicked: mouse => {
+                    if(mouse.button === Qt.LeftButton) {
+                        listItem.activate();
+                        if(!listItem.modelChildren) root.visible = false;
+                    } else if(mouse.button === Qt.RightButton) {
+                        if(listItem.hasActionList) {
+                            listItem.openActionMenu(mouse.x, mouse.y);
+                        }
+                    }
+                }
+            }
         }
 
+        Column {
+            id: childrenColumn
+
+            width: parent.width
+            height: {
+                if(!listItem.modelChildren) return 0;
+                return listItem.expanded ? children.count * listItem.implicitHeight : 0
+            }
+
+            visible: listItem.expanded
+
+            Repeater {
+                id: children
+
+                model: listItem.childModel
+                delegate: KickoffChildItem {
+                    width: childrenColumn.width
+
+                    appView: listItem.appView
+                    smallIcon: listItem.smallIcon
+                    onReset: listItem.listView.actualView.reset();
+                    listView: listItem.listView
+                    childModel: listItem.childModel
+                    parentKickoffItem: listItem
+                }
+            }
+        }
     }
 }

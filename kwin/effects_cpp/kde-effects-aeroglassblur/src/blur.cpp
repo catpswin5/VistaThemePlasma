@@ -88,16 +88,30 @@ BlurEffect::BlurEffect() : m_sharedMemory("kwinaero")
         m_upsamplePass.offsetLocation = m_upsamplePass.shader->uniformLocation("offset");
         m_upsamplePass.halfpixelLocation = m_upsamplePass.shader->uniformLocation("halfpixel");
         m_upsamplePass.colorMatrixLocation = m_upsamplePass.shader->uniformLocation("colorMatrix");
+    }
 
-        m_upsamplePass.basicColorizationLocation = m_upsamplePass.shader->uniformLocation("basicColorization");
-        m_upsamplePass.aeroColorRLocation = m_upsamplePass.shader->uniformLocation("aeroColorR");
-        m_upsamplePass.aeroColorGLocation = m_upsamplePass.shader->uniformLocation("aeroColorG");
-        m_upsamplePass.aeroColorBLocation = m_upsamplePass.shader->uniformLocation("aeroColorB");
-        m_upsamplePass.aeroColorALocation = m_upsamplePass.shader->uniformLocation("aeroColorA");
-        m_upsamplePass.aeroColorBalanceLocation = m_upsamplePass.shader->uniformLocation("aeroColorBalance");
-        m_upsamplePass.aeroAfterglowBalanceLocation = m_upsamplePass.shader->uniformLocation("aeroAfterglowBalance");
-        m_upsamplePass.aeroBlurBalanceLocation = m_upsamplePass.shader->uniformLocation("aeroBlurBalance");
-        m_upsamplePass.aeroColorizeLocation = m_upsamplePass.shader->uniformLocation("aeroColorize");
+    for(int i = 0; i < 3; i++) {
+        qCWarning(KWIN_BLUR) << "Loading shader " << aeroShaderLocations[i];
+        m_aeroPasses[i].shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture,
+                                                                                  QStringLiteral(":/effects/aeroblur/shaders/vertex.vert"),
+                                                                                  aeroShaderLocations[i]);
+        if (!m_aeroPasses[i].shader) {
+            qCWarning(KWIN_BLUR) << "Failed to load aero pass shader " << aeroShaderLocations[i];
+            return;
+        } else {
+            m_aeroPasses[i].mvpMatrixLocation            = m_aeroPasses[i].shader->uniformLocation("modelViewProjectionMatrix");
+            m_aeroPasses[i].offsetLocation               = m_aeroPasses[i].shader->uniformLocation("offset");
+            m_aeroPasses[i].halfpixelLocation            = m_aeroPasses[i].shader->uniformLocation("halfpixel");
+            m_aeroPasses[i].colorMatrixLocation          = m_aeroPasses[i].shader->uniformLocation("colorMatrix");
+            m_aeroPasses[i].aeroColorRLocation           = m_aeroPasses[i].shader->uniformLocation("aeroColorR");
+            m_aeroPasses[i].aeroColorGLocation           = m_aeroPasses[i].shader->uniformLocation("aeroColorG");
+            m_aeroPasses[i].aeroColorBLocation           = m_aeroPasses[i].shader->uniformLocation("aeroColorB");
+            m_aeroPasses[i].aeroColorALocation           = m_aeroPasses[i].shader->uniformLocation("aeroColorA");
+            m_aeroPasses[i].aeroColorBalanceLocation     = m_aeroPasses[i].shader->uniformLocation("aeroColorBalance");
+            m_aeroPasses[i].aeroAfterglowBalanceLocation = m_aeroPasses[i].shader->uniformLocation("aeroAfterglowBalance");
+            m_aeroPasses[i].aeroBlurBalanceLocation      = m_aeroPasses[i].shader->uniformLocation("aeroBlurBalance");
+        }
+
     }
 
     m_reflectPass.shader = ShaderManager::instance()->generateShaderFromFile(
@@ -120,7 +134,7 @@ BlurEffect::BlurEffect() : m_sharedMemory("kwinaero")
     m_glowPass.shader = ShaderManager::instance()->generateShaderFromFile(
         ShaderTrait::MapTexture,
         QStringLiteral(":/effects/aeroblur/shaders/vertex.vert"),
-        QStringLiteral(":/effects/aeroblur/shaders/basic.frag"));
+        QStringLiteral(":/effects/aeroblur/shaders/glow.frag"));
     if (!m_glowPass.shader) {
         qCWarning(KWIN_BLUR) << "Failed to load sideglow pass shader";
         return;
@@ -135,10 +149,10 @@ BlurEffect::BlurEffect() : m_sharedMemory("kwinaero")
     }
 
     m_glowPass.sideGlowTexture = GLTexture::upload(QPixmap(QStringLiteral(":/effects/aeroblur/framecornereffect.png")));
-    m_glowPass.sideGlowTexture->setFilter(GL_LINEAR);
+    m_glowPass.sideGlowTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_glowPass.sideGlowTexture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_glowPass.sideGlowTexture_unfocus = GLTexture::upload(QPixmap(QStringLiteral(":/effects/aeroblur/framecornereffect-unfocus.png")));
-    m_glowPass.sideGlowTexture_unfocus->setFilter(GL_LINEAR);
+    m_glowPass.sideGlowTexture_unfocus->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_glowPass.sideGlowTexture_unfocus->setWrapMode(GL_CLAMP_TO_EDGE);
 
     initBlurStrengthValues();
@@ -259,7 +273,7 @@ bool BlurEffect::readMemory(bool *skipFunc)
 {
 	if(!m_sharedMemory.attach())
     {
-        printf("Couldn't access shared memory! %s %d\n", m_sharedMemory.nativeKey().toStdString().c_str(), m_sharedMemory.error());
+        qCWarning(KWIN_BLUR) << "Couldn't access shared memory! " << m_sharedMemory.nativeKey() << " " << m_sharedMemory.error();
         if(m_sharedMemory.error())
             return false;
     }
@@ -678,6 +692,15 @@ void BlurEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     m_currentBlur = QRegion();
     m_currentScreen = effects->waylandDisplay() ? data.screen : nullptr;
 
+    // We can avoid checking for every window by evaluating the condition here
+    auto maximizedWindowsOnCurrentActivity = [&]() -> bool {
+        return std::find_if(m_maximizedWindows.begin(), m_maximizedWindows.end(),
+                            [](const EffectWindow *a) { return a->isOnCurrentDesktop() && a->isOnCurrentActivity(); }) != m_maximizedWindows.end();
+    };
+    if(m_maximizeColorization) {
+        m_maximizedWindowsInCurrentActivity = maximizedWindowsOnCurrentActivity();
+    }
+
     effects->prePaintScreen(data, presentTime);
 }
 
@@ -743,11 +766,11 @@ bool BlurEffect::scaledOrTransformed(const EffectWindow *w, int mask, const Wind
 bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const
 {
     QString windowClass = w->windowClass().split(' ')[0];
-    //printf("%d %s\n", w->windowType(), windowClass.toStdString().c_str());
+    //qCWarning(KWIN_BLUR) << w->windowClass();
+    //printf("%d %s %s %s\n", w->windowType(), windowClass.toStdString().c_str(), w->isSpecialWindow() ? "specil true" : "specil false", w->caption().toStdString().c_str());
     if (effects->activeFullScreenEffect() && !w->data(WindowForceBlurRole).toBool()) {
         return false;
     }
-
 
     if (w->isOutline() || w->isDesktop() || (!w->isManaged() && !(windowClass == "plasmashell" || windowClass == "kwin_x11" || windowClass == "kwin_wayland"))) {
         return false;
@@ -768,6 +791,12 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 bool BlurEffect::shouldForceBlur(const EffectWindow *w) const
 {
     if ((!m_blurDocks && w->isDock()) || (!m_blurMenus && (w->isMenu() || w->isDropdownMenu() || w->isPopupMenu()))) {
+        return false;
+    }
+    // For some reason, the Alt+Tab window on Wayland is made up of two windows, one of which is completely empty
+    // and has an empty window class, and.. isn't a Wayland client???'
+    if(effects->waylandDisplay() && !w->isWaylandClient() && w->window()->resourceName() == "")
+    {
         return false;
     }
 
@@ -797,11 +826,11 @@ void BlurEffect::ensureReflectTexture()
 	QImage textureImage(m_texturePath);
 	if(effects->waylandDisplay())
 	{
-		textureImage.mirror(true, false);
+		textureImage.flip(Qt::Horizontal);
 	}
 
 	m_reflectPass.reflectTexture = GLTexture::upload(textureImage);
-	m_reflectPass.reflectTexture->setFilter(GL_LINEAR);
+	m_reflectPass.reflectTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
 	m_reflectPass.reflectTexture->setWrapMode(GL_REPEAT);
 }
 
@@ -886,7 +915,8 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         renderInfo.textures.clear();
 
         for (size_t i = 0; i <= m_iterationCount; ++i) {
-            auto texture = GLTexture::allocate(textureFormat, backgroundRect.size() / (1 << i));
+            const QSize textureSize(std::max(1, backgroundRect.width() / (1 << i)), std::max(1, backgroundRect.height() / (1 << i)));
+            auto texture = GLTexture::allocate(textureFormat, textureSize);
             if (!texture) {
                 qCWarning(KWIN_BLUR) << "Failed to allocate an offscreen texture";
                 return;
@@ -1070,7 +1100,6 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
         m_upsamplePass.shader->setUniform(m_upsamplePass.mvpMatrixLocation, projectionMatrix);
         m_upsamplePass.shader->setUniform(m_upsamplePass.offsetLocation, float(m_offset / 2.5f));
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroColorizeLocation, false);
 
         for (size_t i = renderInfo.framebuffers.size() - 1; i > 1; --i) {
             GLFramebuffer::popFramebuffer();
@@ -1084,6 +1113,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
             vbo->draw(GL_TRIANGLES, 0, 6);
         }
+        ShaderManager::instance()->popShader();
 
         // The last upsampling pass is rendered on the screen, not in framebuffers[0].
         GLFramebuffer::popFramebuffer();
@@ -1091,26 +1121,17 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
         projectionMatrix = viewport.projectionMatrix();
         projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
-        /*if(!winData.isNull())
-        {
-            projectionMatrix *= transformedMatrix;
-        }*/
-        m_upsamplePass.shader->setUniform(m_upsamplePass.mvpMatrixLocation, projectionMatrix);
 
-        const QVector2D halfpixel(0.5 / (double)read->colorAttachment()->width(),
-                                  0.5 / (double)read->colorAttachment()->height());
-        m_upsamplePass.shader->setUniform(m_upsamplePass.halfpixelLocation, halfpixel);
-
-        // aero
-
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroColorizeLocation, true);
+        /*********************
+         * COLORIZATION PASS *
+         *********************/
+        float basicAlpha = m_aeroIntensity / 255.0f;
 
         float pb = m_aeroPrimaryBalance;
         float sb = m_aeroSecondaryBalance;
         float bb = m_aeroBlurBalance;
 
-        float al = (m_transparencyEnabled) ? -1.0f : m_aeroColorA;
-        float basicAlpha = m_aeroIntensity / 255.0f;
+        float al = m_aeroColorA;
 		if(!treatAsActive(w))
         {
             pb = m_aeroPrimaryBalanceInactive;
@@ -1121,30 +1142,65 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         float r = m_aeroColorR;
         float g = m_aeroColorG;
         float b = m_aeroColorB;
+
+
+        AeroPasses selectedPass = AeroPasses::AERO;
+
         // A window is maximized, use opaque colorization
         auto maximizeState = w->window()->maximizeMode();
         bool basicCol = m_basicColorization;
+        bool useTransparency = m_transparencyEnabled;
+
+        auto maximizedWindowsShareScreen = [&]() -> bool {
+            return std::find_if(m_maximizedWindows.begin(), m_maximizedWindows.end(),
+                                [&](const EffectWindow *a) { return a->screen() == w->screen(); }) != m_maximizedWindows.end();
+        };
         QString windowClass = w->windowClass().split(' ')[1];
-        bool opaqueMaximize = (maximizeState == MaximizeMode::MaximizeFull || (m_maximizedWindows.size() != 0 && w->isDock())) && m_maximizeColorization && windowClass != "kwin" && w->caption() != "sevenstart-menurepresentation";
+        bool opaqueMaximize = false;
+        if(m_maximizeColorization) {
+            if(maximizeState != MaximizeMode::MaximizeFull && !w->isDock()) opaqueMaximize = false;
+            else if(!m_maximizedWindowsInCurrentActivity) opaqueMaximize = false;
+            else if (w->isDock()) {
+                if(maximizedWindowsShareScreen()) opaqueMaximize = true;
+            }
+            else opaqueMaximize = maximizeState == MaximizeMode::MaximizeFull && windowClass != "kwin" && w->caption() != "sevenstart-menurepresentation";
+        }
+
+        if(w->isOnScreenDisplay()) opaqueMaximize = true;
+        // X11 Alt+Tab window
+        if(w->caption() == "" && windowClass == "kwin") opaqueMaximize = false;
+        // Wayland Alt+Tab window
+        if(effects->waylandDisplay() && !w->isWaylandClient() && w->window()->resourceName() == "") opaqueMaximize = false;
+
+
         if(opaqueMaximize)
         {
-            al = -1.0f;
             getMaximizedColorization(m_aeroIntensity, m_aeroColorR, m_aeroColorG, m_aeroColorB, r, g, b);
             basicAlpha = 1.0;
             basicCol = true;
+            useTransparency = true;
         }
 
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroColorRLocation, r);
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroColorGLocation, g);
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroColorBLocation, b);
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroColorALocation, al);
-        m_upsamplePass.shader->setUniform(m_upsamplePass.basicColorizationLocation, basicCol);
+        if(basicCol) selectedPass = AeroPasses::BASIC;
+        if(!useTransparency) selectedPass = AeroPasses::OPAQUE;
 
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroColorBalanceLocation,     (basicCol) ? basicAlpha : (pb / 100.0f));
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroAfterglowBalanceLocation, sb / 100.0f);
-        m_upsamplePass.shader->setUniform(m_upsamplePass.aeroBlurBalanceLocation,      bb / 100.0f);
+        ShaderManager::instance()->pushShader(m_aeroPasses[selectedPass].shader.get());
 
-        m_upsamplePass.shader->setUniform(m_upsamplePass.colorMatrixLocation, colorMat);
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].mvpMatrixLocation, projectionMatrix);
+
+        const QVector2D halfpixel(0.5 / (double)read->colorAttachment()->width(),
+                                  0.5 / (double)read->colorAttachment()->height());
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].halfpixelLocation, halfpixel);
+
+
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].aeroColorRLocation, r);
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].aeroColorGLocation, g);
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].aeroColorBLocation, b);
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].aeroColorALocation, al);
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].aeroColorBalanceLocation,     (basicCol) ? basicAlpha : (pb / 100.0f));
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].aeroAfterglowBalanceLocation, sb / 100.0f);
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].aeroBlurBalanceLocation,      bb / 100.0f);
+        m_aeroPasses[selectedPass].shader->setUniform(m_aeroPasses[selectedPass].colorMatrixLocation, colorMat);
 
         read->colorAttachment()->bind();
 
@@ -1164,6 +1220,8 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         }
 
         ShaderManager::instance()->popShader();
+
+        //bool opaqueMaximize = false;
 
         glEnable(GL_BLEND);
 
@@ -1191,12 +1249,12 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
 
             QMatrix4x4 projectionMatrix = viewport.projectionMatrix();
             projectionMatrix.translate(deviceBackgroundRect.x(), deviceBackgroundRect.y());
-			
+            const auto scale = viewport.scale();
 
             m_reflectPass.shader->setUniform(m_reflectPass.mvpMatrixLocation, projectionMatrix);
-			m_reflectPass.shader->setUniform(m_reflectPass.screenResolutionLocation, QVector2D(screenSize.width(), screenSize.height()));
-			m_reflectPass.shader->setUniform(m_reflectPass.windowPosLocation, QVector2D(windowPos.x(), windowPos.y()));
-			m_reflectPass.shader->setUniform(m_reflectPass.windowSizeLocation, QVector2D(windowSize.width(), windowSize.height()));
+			m_reflectPass.shader->setUniform(m_reflectPass.screenResolutionLocation, QVector2D(screenSize.width() * scale, screenSize.height() * scale));
+			m_reflectPass.shader->setUniform(m_reflectPass.windowPosLocation, QVector2D(deviceBackgroundRect.x(), deviceBackgroundRect.y()));
+			m_reflectPass.shader->setUniform(m_reflectPass.windowSizeLocation, QVector2D(backgroundRect.width(), backgroundRect.height()));
 			m_reflectPass.shader->setUniform(m_reflectPass.opacityLocation, float(finalOpacity));
 			m_reflectPass.shader->setUniform(m_reflectPass.translateTextureLocation, m_translateTexture ? float(1.0) : float(0.0));
             m_reflectPass.shader->setUniform(m_reflectPass.colorMatrixLocation, colorMat);
@@ -1221,12 +1279,12 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
                 const auto scale = viewport.scale();
 
                 bool scaleY = false;
-                if(deviceBackgroundRect.height() != windowSize.height() && !scaledOrTransformed(w, mask, data)) scaleY = true;
+                if(backgroundRect.height() != windowSize.height() && !scaledOrTransformed(w, mask, data)) scaleY = true;
                 const QRectF pixelGeometry = snapToPixelGridF(scaledRect(QRectF(0, 0, glowTex->width(), glowTex->height()), scale));
                 m_glowPass.shader->setUniform(m_glowPass.mvpMatrixLocation, projectionMatrix);
             	m_glowPass.shader->setUniform(m_glowPass.opacityLocation, float(opacity*0.8));
-            	m_glowPass.shader->setUniform(m_glowPass.windowPosLocation, QVector2D(windowPos.x(), windowPos.y()));
-            	m_glowPass.shader->setUniform(m_glowPass.windowSizeLocation, QVector2D(windowSize.width(), windowSize.height()));
+            	m_glowPass.shader->setUniform(m_glowPass.windowPosLocation, QVector2D(deviceBackgroundRect.x(), deviceBackgroundRect.y()));
+            	m_glowPass.shader->setUniform(m_glowPass.windowSizeLocation, QVector2D(backgroundRect.width(), backgroundRect.height()));
             	m_glowPass.shader->setUniform(m_glowPass.textureSizeLocation, QVector2D(pixelGeometry.width(), pixelGeometry.height()));
             	m_glowPass.shader->setUniform(m_glowPass.scaleYLocation, scaleY);
                 m_glowPass.shader->setUniform(m_glowPass.colorMatrixLocation, colorMat);
@@ -1267,7 +1325,7 @@ QMatrix4x4 BlurEffect::colorMatrix(const float &brightness, const float &saturat
 bool BlurEffect::shouldHaveCornerGlow(const EffectWindow *w) const
 {
 	QString windowClass = w->windowClass().split(' ')[1];
-    if(w->isTooltip()) return false;
+    if(w->isOnScreenDisplay() || w->isTooltip() || w->isSplash()) return false;
     if(w->caption() == "sevenstart-menurepresentation" || (windowClass != "kwin" && w->isDock())) return false; // Disables panels and start menu
     return true;
 }
@@ -1276,7 +1334,9 @@ bool BlurEffect::treatAsActive(const EffectWindow *w)
 {
 	QString windowClass = w->windowClass().split(' ')[1];
     if (m_basicColorization && (w->isDock() || w->caption() == "sevenstart-menurepresentation")) return false;
-	return (w->isFullScreen() || windowClass == "plasmashell" || windowClass == "kwin" || w == effects->activeWindow());
+    if(w->caption() == "aerothemeplasma-tabbox" && !w->isManaged()) return true;
+    if(effects->waylandDisplay() && !w->isWaylandClient() && w->window()->resourceName() == "") return true;
+	return (w->isOnScreenDisplay() || w->isFullScreen() || windowClass == "plasmashell" || windowClass == "kwin" || w == effects->activeWindow());
 }
 
 bool BlurEffect::isActive() const

@@ -37,7 +37,7 @@ QQC2.Menu {
                     Rectangle {
                         anchors.left: parent.left;
                         anchors.right: parent.right;
-                        anchors.bottom: parent.bottom;
+                        anchors.top: parent.top;
                         height: 1;
                         color: \"#e0e0e0\";
                     }
@@ -91,7 +91,7 @@ QQC2.Menu {
             color: "#e2e3e3"
             Rectangle {
                 anchors.top: parent.top;
-                anchors.right: parent.right;
+                anchors.left: parent.left;
                 anchors.bottom: parent.bottom;
                 width: 1;
                 color: "white"

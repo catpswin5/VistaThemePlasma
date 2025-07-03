@@ -14,7 +14,6 @@ import org.kde.plasma.plasmoid
 import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
-    property alias cfg_showPreviews: showPreviews.checked
     property alias cfg_taskStyle: taskStyle.currentIndex
 
     property alias cfg_disableHottracking: disableHottracking.checked
@@ -68,11 +67,6 @@ KCM.SimpleKCM {
             ColumnLayout {
                 Layout.fillWidth: true
 
-                CheckBox {
-                    id: showPreviews
-                    text: i18n("Enable window previews")
-                }
-
                 RowLayout {
                     Layout.fillWidth: true
 
@@ -81,7 +75,6 @@ KCM.SimpleKCM {
                         id: taskStyle
 
                         model: [
-                            i18n("7 Milestone 2"),
                             i18n("Vista"),
                             i18n("Plasma")
                         ]
@@ -116,17 +109,14 @@ KCM.SimpleKCM {
                 CheckBox {
                     id: draggingEnabled
                     text: i18n("Enable dragging")
-                    enabled: cfg_taskStyle !== 0
                 }
-
                 CheckBox {
                     id: showProgress
                     text: i18n("Show app progress bar")
-                    enabled: cfg_taskStyle !== 0
                 }
                 CheckBox {
                     id: hoverFadeAnim
-                    enabled: disableHottracking.checked && cfg_taskStyle === 1
+                    enabled: disableHottracking.checked && cfg_taskStyle === 0
                     text: i18n("Enable hover fade animation")
                 }
             }
