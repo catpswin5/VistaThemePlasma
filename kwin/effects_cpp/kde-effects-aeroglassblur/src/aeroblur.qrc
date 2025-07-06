@@ -2,8 +2,6 @@
 <qresource prefix="/effects/aeroblur/">
   <file>shaders/downsample.frag</file>
   <file>shaders/downsample_core.frag</file>
-  <file>shaders/glow.frag</file>
-  <file>shaders/glow_core.frag</file>
   <file>shaders/reflect.frag</file>
   <file>shaders/reflect_core.frag</file>
   <file>shaders/upsample.frag</file>
@@ -21,7 +19,6 @@
   <file>reflection.png</file>
   <file>framecornereffect.png</file>
   <file>framecornereffect-unfocus.png</file>
-  <file>region.svg</file>
   <file>frame.svg</file>
   <file>frame-select.svg</file>
 </qresource>

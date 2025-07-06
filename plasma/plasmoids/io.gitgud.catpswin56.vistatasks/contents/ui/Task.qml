@@ -38,12 +38,7 @@ PlasmaCore.ToolTipArea {
 
     onAboutToShow: updateToolTipBindings();
 
-    onToolTipVisibleChanged: {
-        if(containsMouse && !tasksRoot.toolTipOpen)
-            tasksRoot.toolTipOpen = toolTipVisible;
-        else
-            tasksRoot.toolTipOpen = false;
-    }
+    onToolTipVisibleChanged: tasksRoot.toolTipOpen = toolTipVisible;
 
     function updateToolTipBindings() {
         taskThumbnail.parentTask = Qt.binding(() => task);

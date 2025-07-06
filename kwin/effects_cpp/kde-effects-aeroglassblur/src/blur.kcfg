@@ -6,13 +6,28 @@
     <kcfgfile arg="true"/>
     <group name="Effect-blurplus">
     <entry name="BlurStrength" type="Int">
-            <default>3</default>
+            <default>4</default>
     </entry>
     <entry name="WindowClasses" type="String">
         <default></default>
     </entry>
     <entry name="BlurFirefox" type="String">
         <default>firefox</default>
+    </entry>
+    <entry name="FirefoxCornerRadius" type="Int">
+        <default>6</default>
+    </entry>
+    <entry name="FirefoxHollowRegion" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="FirefoxBlurTopMargin" type="Int">
+        <default>96</default>
+    </entry>
+    <entry name="OpaqueKrunner" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="OpaqueOSD" type="Bool">
+        <default>true</default>
     </entry>
     <entry name="BlurMatching" type="Bool">
         <default>true</default>
@@ -56,19 +71,19 @@
 	<default>#ffffffff</default>
     </entry>
     <entry name="ReflectionIntensity" type="Int">
-        <default>100</default>
+        <default>75</default>
     </entry>
     <entry name="AeroIntensity" type="Int">
-        <default>69</default>
+        <default>50</default>
     </entry>
     <entry name="AeroHue" type="Int">
-        <default>210</default>
+        <default>0</default>
     </entry>
     <entry name="AeroSaturation" type="Int">
-        <default>74</default>
+        <default>50</default>
     </entry>
     <entry name="AeroBrightness" type="Int">
-        <default>99</default>
+        <default>50</default>
     </entry>
     <entry name="ExcludedColorization" type="String">
         <default></default>

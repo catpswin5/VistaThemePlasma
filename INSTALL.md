@@ -59,7 +59,7 @@ $ git pull
 and re-run the install scripts:
 
 ```sh
-$ sh compile.sh
+$ sh compile.sh 
 $ sh install_plasmoids.sh
 $ sh install_plasmoids.sh --no-compile # If there's no need to recompile the C++ parts of the plasmoids, you can just run this
 $ sh install_kwin_components.sh
@@ -142,8 +142,7 @@ VistaTasks relies on modifications found in `misc/defaulttooltip` in order to wo
     - Plasma shell
     - Preset panel layout that can be applied from Edit mode
     
-3. Move `sddm-theme-mod` to `/usr/share/sddm/themes`. Optionally, to enable the Vista start screen, set `enableStartup=true` in `theme.conf.user`
-4. Import and apply the color scheme through System Settings.
+3. Move `sddm-theme-mod` to `/usr/share/sddm/themes`. This will install the SDDM theme.
 
 ## KWin components <a name="kwin"></a>
 

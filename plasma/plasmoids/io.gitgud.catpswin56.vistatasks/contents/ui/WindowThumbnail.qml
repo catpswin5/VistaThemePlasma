@@ -35,8 +35,13 @@ MouseArea {
 
     readonly property bool extendedFunctionality: Plasmoid.configuration.extPreviewFunc
 
-    property real thumbnailWidth: 164
-    property real thumbnailHeight: 94
+    property real maxThumbnailWidth: 164
+    property real maxThumbnailHeight: 94
+
+    property real thumbnailWidth: maxThumbnailWidth
+    property real thumbnailHeight: maxThumbnailHeight
+
+    property real baselineAspectRatio: maxThumbnailWidth / maxThumbnailHeight
 
     readonly property int margins: Kirigami.Units.smallSpacing * 3.5
 
@@ -285,11 +290,8 @@ MouseArea {
                 sourceComponent: minimized ? appIcon : (KWindowSystem.isPlatformWayland ? (tasks.toolTipOpen ? waylandThumbnail : undefined) : x11Thumbnail)
 
                 onLoaded: {
-                    // It IS possible to make the thumbnail follow
-                    // the Wayland thumbnail size but I suck
-                    // at math too much to know how
-                    if(sourceComponent !== x11Thumbnail) thumbnailRoot.thumbnailWidth = thumbnailLoader.width;
-                    if(sourceComponent !== x11Thumbnail) thumbnailRoot.thumbnailHeight = thumbnailLoader.height;
+                    if(sourceComponent == appIcon) thumbnailRoot.thumbnailWidth = thumbnailLoader.width;
+                    if(sourceComponent == appIcon) thumbnailRoot.thumbnailHeight = thumbnailLoader.height;
                     if(isGroupDelegate && ListView.view !== null) ListView.view.updateMaxSize()
                 }
 
@@ -345,6 +347,7 @@ MouseArea {
                     id: waylandThumbnail
 
                     PipeWire.PipeWireSourceItem {
+                        id: wl_pw_src
                         nodeId: waylandItem.nodeId
 
                         TaskManager.ScreencastingRequest {
@@ -352,41 +355,78 @@ MouseArea {
                             uuid: windows[0]
                         }
 
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: -1
+                        // Calculates aspect ratio of the PipeWire stream size, which is effectively the window's dimensions
+                        property real aspectRatio: (wl_pw_src.streamSize.height == 0) ? 0.0 : wl_pw_src.streamSize.width / wl_pw_src.streamSize.height
+                        // If the stream's width is larger than the height, and also the aspectRatio is greater or equal to the
+                        // aspect ratio of the maximum thumbnail's dimensions, then it follows that the thumbnail preview's width
+                        // will be at the maximum, therefore it's a fixed known value.
+                        // In this case, the height is calculated through simple proportions
+                        // Otherwise the calculations can be derived in a similar manner
+                        property bool widthTakesPrecedence: (wl_pw_src.streamSize.width > wl_pw_src.streamSize.height) &&
+                        (aspectRatio >= thumbnailRoot.baselineAspectRatio)
 
-                            color: "black"
+                        onStreamSizeChanged: thumbnailRect.updateSize();
+                        onReadyChanged: if(ready) thumbnailRect.updateSize();
 
-                            border.width: 1
-                            border.color: "black"
-                            radius: 2
+                        Item {
+                            id: thumbnailRect
 
-                            opacity: 0.5
-                            z: -1
-                        }
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: -2
+                            anchors.centerIn: parent
 
-                            color: "transparent"
+                            onWidthChanged: thumbnailRoot.thumbnailWidth = ((thumbnailRect.width-2) > 0) ? thumbnailRect.width-2 : thumbnailRoot.maxThumbnailWidth
+                            onHeightChanged: thumbnailRoot.thumbnailHeight = ((thumbnailRect.height-2) > 0) ? thumbnailRect.height-2 : thumbnailRoot.maxThumbnailHeight
 
-                            border.width: 1
-                            border.color: "white"
-                            radius: 2
+                            function updateSize() {
+                                if(wl_pw_src.aspectRatio === 0.0 || !wl_pw_src.ready) {
+                                    width = 0;
+                                    height = 0;
+                                } else if(wl_pw_src.widthTakesPrecedence) {
+                                    width = Math.floor(thumbnailRoot.maxThumbnailWidth + 2);
+                                    height = Math.floor((thumbnailRoot.maxThumbnailWidth / wl_pw_src.aspectRatio) + 2);
+                                } else {
+                                    width = Math.floor((wl_pw_src.aspectRatio * thumbnailRoot.maxThumbnailHeight) + 2);
+                                    height = Math.floor(thumbnailRoot.maxThumbnailHeight + 2);
+                                }
+                            }
 
-                            opacity: 0.5
-                            z: -1
-                        }
+                            Rectangle {
+                                anchors.centerIn: parent
 
-                        Close {
-                            anchors {
-                                top: parent.top
-                                topMargin: 4
-                                right: parent.right
-                                rightMargin: 4
+                                width: parent.width
+                                height: parent.height
+
+                                color: "transparent"
+
+                                border.width: 1
+                                border.color: "black"
+
+                                opacity: 0.5
+                                z: -1
+                            }
+
+                            Rectangle {
+                                anchors.centerIn: parent
+
+                                width: parent.width+2
+                                height: parent.height+2
+
+                                color: "transparent"
+
+                                border.width: 1
+                                border.color: "white"
+                                radius: 2
+
+                                opacity: 0.5
+                                z: -1
+                            }
+
+                            Close {
+                                anchors.centerIn: parent
+                                anchors.horizontalCenterOffset: parent.width/2 - 10
+                                anchors.verticalCenterOffset: -parent.height/2 + 10
                             }
                         }
+
                     }
                 }
 

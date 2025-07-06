@@ -66,8 +66,7 @@ public:
     QMatrix4x4 colorMatrix(const float &brightness, const float &saturation) const;
 
     //FF stuff
-    QRegion applyBlurRegion(KWin::EffectWindow *w);
-    QRegion getForcedNewRegion();
+    QRegion applyBlurRegion(KWin::EffectWindow *w, bool useFrame = false);
     bool isFirefoxWindowValid(KWin::EffectWindow *w);
 
     bool provides(Feature feature) override;
@@ -111,23 +110,10 @@ private:
 private:
     struct
     {
+        std::unique_ptr<GLShader> shader;
+        std::unique_ptr<GLTexture> reflectTexture;
         std::unique_ptr<GLTexture> sideGlowTexture;
         std::unique_ptr<GLTexture> sideGlowTexture_unfocus;
-        std::unique_ptr<GLShader> shader;
-
-        int colorMatrixLocation;
-        int textureSizeLocation;
-        int windowPosLocation;
-        int windowSizeLocation;
-        int mvpMatrixLocation;
-        int opacityLocation;
-        int scaleYLocation;
-
-    } m_glowPass;
-    struct
-    {
-	std::unique_ptr<GLShader> shader;
-	std::unique_ptr<GLTexture> reflectTexture;
         int mvpMatrixLocation;
         int colorMatrixLocation;
         int screenResolutionLocation;
@@ -135,6 +121,14 @@ private:
         int windowSizeLocation;
         int opacityLocation;
         int translateTextureLocation;
+        int reflectTextureLocation;
+
+        // Glow
+        int glowTextureLocation;
+        int glowEnableLocation;
+        int textureSizeLocation;
+        int scaleYLocation;
+        int glowOpacityLocation;
     } m_reflectPass;
     struct
     {
@@ -191,6 +185,13 @@ private:
     QStringList m_windowClasses;
     QStringList m_windowClassesColorization;
     QStringList m_firefoxWindows;
+
+    int m_firefoxCornerRadius;
+    int m_firefoxBlurTopMargin;
+    bool m_firefoxHollowRegion;
+
+    bool m_opaqueKrunner;
+    bool m_opaqueOSD;
     bool m_blurMatching;
     bool m_blurNonMatching;
     bool m_blurMenus;
@@ -211,6 +212,10 @@ private:
     float m_aeroColorG;
     float m_aeroColorB;
     float m_aeroColorA;
+
+    float m_aeroColorROpaque;
+    float m_aeroColorGOpaque;
+    float m_aeroColorBOpaque;
 
     int m_aeroPrimaryBalance;
     int m_aeroSecondaryBalance;
@@ -251,8 +256,6 @@ private:
     static BlurManagerInterface *s_blurManager;
     static QTimer *s_blurManagerRemoveTimer;
     QSharedMemory m_sharedMemory;
-
-    KSvg::FrameSvg defaultSvg;
 
 };
 
