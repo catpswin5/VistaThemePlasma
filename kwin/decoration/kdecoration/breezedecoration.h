@@ -150,7 +150,7 @@ private:
     void smodPaintGlow(QPainter *painter, const QRectF &repaintRegion);
     void smodPaintOuterBorder(QPainter *painter, const QRectF &repaintRegion);
     void smodPaintTitleBar(QPainter *painter, const QRectF &repaintRegion);
-    void updateShadow();
+    void updateShadow(bool reconfigured = false);
     std::shared_ptr<KDecoration3::DecorationShadow> smodCreateShadow(bool active);
     void setScaledCornerRadius();
 
@@ -272,7 +272,7 @@ bool Decoration::isPolkit() const
 }
 bool Decoration::hideIcon() const
 {
-    if(isGadgetExplorer() || isPolkit()) return true;
+    if(isPersonalizeKCM() || isGadgetExplorer() || isPolkit()) return true;
     return m_internalSettings->hideIcon() && !window()->isShaded();
 }
 

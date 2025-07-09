@@ -419,13 +419,7 @@ ContainmentItem {
         }
 
         Plasmoid.contextualActions: [
-            PlasmaCore.Action {
-                text: i18n("Gadgets")
-                icon.name: "gadgets-sidebar"
-                onTriggered: {
-                    execEngine.exec("qdbus6 org.kde.plasmashell /PlasmaShell toggleWidgetExplorer; qdbus6 org.kde.plasmashell /PlasmaShell editMode false");
-                }
-            }
+
         ]
 
         PlasmaCore.Action {
