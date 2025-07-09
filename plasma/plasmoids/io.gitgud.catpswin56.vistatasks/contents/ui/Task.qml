@@ -1246,7 +1246,7 @@ TaskManagerApplet.SmartLauncherItem { }
                 fill: parent
 
                 bottomMargin: 1
-                topMargin: 2
+                topMargin: 1
             }
 
             imagePath: Plasmoid.configuration.taskStyle == 1 ? "widgets/tasks" : Qt.resolvedUrl("svgs/tasks.svg")
@@ -1274,9 +1274,10 @@ TaskManagerApplet.SmartLauncherItem { }
             id: taskProgressOverlayLoader
 
             anchors.fill: frame
+            anchors.margins: -1
 
             asynchronous: true
-            active: model.IsWindow && task.smartLauncherItem && task.smartLauncherItem.progressVisible
+            active: (model.IsWindow && task.smartLauncherItem && task.smartLauncherItem.progressVisible) && Plasmoid.configuration.showProgress
 
             source: "TaskProgressOverlay.qml"
 
