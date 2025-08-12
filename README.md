@@ -28,8 +28,6 @@ For the sidebar gadgets, go [here](https://gitgud.io/catpswin56/win-gadgets).
 
 Many thanks to the people who helped out by testing and providing some suggestions for certain plasmoids and other stuff. Special thanks goes to [WackyIdeas](https://gitgud.io/wackyideas/) for making the original [AeroThemePlasma](https://gitgud.io/wackyideas/aerothemeplasma) theme.
 
-### Credits
-
 ### Contributors
 
 - [AngelBruni](https://github.com/angelbruni) for the SVG Vista taskbar texture
