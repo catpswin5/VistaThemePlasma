@@ -1,6 +1,7 @@
 PlymouthVista/
 misc/defaulttooltip/build
 plasma/aerothemeplasma-kcmloader/build
+plasma/plasmoids/src/sidebar_src/build
 plasma/plasmoids/src/vistadesktop_src/build
 plasma/plasmoids/src/vistastart_src/build
 plasma/plasmoids/src/vistatasks_src/build
