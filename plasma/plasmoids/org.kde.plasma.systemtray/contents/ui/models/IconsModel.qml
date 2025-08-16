@@ -14,6 +14,7 @@ DelegateModel {
     required property var status
     required property Item grid
     required property Item orderingManager
+    required property Item root
 
     model: KItemModels.KSortFilterProxyModel {
         sourceModel: Plasmoid.systemTrayModel
@@ -64,9 +65,10 @@ DelegateModel {
         includeByDefault: true
         onChanged: (removed, inserted) => {
             if(inserted.length > 0) {
-                delegateModel.model.invalidateFilter();
+                delegateModel.root.invalidateFilters();
             }
             delegateModel.sort();
+            delegateModel.root.updateTimer.start();
         }
     }
     delegate: ItemLoader {

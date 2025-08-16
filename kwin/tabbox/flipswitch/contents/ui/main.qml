@@ -23,7 +23,7 @@ KWin.TabBoxSwitcher {
     currentIndex: thumbnailView ? thumbnailView.currentIndex : -1
 
     // TODO: Make it user configurable ?
-    property bool enableBlur: true
+    property bool enableBlur: false
 
     Window {
         id: window
@@ -39,27 +39,16 @@ KWin.TabBoxSwitcher {
 
         color: "transparent"
 
-        KWin.DesktopBackground {
-            activity: KWin.Workspace.currentActivity
-            desktop: KWin.Workspace.currentVirtualDesktop
-            outputName: window.screen.name
-
-            /*layer.enabled: true
-            layer.effect: FastBlur {
-                radius: enableBlur ? 64 : 0
-            }*/
-        }
-
         Rectangle {
             anchors {
-                top: enableBlur ? parent.top : infoBar.top
-                topMargin: enableBlur ? 0 : -infoBar.anchors.bottomMargin
+                top: parent.top
+                topMargin: 0
                 left: parent.left
                 right: parent.right
                 bottom: parent.bottom
             }
-            color: Kirigami.Theme.backgroundColor
-            opacity: enableBlur ? 0.5 : 0.75
+            color: "black"
+            opacity: 0.5
         }
 
         PathView {

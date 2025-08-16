@@ -36,13 +36,15 @@ ContainmentItem {
     readonly property alias itemSize: activeIconsGrid.itemSize
     readonly property bool oneRowOrColumn: activeIconsGrid.rowsOrColumns === 1
 
-    readonly property alias hiddenIconsGrid: hiddenIconsGrid
-    readonly property alias activeIconsGrid: activeIconsGrid
-    readonly property alias systemIconsGrid: systemIconsGrid
+    property alias hiddenIconsGrid: hiddenIconsGrid
+    property alias activeIconsGrid: activeIconsGrid
+    property alias systemIconsGrid: systemIconsGrid
 
-    readonly property alias hiddenModel: hiddenIconsModel
-    readonly property alias activeModel: activeIconsModel
-    readonly property alias systemModel: systemIconsModel
+    property alias hiddenModel: hiddenIconsModel
+    property alias activeModel: activeIconsModel
+    property alias systemModel: systemIconsModel
+
+    property alias updateTimer: updateTimer
 
     property bool showHidden: false
 
@@ -56,6 +58,12 @@ ContainmentItem {
         id: dialogSvg
         visible: false
         imagePath: "solid/dialogs/background"
+    }
+
+    function invalidateFilters() {
+        hiddenIconsModel.model.invalidateFilter();
+        activeIconsModel.model.invalidateFilter();
+        systemIconsModel.model.invalidateFilter();
     }
 
     MouseArea {
@@ -136,6 +144,7 @@ ContainmentItem {
 
             status: PlasmaCore.Types.PassiveStatus
             grid: hiddenIconsGrid
+            root: root
             orderingManager: Item {
                 id: hiddenOrderingManager
 
@@ -182,6 +191,7 @@ ContainmentItem {
 
             status: PlasmaCore.Types.ActiveStatus
             grid: activeIconsGrid
+            root: root
             orderingManager: Item {
                 id: activeOrderingManager
 
@@ -226,6 +236,7 @@ ContainmentItem {
         ItemModels.SystemModel {
             id: systemIconsModel
 
+            root: root
             orderingManager: Item {
                 id: systemOrderingManager
 
@@ -266,6 +277,12 @@ ContainmentItem {
                         orderObject = {};
                 }
             }
+        }
+
+        Timer {
+            id: updateTimer
+            interval: 100
+            onTriggered: root.invalidateFilters();
         }
 
         //Main Layout

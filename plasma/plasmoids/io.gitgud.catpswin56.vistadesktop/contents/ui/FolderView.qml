@@ -173,9 +173,11 @@ FocusScope {
             main.generateDragImage();
         }
 
-        function onHasRefreshed() {
-            gridView.visible = false;
-            refreshGridView.start();
+        function onHasRefreshed(isExplicit) {
+            if(isExplicit) {
+                gridView.visible = false;
+                refreshGridView.start();
+            }
         }
     }
     Timer {
@@ -275,7 +277,7 @@ FocusScope {
                     case(0):
                         return "Build 6003";
                     case(1):
-                        return "Build 12/8/2025";
+                        return "Build 15/8/2025";
                     case(2):
                         return Plasmoid.configuration.customText2;
                 }
@@ -1129,7 +1131,7 @@ FocusScope {
                     } else if (event.matches(StandardKey.Undo)) {
                         dir.undo();
                     } else if (event.matches(StandardKey.Refresh)) {
-                        dir.refresh();
+                        dir.refresh(true);
                     } else if (event.matches(StandardKey.SelectAll)) {
                         positioner.setRangeSelected(0, count - 1);
                     } else {
