@@ -29,7 +29,13 @@ PlasmoidItem {
     Item {
         id: containerRect
 
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
+        height: 25
 
         opacity: root.hideToolbar ? 0 : 1
 

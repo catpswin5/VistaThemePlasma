@@ -107,6 +107,7 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: 6
         anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 1
 
         width: 11
         height: 11
