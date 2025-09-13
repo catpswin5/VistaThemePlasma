@@ -102,6 +102,7 @@ void Decoration::smodPaint(QPainter *painter, const QRectF &repaintRegion)
 
 void Decoration::smodPaintGlow(QPainter *painter, const QRectF &repaintRegion)
 {
+    Q_UNUSED(repaintRegion);
     const auto c = window();
 
     int SIDEBAR_HEIGHT = qMax(25, (int)(size().height() / 4));
@@ -283,9 +284,10 @@ void Decoration::smodPaintTitleBar(QPainter *painter, const QRectF &repaintRegio
         bool invertText = internalSettings()->invertTextColor() && c->isMaximized();
 
         QRect captionRect(m_leftButtons->geometry().right(), 0, m_rightButtons->geometry().left() - m_leftButtons->geometry().right() - 4, borderTop());
-        QString caption = settings()->fontMetrics().elidedText(c->caption(), Qt::ElideMiddle, captionRect.width());
-        QStringList programname = caption.split(" — ");
-        caption.remove(" — " + programname.at(programname.size()-1));
+        QString rawCaption = c->caption();
+        QStringList programname = rawCaption.split(" — ");
+        rawCaption.remove(" — " + programname.at(programname.size()-1));
+        QString caption = settings()->fontMetrics().elidedText(rawCaption, Qt::ElideMiddle, captionRect.width());
         QFontMetrics fm(settings()->font());
         QString fixedCaption = caption;
         auto rect = fm.boundingRect(fixedCaption.replace(QRegularExpression("\\p{Extended_Pictographic}", QRegularExpression::UseUnicodePropertiesOption), "█"));
@@ -354,7 +356,7 @@ void Decoration::smodPaintTitleBar(QPainter *painter, const QRectF &repaintRegio
 
         FrameTexture gl(l, r, t, b, glowWidth, glowHeight, &glow, c->isActive() ? margins.active_opacity : margins.inactive_opacity);
 
-        int leftButtonsX = (hideIcon() ? -5 : m_leftButtons->geometry().x());
+        int leftButtonsX = (hideIcon() ? -5 : (m_leftButtons->geometry().x()));
 
         if(!caption.trimmed().isEmpty())
         {
@@ -374,7 +376,7 @@ void Decoration::smodPaintTitleBar(QPainter *painter, const QRectF &repaintRegio
             }
             else
             {
-                xpos = leftButtonsX + 2;
+                xpos = captionRect.left() - (l/2);
             }
 
             bool isRTL = caption.isRightToLeft();
@@ -392,6 +394,7 @@ void Decoration::smodPaintTitleBar(QPainter *painter, const QRectF &repaintRegio
                     xpos += captionRect.width() - blurWidth;
                 }
             }
+
             if(!invertText)
             {
                 int alignmentOffset = 0;
