@@ -195,6 +195,7 @@ Item {
 
             property bool held: false
             property int itemIndex: model.index
+            property point dragThreshold: Qt.point(-1,-1);
 
             onHeldChanged: {
                 if(held) {
@@ -219,14 +220,20 @@ Item {
                 itemRect.x = dropArea.x;
                 itemRect.y = dropArea.y;
                 itemRect.Drag.cancel();
+                dragThreshold = Qt.point(-1,-1);
             }
 
-            onReleased: event => {
-                if(held) resetPos();
-            }
+            onPressed: dragThreshold = Qt.point(mouseX, mouseY);
+            onReleased: if(held) resetPos();
+
             onPositionChanged: {
-                if(containsPress) held = true;
+                if(mouseArea.containsPress && (dragThreshold.x !== -1 && dragThreshold.y !== -1)) {
+                    if(Math.abs(dragThreshold.x - mouseX) > 5 || Math.abs(dragThreshold.y - mouseY) > 5) {
+                        held = true;
+                    }
+                }
             }
+
 
             onClicked: mouse => {
                 if (mouse.button == Qt.RightButton) {
