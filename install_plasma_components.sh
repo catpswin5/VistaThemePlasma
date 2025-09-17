@@ -45,7 +45,7 @@ install_component "$PWD/plasma/shells/org.kde.plasma.desktop" "Plasma/Shell"
 echo -e "Installing color scheme..."
 COLOR_DIR="$HOME/.local/share/color-schemes"
 mkdir -p "$COLOR_DIR"
-cp "$PWD/plasma/color_scheme/AeroColorScheme1.colors" "$COLOR_DIR"
+cp "$PWD/plasma/color_scheme/Aero.colors" "$COLOR_DIR"
 #plasma-apply-colorscheme AeroColorScheme1
 
 # SMOD
