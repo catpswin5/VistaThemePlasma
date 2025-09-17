@@ -69,8 +69,6 @@ KCM.SimpleKCM {
             ColumnLayout {
                 Layout.fillWidth: true
 
-                spacing: 0
-
                 CheckBox {
                     id: groupPopups
                     text: i18n("Group tasks together")
@@ -92,8 +90,6 @@ KCM.SimpleKCM {
             ColumnLayout {
                 Layout.fillWidth: true
 
-                spacing: 0
-
                 CheckBox {
                     id: minimizeActive
 
@@ -112,8 +108,6 @@ KCM.SimpleKCM {
                     ColumnLayout {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-
-                        spacing: 0
 
                         CheckBox {
                             id: showOnlyCurrentScreen

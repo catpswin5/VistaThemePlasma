@@ -1239,10 +1239,7 @@ TaskManagerApplet.SmartLauncherItem { }
             property string basePrefix: {
                 if(model.IsLauncher) return "";
                 if(attentionIndicator.requiresAttention && Plasmoid.configuration.disableHottracking) return "attention";
-                if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) {
-                    if(Plasmoid.configuration.taskStyle == 1) return "focus";
-                    else return "active";
-                }
+                if(isActive && !(attentionIndicator.requiresAttention || attentionFadeOut.running)) return "active"
                 return "normal";
             }
 
@@ -1253,10 +1250,9 @@ TaskManagerApplet.SmartLauncherItem { }
                 topMargin: 1
             }
 
-            imagePath: Plasmoid.configuration.taskStyle == 1 ? "widgets/tasks" : Qt.resolvedUrl("svgs/tasks.svg")
-            prefix: Plasmoid.configuration.taskStyle == 1 ?
-                (isHovered ? TaskTools.taskPrefixHovered(basePrefix, Plasmoid.location) : TaskTools.taskPrefix(basePrefix, Plasmoid.location)) :
-                basePrefix + (isHovered && (!Plasmoid.configuration.hoverFadeAnim && Plasmoid.configuration.disableHottracking) ? "-hover" : "")
+            imagePath: Qt.resolvedUrl("svgs/tasks.svg")
+            prefix: basePrefix + (isHovered && (!Plasmoid.configuration.hoverFadeAnim && Plasmoid.configuration.disableHottracking) ? "-hover" : "")
+
 
             KSvg.FrameSvgItem {
                 anchors.fill: parent

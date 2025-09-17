@@ -14,8 +14,6 @@ import org.kde.plasma.plasmoid
 import org.kde.kcmutils as KCM
 
 KCM.SimpleKCM {
-    property alias cfg_taskStyle: taskStyle.currentIndex
-
     property alias cfg_disableHottracking: disableHottracking.checked
     property alias cfg_disableJumplists: disableJumplists.checked
     property alias cfg_draggingEnabled: draggingEnabled.checked
@@ -62,36 +60,10 @@ KCM.SimpleKCM {
         CustomGroupBox {
             Layout.fillWidth: true
 
-            title: "General"
-
-            ColumnLayout {
-                Layout.fillWidth: true
-
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    Text { text: i18n("Style (unfinished):") }
-                    ComboBox {
-                        id: taskStyle
-
-                        model: [
-                            i18n("Vista"),
-                            i18n("Plasma")
-                        ]
-                    }
-                }
-            }
-        }
-
-        CustomGroupBox {
-            Layout.fillWidth: true
-
             title: "Tweaks"
 
             ColumnLayout {
                 Layout.fillWidth: true
-
-                spacing: 0
 
                 CheckBox {
                     id: disableHottracking
@@ -116,7 +88,7 @@ KCM.SimpleKCM {
                 }
                 CheckBox {
                     id: hoverFadeAnim
-                    enabled: disableHottracking.checked && cfg_taskStyle === 0
+                    enabled: disableHottracking.checked
                     text: i18n("Enable hover fade animation")
                 }
             }

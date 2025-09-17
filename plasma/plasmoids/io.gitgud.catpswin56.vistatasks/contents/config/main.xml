@@ -138,11 +138,6 @@
       <label>Whether to grow the tasks in according to system configuration or opposite to system configuration.</label>
       <default>false</default>
     </entry>
-
-    <entry name="taskStyle" type="Int">
-      <label>0 = Vista (default), 1 = Plasma</label>
-      <default>0</default>
-    </entry>
   </group>
 
   <group name="Previews">

@@ -29,9 +29,6 @@ ContainmentItem {
     Layout.preferredWidth: fixedWidth || currentLayout.implicitWidth + currentLayout.horizontalDisplacement
     Layout.preferredHeight: fixedHeight || currentLayout.implicitHeight + currentLayout.verticalDisplacement
 
-    // The current panel style. This is set by VistaTasks
-    property string currentStyle: "vista"
-
     property Item toolBox
     property var layoutManager: LayoutManager
 
@@ -147,7 +144,6 @@ ContainmentItem {
 
             imagePath: Qt.resolvedUrl("svgs/vista-panel-background.svg")
             prefix: root.svgLocation() + root.hasCompositing
-            visible: root.currentStyle !== "plasma"
 
             KSvg.FrameSvgItem {
                 id: shineLayer

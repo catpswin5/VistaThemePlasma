@@ -81,13 +81,6 @@ PlasmoidItem {
         } else return true; // Composition is always enabled in Wayland
     }
 
-    Connections {
-        target: Plasmoid.configuration
-        function onTaskStyleChanged() {
-            setTaskStyle(Plasmoid.configuration.taskStyle);
-        }
-    }
-
     Item {
         id: animationManager
         property var finishAnimation: {}
@@ -129,24 +122,6 @@ PlasmoidItem {
         return !tasks.vertical ? 0 : LayoutMetrics.preferredMinHeight();
     }
 
-    function setTaskStyle(value) {
-        var taskStyleName = "";
-        switch(value) {
-            case(0):
-                taskStyleName = "vista";
-                break;
-            case(1):
-                taskStyleName = "plasma";
-                break;
-        }
-        let item = this;
-        while (item.parent) {
-            item = item.parent;
-            if (item.currentStyle !== undefined) {
-                item.currentStyle = taskStyleName
-            }
-        }
-    }
     function setRequestedInhibitDnd(value) {
         // This is modifying the value in the panel containment that
         // inhibits accepting drag and drop, so that we don't accidentally
@@ -530,20 +505,11 @@ PlasmoidItem {
         return contextMenuComponent.createObject(rootTask, initialArgs);
     }
 
-    Timer {
-        id: styleTimer
-        interval: 5
-        running: false
-        triggeredOnStart: false
-        onTriggered: setTaskStyle(Plasmoid.configuration.taskStyle);
-    }
-
     Component.onCompleted: {
         TaskTools.taskManagerInstanceCount += 1;
         tasks.requestLayout.connect(iconGeometryTimer.restart);
         // tasks.windowsHovered.connect(backend.windowsHovered);
         // tasks.activateWindowView.connect(backend.activateWindowView);
-        styleTimer.start();
     }
 
     Component.onDestruction: {

@@ -109,10 +109,7 @@ MouseArea {
         property bool isActive: model.IsActive || contentMa.containsPress
         property bool doHoverFade: Plasmoid.configuration.hoverFadeAnim && Plasmoid.configuration.disableHottracking
         property string basePrefix: {
-            if(isActive) {
-                if(Plasmoid.configuration.taskStyle == 1) return "focus";
-                else return "active";
-            }
+            if(isActive) return "active";
             else if(isHovered) return "normal";
             else return "";
         }
@@ -124,10 +121,9 @@ MouseArea {
             rightMargin: 2
         }
 
-        imagePath: Plasmoid.configuration.taskStyle == 1 ? "widgets/tasks" : Qt.resolvedUrl("svgs/tasks.svg")
-        prefix: Plasmoid.configuration.taskStyle == 1 ?
-            (isHovered ? TaskTools.taskPrefixHovered(basePrefix, Plasmoid.location) : TaskTools.taskPrefix(basePrefix, Plasmoid.location)) :
-            basePrefix + (isHovered && !Plasmoid.configuration.hoverFadeAnim ? "-hover" : "")
+        imagePath: Qt.resolvedUrl("svgs/tasks.svg")
+        prefix: basePrefix + (isHovered && !Plasmoid.configuration.hoverFadeAnim ? "-hover" : "")
+
 
         enabledBorders: KSvg.FrameSvg.TopBorder | KSvg.FrameSvg.BottomBorder
 
