@@ -40,6 +40,8 @@ PlasmaCore.Dialog {
     flags: Qt.WindowTransparentForInput
     location: "Floating"
 
+    signal checkPosition()
+
     type: "Notification"
     title: "seventasks-floatingorb"
 
@@ -50,9 +52,11 @@ PlasmaCore.Dialog {
     // Input masks won't be applied correctly when compositing is disabled unless I do this. WHY?
     onYChanged: {
         Plasmoid.setTransparentWindow();
+        checkPosition();
     }
     onXChanged: {
         Plasmoid.setTransparentWindow();
+        checkPosition();
     }
 
     onVisibleChanged: {

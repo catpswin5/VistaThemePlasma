@@ -23,22 +23,24 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Widgets
     QuickWidgets
     DBus
-    Svg
-    Core5Compat
 )
 
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+find_package(LayerShellQt REQUIRED)
+find_package(Qt6WaylandClient COMPONENTS Private)
+find_package(PlasmaWaylandProtocols)
+find_package(Wayland REQUIRED COMPONENTS Client)
+
+find_package(KF6 REQUIRED COMPONENTS
     I18n
     Kirigami
     CoreAddons
+    WindowSystem
     IconThemes
     Config
     KCMUtils
     DBusAddons
     Package
-    IconThemes
     XmlGui
-    Svg
 )
 
 ecm_find_qmlmodule(org.kde.kirigami REQUIRED)

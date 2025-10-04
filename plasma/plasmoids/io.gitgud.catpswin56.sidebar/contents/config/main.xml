@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+        http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name=""/>
+
+    <group name="General">
+        <entry name="itemOrdering" type="String">
+            <default></default>
+        </entry>
+        <entry name="collapsed" type="Bool">
+            <default>false</default>
+        </entry>
+
+        <entry name="width" type="Int">
+            <default>15</default>
+        </entry>
+        <entry name="location" type="Int">
+            <label>0 = Right, 1 = Left</label>
+            <default>0</default>
+        </entry>
+        <entry name="dock" type="Bool">
+            <default>false</default>
+        </entry>
+
+        <entry name="disableTrayIcon" type="Bool">
+            <default>false</default>
+        </entry>
+    </group>
+</kcfg>
+

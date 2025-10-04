@@ -4,10 +4,10 @@ List of plasmoids:
 
 - Standalone, with C++ components:
     - Desktop containment (io.gitgud.catpswin56.vistadesktop)
-    - VistaStart (io.gitgud.wackyideas.VistaStart)
-    - VistaTasks (io.gitgud.wackyideas.vistatasks)
+    - VistaStart (io.gitgud.catpswin56.VistaStart)
+    - VistaTasks (io.gitgud.catpswin56.vistatasks)
     - Sound Mixer (io.gitgud.catpswin56.volume)
-    - Windows Sidebar (io.gitgud.catpswin56.private.sidebar and io.gitgud.catpswin56.sidebar)
+    - Windows Sidebar (io.gitgud.catpswin56.sidebar)
 
 - Standalone, without C++ components:
     - Network Manager (io.gitgud.catpswin56.networkmanagement)

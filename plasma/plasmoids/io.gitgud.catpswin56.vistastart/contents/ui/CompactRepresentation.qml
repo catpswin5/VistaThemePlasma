@@ -51,6 +51,8 @@ Item {
     readonly property bool vertical: (Plasmoid.formFactor == PlasmaCore.Types.Vertical)
     readonly property bool enableShadow: (Plasmoid.configuration.enableShadow)
 
+	property vector2d orbPos: Qt.vector2d(0, 0)
+
     onEnableShadowChanged: {
         //Plasmoid.enableShadow(Plasmoid.configuration.enableShadow);
         if(dashWindow) {
@@ -80,8 +82,10 @@ Item {
             pos.y += 2;
         }
 
-        orb.x = pos.x;
-        orb.y = pos.y;
+		orbPos = pos;
+
+        orb.x = orbPos.x;
+        orb.y = orbPos.y;
     }
     function showMenu() {
         dashWindow.visible = !dashWindow.visible;
@@ -136,6 +140,9 @@ Item {
         Plasmoid.activated.connect(function () {
             showMenu();
         });
+		orb.checkPosition.connect(function () {
+			if(orb.x != orbPos.x || orb.y != orbPos.y) positionOrb();
+		});
     }
     onCompositingChanged: {
         updateSizeHints();

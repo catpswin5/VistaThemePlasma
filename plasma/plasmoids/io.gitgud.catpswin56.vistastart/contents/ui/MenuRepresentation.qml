@@ -46,6 +46,7 @@ PlasmaCore.Dialog {
     objectName: "popupWindow"
     location: "Floating" // To make the panel display all 4 borders, the panel will be positioned at a corner.
     flags: Qt.WindowStaysOnTopHint //| Qt.Popup // Set to popup so that it is still considered a plasmoid popup, despite being a floating dialog window.
+    type: "Dock"
 	hideOnWindowDeactivate: true
 
 	title: "sevenstart-menurepresentation"
