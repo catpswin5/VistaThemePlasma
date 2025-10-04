@@ -120,23 +120,45 @@ namespace Breeze
             bool buttonBefore{false};
             bool buttonAfter{false};
 
-            // cast the parent class
-            const KDecoration3::DecorationButtonGroup *btnGroup = (KDecoration3::DecorationButtonGroup*)(this->parent());
-
-            // just in case
-            if(btnGroup == nullptr) {
-                qWarning() << "kdecorationbutton parent is nullptr, returning";
-                return;
-            };
-
-            index = btnGroup->buttons().indexOf(this);
-
+            // get the button group this button is in
+            const KDecoration3::DecorationButtonGroup *btnGroup = deco->getButtonGroup(this);
             QString btnGroupPos = "right";
-            if(btnGroup->pos().x() < deco->captionWidth()/2) btnGroupPos = "left";
 
             const auto internalSettingsButtons = btnGroupPos == "left"
-                                                        ? decoration()->settings()->decorationButtonsLeft()
-                                                        : decoration()->settings()->decorationButtonsRight();
+                                                 ? decoration()->settings()->decorationButtonsLeft()
+                                                 : decoration()->settings()->decorationButtonsRight();
+
+            if(!m_gtkButton){
+                // just in case
+                if(btnGroup == nullptr) {
+                    qWarning() << "smod: button group search returned a nullptr, returning...";
+                    return;
+                }
+
+                index = btnGroup->buttons().indexOf(this);
+
+                // just in case too
+                if(index == -1) {
+                    qWarning() << "smod: button does not exist in button group (how), returning...";
+                    return;
+                }
+
+                if(btnGroup->pos().x() < decoration()->titleBar().x()) btnGroupPos = "left";
+
+                if(btnGroup->buttons().length() > 1)
+                {
+                    if(index > 0) {
+                        const auto button = internalSettingsButtons.at(index-1);
+
+                        buttonBefore = !(button == DecorationButtonType::Spacer || button == DecorationButtonType::Menu) && btnGroup->buttons().at(index-1)->isVisible();
+                    }
+                    if(index != btnGroup->buttons().length() - 1) {
+                        const auto button = internalSettingsButtons.at(index+1);
+
+                        buttonAfter = !(button == DecorationButtonType::Spacer || button == DecorationButtonType::Menu) && btnGroup->buttons().at(index+1)->isVisible();
+                    }
+                }
+            }
 
             const auto c = decoration()->window();
 
@@ -166,20 +188,6 @@ namespace Breeze
 
             int leftoverwidth = 0;
             int leftoverheight = 0;
-
-            if(btnGroup->buttons().length() > 1)
-            {
-                if(index > 0) {
-                    const auto button = internalSettingsButtons.at(index-1);
-
-                    buttonBefore = !(button == DecorationButtonType::Spacer || button == DecorationButtonType::Menu) && btnGroup->buttons().at(index-1)->isVisible();
-                }
-                if(index != btnGroup->buttons().length() - 1) {
-                    const auto button = internalSettingsButtons.at(index+1);
-
-                    buttonAfter = !(button == DecorationButtonType::Spacer || button == DecorationButtonType::Menu) && btnGroup->buttons().at(index+1)->isVisible();
-                }
-            }
 
             bool isSingleClose = !(c->isMinimizeable() || c->isMaximizeable() || c->providesContextHelp()) || (!buttonAfter && !buttonBefore);
 
@@ -275,7 +283,7 @@ namespace Breeze
             }
 
             // BEGIN FLIPPING AND MIRRORING LOGIC
-            if(margins.commonSizing().group_buttons) {
+            if(margins.commonSizing().group_buttons && !m_gtkButton) {
                 QImage copy;
 
                 // if there's a button before this button and after this button

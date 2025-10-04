@@ -43,9 +43,9 @@ using KDecoration3::ColorRole;
 
 static SizingMargins g_sizingmargins;
 static QString g_themeName = "Aero";
-//static int g_shadowStrength = 255;
+// static int g_shadowStrength = 255;
 static QColor g_shadowColor = Qt::black;
-//static int g_lastBorderSize;
+// static int g_lastBorderSize;
 
 //________________________________________________________________
 void Decoration::setOpacity(qreal value)
@@ -54,7 +54,8 @@ void Decoration::setOpacity(qreal value)
         return;
     }
     m_opacity = value;
-    update();}
+    update();
+}
 QString Decoration::themeName()
 {
     return SMOD::currentlyRegisteredPath;
@@ -76,6 +77,19 @@ bool Decoration::glowEnabled()
     if(g_sizingmargins.loaded())
         return g_sizingmargins.commonSizing().enable_glow;
     else return false;
+}
+
+KDecoration3::DecorationButtonGroup *Decoration::getButtonGroup(Button *button) const
+{
+    if(!m_leftButtons || !m_rightButtons) {
+        qWarning() << "smod: button groups not initialized (how was this even called), returning...";
+        return nullptr;
+    }
+
+    if(m_leftButtons->buttons().indexOf(button) != -1) return m_leftButtons;
+    if(m_rightButtons->buttons().indexOf(button) != -1) return m_rightButtons;
+
+    return nullptr;
 }
 
 //________________________________________________________________
@@ -515,12 +529,6 @@ void Decoration::onTabletModeChanged(bool mode)
     m_tabletMode = mode;
     recalculateBorders();
     updateButtonsGeometry();
-}
-
-//________________________________________________________________
-int Decoration::captionWidth() const
-{
-    return captionRect().first.width();
 }
 
 //________________________________________________________________

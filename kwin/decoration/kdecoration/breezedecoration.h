@@ -69,12 +69,13 @@ public:
         return m_animation->duration();
     }
 
-    //* caption sizes
-    int captionWidth() const;
+    //* caption height
     int captionHeight() const;
 
     //* button height
     int buttonHeight() const;
+
+    KDecoration3::DecorationButtonGroup *getButtonGroup(Button *button) const;
 
     int titlebarHeight() const;
     static QString themeName();

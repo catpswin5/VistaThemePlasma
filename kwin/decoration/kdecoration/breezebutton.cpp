@@ -35,6 +35,8 @@ Button::Button(DecorationButtonType type, Decoration *decoration, QObject *paren
         setOpacity(value.toReal());
     });
 
+    // check if it's for gtk
+    if(QCoreApplication::applicationName() == QStringLiteral("kded6")) m_gtkButton = true;
 
     updateGeometry();
 
@@ -67,8 +69,6 @@ Button::Button(QObject *parent, const QVariantList &args)
 
 void Button::smodPaintGlow(QPainter *painter, const QRectF &repaintArea)
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(repaintArea);
     return;
 }
 

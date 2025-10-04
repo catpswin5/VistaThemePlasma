@@ -156,6 +156,7 @@ private:
     bool m_isMirrored{false};
     bool m_isFlipped{false};
     QString m_textureType{};
+    bool m_gtkButton{false};
 
     //* active state change opacity
     qreal m_opacity = 0;

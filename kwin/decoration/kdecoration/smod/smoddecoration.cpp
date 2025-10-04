@@ -102,7 +102,6 @@ void Decoration::smodPaint(QPainter *painter, const QRectF &repaintRegion)
 
 void Decoration::smodPaintGlow(QPainter *painter, const QRectF &repaintRegion)
 {
-    Q_UNUSED(repaintRegion);
     const auto c = window();
 
     int SIDEBAR_HEIGHT = qMax(25, (int)(size().height() / 4));
@@ -284,10 +283,9 @@ void Decoration::smodPaintTitleBar(QPainter *painter, const QRectF &repaintRegio
         bool invertText = internalSettings()->invertTextColor() && c->isMaximized();
 
         QRect captionRect(m_leftButtons->geometry().right(), 0, m_rightButtons->geometry().left() - m_leftButtons->geometry().right() - 4, borderTop());
-        QString rawCaption = c->caption();
-        QStringList programname = rawCaption.split(" — ");
-        rawCaption.remove(" — " + programname.at(programname.size()-1));
-        QString caption = settings()->fontMetrics().elidedText(rawCaption, Qt::ElideMiddle, captionRect.width());
+        QString caption = settings()->fontMetrics().elidedText(c->caption(), Qt::ElideMiddle, captionRect.width());
+        QStringList programname = caption.split(" — ");
+        caption.remove(" — " + programname.at(programname.size()-1));
         QFontMetrics fm(settings()->font());
         QString fixedCaption = caption;
         auto rect = fm.boundingRect(fixedCaption.replace(QRegularExpression("\\p{Extended_Pictographic}", QRegularExpression::UseUnicodePropertiesOption), "█"));
