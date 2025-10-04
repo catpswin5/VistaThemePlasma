@@ -92,14 +92,9 @@ PlasmoidItem {
         BorderImage {
             id: plasmoidBg
 
-            property int rightMargin: plasmoidMa.hovered || (compactRepresentation?.plasmoidItem.expanded ?? false) ? 12 : 2
-            Behavior on rightMargin {
-                NumberAnimation { duration: 63 }
-            }
-
             anchors.fill: parent
-            anchors.leftMargin: !plasmoidDelegate.isGadget ? 2 : 0
-            anchors.rightMargin: !plasmoidDelegate.isGadget ? rightMargin : 0
+            anchors.leftMargin: !plasmoidDelegate.isGadget ? 10 : 0
+            anchors.rightMargin: !plasmoidDelegate.isGadget ? 12 : 0
 
             border {
                 left: 6
@@ -287,7 +282,7 @@ PlasmoidItem {
         }
 
         if(plasmoidDelegate.height == 0) plasmoidDelegate.height = mainStack.delegateWidth/2;
-        if(applet?.plasmoid.backgroundHints != 0) plasmoidDelegate.height += 12;
+        if(applet?.plasmoid.backgroundHints != 0) plasmoidDelegate.height += 10;
 
         applet?.compactRepresentationItemChanged.connect(replaceCompactRepresentation);
 
