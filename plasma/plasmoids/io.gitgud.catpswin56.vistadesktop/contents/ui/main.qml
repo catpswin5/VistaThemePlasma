@@ -29,12 +29,6 @@ ContainmentItem {
     switchWidth: { switchSize(); }
     switchHeight: { switchSize(); }
 
-    Rectangle {
-        anchors.fill: parent
-        color: "black"
-        visible: Plasmoid.configuration.watermarkTrueGenuine && Plasmoid.configuration.watermarkVisible
-    }
-
     // Only exists because the default CompactRepresentation doesn't:
     // - open on drag
     // - allow defining a custom drop handler
@@ -291,7 +285,6 @@ ContainmentItem {
         ContainmentLayoutManager.AppletsLayout {
             id: appletsLayout
             anchors.fill: parent
-            anchors.rightMargin: root.sidebarExists ? root.sidebarWidth : 0
             relayoutLock: width !== root.availableScreenRect.width || height !== root.availableScreenRect.height
             // NOTE: use root.availableScreenRect and not own width and height as they are updated not atomically
             configKey: "ItemGeometries-" + Math.round(root.screenGeometry.width) + "x" + Math.round(root.screenGeometry.height)
