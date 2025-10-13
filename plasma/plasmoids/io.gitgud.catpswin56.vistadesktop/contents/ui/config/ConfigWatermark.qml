@@ -73,7 +73,7 @@ Item {
         }
 
         function addWatermark(index: int, text: string, bold: bool, color: string, horizontalAlignment: int) {
-            console.log("desktop: adding watermark")
+            console.log("vistadesktop: adding watermark")
             var watermark = {
                 "text":text,
                 "bold":bold,

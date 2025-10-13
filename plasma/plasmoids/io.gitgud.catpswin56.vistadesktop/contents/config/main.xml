@@ -147,6 +147,10 @@
       <label>Use drop shadows for icons on the desktop.</label>
       <default>false</default>
     </entry>
+
+    <entry name="plasmoidPositions" type="String">
+      <default>[]</default>
+    </entry>
   </group>
 
   <group name="Watermark">

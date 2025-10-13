@@ -66,7 +66,7 @@ ContainmentItem {
     readonly property int hoverActivateDelay: 750 // Magic number that matches Dolphin's auto-expand folders delay.
 
     readonly property Loader folderViewLayer: fullRepresentationItem.folderViewLayer
-    readonly property ContainmentLayoutManager.AppletsLayout appletsLayout: fullRepresentationItem.appletsLayout
+    readonly property Item appletsLayout: fullRepresentationItem.appletsLayout
 
     // Plasmoid.title is set by a Binding {} in FolderViewLayer
     toolTipSubText: ""
@@ -175,6 +175,8 @@ ContainmentItem {
         property int leftBorder: elementSize("left").width
     }
 
+    Containment.onAppletAdded: (applet) => appletsLayout.createApplet(applet);
+
     // FIXME: the use and existence of this property is a workaround
     preloadFullRepresentation: true
     fullRepresentation: FolderViewDropArea {
@@ -208,6 +210,7 @@ ContainmentItem {
         // Maximum size is intentionally unbounded
 
         preventStealing: true
+        enabled: !appletsLayout.isDragging
 
         onDragEnter: event => {
             if (isContainment && Plasmoid.immutable && !(isFolder && FolderTools.isFileDrag(event))) {
@@ -234,13 +237,6 @@ ContainmentItem {
             // Trigger autoscroll.
             if (isFolder && FolderTools.isFileDrag(event)) {
                 handleDragMove(folderViewLayer.view, mapToItem(folderViewLayer.view, event.x, event.y));
-            } else if (isContainment) {
-                appletsLayout.showPlaceHolderAt(
-                    Qt.rect(event.x - appletsLayout.minimumItemWidth / 2,
-                    event.y - appletsLayout.minimumItemHeight / 2,
-                    appletsLayout.minimumItemWidth,
-                    appletsLayout.minimumItemHeight)
-                );
             }
         }
 
@@ -249,10 +245,6 @@ ContainmentItem {
             if (isFolder) {
                 handleDragEnd(folderViewLayer.view);
             }
-
-            if (isContainment) {
-                appletsLayout.hidePlaceHolder();
-            }
         }
 
         onDrop: event => {
@@ -260,11 +252,22 @@ ContainmentItem {
                 handleDragEnd(folderViewLayer.view);
                 folderViewLayer.view.drop(root, event, mapToItem(folderViewLayer.view, event.x, event.y));
             } else if (isContainment) {
-                root.processMimeData(event.mimeData,
-                    event.x - appletsLayout.placeHolder.width / 2,
-                    event.y - appletsLayout.placeHolder.height / 2);
-                event.accept(event.proposedAction);
-                appletsLayout.hidePlaceHolder();
+
+                function appletName(event) {
+                    if (event.mimeData.formats.indexOf("text/x-plasmoidservicename") < 0) {
+                        return null;
+                    }
+                    var plasmoidId = event.mimeData.getDataAsByteArray("text/x-plasmoidservicename");
+                    return plasmoidId;
+                }
+
+                var plasmoidId = appletName(event);
+                if (!plasmoidId) {
+                    event.ignore();
+                    return;
+                }
+                console.log(event.x, event.y, mapToItem(appletsLayout, event.x, event.y).x,  mapToItem(appletsLayout, event.x, event.y).y)
+                Plasmoid.newTask(plasmoidId, mapToItem(appletsLayout, event.x, event.y).x, mapToItem(appletsLayout, event.x, event.y).y);
             }
         }
 
@@ -273,123 +276,163 @@ ContainmentItem {
             CompactRepresentation { folderView: folderViewLayer.view }
         }
 
-        Connections {
-            target: Plasmoid.containment.corona
-            ignoreUnknownSignals: true
+        Loader {
+            id: folderViewLayer
 
-            function onEditModeChanged() {
-                appletsLayout.editMode = Plasmoid.containment.corona.editMode;
-            }
-        }
-
-        ContainmentLayoutManager.AppletsLayout {
-            id: appletsLayout
             anchors.fill: parent
-            relayoutLock: width !== root.availableScreenRect.width || height !== root.availableScreenRect.height
-            // NOTE: use root.availableScreenRect and not own width and height as they are updated not atomically
-            configKey: "ItemGeometries-" + Math.round(root.screenGeometry.width) + "x" + Math.round(root.screenGeometry.height)
-            fallbackConfigKey: root.availableScreenRect.width > root.availableScreenRect.height ? "ItemGeometriesHorizontal" : "ItemGeometriesVertical"
+            anchors.leftMargin: appletsLayout.anchors.leftMargin
+            anchors.rightMargin: appletsLayout.anchors.rightMargin
 
-            containment: Plasmoid
-            containmentItem: root
-            editModeCondition: Plasmoid.immutable
-                    ? ContainmentLayoutManager.AppletsLayout.Locked
-                    : ContainmentLayoutManager.AppletsLayout.AfterPressAndHold
+            property bool ready: status === Loader.Ready
+            property Item view: item?.view ?? null
+            property QtObject model: item?.model ?? null
 
-            // Sets the containment in edit mode when we go in edit mode as well
-            onEditModeChanged: Plasmoid.containment.corona.editMode = editMode;
+            focus: true
 
-            minimumItemWidth: Kirigami.Units.iconSizes.small * 3
-            minimumItemHeight: minimumItemWidth
+            active: isFolder
+            asynchronous: false
 
-            cellWidth: Kirigami.Units.iconSizes.small
-            cellHeight: cellWidth
-            defaultItemWidth: cellWidth * 6
-            defaultItemHeight: cellHeight * 6
+            source: "FolderViewLayer.qml"
 
-            eventManagerToFilter: folderViewLayer.item?.view.view ?? null
-
-            appletContainerComponent: ContainmentLayoutManager.BasicAppletContainer {
-                id: appletContainer
-
-                editModeCondition: Plasmoid.immutable
-                    ? ContainmentLayoutManager.ItemContainer.Locked
-                    : ContainmentLayoutManager.ItemContainer.AfterPressAndHold
-
-                configOverlaySource: "ConfigOverlay.qml"
-
-                onAppletChanged: applet.visible = true
-
-                Drag.dragType: Drag.Automatic
-                Drag.active: false
-                Drag.supportedActions: Qt.MoveAction
-                Drag.mimeData: {
-                    "text/x-plasmoidinstanceid": Plasmoid.containment.id+':'+appletContainer.applet.plasmoid.id
+            onFocusChanged: {
+                if (!focus && model) {
+                    model.clearSelection();
                 }
-                Drag.onDragFinished: dropEvent => {
-                    if (dropEvent == Qt.MoveAction) {
-                        appletContainer.visible = true
-                        appletContainer.applet.visible = true
+            }
+
+            Connections {
+                target: folderViewLayer.view
+
+                // `FolderViewDropArea` is not a FocusScope. We need to forward manually.
+                function onPressed() {
+                    folderViewLayer.forceActiveFocus();
+                }
+            }
+        } // folder view
+
+        Item {
+            id: positionManager
+
+            property var positions
+
+            Connections {
+                target: Plasmoid.corona
+
+                function onEditModeChanged() {
+                    if(!Plasmoid.corona.editMode) positionManager.savePositions()
+                }
+            }
+
+            function savePositions() {
+                for(var i = 0; i < appletsLayout.plasmoids.length; i++) {
+                    var item = appletsLayout.plasmoids[i];
+                    if(item.id !== "")
+                        setPosition(item, false);
+                }
+                writeToConfig();
+            }
+
+            function setPosition(plasmoid) {
+                var position_object = positions.find((plasmoid_position) => plasmoid_position.index === plasmoid.index)
+
+                if(typeof position_object != "undefined") {
+                    position_object.x = plasmoid.x;
+                    position_object.y = plasmoid.y;
+                    position_object.width = plasmoid.width;
+                    position_object.height = plasmoid.height;
+                }
+            }
+
+            function writeToConfig() {
+                Plasmoid.configuration.plasmoidPositions = JSON.stringify(positions);
+                Plasmoid.configuration.writeConfig();
+            }
+
+            Connections {
+                target: appletsLayout
+
+                function onPlasmoidCreated(plasmoid: var) {
+                    var position_object = positionManager.positions.find((plasmoid_position) => plasmoid_position.index === plasmoid.index)
+
+                    if(typeof position_object != "undefined") {
+                        plasmoid.x = position_object.x;
+                        plasmoid.y = position_object.y;
+
+                        if(!plasmoid.id.includes("io.gitgud.catpswin56.gadgets")) {
+                            plasmoid.width = position_object.width;
+                            plasmoid.height = position_object.height;
+                        }
+                        else if(plasmoid.id == "io.gitgud.catpswin56.gadgets.notes") {
+                            if(plasmoid.applet.resizable) {
+                                plasmoid.width = position_object.width;
+                                plasmoid.height = position_object.height;
+                            }
+                        }
+
                     } else {
-                        appletContainer.visible = true
-                    }
-                }
+                        position_object = {
+                            "index":plasmoid.index,
+                            "id":plasmoid.id,
+                            "x":plasmoid.x,
+                            "y":plasmoid.y,
+                            "width":plasmoid.width,
+                            "height":plasmoid.height
+                        };
+                        positionManager.positions.push(position_object);
+                        positionManager.writeToConfig();
 
-                onUserDrag: (newPosition, dragCenter) => {
-                    const pos = mapToItem(root.parent, dragCenter.x, dragCenter.y);
-                    const newCont = root.containmentItemAt(pos.x, pos.y);
-
-                    if (!newCont || newCont.plasmoid !== Plasmoid) {
-                        // First go out of applet edit mode, get rid of the config overlay, release mouse grabs in preparation of applet reparenting
-                        cancelEdit();
-                        appletsLayout.hidePlaceHolder();
-                        appletContainer.grabToImage(result => {
-                            appletContainer.Drag.imageSource = result.url
-                            appletContainer.visible = false
-                            appletContainer.Drag.active = true
-                        })
-                    }
-                }
-
-                ShortDropBehavior on x { }
-                ShortDropBehavior on y { }
-            }
-
-            placeHolder: ContainmentLayoutManager.PlaceHolder {}
-
-            Loader {
-                id: folderViewLayer
-
-                anchors.fill: parent
-                anchors.topMargin: root.availableScreenRect.y > 0 ? -4 : 0
-
-                property bool ready: status === Loader.Ready
-                property Item view: item?.view ?? null
-                property QtObject model: item?.model ?? null
-
-                focus: true
-
-                active: isFolder
-                asynchronous: false
-
-                source: "FolderViewLayer.qml"
-
-                onFocusChanged: {
-                    if (!focus && model) {
-                        model.clearSelection();
-                    }
-                }
-
-                Connections {
-                    target: folderViewLayer.view
-
-                    // `FolderViewDropArea` is not a FocusScope. We need to forward manually.
-                    function onPressed() {
-                        folderViewLayer.forceActiveFocus();
                     }
                 }
             }
-        }
+
+            Component.onCompleted: positions = JSON.parse(Plasmoid.configuration.plasmoidPositions)
+        } // position manager
+
+        Item {
+            id: appletsLayout
+
+            signal plasmoidCreated(var plasmoid)
+            signal plasmoidDestroyed(int index, string id)
+            onPlasmoidDestroyed: (index, id) => {
+                for(var i = index; i < plasmoids.length; i++) plasmoids[i].index--;
+
+                positionManager.positions.splice(index, 1)
+                for(var i = index; i < positionManager.positions.length; i++) positionManager.positions[i].index--
+                positionManager.writeToConfig();
+            }
+
+            property PlasmoidContainer plasmoid_aboveAll
+            property list<PlasmoidContainer> plasmoids: []
+            property bool isDragging: false
+            property alias positionManager: positionManager
+
+            function createApplet(applet, x, y) {
+                var createAtX;
+                if(typeof x == "undefined") createAtX = 0;
+                else createAtX = x;
+
+                var createAtY;
+                if(typeof y == "undefined") createAtY = 0;
+                else createAtY = y;
+
+                var component = Qt.createComponent("PlasmoidContainer.qml", appletsLayout);
+
+                if(component.status == Component.Ready) {
+                    var plasmoid = component.createObject(appletsLayout, {
+                        x: createAtX,
+                        y: createAtY,
+                        index: plasmoids.length,
+                        applet: root.itemFor(applet)
+                    });
+                    if(plasmoid.id != "io.gitgud.catpswin56.sidebar") plasmoids.push(plasmoid);
+
+                } else if(component.status == Component.Error)
+                    console.log("vistadesktop: Error creating plasmoid container:\n", component.errorString());
+
+            }
+
+            anchors.fill: parent
+        } // plasmoid layout
 
         Plasma5Support.DataSource {
             id: execEngine
@@ -411,9 +454,7 @@ ContainmentItem {
             signal exited(string cmd, int exitCode, int exitStatus, string stdout, string stderr)
         }
 
-        Plasmoid.contextualActions: [
-
-        ]
+        Plasmoid.contextualActions: []
 
         PlasmaCore.Action {
             id: configAction
@@ -429,6 +470,17 @@ ContainmentItem {
             }
 
             Plasmoid.setInternalAction("configure", configAction)
+        }
+    }
+
+    Component.onCompleted: {
+        var appletCount = Plasmoid.applets.length;
+        if(appletCount > 0) {
+            for(var i = 0; i < appletCount; i++) {
+                var applet = Plasmoid.applets[i];
+                // console.log(i);
+                appletsLayout.createApplet(applet);
+            }
         }
     }
 }
