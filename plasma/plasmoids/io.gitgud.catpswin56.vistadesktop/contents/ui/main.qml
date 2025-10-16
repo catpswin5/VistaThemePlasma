@@ -423,6 +423,7 @@ ContainmentItem {
             }
 
             function createApplet(applet, x, y) {
+                // FIXME TODO: this doesn't work, fix later
                 var createAtX;
                 if(typeof x == "undefined") createAtX = 0;
                 else createAtX = x;

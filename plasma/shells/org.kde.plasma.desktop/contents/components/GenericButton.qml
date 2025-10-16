@@ -19,6 +19,16 @@ Control {
     property int iconSize: Kirigami.Units.iconSizes.smallMedium;
     property alias label: btnLabel
 
+    implicitWidth: {
+        if(text !== "") return label.implicitWidth + Kirigami.Units.largeSpacing*2;
+        else return iconSize + Kirigami.Units.largeSpacing;
+    }
+
+    implicitHeight: {
+        if(text !== "") return label.implicitHeight + Kirigami.Units.largeSpacing;
+        else return iconSize + Kirigami.Units.largeSpacing;
+    }
+
     Keys.priority: Keys.AfterItem
     Keys.onPressed: (event) => {
         if(event.key == Qt.Key_Return) {
@@ -73,15 +83,5 @@ Control {
         renderType: Text.NativeRendering
         font.hintingPreference: Font.PreferFullHinting
         font.kerning: false
-        layer.enabled: genericButton.text !== ""
-        layer.effect: DropShadow {
-            //visible: !softwareRendering
-            horizontalOffset: 0
-            verticalOffset: 1
-            radius: 6
-            samples: 14
-            spread: 0.0001
-            color: "#bf000000"
-        }
     }
 }

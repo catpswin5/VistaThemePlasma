@@ -160,28 +160,28 @@ Item {
             clear();
             switch(preset) {
                 case 0: {
-                    addWatermark("Windows 10", false, "FFFFFF", 2);
-                    addWatermark("Build 22H2", false, "FFFFFF", 2);
+                    addWatermark(0, "Windows 10", false, "FFFFFF", 2);
+                    addWatermark(0, "Build 22H2", false, "FFFFFF", 2);
                     break;
                 }
                 case 1: {
-                    addWatermark("Windows 8.1", false, "FFFFFF", 2);
-                    addWatermark("Build 9600", false, "FFFFFF", 2);
+                    addWatermark(0, "Windows 8.1", false, "FFFFFF", 2);
+                    addWatermark(0, "Build 9600", false, "FFFFFF", 2);
                     break;
                 }
                 case 2: {
-                    addWatermark("Windows 8", false, "FFFFFF", 2);
-                    addWatermark("Build 9200", false, "FFFFFF", 2);
+                    addWatermark(0, "Windows 8", false, "FFFFFF", 2);
+                    addWatermark(0, "Build 9200", false, "FFFFFF", 2);
                     break;
                 }
                 case 3: {
-                    addWatermark("Windows 7", false, "FFFFFF", 2);
-                    addWatermark("Build 7601", false, "FFFFFF", 2);
+                    addWatermark(0, "Windows 7", false, "FFFFFF", 2);
+                    addWatermark(0, "Build 7601", false, "FFFFFF", 2);
                     break;
                 }
                 case 4: {
-                    addWatermark("Windows Vista(TM)", false, "FFFFFF", 2);
-                    addWatermark("Build 6003", false, "FFFFFF", 2);
+                    addWatermark(0, "Windows Vista(TM)", false, "FFFFFF", 2);
+                    addWatermark(0, "Build 6003", false, "FFFFFF", 2);
                     break;
                 }
             }

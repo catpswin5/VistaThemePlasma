@@ -146,7 +146,11 @@ Item {
         onTriggered: plasmoid_root.correctPositions();
     }
 
-    HoverHandler { id: plasmoidMa }
+    HoverHandler {
+        id: plasmoidMa
+        blocking: true
+        margin: 1
+    }
     TapHandler {
         onPressedChanged: plasmoid_root.setAbove();
     }
