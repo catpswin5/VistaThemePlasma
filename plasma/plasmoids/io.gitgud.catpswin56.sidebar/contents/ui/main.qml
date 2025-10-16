@@ -29,11 +29,14 @@ ContainmentItem {
     property ContainmentItem desktopContainment: null
     onDesktopContainmentChanged: root.parent = desktopContainment;
 
+    // in case desktopContainment is our own containment implementation
+    property bool isVTPcontainment: false
+
     property var appletsLayout: null
     onAppletsLayoutChanged: updateDesktopBindings();
 
     Timer {
-        running: desktopContainment == null
+        running: desktopContainment == null && !isVTPcontainment
         interval: 1
         triggeredOnStart: true
         onTriggered: {

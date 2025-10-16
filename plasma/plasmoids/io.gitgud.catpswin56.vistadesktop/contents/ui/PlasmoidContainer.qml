@@ -72,20 +72,23 @@ Item {
     function correctPositions() {
         plasmoid_root.checkingPosition = true;
 
-        if(parent.width != 0 || parent.height != 0) {
+        if((parent.width > 0 || parent.height > 0) && (parent.x > 0 || parent.y > 0)) {
             // ensure that the plasmoid stays within layout bounds
-            if(plasmoid_root.x < parent.x)
-                plasmoid_root.x = parent.x;
-            if(plasmoid_root.y < parent.y)
-                plasmoid_root.y = parent.y;
+            console.log(x, width, parent.x, parent.width);
+            console.log(y, height, parent.y, parent.height);
 
             if(plasmoid_root.x + plasmoid_root.width > parent.x + parent.width)
                 plasmoid_root.x = (parent.x + parent.width) - plasmoid_root.width;
             if(plasmoid_root.y + plasmoid_root.height > parent.y + parent.height)
                 plasmoid_root.y = (parent.y + parent.height) - plasmoid_root.height;
 
+            if(plasmoid_root.x < parent.x)
+                plasmoid_root.x = parent.x;
+            if(plasmoid_root.y < parent.y)
+                plasmoid_root.y = parent.y;
+
         } else {
-            waiter.start(); // wait for sizes to be correct
+            waiter.start(); // wait for sizes or positions to be correct
             return;
         }
 
@@ -386,5 +389,8 @@ Item {
     }
 
 
-    Component.onCompleted: if(!isSidebar) parent.plasmoidCreated(plasmoid_root);
+    Component.onCompleted: {
+        correctPositions();
+        if(!isSidebar) parent.plasmoidCreated(plasmoid_root);
+    }
 }

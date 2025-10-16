@@ -4,6 +4,8 @@ import QtQuick.Controls as QQC2
 
 import org.kde.kirigami as Kirigami
 
+import org.kde.plasma.plasmoid
+
 Window {
     id: exitDialog
 
