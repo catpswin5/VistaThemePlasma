@@ -36,21 +36,31 @@ Item {
 
     property var applet: null
     onAppletChanged: {
-        if(isSidebar) {
-            plasmoid_root.visible = false;
-            applet.isVTPcontainment = true;
-            applet.desktopContainment = root;
-            applet.appletsLayout = appletsLayout;
-            return;
+        if(applet) {
+            if(isSidebar) {
+                plasmoid_root.visible = false;
+                applet.isVTPcontainment = true;
+                applet.desktopContainment = root;
+                applet.appletsLayout = appletsLayout;
+                return;
+            }
+
+            applet.parent = representation_container;
+            applet.anchors.fill = representation_container;
+            applet.visible = true;
+
+            if(id == "io.gitgud.catpswin56.gadgets.notes") notesIsResizable = Qt.binding(() => applet.resizable);
+
+            updateSizes();
         }
+        else plasmoid_root.remove();
+    }
 
-        applet.parent = representation_container;
-        applet.anchors.fill = representation_container;
-        applet.visible = true;
-
-        if(id == "io.gitgud.catpswin56.gadgets.notes") notesIsResizable = Qt.binding(() => applet.resizable);
-
-        updateSizes();
+    function remove() {
+        parent.plasmoidDestroyed(plasmoid_root.index, plasmoid_root.id);
+        if(applet) applet.plasmoid.internalAction("remove").trigger();
+        console.log("vistadesktop: removing applet...")
+        destroy();
     }
 
     function updateSizes() {
@@ -152,6 +162,7 @@ Item {
     HoverHandler {
         id: plasmoidMa
         blocking: true
+        parent: plasmoid_root
         margin: 1
     }
     TapHandler {
@@ -254,11 +265,7 @@ Item {
 
                 pixmap: Qt.resolvedUrl("pngs/gadget-remove.png")
                 count: 3
-                onClicked: {
-                    plasmoid_root.parent.plasmoidDestroyed(plasmoid_root.index, plasmoid_root.id);
-                    plasmoid_root.applet.plasmoid.internalAction("remove").trigger();
-                    plasmoid_root.destroy();
-                }
+                onClicked: plasmoid_root.remove();
             }
 
             SegmentedControl {

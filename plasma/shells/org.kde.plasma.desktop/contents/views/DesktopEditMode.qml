@@ -45,7 +45,7 @@ Item {
             topMargin: editModeUi.y - (toolBar.height + Kirigami.Units.smallSpacing) - ((Kirigami.Units.largeSpacing * 4) / 2)
         }
 
-        height: editModeUi.height + (toolBar.height + Kirigami.Units.smallSpacing) + (Kirigami.Units.largeSpacing * 4)
+        height: editModeUi.height + Kirigami.Units.smallSpacing + (Kirigami.Units.largeSpacing * 4)
 
         gradient: Gradient {
             orientation: Gradient.Vertical
@@ -143,8 +143,8 @@ Item {
         visible: open || xAnim.running
         x: Math.round(open ? editModeRect.x + editModeRect.width/2 - zoomedWidth/2 : 0)
         y: Math.round(open ? editModeRect.y + editModeRect.height/2 - zoomedHeight/2 + toolBar.height : 0)
-        width: open ? zoomedWidth - toolBar.height : roundedRootWidth - toolBar.height
-        height: open ? zoomedHeight - toolBar.height : roundedRootHeight - toolBar.height
+        width: open ? zoomedWidth : roundedRootWidth
+        height: open ? zoomedHeight : roundedRootHeight
         property real zoomedWidth: Math.round(root.width * containmentParent.scaleFactor)
         property real zoomedHeight: Math.round(root.height * containmentParent.scaleFactor)
 

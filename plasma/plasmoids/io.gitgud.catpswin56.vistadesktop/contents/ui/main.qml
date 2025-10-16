@@ -324,10 +324,11 @@ ContainmentItem {
             }
 
             function savePositions() {
+                console.log("vistadesktop: function savePositions() called!")
                 for(var i = 0; i < appletsLayout.plasmoids.length; i++) {
                     var item = appletsLayout.plasmoids[i];
                     if(item.id !== "")
-                        setPosition(item, false);
+                        setPosition(item);
                 }
                 save();
             }
@@ -341,6 +342,23 @@ ContainmentItem {
                     position_object.width = plasmoid.width;
                     position_object.height = plasmoid.height;
                 }
+                else {
+                    console.log("vistadesktop: position object for", plasmoid.id, "does not exist, creating...");
+                    createPositionObject(plasmoid);
+                }
+            }
+
+            function createPositionObject(plasmoid) {
+                var position_object = {
+                    "index":plasmoid.index,
+                    "id":plasmoid.id,
+                    "x":plasmoid.x,
+                    "y":plasmoid.y,
+                    "width":plasmoid.width,
+                    "height":plasmoid.height
+                };
+                positions.push(position_object);
+                save();
             }
 
             function save() {
@@ -369,19 +387,7 @@ ContainmentItem {
                             }
                         }
 
-                    } else {
-                        position_object = {
-                            "index":plasmoid.index,
-                            "id":plasmoid.id,
-                            "x":plasmoid.x,
-                            "y":plasmoid.y,
-                            "width":plasmoid.width,
-                            "height":plasmoid.height
-                        };
-                        positionManager.positions.push(position_object);
-                        positionManager.save();
-
-                    }
+                    } else positionManager.createPositionObject(plasmoid);
                 }
             }
 
@@ -398,10 +404,13 @@ ContainmentItem {
                 function onAppletAboutToBeRemoved(applet) {
                     var plasmoid;
                     for(var i = 0; i < appletsLayout.plasmoids.length; i++) {
-                        if(appletsLayout.plasmoids[i].applet == applet) plasmoid = appletsLayout.plasmoids[i];
+                        if(appletsLayout.plasmoids[i].applet.Plasmoid == applet) plasmoid = appletsLayout.plasmoids[i];
                     }
 
-                    if(typeof plasmoid !== "undefined") appletsLayout.deleteApplet(plasmoid.id, plasmoid.index);
+                    if(typeof plasmoid !== "undefined") {
+                        plasmoid.remove();
+                        appletsLayout.deleteApplet(plasmoid.id, plasmoid.index);
+                    }
                 }
             }
 
