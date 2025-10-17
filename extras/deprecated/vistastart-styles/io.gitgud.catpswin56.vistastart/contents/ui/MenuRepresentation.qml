@@ -55,12 +55,10 @@ PlasmaCore.Dialog {
 
     property int iconSize: Kirigami.Units.iconSizes.medium
     property int iconSizeSide: Kirigami.Units.iconSizes.smallMedium
-    property int cellWidth: 254 // Width for left panel items.
-    property int cellWidthSide: 139 // Width for right panel items.
-    property int cellHeight: iconSize + Kirigami.Units.smallSpacing
-							 + (Math.max(highlightItemSvg.margins.top + highlightItemSvg.margins.bottom, highlightItemSvg.margins.left + highlightItemSvg.margins.right))
-							 - Kirigami.Units.smallSpacing/2
-
+    property int cellWidth: startStyles.currentStyle.cellWidth // Width for all standard menu items.
+    property int cellWidthSide: startStyles.currentStyle.cellWidthSide // Width for sidebar menu items.
+    property int cellHeight: iconSize + Kirigami.Units.smallSpacing + (Math.max(highlightItemSvg.margins.top + highlightItemSvg.margins.bottom,
+                                                    				   highlightItemSvg.margins.left + highlightItemSvg.margins.right)) - Kirigami.Units.smallSpacing/2
 	property int cellCount: Plasmoid.configuration.numberRows + faves.getFavoritesCount()
 
 	property int shutdownIndex: -1
@@ -75,13 +73,13 @@ PlasmaCore.Dialog {
 
 	property color leftPanelBackgroundColor: "white"
 	property color leftPanelBorderColor: "#44000000"
-	property color leftPanelSeparatorColor: "#e2e2e2"
+	property color leftPanelSeparatorColor: startStyles.currentStyle.leftPanel.separatorColor
 	property color searchPanelSeparatorColor: "#cddbea"
 	property color searchPanelBackgroundColor: "#f1f5fb"
 
 	property color searchFieldBackgroundColor: "white"
 	property color searchFieldTextColor: "black"
-	property color searchFieldPlaceholderColor: "#707070"
+	property color searchFieldPlaceholderColor: startStyles.currentStyle.searchBar.textColor
 
 	property color shutdownTextColor: "#202020"
 
@@ -215,26 +213,19 @@ PlasmaCore.Dialog {
     FocusScope {
 		id: mainFocusScope
 		objectName: "MainFocusScope"
-        Layout.minimumWidth: Math.max(397,
-									  root.cellWidth + Kirigami.Units.mediumSpacing + columnItems.width)
-							 + (Kirigami.Units.mediumSpacing*2)
-
-		Layout.maximumWidth: Math.max(397,
-									  root.cellWidth + Kirigami.Units.mediumSpacing + columnItems.width)
-							 + (Kirigami.Units.mediumSpacing*2)
+        Layout.minimumWidth: Math.max(397, root.cellWidth + Kirigami.Units.mediumSpacing + columnItems.width) + startStyles.currentStyle.panelSpacing
+		Layout.maximumWidth: Math.max(397, root.cellWidth + Kirigami.Units.mediumSpacing + columnItems.width) + startStyles.currentStyle.panelSpacing
 
 		property int extraPadding: (compositingEnabled
-									? (!root.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 - Kirigami.Units.smallSpacing*4
-									: nonCompositingIcon.height-15) // top panel
-									: nonCompositingIcon.height); // no compositing
+		? (!root.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 - Kirigami.Units.smallSpacing*4
+		: nonCompositingIcon.height-15) // top panel
+		: nonCompositingIcon.height); // no compositing
 
 		property int mainPanelHeight: leftSidebar.height + bottomControls.height
 		property int sidePanelHeight: 45 + columnItems.height + extraPadding
 
-        Layout.minimumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377)
-							  + (Kirigami.Units.smallSpacing/2) + (Kirigami.Units.mediumSpacing*2)
-        Layout.maximumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377)
-							  + (Kirigami.Units.smallSpacing/2) + (Kirigami.Units.mediumSpacing*2)
+        Layout.minimumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377) + Kirigami.Units.smallSpacing/2 + Kirigami.Units.mediumSpacing*2
+        Layout.maximumHeight: Math.max(Math.max(mainPanelHeight, sidePanelHeight), 377) + Kirigami.Units.smallSpacing/2 + Kirigami.Units.mediumSpacing*2
         
         focus: true
 		clip: false
@@ -308,7 +299,7 @@ PlasmaCore.Dialog {
 				x: 0
 				y: 0
 				backgroundHints: PlasmaCore.Types.NoBackground // To prevent the dialog background SVG from being rendered, we want a fully transparent window.
-				visible: root.visible && compositingEnabled && Plasmoid.location != PlasmaCore.Types.TopEdge
+				visible: root.visible && compositingEnabled && Plasmoid.location != PlasmaCore.Types.TopEdge && !startStyles.currentStyle.rightPanel.hideUserPFP
 				opacity: iconUser.visible && firstTimePopup // To prevent even more NP-hard unpredictable behavior
 				mainItem: FloatingIcon {
 					id: compositingIcon
@@ -405,9 +396,7 @@ PlasmaCore.Dialog {
 				required property int index
 				required property var model
 
-				text: (!Plasmoid.configuration.hideLeaveMenuPadding ? "       " : "")
-					  + model.display
-					  + (!Plasmoid.configuration.hideLeaveMenuPadding ? "      " : "")
+				text: "       " + model.display + "      "
 				onClicked: {
 					filteredMenuItemsModel.trigger(index)
 					root.visible = false;
@@ -457,7 +446,7 @@ PlasmaCore.Dialog {
 		KSvg.FrameSvgItem {
 			id: dialogBackground
 			anchors.fill: parent
-			imagePath: Qt.resolvedUrl("svgs/dialog.svgz");
+			imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "dialog.svgz");
 			//opacity: 0
 		}
 
@@ -480,6 +469,7 @@ PlasmaCore.Dialog {
 			topLeftRadius: 8
 			topRightRadius: 8
 			opacity: 0
+			visible: startStyles.currentStyle.styleName == "Vista"
 		}
 
 		/*
@@ -501,18 +491,40 @@ PlasmaCore.Dialog {
 				bottomMargin: searchField.height + Kirigami.Units.mediumSpacing * 2 - 1
 			}
 
-        	imagePath: Qt.resolvedUrl("svgs/background.svg")
+        	imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "background.svg")
 
 			width: root.cellWidth
+
+			visible: startStyles.currentStyle.leftPanel.textureVisible
         }
+
+        KSvg.FrameSvgItem {
+			id: rightPanelBg
+
+			anchors {
+				top: sidePanel.top
+				bottom: parent.bottom
+				right: sidePanel.right
+				left: sidePanel.left
+
+				topMargin: -2
+				bottomMargin: 40
+				leftMargin: -2
+				rightMargin: -1
+			}
+
+			imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "sidepanel-background.svg")
+
+			visible: startStyles.currentStyle.rightPanel.textureVisible
+		}
 
         ColumnLayout {
 			id: leftSidebar
 			anchors {
 				top: parent.top
 				left: parent.left
-				topMargin: 5 + Kirigami.Units.mediumSpacing
-				leftMargin: 1 + Kirigami.Units.mediumSpacing
+				topMargin: startStyles.currentStyle.leftPanel.topMargin
+				leftMargin: startStyles.currentStyle.leftPanel.leftMargin
 			}
 			z: 3
 			width: root.cellWidth
@@ -541,7 +553,7 @@ PlasmaCore.Dialog {
 			Layout.fillWidth: true
        		Layout.preferredHeight: 1
        		color: leftPanelSeparatorColor
-       		opacity: Plasmoid.configuration.numberRows && faves.count && (!showingAllPrograms && !searching) ? 1.0 : 0
+       		opacity: Plasmoid.configuration.numberRows && faves.count && (!showingAllPrograms && !searching) ? startStyles.currentStyle.leftPanel.separatorOpacity : 0
 			Behavior on opacity {
 				NumberAnimation { easing.type: Easing.Linear; duration: animationDuration*0.66 }
 			}
@@ -584,7 +596,7 @@ PlasmaCore.Dialog {
 				Layout.rightMargin: Kirigami.Units.largeSpacing+1
 				Layout.fillWidth: true
 				Layout.preferredHeight: 1
-				opacity: !searching ? 1.0 : 0
+				opacity: !searching ? startStyles.currentStyle.leftPanel.separatorOpacity : 0
 				color: leftPanelSeparatorColor
 				Behavior on opacity {
 					NumberAnimation { easing.type: Easing.Linear; duration: animationDuration }
@@ -657,14 +669,14 @@ PlasmaCore.Dialog {
 						if(focusAppsView) appsView.focus = true;
 					}
 				}
-				Layout.preferredHeight: allProgsBtn.implicitHeight + (Kirigami.Units.largeSpacing-1)
+				Layout.preferredHeight: allProgsBtn.implicitHeight + startStyles.currentStyle.allProgramsBtn.padding
 
 				KSvg.FrameSvgItem {
 					id: allPBNew
 
 					anchors.fill: parent
 
-					imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
 					prefix: "new"
 
 					visible: root.newItemsAvailable
@@ -680,7 +692,7 @@ PlasmaCore.Dialog {
 
 					anchors.fill: parent
 
-					imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
+					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
 					prefix: "hover"
 
 					opacity: {
@@ -722,24 +734,33 @@ PlasmaCore.Dialog {
 					}
 
 					spacing: 0
+					layoutDirection: startStyles.currentStyle.allProgramsBtn.reverseLayout ? Qt.RightToLeft : Qt.LeftToRight
 
 					// HACK: put the elements that the CrossFadeBehaviors above will modify
 					// inside a non-layout item to avoid shader positioning issues
 					Item {
 						Layout.alignment: Qt.AlignVCenter
 
-						implicitWidth: 16
-						implicitHeight: 16
+						implicitWidth: startStyles.currentStyle.allProgramsBtn.indicatorWidth
+						implicitHeight: startStyles.currentStyle.allProgramsBtn.indicatorHeight
 
 						KSvg.SvgItem {
 							id: arrowDirection
 
+							readonly property string state: {
+								if(startStyles.currentStyle.allProgramsBtn.indicatorHover && allButtonsArea.containsMouse) return "-hover";
+								return ""
+							}
+
 							anchors.fill: parent
 
-							imagePath: Qt.resolvedUrl("svgs//arrows.svgz")
-							elementId: showingAllPrograms ? "all-applications-left" : "all-applications-right"
+							imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/arrows.svgz")
+							elementId: showingAllPrograms ? "all-applications-left" + state : "all-applications-right" + state
 						}
 					}
+
+					Item { Layout.minimumWidth: startStyles.currentStyle.allProgramsBtn.spacing; visible: !startStyles.currentStyle.allProgramsBtn.centerText }
+					Item { Layout.fillWidth: startStyles.currentStyle.allProgramsBtn.centerText }
 
 					Item {
 						Layout.alignment: Qt.AlignVCenter
@@ -754,13 +775,12 @@ PlasmaCore.Dialog {
 
 							text: /*"    " + */(showingAllPrograms ? i18n("Back") : i18n("All Programs"))
 							font.pixelSize: 12
-							leftPadding: Kirigami.Units.largeSpacing * 2
 							font.bold: true
 							style: Text.Sunken
 							styleColor: "transparent"
-							horizontalAlignment: Text.AlignLeft
+							horizontalAlignment: startStyles.currentStyle.allProgramsBtn.centerText ? Text.AlignHCenter : Text.AlignLeft
 							verticalAlignment: Text.AlignVCenter
-							color: "black"
+							color: startStyles.currentStyle.leftPanel.itemTextColor
 						}
 					}
 
@@ -770,34 +790,32 @@ PlasmaCore.Dialog {
 			PlasmaExtras.ActionTextField {
 				id: searchField
 
+				focus: true
 				Layout.topMargin: Kirigami.Units.mediumSpacing + Kirigami.Units.smallSpacing
 				Layout.bottomMargin: Kirigami.Units.mediumSpacing-1
-				Layout.leftMargin: Kirigami.Units.smallSpacing + 2
-
+				Layout.leftMargin: startStyles.currentStyle.searchBar.leftMargin
+				Layout.rightMargin: startStyles.currentStyle.searchBar.rightMargin
 				Layout.alignment: Qt.AlignHCenter
-
 				Layout.fillWidth: true
 				Layout.preferredHeight: Kirigami.Units.smallSpacing * 7 - Kirigami.Units.smallSpacing
 
 				background: null
 
-				focus: true
-
 				KSvg.FrameSvgItem {
 					anchors.fill: parent
 					anchors.leftMargin: -Kirigami.Units.smallSpacing - 2
 					anchors.rightMargin: parent.rightPadding;
-
-					imagePath: Qt.resolvedUrl("svgs/lineedit.svg")
-					prefix: "base"
+					imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "lineedit.svg")
+					prefix: startStyles.currentStyle.searchBar.bgOnlyOnFocus ? (parent.focus || parent.text != "" ? "base" : "") : "base"
 
 					Text {
 						anchors.fill: parent
 						anchors.leftMargin: Kirigami.Units.smallSpacing*2-1
 						anchors.bottomMargin: 2
 						font.italic: true
-						color: "#707070"
-						text: i18n("Start search...")
+						color: searchField.focus && !startStyles.currentStyle.searchView.bgOnlyOnHover
+							? searchFieldPlaceholderColor : startStyles.currentStyle.searchBar.inactiveTextColor
+						text: startStyles.currentStyle.searchBar.placeholderText
 						verticalAlignment: Text.AlignVCenter
 						visible: !searching
 						style: Text.Outline
@@ -807,7 +825,7 @@ PlasmaCore.Dialog {
 					Kirigami.Icon {
 						id: searchFieldIcon
 
-						source: "gtk-search"
+						source: startStyles.currentStyle.searchBar.icon
 						smooth: true
 						visible: parent.anchors.rightMargin > width ? true : !searching
 						width: Kirigami.Units.iconSizes.small;
@@ -830,6 +848,7 @@ PlasmaCore.Dialog {
 				color: "black"
 				verticalAlignment: TextInput.AlignVCenter
 				leftInset: Kirigami.Units.smallSpacing*2
+				rightPadding: startStyles.currentStyle.searchBar.rightPadding
 				bottomInset: leftInset
 				clip: false
 
@@ -1046,15 +1065,15 @@ PlasmaCore.Dialog {
                 right: parent.right
                 top: parent.top
                 bottom: bottomControls.top
-                rightMargin: 5
-                topMargin: (kicker.compositingEnabled && !kicker.dashWindow.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 + Kirigami.Units.smallSpacing : 0) + (Kirigami.Units.smallSpacing - 1)
+                rightMargin: startStyles.currentStyle.rightPanel.rightMargin
+                topMargin: startStyles.currentStyle.rightPanel.topMargin
 			}
 			spacing: Kirigami.Units.smallSpacing
 
 			FloatingIcon {
 				id: nonCompositingIcon
 				Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-				visible: !compositingEnabled || root.isTouchingTopEdge()
+				visible: (!compositingEnabled || root.isTouchingTopEdge()) && !startStyles.currentStyle.rightPanel.hideUserPFP
 			}
 
 			Timer {
@@ -1206,7 +1225,7 @@ PlasmaCore.Dialog {
 				left: sidePanel.left
 			}
 
-			spacing: 0
+			spacing: startStyles.currentStyle.leaveButtons.spacing
 
 			z: 7
 
@@ -1237,8 +1256,11 @@ PlasmaCore.Dialog {
 					}
 				}
 
+				text: Plasmoid.configuration.disableSleep ? i18n("Power off") : i18n("Sleep")
 				description: i18n("Closes all open programs, shuts down Linux, and then turns off your computer.")
+				showLabel: startStyles.currentStyle.leaveButtons.showLabel
 
+				isFramed: startStyles.currentStyle.leaveButtons.isFramed
 				prefix: {
 					if(!Plasmoid.configuration.disableSleep) return "sleep";
 					else return "shutdown";
@@ -1247,8 +1269,8 @@ PlasmaCore.Dialog {
 				glyphWidth: 16
 				glyphHeight: 17
 
-				width: 54
-				height: 24
+				elementWidth: startStyles.currentStyle.leaveButtons.shutdownWidth
+				elementHeight: startStyles.currentStyle.leaveButtons.shutdownHeight
 
 				onClicked: {
 					if((!Plasmoid.configuration.disableSleep && sleepIndex !== -1) || (Plasmoid.configuration.disableSleep && shutdownIndex !== -1))
@@ -1277,14 +1299,18 @@ PlasmaCore.Dialog {
 					}
 				}
 
+				text: i18n("Lock")
 				description: i18n("Lock this computer.")
+				showLabel: startStyles.currentStyle.leaveButtons.showLabel
+
+				isFramed: startStyles.currentStyle.leaveButtons.isFramed
 				prefix: "lock"
 
 				glyphWidth: 15
 				glyphHeight: 16
 
-				width: 53
-				height: 24
+				elementWidth: startStyles.currentStyle.leaveButtons.lockWidth
+				elementHeight: startStyles.currentStyle.leaveButtons.lockHeight
 
 				onClicked: {
 					if(lockIndex !== -1)
@@ -1311,13 +1337,14 @@ PlasmaCore.Dialog {
 					}
 				}
 
+				isFramed: startStyles.currentStyle.leaveButtons.isFramed
 				prefix: "more"
 
 				glyphWidth: 20
 				glyphHeight: 21
 
-				width: 24
-				height: 24
+				elementWidth: startStyles.currentStyle.leaveButtons.moreWidth
+				elementHeight: startStyles.currentStyle.leaveButtons.moreHeight
 
 				onClicked: contextMenu.openRelative();
 			}

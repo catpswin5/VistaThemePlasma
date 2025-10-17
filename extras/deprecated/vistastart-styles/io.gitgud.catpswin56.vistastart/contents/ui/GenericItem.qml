@@ -111,7 +111,7 @@ Item {
     text: ("name" in model ? model.name : model.display)
     font.underline: ma.containsMouse
     elide: Text.ElideRight
-    color: "black"
+    color: startStyles.currentStyle.searchView.itemTextColor
   }
   
   KickoffHighlight {

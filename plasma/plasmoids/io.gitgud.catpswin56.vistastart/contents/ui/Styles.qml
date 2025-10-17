@@ -45,8 +45,8 @@ QtObject {
             rightPanel: {
                 textureVisible: false,
 
-                topMargin: (kicker.compositingEnabled && !kicker.dashWindow.isTouchingTopEdge() ? Kirigami.Units.iconSizes.huge / 2 + Kirigami.Units.smallSpacing : 0) + (Kirigami.Units.smallSpacing - 1),
-                rightMargin: 5,
+                topMargin: ,
+                rightMargin: ,
 
                 itemTextColor: "white",
                 hideUserPFP: false
@@ -54,8 +54,8 @@ QtObject {
             leftPanel: {
                 textureVisible: true,
 
-                topMargin: 5 + Kirigami.Units.mediumSpacing,
-                leftMargin: 1 + Kirigami.Units.mediumSpacing,
+                topMargin: ,
+                leftMargin: ,
 
                 itemTextColor: "black",
                 separatorColor: "#e2e2e2",
@@ -66,7 +66,7 @@ QtObject {
                 sectionSeparatorColor: "#ccd9ec",
                 sectionSeparatorOpacity: 0.5,
 
-                itemTextColor: "black",
+                itemTextColor: "",
                 linksColor: "#003963"
             },
             searchBar: {

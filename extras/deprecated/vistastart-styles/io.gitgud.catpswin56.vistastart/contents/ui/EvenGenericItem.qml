@@ -57,7 +57,7 @@ Item {
     text: parent.text
     font.underline: ma.containsMouse
     elide: Text.ElideRight
-    color: "#003963"
+    color: startStyles.currentStyle.searchView.linksColor
   }
   
   KickoffHighlight {

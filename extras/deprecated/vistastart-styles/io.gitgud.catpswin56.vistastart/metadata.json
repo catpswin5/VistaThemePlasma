@@ -1,0 +1,28 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "wackyideas[at]disroot.org",
+        "Name": "WackyIdeas"
+      },
+      {
+        "Name": "catpswin56"
+      }
+    ],
+    "Category": "Application Launchers",
+    "Dependencies": [
+    ],
+    "Description": "Open application menu",
+    "EnabledByDefault": true,
+    "Icon": "start-here-kde",
+    "Id": "io.gitgud.catpswin56.vistastart",
+    "License": "AGPL v3",
+    "Name": "VistaStart",
+    "Version": "1.0"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "KPackageStructure": "Plasma/Applet",
+  "X-Plasma-Provides": [
+    "org.kde.plasma.launchermenu"
+  ]
+}

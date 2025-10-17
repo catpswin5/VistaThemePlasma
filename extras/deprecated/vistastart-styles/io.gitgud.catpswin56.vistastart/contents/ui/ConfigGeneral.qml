@@ -58,13 +58,14 @@ KCM.SimpleKCM {
     property alias cfg_enableShadow: enableShadow.checked
     property alias cfg_enableAnimations: enableAnimations.checked
     property alias cfg_hideSearchLinks: hideSearchLinks.checked
-    property alias cfg_hideLeaveMenuPadding: hideLeaveMenuPadding.checked
 
     property alias cfg_numberRows: numberRows.value
 
     property string cfg_defaultInternetApp
     property string cfg_defaultEmailApp
     property string cfg_defaultRunnerApp
+
+    property alias cfg_startStyle: startStyle.currentIndex
 
     component CustomGroupBox: GroupBox {
         id: gbox
@@ -200,10 +201,6 @@ KCM.SimpleKCM {
                     id: hideSearchLinks
                     text: i18n("Hide search links")
                 }
-                CheckBox {
-                    id: hideLeaveMenuPadding
-                    text: i18n("Remove extra more menu padding")
-                }
             }
         }
         CustomGroupBox {
@@ -266,6 +263,30 @@ KCM.SimpleKCM {
                 }
             }
         }
+
+        CustomGroupBox {
+            Layout.fillWidth: true
+
+            title: i18n("Style")
+
+            ColumnLayout {
+                RowLayout {
+                    Label {
+                        text: i18n("Style to be used:")
+                    }
+
+                    ComboBox {
+                        id: startStyle
+
+                        model: [
+                            i18n("Vista"),
+                            i18n("Longhorn-like")
+                        ]
+                    }
+                }
+            }
+        }
+
     }
 
 

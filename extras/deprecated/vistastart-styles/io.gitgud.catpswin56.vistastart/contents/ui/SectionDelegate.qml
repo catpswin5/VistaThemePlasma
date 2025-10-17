@@ -41,7 +41,7 @@ Item {
             verticalCenter: parent.verticalCenter
             //verticalCenterOffset: Kirigami.Units.smallSpacing/2
         }
-        color: "#003693"
+        color: startStyles.currentStyle.searchView.sectionColor
         //y: Math.round(Kirigami.Units.gridUnit / 4)
         level: 5
         text: section
@@ -56,7 +56,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 1
         height: 1
-        color: "#ccd9ec"
-        opacity: 0.5
+        color: startStyles.currentStyle.searchView.sectionSeparatorColor
+        opacity: startStyles.currentStyle.searchView.sectionSeparatorOpacity
     }
 } // sectionDelegate

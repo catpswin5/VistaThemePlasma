@@ -164,7 +164,7 @@ Item {
 
                 anchors.fill: background
 
-                imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
+                imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
                 prefix: "new"
 
                 visible: model?.isNewlyInstalled ?? false
@@ -174,7 +174,7 @@ Item {
 
                     color: "#ffe599"
 
-                    visible: listItem.smallIcon && startStyles.currentStyle.styleName === "Vista"
+                    visible: listItem.smallIcon
                 }
             }
 
@@ -183,7 +183,7 @@ Item {
 
                 anchors.fill: parent
 
-                imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "menuitem.svg")
+                imagePath: Qt.resolvedUrl("svgs/menuitem.svg")
                 prefix: "hover"
 
                 opacity: {
@@ -233,7 +233,7 @@ Item {
                         || listItem.isDefaultEmailApp
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignLeft
-                    color: startStyles.currentStyle.leftPanel.itemTextColor
+                    color: "black"
                 }
 
                 PlasmaComponents.Label {
@@ -242,7 +242,7 @@ Item {
                     Layout.fillWidth: true
 
                     height: implicitHeight
-                    color: startStyles.currentStyle.leftPanel.itemTextColor
+                    color: "black"
                     text: isDefaultEmailApp || isDefaultInternetApp ? listItem.subtitle : listItem.title
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignLeft

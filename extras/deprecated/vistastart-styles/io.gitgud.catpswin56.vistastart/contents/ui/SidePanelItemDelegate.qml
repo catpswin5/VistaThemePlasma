@@ -101,7 +101,7 @@ Item {
 
         anchors.fill: parent
         anchors.rightMargin: 1
-        imagePath: Qt.resolvedUrl("svgs/sidebaritem.svg")
+        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "sidebaritem.svg")
         prefix: "menuitem"
 
     }
@@ -115,7 +115,7 @@ Item {
         anchors.verticalCenterOffset: -1
         style: Text.Sunken
         styleColor: "transparent"
-        color: "white"
+        color: startStyles.currentStyle.rightPanel.itemTextColor
         text: itemText
     }
     PlasmaComponents.Label {
@@ -128,7 +128,7 @@ Item {
         anchors.verticalCenterOffset: -1
         style: Text.Sunken
         styleColor: "transparent"
-        color: "white"
+        color: startStyles.currentStyle.rightPanel.itemTextColor
         opacity: 0.66
         text: itemText
     }
@@ -140,7 +140,7 @@ Item {
         implicitWidth: 6
         implicitHeight: 10
 
-        imagePath: Qt.resolvedUrl("svgs/arrows.svgz")
+        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "arrows.svgz")
         elementId: "group-expander-left"
         visible: sidePanelDelegate.menuModel !== null
     }

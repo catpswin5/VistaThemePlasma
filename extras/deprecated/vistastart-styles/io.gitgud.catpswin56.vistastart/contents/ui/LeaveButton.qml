@@ -30,16 +30,27 @@ Item {
 
     signal clicked
 
+    property alias text: label.text
+
     readonly property bool hovered: focus || mouseArea.containsMouse
 
+    property bool isFramed: true
     property string prefix: ""
     property alias glyphWidth: glyphItem.width
     property alias glyphHeight: glyphItem.height
 
+    property alias elementWidth: svgItem.implicitWidth
+    property alias elementHeight: svgItem.implicitHeight
+
     property string description: ""
 
-    implicitWidth: glyphWidth
-    implicitHeight: glyphHeight
+    property bool showLabel: false
+
+    width: isFramed ? elementWidth : implicitWidth
+    height: isFramed ? elementHeight : implicitHeight
+
+    implicitWidth: contentArea.width
+    implicitHeight: contentArea.height
 
     Timer {
         id: toolTipTimer
@@ -74,7 +85,7 @@ Item {
     MouseArea {
         id: mouseArea
 
-        anchors.fill: parent
+        anchors.fill: contentArea
 
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
@@ -101,13 +112,43 @@ Item {
             anchors.horizontalCenterOffset: mouseArea.containsPress ? 1 : 0
             anchors.verticalCenterOffset: mouseArea.containsPress ? 1 : 0
 
-            imagePath: Qt.resolvedUrl("svgs/startmenu-buttons.svg")
+            imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "startmenu-buttons.svg")
             elementId: item.prefix
 
             z: 1
         }
 
-        imagePath: Qt.resolvedUrl("svgs/startmenu-buttons.svg")
+        imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "startmenu-buttons.svg")
         prefix: item.prefix + (item.hovered ? (mouseArea.containsPress ? "-pressed": "-hover") : "")
+
+        visible: item.isFramed
+    }
+
+    RowLayout {
+        id: contentArea
+
+        visible: !item.isFramed
+
+        KSvg.SvgItem {
+            id: svgItem
+
+            imagePath: Qt.resolvedUrl("svgs/" + startStyles.currentStyle.styleName + "/" + "startmenu-buttons.svg")
+            elementId: item.prefix + (item.hovered ? (mouseArea.containsPress ? "-pressed": "-hover") : "")
+        }
+
+        PlasmaComponents.Label {
+            id: label
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.NoWrap
+            elide: Text.ElideRight
+            style: Text.Sunken
+            styleColor: "transparent"
+
+            visible: item.showLabel
+        }
     }
 }

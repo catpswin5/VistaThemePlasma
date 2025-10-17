@@ -78,7 +78,7 @@ FocusScope {
     horizontalAlignment: Text.AlignHCenter
     wrapMode: Text.WordWrap
     visible: listView.count === 0 && searching
-    color: "black"
+    color: startStyles.currentStyle.searchView.itemTextColor
   }
   ScrollView {
     id: scrollView
