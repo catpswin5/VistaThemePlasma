@@ -282,11 +282,15 @@ void Decoration::smodPaintTitleBar(QPainter *painter, const QRectF &repaintRegio
         int titleAlignment = internalSettings()->titleAlignment();
         bool invertText = internalSettings()->invertTextColor() && c->isMaximized();
 
+        const int left = m_leftButtons->geometry().right();
+        const int right = m_rightButtons->geometry().left();
+
         QRect captionRect(m_leftButtons->geometry().right(), 0,
-                          titleBar().width() - (m_rightButtons->geometry().left() + m_leftButtons->geometry().right()) - 4, borderTop());
+                          (right == 0 ? size().width() : right) - left - 4, borderTop());
         qDebug() << "smod: captionRect width:" << captionRect.width();
         qDebug() << "smod: m_leftButtons right:" << m_leftButtons->geometry().right();
-        qDebug() << "smod: m_rightButtons right:" << m_rightButtons->geometry().left();
+        qDebug() << "smod: m_rightButtons left:" << m_rightButtons->geometry().left();
+        qDebug() << "smod: this thing:" << m_leftButtons->geometry().right() + m_rightButtons->geometry().left();
         QString caption = settings()->fontMetrics().elidedText(c->caption(), Qt::ElideMiddle, captionRect.width());
         QStringList programname = caption.split(" — ");
         caption.remove(" — " + programname.at(programname.size()-1));
