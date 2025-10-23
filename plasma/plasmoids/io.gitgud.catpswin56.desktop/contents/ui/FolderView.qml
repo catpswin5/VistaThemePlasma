@@ -14,7 +14,7 @@ import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0
 
-import io.gitgud.catpswin56.vistadesktop.folder as Folder
+import io.gitgud.catpswin56.desktop.folder as Folder
 import "code/FolderTools.js" as FolderTools
 
 FocusScope {

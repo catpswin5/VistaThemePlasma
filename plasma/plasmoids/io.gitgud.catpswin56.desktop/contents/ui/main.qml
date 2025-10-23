@@ -19,7 +19,7 @@ import org.kde.plasma.plasma5support as Plasma5Support
 
 import org.kde.plasma.private.containmentlayoutmanager 1.0 as ContainmentLayoutManager
 
-import io.gitgud.catpswin56.vistadesktop.folder as Folder
+import io.gitgud.catpswin56.desktop.folder as Folder
 
 import "code/FolderTools.js" as FolderTools
 

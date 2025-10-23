@@ -17,7 +17,7 @@ import org.kde.config // for KAuthorized
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 
-import io.gitgud.catpswin56.vistadesktop.folder as Folder
+import io.gitgud.catpswin56.desktop.folder as Folder
 
 Item {
     id: configIcons

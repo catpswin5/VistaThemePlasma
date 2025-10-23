@@ -193,7 +193,7 @@ Item {
 
         Item {
             id: representation_container
-            objectName: "io.gitgud.catpswin56.vistadesktop.representation_container"
+            objectName: "io.gitgud.catpswin56.desktop.representation_container"
 
             anchors.fill: plasmoidBg
             anchors.margins: !plasmoid_root.isGadget ? 5 : 0
