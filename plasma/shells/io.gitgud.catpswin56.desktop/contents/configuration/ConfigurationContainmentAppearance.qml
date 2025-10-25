@@ -97,7 +97,7 @@ Item {
         }
 
         Flow {
-            // Layout.topMargin: Kirigami.Units.smallSpacing*3
+            Layout.topMargin: Kirigami.Units.smallSpacing*3
             Layout.bottomMargin: Kirigami.Units.smallSpacing*3
             Layout.leftMargin: Kirigami.Units.smallSpacing*3
             Layout.rightMargin: Kirigami.Units.smallSpacing*3

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=XSession
-Exec=/usr/bin/startvtp
-TryExec=/usr/bin/startvtp
+Exec=${CMAKE_INSTALL_FULL_BINDIR}/startvtp
+TryExec=${CMAKE_INSTALL_FULL_BINDIR}/startvtp
 DesktopNames=KDE
 Name=VistaThemePlasma (X11)
 Comment=KDE Plasma running VistaThemePlasma

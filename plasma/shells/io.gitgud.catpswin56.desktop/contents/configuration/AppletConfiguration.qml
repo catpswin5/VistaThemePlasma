@@ -384,10 +384,10 @@ Rectangle {
             bottom: parent.bottom
         }
 
-        pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.Auto
+        pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.None
         wideScreen: true
-        pageStack.globalToolBar.separatorVisible: bottomSeparator.visible
-        pageStack.globalToolBar.colorSet: Kirigami.Theme.View
+        // pageStack.globalToolBar.separatorVisible: bottomSeparator.visible
+        // pageStack.globalToolBar.colorSet: Kirigami.Theme.View
         property var currentConfigPage: null
         onCurrentConfigPageChanged: {
             if(currentConfigPage) {
@@ -449,20 +449,6 @@ Rectangle {
                     text: i18nd("plasma_shell_org.kde.plasma.desktop", "Cancel")
                     onClicked: cancelAction.trigger()
                     visible: !app.isAboutPage
-                }
-            }
-            background: Item {
-                Kirigami.Separator {
-                    id: bottomSeparator
-                    visible: app.pageStack.currentItem
-                        && app.pageStack.currentItem.flickable
-                        && !(app.pageStack.currentItem.flickable.atYBeginning
-                        && app.pageStack.currentItem.flickable.atYEnd)
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        top: parent.top
-                    }
                 }
             }
         }

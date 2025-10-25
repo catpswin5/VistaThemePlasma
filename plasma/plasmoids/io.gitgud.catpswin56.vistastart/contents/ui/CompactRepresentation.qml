@@ -99,7 +99,7 @@ Item {
     }
     function updateSizeHints() {
         return;
-        if (useCustomButtonImage) {
+        /*if (useCustomButtonImage) {
             if (vertical) {
                 var scaledHeight = Math.floor(parent.width * (floatingOrbPanel.buttonIcon.height / floatingOrbPanel.buttonIcon.width));
                 root.Layout.minimumHeight = scaledHeight;
@@ -124,7 +124,7 @@ Item {
             root.Layout.maximumWidth = orb.width + panelSvg.margins.right * (compositing ? 0 : 1);
             root.Layout.minimumHeight = orb.height;
             root.Layout.maximumHeight = orb.height;
-        }
+        }*/
     }
 
     //kicker.status: PlasmaCore.Types.PassiveStatus

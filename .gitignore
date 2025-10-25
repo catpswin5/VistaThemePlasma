@@ -2,6 +2,7 @@ PlymouthVista/
 misc/libplasma/build
 misc/uac-polkitagent/build
 plasma/aerothemeplasma-kcmloader/build
+plasma/sddm/login-sessions/build
 plasma/plasmoids/src/sidebar_src/build
 plasma/plasmoids/src/vistadesktop_src/build
 plasma/plasmoids/src/vistastart_src/build

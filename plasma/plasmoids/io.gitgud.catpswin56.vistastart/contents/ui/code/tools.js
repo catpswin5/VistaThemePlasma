@@ -37,26 +37,26 @@ function createFavoriteActions(i18n, favoriteModel, favoriteId) {
 
 
     if (favoriteModel.activities === undefined ||
-        favoriteModel.activities.runningActivities.length <= 1) {
+        favoriteModel.activities?.runningActivities?.length <= 1) {
         var action = {};
 
-    if (favoriteModel.isFavorite(favoriteId)) {
-        action.text = i18n("Unpin from Start Menu");
-        //action.icon = "pin";
-        action.actionId = "_kicker_favorite_remove";
-    } else if (favoriteModel.maxFavorites === -1 || favoriteModel.count < favoriteModel.maxFavorites) {
-        action.text = i18n("Pin to Start Menu");
-        //action.icon = "bookmark-new";
-        action.actionId = "_kicker_favorite_add";
-    } else {
-        return null;
-    }
-
-    action.actionArgument = { favoriteModel: favoriteModel, favoriteId: favoriteId };
-
-    return [action];
-
+        if (favoriteModel.isFavorite(favoriteId)) {
+            action.text = i18n("Unpin from Start Menu");
+            //action.icon = "pin";
+            action.actionId = "_kicker_favorite_remove";
+        } else if (favoriteModel.maxFavorites === -1 || favoriteModel.count < favoriteModel.maxFavorites) {
+            action.text = i18n("Pin to Start Menu");
+            //action.icon = "bookmark-new";
+            action.actionId = "_kicker_favorite_add";
         } else {
+            return null;
+        }
+
+        action.actionArgument = { favoriteModel: favoriteModel, favoriteId: favoriteId };
+
+        return [action];
+
+    } else {
             var actions = [];
 
             var linkedActivities = favoriteModel.linkedActivitiesFor(favoriteId);
@@ -128,13 +128,12 @@ function createFavoriteActions(i18n, favoriteModel, favoriteId) {
 
             // Adding the items for each activity
 
-            activities.forEach(function(activityId) {
+            activities?.forEach(function(activityId) {
                 addActivityItem(activityId, favoriteModel.activityNameForId(activityId));
             });
 
             return [{
-                text       : i18n("Show in Favorites"),
-                icon       : "favorite",
+                text       : i18n("Pin to Start Menu"),
                 subActions : actions
             }];
         }

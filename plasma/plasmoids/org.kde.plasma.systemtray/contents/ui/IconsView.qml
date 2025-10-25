@@ -3,9 +3,9 @@ import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.kirigami as Kirigami
 
-GridView {
+ListView {
     interactive: false //disable features we don't need
-    flow: vertical ? GridView.LeftToRight : GridView.TopToBottom
+    flow: vertical ? ListView.LeftToRight : ListView.TopToBottom
 
     // The icon size to display when not using the auto-scaling setting
     readonly property int smallIconSize: Kirigami.Units.iconSizes.small
