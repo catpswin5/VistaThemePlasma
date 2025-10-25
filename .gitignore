@@ -10,6 +10,7 @@ plasma/plasmoids/src/vistatasks_src/build
 plasma/plasmoids/src/quicklaunch_src/build
 plasma/plasmoids/src/volume_src/build
 plasma/plasmoids/src/notifications_src/build
+plasma/plasmoids/src/systemtray_src/build
 kwin/decoration/build
 kwin/effects_cpp/kwin-effect-smodsnap-v2/build
 kwin/effects_cpp/kwin-effect-smodsnap-v2/build-wl
