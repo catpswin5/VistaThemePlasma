@@ -34,12 +34,6 @@ for filename in "$PWD/kwin/effects/"*; do
 done
 echo "Done."
 
-echo "Installing KWin scripts..."
-for filename in "$PWD/kwin/scripts/"*; do
-    install_component "$filename" "KWin/Script"
-done
-echo "Done."
-
 echo "Installing KWin task switchers..."
 for filename in "$PWD/kwin/tabbox/"*; do
     install_component "$filename" "KWin/WindowSwitcher"

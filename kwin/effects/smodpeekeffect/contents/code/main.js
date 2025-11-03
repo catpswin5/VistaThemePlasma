@@ -11,10 +11,10 @@
 "use strict";
 
 var badBadWindowsEffect = {
-    duration: animationTime(400),
+    duration: animationTime(0),
     showingDesktop: false,
     loadConfig: function () {
-        badBadWindowsEffect.duration = animationTime(400);
+        badBadWindowsEffect.duration = animationTime(0);
     },
     setShowingDesktop: function (showing) {
         badBadWindowsEffect.showingDesktop = showing;

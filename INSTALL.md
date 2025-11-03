@@ -221,8 +221,6 @@ $ chmod +x add_rule.sh && ./add_rule.sh
 - In Window Behavior -> Task Switcher:
   - Main: Thumbnail Seven, Include "Show Desktop" entry
   - Alternative: Flip 3D, Forward shortcut: Meta+Tab
-- In Window Behavior -> KWin Scripts: 
-  - Enable Minimize All, SMOD Peek (**Wayland users should keep SMOD Peek disabled as it doesn't work and can cause freezing**)
 - In Window Behavior -> Desktop Effects, enable **all** effects in the VistaThemePlasma category. Additionally enable the "Desaturate Unresponsive Applications" effect.
 - In Window Behavior -> Desktop Effects, **disable** the following:
   - Background Contrast
