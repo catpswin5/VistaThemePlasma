@@ -17,6 +17,8 @@ VTP is in constant development and testing. So far it has been tested on:
 
 ## This project overwrites a small number of [system](https://gitgud.io/catpswin56/vistathemeplasma/-/tree/master/misc/libplasma) [files](https://gitgud.io/catpswin56/vistathemeplasma/-/tree/master/extras/extra-components/uac-polkitagent), it's always recommended to make backups of your system just in case. I am not responsible for broken systems, please proceed with caution.
 
+[GitHub mirror](https://github.com/catpswin5/vistathemeplasma)
+
 ## Installation
 
 See [INSTALL.md](./INSTALL.md) for a quick install guide.
