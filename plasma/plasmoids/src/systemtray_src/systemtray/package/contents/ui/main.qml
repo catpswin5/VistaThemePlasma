@@ -50,6 +50,7 @@ ContainmentItem {
     readonly property alias visibleLayout: tasksGrid
 
     property bool hiddenItemsVisible: false
+    property int hiddenItemsCount: 0
 
     KSvg.Svg {
         id: buttonIcons
@@ -183,17 +184,6 @@ ContainmentItem {
 
             property int unsortedCount: unsortedItems.count
             property int sortedCount: items.count
-            property var hiddenIndexes: []
-
-            signal sortingComplete()
-            onSortingComplete: {
-                hiddenIndexes = [];
-                for(var i = 0; i < items.count; i++) {
-                    const item = items.get(i);
-                    if(item.model.effectiveStatus === PlasmaCore.Types.PassiveStatus) hiddenIndexes.push(item.itemsIndex);
-                }
-                expander.visible = activeModel.hiddenIndexes.length > 0;
-            }
 
             model: KItemModels.KSortFilterProxyModel {
                 id: shownItemsModel
@@ -278,10 +268,9 @@ ContainmentItem {
                     const item = unsortedItems.get(0);
 
                     var i = determinePosition(item);
-                    item.groups =  "items";
+                    item.groups = "items";
                     items.move(item.itemsIndex, i);
                 }
-                sortingComplete();
             }
         }
         // Main Layout
@@ -304,7 +293,7 @@ ContainmentItem {
                 Layout.topMargin: !vertical ? (!Plasmoid.configuration.dontOffset ? Kirigami.Units.smallSpacing*2 : 0) : 0
                 Layout.rightMargin: -Kirigami.Units.smallSpacing/2
 
-                visible: activeModel.hiddenIndexes.length > 0
+                visible: root.hiddenItemsCount > 0
             }
 
             ItemsGrid {
@@ -514,4 +503,6 @@ ContainmentItem {
             }
         }
     }
+
+    Component.onCompleted: root.hiddenItemsVisible = false;
 }

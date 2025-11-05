@@ -28,18 +28,16 @@ PlasmaCore.ToolTipArea {
 
     readonly property bool isReorderingDisabled: index === -1
     readonly property int size: root.itemSize
-    readonly property int hiddenIndexesIndex: root.activeModel.hiddenIndexes.indexOf(index)
-    readonly property int hiddenIndexesLength: root.activeModel.hiddenIndexes.length
-    readonly property bool shouldBeHidden: hiddenIndexesIndex !== -1 && !root.hiddenItemsVisible && !isReorderingDisabled
+    readonly property bool shouldBeHidden: !root.hiddenItemsVisible && !isReorderingDisabled
     onShouldBeHiddenChanged: {
         if(isReorderingDisabled) return;
 
         if(effectiveStatus == PlasmaCore.Types.PassiveStatus) {
-            if(shouldBeHidden && hiddenIndexesIndex == 0) {
+            if(shouldBeHidden) {
                 seqAnim.to = 0;
                 seqAnim.start();
 
-            } else if(!shouldBeHidden && hiddenIndexesIndex == (hiddenIndexesLength - 1)) {
+            } else if(!shouldBeHidden) {
                 seqAnim.to = size;
                 seqAnim.start();
 
@@ -49,7 +47,21 @@ PlasmaCore.ToolTipArea {
 
     property int index: visualIndex
     property var model: itemModel
+    property int oldEffectiveStatus: PlasmaCore.Types.UnknownStatus
     property int effectiveStatus: model.effectiveStatus || PlasmaCore.Types.UnknownStatus
+    onEffectiveStatusChanged: {
+        if(oldEffectiveStatus == PlasmaCore.Types.PassiveStatus && effectiveStatus == PlasmaCore.Types.ActiveStatus) {
+            root.hiddenItemsCount -= 1;
+            abstractItem.implicitWidth = abstractItem.size;
+
+        } else if(oldEffectiveStatus == PlasmaCore.Types.ActiveStatus && effectiveStatus == PlasmaCore.Types.PassiveStatus) {
+            root.hiddenItemsCount += 1;
+            root.hiddenItemsVisible = true;
+
+        }
+
+        oldEffectiveStatus = effectiveStatus;
+    }
 
     property string text
     property string itemId
@@ -72,36 +84,6 @@ PlasmaCore.ToolTipArea {
         property int to: 0
 
         NumberAnimation { target: abstractItem; property: "implicitWidth"; to: seqAnim.to; duration: 75 }
-        ScriptAction {
-            script: {
-                var item;
-
-                if(abstractItem.shouldBeHidden) {
-                    for(var i = 0; i < root.tasksRepeater.count; i++) {
-                        if(root.tasksRepeater.itemAt(i).item.hiddenIndexesIndex == hiddenIndexesIndex + 1) {
-                            item = root.tasksRepeater.itemAt(i).item;
-                        } else continue;
-                    }
-
-                    if(item !== undefined) {
-                        item.seqAnim.to = 0;
-                        item.seqAnim.start();
-                    }
-
-                } else if(!abstractItem.shouldBeHidden) {
-                    for(var i = 0; i < root.tasksRepeater.count; i++) {
-                        if(root.tasksRepeater.itemAt(i).item.hiddenIndexesIndex == hiddenIndexesIndex - 1) {
-                            item = root.tasksRepeater.itemAt(i).item;
-                        } else continue;
-                    }
-
-                    if(item !== undefined) {
-                        item.seqAnim.to = item.size;
-                        item.seqAnim.start();
-                    }
-                }
-            }
-        }
     }
 
     implicitWidth: size
@@ -296,6 +278,14 @@ PlasmaCore.ToolTipArea {
             rightBar.visible = false;
             leftBar.visible = false;
             orderingManager.saveConfiguration();
+        }
+    }
+
+    Component.onCompleted: {
+        if(effectiveStatus == PlasmaCore.Types.PassiveStatus) {
+            root.hiddenItemsCount += 1;
+            abstractItem.implicitWidth = 0;
+            root.hiddenItemsVisible = false;
         }
     }
 }
