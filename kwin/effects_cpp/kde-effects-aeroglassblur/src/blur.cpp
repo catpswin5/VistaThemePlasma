@@ -1210,18 +1210,15 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
             else if (w->isDock()) {
                 if(maximizedWindowsShareScreen()) opaqueMaximize = true;
             }
-            else opaqueMaximize = maximizeState == MaximizeMode::MaximizeFull && windowClass != "kwin";
+            else opaqueMaximize = maximizeState == MaximizeMode::MaximizeFull && windowClass != "kwin" && w->caption() != "sevenstart-menurepresentation";
         }
         if(w->window()->resourceName() == "krunner" && w->window()->resourceClass() == "krunner" && m_opaqueKrunner) opaqueMaximize = true;
 
-        // OSDs
         if(w->isOnScreenDisplay() && m_opaqueOSD) opaqueMaximize = true;
         // X11 Alt+Tab window
         if(w->caption() == "" && windowClass == "kwin") opaqueMaximize = false;
         // Wayland Alt+Tab window
         if(effects->waylandDisplay() && !w->isWaylandClient() && w->window()->resourceName() == "") opaqueMaximize = false;
-        // SevenStart
-        if(w->caption() == "sevenstart-menurepresentation") opaqueMaximize = false;
 
         if(opaqueMaximize)
         {

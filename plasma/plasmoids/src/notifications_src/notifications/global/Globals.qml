@@ -19,7 +19,7 @@ import org.kde.kirigami 2.11 as Kirigami
 import org.kde.notificationmanager as NotificationManager
 import org.kde.taskmanager 0.1 as TaskManager
 
-import plasma.applet.io.gitgud.catpswin56.notifications as Notifications
+import plasma.applet.io.gitgud.wackyideas.notifications as Notifications
 
 import ".."
 
@@ -403,6 +403,7 @@ QtObject {
             }
             popup.intendedX = popup.x;
             popup.intendedY = popup.y;
+            console.log(popup.x, popup.y);
 
             // don't let notifications take more than popupMaximumScreenFill of the screen
             var visible = true;
@@ -414,7 +415,7 @@ QtObject {
                 }
             }
 
-            popup.visible = visible;
+            Qt.callLater(() => { popup.visible = visible; });
         }
     }
 
