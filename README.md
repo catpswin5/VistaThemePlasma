@@ -73,8 +73,8 @@ Many thanks to the people who helped out by testing and providing some suggestio
 
 ### Sound Mixer
 
-![volume](screenshots/volume.png)
-![volumemixer](screenshots/volumemixer.png)
+![mixer](screenshots/mixer.png)
+![mixer_expanded](screenshots/mixer_expanded.png)
 
 ### Notifications 
 
