@@ -26,6 +26,7 @@ kwin/effects_cpp/startupfeedback/build
 kwin/effects_cpp/startupfeedback/build-wl
 testing/
 build
+build_x11
 repos
 manifest
 
