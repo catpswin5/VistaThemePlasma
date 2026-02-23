@@ -106,6 +106,8 @@ Run the following script:
 $ bash install.sh --ninja # Pass --ninja to reduce build times
 ``` 
 
+**NOTE:** If you happen to experience font rendering issues with HiDPI in QML applications after logging in, re-run the installation script with the ``--keep-qml-distancefield`` added.
+
 This will clone every repository needed for VistaThemePlasma and build everything from source.
 
 You can also run the install script like this:

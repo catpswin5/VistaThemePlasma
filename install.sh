@@ -4,6 +4,7 @@ CUR_DIR=${PWD}
 SU_CMD=sudo
 USE_NINJA=
 NINJA_PARAM=
+QMLDISTANCEFIELD_PARAM=
 if [[ "$*" == *"--ninja"* ]]
 then
     if [[ -z "$(command -v ninja)" ]]; then
@@ -13,6 +14,12 @@ then
         USE_NINJA="-G Ninja"
         NINJA_PARAM="--ninja"
     fi
+fi
+
+if [[ "$*" == *"--keep-qml-distancefield"* ]]
+then
+    echo "Keeping QML distance field enabled for the session entries."
+    QMLDISTANCEFIELD_PARAM="-DKEEP_QML_DISTANCEFIELD=ON"
 fi
 
 if [[ -z "$(command -v $SU_CMD)" ]]; then
@@ -105,7 +112,7 @@ cd "$CUR_DIR/repos"
 
 # Vistathemeplasma
 cd "$CUR_DIR"
-cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR=$LIBEXEC_DIR -B build . || exit 1
+cmake -G Ninja $QMLDISTANCEFIELD_PARAM -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR=$LIBEXEC_DIR -B build . || exit 1
 cmake --build build || exit 1
 $SU_CMD cmake --install build || exit 1
 cp build/install_manifest.txt "$CUR_DIR/manifest/vistathemeplasma_install_manifest.txt"
