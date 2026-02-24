@@ -64,12 +64,6 @@ KWIN_EFFECTS=(
     smodpeekeffect
     squashaero
 )
-KWIN_TABBOX=(
-    flip3d
-    thumbnail_seven
-)
-
-KWIN_SCRIPT=smodpeekscript
 
 function uninstall_cmake_component {
     if [ ! -f "$CUR_DIR/$1/install_manifest.txt" ]; then
@@ -213,9 +207,8 @@ fi
 uninstall_prompt "KWin task switchers"
 if [ "$?" == 1 ]; then
     echo "Uninstalling KWin task switchers..."
-    for entry in ${KWIN_TABBOX[@]}; do
-        uninstall_component "$entry" "KWin/WindowSwitcher"
-    done
+    uninstall_component "flip3d" "KWin/WindowSwitcher"
+    uninstall_component "thumbnail_seven" "KWin/WindowSwitcher"
     echo "Done."
 fi
 
