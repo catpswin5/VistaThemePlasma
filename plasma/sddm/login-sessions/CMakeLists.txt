@@ -9,20 +9,12 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 
-option(KEEP_QML_DISTANCEFIELD OFF)
-
 if(PLASMA_X11_DEFAULT_SESSION)
    set(PLASMA_X11_DESKTOP_FILENAME vistathemeplasma.desktop CACHE INTERNAL "Filename for Plasma X11 session")
    set(PLASMA_WAYLAND_DESKTOP_FILENAME vistathemeplasmawayland.desktop CACHE INTERNAL "Filename for Plasma Wayland session")
 else()
    set(PLASMA_X11_DESKTOP_FILENAME vistathemeplasmax11.desktop CACHE INTERNAL "Filename for Plasma X11 session")
    set(PLASMA_WAYLAND_DESKTOP_FILENAME vistathemeplasma.desktop CACHE INTERNAL "Filename for Plasma Wayland session")
-endif()
-
-if(KEEP_QML_DISTANCEFIELD)
-   set(QML_DISABLE_DISTANCEFIELD 0)
-else()
-   set(QML_DISABLE_DISTANCEFIELD 1)
 endif()
 
 

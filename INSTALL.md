@@ -106,8 +106,6 @@ Run the following script:
 $ bash install.sh --ninja # Pass --ninja to reduce build times
 ``` 
 
-**NOTE:** If you happen to experience font rendering issues with HiDPI in QML applications after logging in, re-run the installation script with the ``--keep-qml-distancefield`` added.
-
 This will clone every repository needed for VistaThemePlasma and build everything from source.
 
 You can also run the install script like this:
@@ -115,6 +113,15 @@ You can also run the install script like this:
 ```bash
 $ chmod +x install.sh && ./install.sh
 ```
+
+**NOTE:** If you happen to experience font rendering issues with HiDPI in QML applications after logging in, open the file named ``vistathemeplasmarc`` within ``~/.config/``, and add the following contents into it:
+
+```ini
+[General]
+qmlDisableDistanceField=0
+```
+
+Make sure to not accidentally delete any other already existing stuff inside the file. Afterwards, restart your session and you should see your font look normal again.
 
 # NOTE FOR OTHER DISTROS
 
