@@ -157,13 +157,15 @@ public:
     Q_INVOKABLE void setTransparentWindow()
     {
         if(orb == nullptr || inputMaskCache == nullptr) return;
-        if(!KX11Extras::compositingActive())
+
+        bool compositingActive{true};
+        if(KWindowSystem::isPlatformX11()) compositingActive = KX11Extras::compositingActive();
+
+        if(compositingActive)
         {
             orb->setMask(*inputMaskCache);
             printf("Set input mask correctly\n");
-        }
-        else if(KX11Extras::compositingActive())
-        {
+        } else {
             orb->setMask(QRegion());
             printf("Reset input mask\n");
         }
