@@ -37,6 +37,16 @@ mkdir -p repos
 mkdir -p manifest
 cd repos
 
+# libplasma last
+git clone https://gitgud.io/aeroshell/libplasma.git libplasma
+cd libplasma
+git pull
+cmake $USE_NINJA -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
+cmake --build build || exit 1
+$SU_CMD cmake --install build || exit 1
+cp build/install_manifest.txt "$CUR_DIR/manifest/libplasma_install_manifest.txt"
+cd "$CUR_DIR/repos"
+
 # uac-polkit-agent
 git clone https://gitgud.io/aeroshell/uac-polkit-agent.git uac-polkit-agent
 cd uac-polkit-agent
@@ -123,16 +133,6 @@ then
     cp build_x11/install_manifest.txt "$CUR_DIR/manifest/vistathemeplasma-x11_install_manifest.txt"
 fi
 
-cd "$CUR_DIR/repos"
-
-# libplasma last
-git clone https://gitgud.io/aeroshell/libplasma.git libplasma
-cd libplasma
-git pull
-cmake $USE_NINJA -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
-cmake --build build || exit 1
-$SU_CMD cmake --install build || exit 1
-cp build/install_manifest.txt "$CUR_DIR/manifest/libplasma_install_manifest.txt"
 cd "$CUR_DIR/repos"
 
 echo "Done."
