@@ -103,7 +103,7 @@ It's highly recommended to use git for downloading VistaThemePlasma as updating 
 Run the following script:
 
 ```sh
-$ bash install.sh --ninja # Pass --ninja to reduce build times
+$ bash install.sh [--ninja]  [--skip-x11] # --ninja to reduce build times, --skip-x11 to skip building X11 components
 ``` 
 
 This will clone every repository needed for VistaThemePlasma and build everything from source.
@@ -111,7 +111,7 @@ This will clone every repository needed for VistaThemePlasma and build everythin
 You can also run the install script like this:
 
 ```bash
-$ chmod +x install.sh && ./install.sh
+$ chmod +x install.sh && ./install.sh 
 ```
 
 **NOTE:** If you happen to experience font rendering issues with HiDPI in QML applications after logging in, open the file named ``vistathemeplasmarc`` within ``~/.config/``, and add the following contents into it:
