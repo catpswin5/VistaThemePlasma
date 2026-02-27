@@ -823,7 +823,7 @@ Item
         implicitWidth: 35
         implicitHeight: 28
 
-        text: keyboard.layouts[currentIndex].shortName
+        text: keyboard.layouts[currentIndex]?.shortName ?? ""
         onClicked: currentIndex = (currentIndex + 1) % keyboard.layouts.length
 
         label.font.pointSize: 9
