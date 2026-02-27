@@ -110,7 +110,7 @@ MouseArea {
             prefix: "attention"
 
             visible: demandsAttention
-            opacity: root.parentTask?.attentionAnimOpacity
+            opacity: root.parentTask?.attentionAnimOpacity ?? 1.0
         }
 
         KSvg.FrameSvgItem {

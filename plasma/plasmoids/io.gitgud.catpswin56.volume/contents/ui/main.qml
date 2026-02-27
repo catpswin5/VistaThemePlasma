@@ -300,6 +300,8 @@ PlasmoidItem {
                 visible: count && !fullRep.hiddenTypes.includes("sink-output")
 
                 Rectangle {
+                    id: separator
+
                     anchors {
                         right: parent.right
                         rightMargin: -Kirigami.Units.smallSpacing * 3
