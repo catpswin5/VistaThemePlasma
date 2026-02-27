@@ -77,11 +77,18 @@ int main(int argc, char *argv[])
         // Copyright Statement.
         i18n("(c) 2025"));
     aboutData.addAuthor(i18nc("@info:credit", "WackyIdeas"),
-                        i18nc("@info:credit", "Maintainer"),
+                        i18nc("@info:credit", "Author of the original ATPOOTB"),
                         u"wackyideas@disroot.org"_s,
                         u"https://gitgud.io/aeroshell/atp/aerothemeplasma"_s);
+    aboutData.addAuthor(i18nc("@info:credit", "catpswin56"),
+                        i18nc("@info:credit", "Maintainer"),
+                        u"catpswin5@proton.me"_s,
+                        u"https://gitgud.io/aeroshell/vtp/vistathemeplasma"_s);
+    aboutData.setOrganizationDomain("gitgud.io");
+    aboutData.setDesktopFileName("__VTPOOTB");
     //aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     KAboutData::setApplicationData(aboutData);
+
     QGuiApplication::setWindowIcon(QIcon::fromTheme(u"io.gitgud.catpswin56.vtpootb"_s));
     QCoreApplication::setApplicationName(QStringLiteral("__VTPOOTB"));
 

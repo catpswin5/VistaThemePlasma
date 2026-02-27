@@ -2,14 +2,14 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import org.kde.coreaddons 1.0 as KCoreAddons
+import org.kde.coreaddons as KCoreAddons
 import org.kde.kcmutils as KCMUtils
 
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.extras as PlasmaExtras
 import org.kde.plasma.networkmanagement as PlasmaNM
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
 Window {
     id: detailsWindow
@@ -78,6 +78,8 @@ Window {
         TabButton {
             width: contentItem.implicitWidth + Kirigami.Units.largeSpacing*2
             height: 21
+            bottomPadding: 2
+            topPadding: isCurrentIndex ? 0 : Kirigami.Units.smallSpacing+1
             spacing: 0
             property bool isCurrentIndex: (TabBar.index === tabs.currentIndex)
             contentItem: Text { // All this just to make the sizing correct
@@ -98,9 +100,10 @@ Window {
         TabButton {
             width: contentItem.implicitWidth + Kirigami.Units.largeSpacing*2
             height: 21
-            bottomPadding: 0
-            spacing: 0
+            bottomPadding: 2
+            topPadding: isCurrentIndex ? 0 : Kirigami.Units.smallSpacing+1
             property bool isCurrentIndex: (TabBar.index === tabs.currentIndex)
+            spacing: 0
             visible: detailsWindow.speedVisible
             Rectangle {
                 anchors.left: parent.left
