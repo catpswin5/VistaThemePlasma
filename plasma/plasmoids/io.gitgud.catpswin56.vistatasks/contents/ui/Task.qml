@@ -253,7 +253,7 @@ PlasmaCore.ToolTipArea {
     onSmartLauncherEnabledChanged: {
         if (smartLauncherEnabled && !smartLauncherItem) {
             const smartLauncher = Qt.createQmlObject(`
-import org.kde.plasma.private.taskmanager as TaskManagerApplet
+import aeroshell.taskmanager as TaskManagerApplet
 
 TaskManagerApplet.SmartLauncherItem { }
 `, task);
