@@ -39,7 +39,7 @@ RowLayout {
             Layout.fillWidth: true
             elide: Text.ElideRight
             wrapMode: Text.Wrap
-            text: i18n("Volume: %1%", main.volumePercent(PreferredDevice.sink.volume))
+            text: i18n("Volume: %1%", main.volumePercent(PreferredDevice.sink?.volume ?? 0))
             textFormat: Text.PlainText
             color: "#003399"
             visible: text !== ""

@@ -111,15 +111,15 @@
                 "Name[zh_TW]": "Eike Hein"
             }
         ],
-        "BugReportUrl": "https://gitgud.io/catpswin56/vistathemeplasma/-/issues",
+        "BugReportUrl": "https://gitgud.io/aeroshell/vtp/vistathemeplasma/-/issues",
         "Category": "Containments",
         "Description": "A Windows Vista-like desktop layout",
         "EnabledByDefault": true,
         "Icon": "user-desktop",
         "Id": "io.gitgud.catpswin56.desktopcontainment",
         "License": "GPL-2.0+",
-        "Name": "Vista Desktop",
-        "Website": "https://gitgud.io/catpswin56/vistathemeplasma"
+        "Name": "Desktop",
+        "Website": "https://gitgud.io/aeroshell/vtp/vistathemeplasma"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-ContainmentType": "Desktop",

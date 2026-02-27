@@ -425,29 +425,9 @@ PlasmaCore.Dialog {
 			onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
 		}
 
-		Instantiator {
-			model: fileUsageModel
-			delegate: PlasmaExtras.MenuItem {
-				required property int index
-				required property var model
-
-				text: model.display + "      "
-				icon: model.decoration
-				onClicked: fileUsageModel.trigger(index, "", null)
-			}
-			onObjectAdded: (index, object) => fileUsageMenu.addMenuItem(object);
-			onObjectRemoved: (index, object) => fileUsageMenu.removeMenuItem(object)
-		}
-
         PlasmaExtras.Menu {
 			id: contextMenu
 			visualParent: moreBtn
-			placement: PlasmaExtras.Menu.RightPosedTopAlignedPopup
-		}
-
-		PlasmaExtras.Menu {
-			id: fileUsageMenu
-			visualParent: m_recentsSidePanelItem
 			placement: PlasmaExtras.Menu.RightPosedTopAlignedPopup
 		}
 

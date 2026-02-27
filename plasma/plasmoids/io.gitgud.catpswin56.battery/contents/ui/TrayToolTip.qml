@@ -36,9 +36,9 @@ ColumnLayout {
 
             hasBattery: batterymonitor.compactRepresentationItem.batteryPluggedIn
             percent: batterymonitor.compactRepresentationItem.batteryPercent
-            pluggedIn: batterymonitor.compactRepresentationItem.pluggedIn && batterymonitor.compactRepresentationItem.batteryIsPowerSupply
-            batteryType: batterymonitor.compactRepresentationItem.batteryType
-            broken: batterymonitor.compactRepresentationItem.isBroken
+            pluggedIn: (batterymonitor.compactRepresentationItem?.pluggedIn ?? true) && (batterymonitor.compactRepresentationItem?.batteryIsPowerSupply ?? true)
+            batteryType: batterymonitor.compactRepresentationItem?.batteryType ?? 0
+            broken: batterymonitor.compactRepresentationItem?.isBroken ?? false
         }
 
         PlasmaComponents.Label {

@@ -186,8 +186,8 @@ ContainmentItem {
             leftMargin: root.availableScreenRect ? root.availableScreenRect.x : 0
             topMargin: root.availableScreenRect ? root.availableScreenRect.y : 0
 
-            rightMargin: root.availableScreenRect ? parent.width - (root.availableScreenRect.x + root.availableScreenRect.width) : 0
-            bottomMargin: root.availableScreenRect ? parent.height - (root.availableScreenRect.y + root.availableScreenRect.height) : 0
+            rightMargin: root.availableScreenRect ? (parent?.width ?? 0) - (root.availableScreenRect.x + root.availableScreenRect.width) : 0
+            bottomMargin: root.availableScreenRect ? (parent?.height ?? 0) - (root.availableScreenRect.y + root.availableScreenRect.height) : 0
         }
 
         LongDropBehavior on anchors.topMargin { }

@@ -32,7 +32,8 @@ PlasmoidItem {
     }
 
     property bool volumeFeedback: config.audioFeedback
-    property bool globalMute: config.globalMute
+    property bool globalMuteSinks: config.globalMuteSinks
+    property bool globalMuteSources: config.globalMuteSources
     property string displayName: i18n("Audio Volume")
     property QtObject draggedStream: null
     property QtObject mixerWindow: null
@@ -171,7 +172,7 @@ PlasmoidItem {
             if (mouse.button == Qt.LeftButton) {
                 wasExpanded = main.expanded;
             } else if (mouse.button == Qt.MiddleButton) {
-                GlobalService.globalMute();
+                GlobalService.globalMuteSinks();
             }
         }
         onClicked: mouse => {
@@ -410,11 +411,20 @@ PlasmoidItem {
     Plasmoid.contextualActions: [
         PlasmaCore.Action {
             text: i18n("Force mute all playback devices")
-            icon.name: "audio-volume-muted"
+            icon.name: "audio-volume-muted" + (Qt.application.layoutDirection === Qt.RightToLeft ? "-rtl" : "");
             checkable: true
-            checked: globalMute
+            checked: globalMuteSinks
             onTriggered: {
-                GlobalService.globalMute();
+                GlobalService.globalMuteSinks();
+            }
+        },
+        PlasmaCore.Action {
+            text: i18n("Force mute all input devices")
+            icon.name: "microphone-sensitivity-muted" + (Qt.application.layoutDirection === Qt.RightToLeft ? "-rtl" : "");
+            checkable: true
+            checked: globalMuteSources
+            onTriggered: {
+                GlobalService.globalMuteSources();
             }
         },
         PlasmaCore.Action {

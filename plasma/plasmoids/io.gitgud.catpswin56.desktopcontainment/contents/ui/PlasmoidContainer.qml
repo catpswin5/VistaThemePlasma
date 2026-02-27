@@ -215,7 +215,7 @@ Item {
             Loader {
                 id: shadow
 
-                anchors.fill: applet
+                anchors.fill: parent
 
                 active: applet && (!backgroundControl.bgEnabled && backgroundControl.canConfigureBg)
                 sourceComponent: shadowComponent

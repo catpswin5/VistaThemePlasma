@@ -254,7 +254,9 @@ PlasmoidItem {
         }
 
         Component.onCompleted: {
-            launcherList = Plasmoid.configuration.launchers;
+            if(Plasmoid.configuration.launchers)
+                launcherList = Plasmoid.configuration.launchers;
+
             groupingAppIdBlacklist = Plasmoid.configuration.groupingAppIdBlacklist;
             groupingLauncherUrlBlacklist = Plasmoid.configuration.groupingLauncherUrlBlacklist;
         }
@@ -504,6 +506,8 @@ PlasmoidItem {
         if (typeof index !== "number") {
             return;
         }
+
+        if(!taskList) return;
 
         var task = taskList.itemAtIndex(index);
         if (task) {

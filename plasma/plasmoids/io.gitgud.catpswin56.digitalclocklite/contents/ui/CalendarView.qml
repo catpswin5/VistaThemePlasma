@@ -114,7 +114,7 @@ PlasmaCore.Dialog {
 
     property bool debug: false
 
-    property bool isExpanded: Plasmoid.expanded
+    property bool isExpanded: Plasmoid?.expanded ?? false
 
     onIsExpandedChanged: {
         // clear all the selections when the plasmoid is showing/hiding

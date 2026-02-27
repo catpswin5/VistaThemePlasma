@@ -193,7 +193,7 @@ PlasmaExtras.Representation {
     Connections {
         target: mainWindow
         function onExpandedChanged(expanded) {
-            handler.requestScan();
+            if(handler) handler.requestScan();
             if (!full.connectionModel) {
                 full.connectionModel = networkModelComponent.createObject(full);
             }

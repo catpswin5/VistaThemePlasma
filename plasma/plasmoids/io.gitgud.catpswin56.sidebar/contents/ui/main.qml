@@ -106,7 +106,10 @@ ContainmentItem {
         }
     }
 
+    // TODO FIXME make desktop read from a property what we do here
     function updateDesktopBindings() {
+        if(!appletsLayout) return;
+
         if(sidebarDock && !sidebarCollapsed) {
             if(sidebarLocation) {
                 appletsLayout.anchors.leftMargin = Qt.binding(() => root.sidebarWidth);
@@ -485,7 +488,6 @@ ContainmentItem {
         interval: 100
         onTriggered: {
             window.setPos();
-            console.log("sidebar: configuring sidebar window...")
             Plasmoid.configureWindow(window,
                                      Qt.rect(window.x, window.y, root.sidebarWidth, window.height),
                                      root.sidebarDock,

@@ -75,7 +75,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 opacity: 0.4
                 text: modelData
-                font.pixelSize: Math.max(Kirigami.Theme.smallestFont.pixelSize, daysCalendar.cellHeight / 3)
+                font.pixelSize: Math.max(Kirigami.Theme.defaultFont.pixelSize, daysCalendar.cellHeight / 3)
             }
         }
     }
@@ -115,7 +115,7 @@ Item {
                 width: daysCalendar.cellWidth
                 height: daysCalendar.cellHeight
                 text: (Qt.locale(Qt.locale().uiLanguages[0]).dayName(((calendarBackend.firstDayOfWeek + index) % days.count), Locale.ShortFormat)).substring(0, 2);
-                font.pixelSize: Math.max(Kirigami.Theme.smallestFont.pixelSize, daysCalendar.cellHeight / 3)
+                font.pixelSize: Math.max(Kirigami.Theme.defaultFont.pixelSize, daysCalendar.cellHeight / 3)
                 //opacity: 0.8
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
