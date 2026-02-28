@@ -2,6 +2,6 @@
 LockGrace=0
 
 [Greeter][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/sddm/themes/sddm-theme-mod/bgtexture.jpg
-PreviewImage=file:///usr/share/sddm/themes/sddm-theme-mod/bgtexture.jpg
+Image=file:///usr/share/sddm/themes/vista-theme-mod/bgtexture.jpg
+PreviewImage=file:///usr/share/sddm/themes/vista-theme-mod/bgtexture.jpg
 
