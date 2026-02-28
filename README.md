@@ -17,7 +17,7 @@ VistaThemePlasma currently lacks full Wayland support, which may result in Wayla
 
 ## This software comes "as is" without warranty of any kind. It's always recommended to make backups of your system just in case. I am not responsible for broken systems, please proceed with caution.
 
-[GitHub mirror](https://github.com/catpswin5/vistathemeplasma)
+[GitHub mirror](https://github.com/aeroshell-desktop/vistathemeplasma)
 
 ## Installation
 
