@@ -75,12 +75,6 @@ ContainmentItem {
             id: systemTrayState
         }
 
-        //being there forces the items to fully load, and they will be reparented in the popup one by one, this item is *never* visible
-        Item {
-            id: preloadedStorage
-            visible: false
-        }
-
         CurrentItemHighLight {
             id: currentHighlight
             location: Plasmoid.location
@@ -490,6 +484,13 @@ ContainmentItem {
                 Keys.onEscapePressed: {
                     systemTrayState.expanded = false
                 }
+
+                //being there forces the items to fully load, and they will be reparented in the popup one by one, this item is *never* visible
+                Item {
+                    id: preloadedStorage
+                    visible: false
+                }
+
 
                 LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
                 LayoutMirroring.childrenInherit: true

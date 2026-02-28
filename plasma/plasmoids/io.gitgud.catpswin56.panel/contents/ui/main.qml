@@ -6,16 +6,16 @@
 */
 
 import QtQuick
-import QtQuick.Layouts 1.1
-import org.kde.plasma.plasmoid 2.0
+import QtQuick.Layouts
+import org.kde.plasma.plasmoid
 
 import org.kde.plasma.core as PlasmaCore
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.kquickcontrolsaddons 2.0
-import org.kde.kwindowsystem 1.0
-import org.kde.draganddrop 2.0 as DragDrop
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.plasma.components as PC3
+import org.kde.kquickcontrolsaddons
+import org.kde.kwindowsystem
+import org.kde.draganddrop as DragDrop
+import org.kde.kirigami as Kirigami
 
 import "LayoutManager.js" as LayoutManager
 
@@ -119,7 +119,7 @@ ContainmentItem {
             return;
         }
 
-        Plasmoid.applets.forEach(applet => applet.expanded = false);
+        Containment.applets.forEach(applet => applet.expanded = false);
         const component = Qt.createComponent("ConfigOverlay.qml");
         root.configOverlay = component.createObject(root, {
             "anchors.fill": dropArea,
@@ -285,7 +285,7 @@ ContainmentItem {
                 property bool isMarginSeparator: ((applet.plasmoid?.constraintHints & Plasmoid.MarginAreasSeparator) == Plasmoid.MarginAreasSeparator)
                 property int appletIndex: index // To make sure it's always readable even inside other models
                 property bool inThickArea: false
-                visible: applet.plasmoid?.status !== PlasmaCore.Types.HiddenStatus || (!Plasmoid.immutable && Plasmoid.userConfiguring);
+                visible: applet.plasmoid?.status !== PlasmaCore.Types.HiddenStatus || (!Plasmoid.immutable && Plasmoid.userConfiguring) || Containment.corona.editMode;
 
                 //when the applet moves caused by its resize, don't animate.
                 //this is completely heuristic, but looks way less "jumpy"
@@ -495,7 +495,7 @@ ContainmentItem {
     }
     MouseArea {
         anchors.fill: parent
-        visible: Plasmoid.corona.editMode && !Plasmoid.userConfiguring
+        visible: Containment.corona.editMode && !Plasmoid.userConfiguring
         hoverEnabled: true
         onClicked: Plasmoid.internalAction("configure").trigger()
         Rectangle {

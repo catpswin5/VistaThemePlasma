@@ -6,18 +6,18 @@
 
 pragma ComponentBehavior: Bound
 pragma Singleton
-import QtQuick 2.8
-import QtQuick.Window 2.12
-import QtQuick.Layouts 1.1
-import QtQml 2.15
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
+import QtQml
 
 import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasma5support 2.0 as P5Support
-import org.kde.kquickcontrolsaddons 2.0
-import org.kde.kirigami 2.11 as Kirigami
+import org.kde.plasma.clock
+import org.kde.kquickcontrolsaddons
+import org.kde.kirigami as Kirigami
 
 import org.kde.notificationmanager as NotificationManager
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.taskmanager as TaskManager
 
 import plasma.applet.io.gitgud.catpswin56.notifications as Notifications
 
@@ -35,6 +35,9 @@ QtObject {
     property bool inhibited: false
 
     onInhibitedChanged: {
+
+        NotificationManager.Server.inhibited = inhibited;
+
         if (!inhibited) {
             const urgency = notificationSettings.lowPriorityHistory ? NotificationManager.Notifications.LowUrgency : NotificationManager.Notifications.NormalUrgency;
             popupNotificationsModel.showInhibitionSummary(urgency, notificationSettings.historyBlacklistedApplications, notificationSettings.historyBlacklistedServices);
@@ -464,16 +467,13 @@ QtObject {
     }
 
     // This periodically checks whether do not disturb mode timed out and updates the "minutes ago" labels
-    property P5Support.DataSource timeSource: P5Support.DataSource {
-        engine: "time"
-        connectedSources: ["Local"]
-        interval: 60000 // 1 min
-        intervalAlignment: P5Support.Types.AlignToMinute
-        onDataChanged: {
+    property Clock clockSource: Clock {
+        onDateTimeChanged: {
             globals.checkInhibition();
             globals.timeChanged();
         }
     }
+
 
     property Instantiator popupInstantiator: Instantiator {
         model: globals.popupNotificationsModel
@@ -546,7 +546,7 @@ QtObject {
                 applicationIconSource: popup.applicationIconName
                 originName: popup.originName || ""
 
-                time: popup.updated || popup.created
+                time: isNaN(popup.updated) ? popup.created : popup.updated
 
                 configurable: popup.configurable
                 // For running jobs instead of offering a "close" button that might lead the user to
@@ -773,14 +773,6 @@ QtObject {
         function onHeightChanged() {
             globals.repositionTimer.start();
         }
-    }
-
-    // Keeps the Inhibited property on DBus in sync with our inhibition handling
-    property Binding serverInhibitedBinding: Binding {
-        target: NotificationManager.Server
-        property: "inhibited"
-        value: globals.inhibited
-        restoreMode: Binding.RestoreBinding
     }
 
     function toggleDoNotDisturbMode() {

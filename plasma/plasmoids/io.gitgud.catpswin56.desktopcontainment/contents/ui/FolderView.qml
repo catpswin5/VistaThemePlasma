@@ -41,6 +41,7 @@ FocusScope {
     property alias filterPattern: dir.filterPattern
     property alias filterMimeTypes: dir.filterMimeTypes
     property alias showHiddenFiles: dir.showHiddenFiles
+    property alias creatingNewItems: dir.creatingNewItems
     property alias flow: gridView.flow
     property alias layoutDirection: gridView.layoutDirection
     property alias cellWidth: gridView.cellWidth
@@ -260,6 +261,7 @@ FocusScope {
 
     MouseEventListener {
         id: listener
+        enabled: !Plasmoid.containment.corona.editMode
 
         anchors {
             topMargin: backButton !== null ? backButton.height : undefined
@@ -349,8 +351,14 @@ FocusScope {
 
                 if (mouse.buttons & Qt.RightButton) {
                     clearPressState();
-                    dir.openContextMenu(main, mouse.modifiers);
-                    mouse.accepted = true;
+
+                    // If it's the desktop, fall through to the desktop context menu plugin
+                    // Disallow opening contextmenu if we're already creating new items
+                    if (!dir.usedByContainment && !dir.creatingNewItems) {
+                        dir.openContextMenu(main, mouse.modifiers);
+                        mouse.accepted = true;
+                    }
+
                 }
             } else {
                 pressedItem = hoveredItem;
@@ -595,6 +603,9 @@ FocusScope {
         onContainsMouseChanged: {
             if (!containsMouse && !main.rubberBand) {
                 clearPressState();
+                if (!(hoveredItem?.popupDialog?.visible ?? false)) {
+                    hoveredItem = null;
+                }
             }
         }
 
@@ -1337,9 +1348,19 @@ FocusScope {
 
             folderModel: dir
 
+            optimalStripes: Math.floor((gridView.flow === GridView.FlowLeftToRight)
+            ? (gridView.height / gridView.cellHeight)
+            : (gridView.width / gridView.cellWidth))
+
             perStripe: Math.floor((gridView.flow === GridView.FlowLeftToRight)
                 ? (gridView.width / gridView.cellWidth)
                 : (gridView.height / gridView.cellHeight))
+
+            Component.onCompleted: {
+                positioner.updateResolution();
+                positioner.loadAndApplyPositionsConfig();
+            }
+
         }
 
         Folder.ItemViewAdapter {

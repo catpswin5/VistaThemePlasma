@@ -347,7 +347,19 @@ void FolderModel::newFileMenuItemCreated(const QUrl &url)
         m_menuPosition = {};
         m_dropTargetPositionsCleanup->start();
     }
+    setCreatingNewItems(false);
 }
+void FolderModel::newFileMenuItemRejected(const QUrl &url)
+{
+    Q_UNUSED(url);
+    setCreatingNewItems(false);
+}
+void FolderModel::newFileMenuItemCreationStarted(const QUrl &url)
+{
+    Q_UNUSED(url);
+    setCreatingNewItems(true);
+}
+
 
 QString FolderModel::url() const
 {
@@ -388,12 +400,8 @@ void FolderModel::setUrl(const QString &url)
         m_dirWatch = new KDirWatch(this);
         connect(m_dirWatch, &KDirWatch::created, this, &FolderModel::iconNameChanged);
         connect(m_dirWatch, &KDirWatch::dirty, this, &FolderModel::iconNameChanged);
-        m_dirWatch->addFile(resolvedNewUrl.toLocalFile() + QStringLiteral("/.directory"));
+        m_dirWatch->addFile(DesktopSchemeHelper::getFileUrl(resolvedNewUrl.toString()).remove(QStringLiteral("file://")) + QStringLiteral("/.directory"));
     }
-
-    watcher = new QFileSystemWatcher(this);
-    addDirectoriesRecursively(resolvedNewUrl.toString(), watcher);
-    connect(watcher, &QFileSystemWatcher::directoryChanged, this, [=]() { this->refresh(); } );
 
     if (dragging()) {
         m_urlChangedWhileDragging = true;
@@ -407,39 +415,22 @@ void FolderModel::setUrl(const QString &url)
     }
 }
 
-void FolderModel::addDirectoriesRecursively(const QString &resolvedNewUrl, QFileSystemWatcher *watcher)
-{
-    QStack<QString> directoryStack;
-    directoryStack.push(resolvedNewUrl);
-
-    while (!directoryStack.isEmpty()) {
-        QString currentDir = directoryStack.pop();
-
-        // Add current directory to watcher
-        watcher->addPath(DesktopSchemeHelper::getFileUrl(currentDir));
-
-        QDir dir(currentDir);
-        dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-        QList<QFileInfo> subdirInfoList = dir.entryInfoList();
-
-        // Extract file paths and add them to subdirs list
-        QStringList subdirs;
-        for (const QFileInfo &subdirInfo : subdirInfoList) {
-            if (subdirInfo.isDir()) {
-                subdirs.append(subdirInfo.filePath());
-            }
-        }
-
-        // Push subdirectories onto the stack for further processing
-        for (const QString &subdir : subdirs) {
-            directoryStack.push(subdir);
-        }
-    }
-}
-
 QUrl FolderModel::resolvedUrl() const
 {
     return m_dirModel->dirLister()->url();
+}
+
+bool FolderModel::creatingNewItems() const
+{
+    return m_creatingNewItems;
+}
+
+void FolderModel::setCreatingNewItems(bool enabled)
+{
+    if (m_creatingNewItems != enabled) {
+        m_creatingNewItems = enabled;
+        Q_EMIT creatingNewItemsChanged();
+    }
 }
 
 QUrl FolderModel::resolve(const QString &url)
@@ -886,8 +877,22 @@ void FolderModel::rename(int row, const QString &name)
     }
 
     QModelIndex idx = index(row, 0);
+    const QString filename = data(idx, UrlRole).toString();
+    Q_EMIT itemAboutToRename(filename);
     m_dirModel->setData(mapToSource(idx), name, Qt::EditRole);
-    connect(m_dirModel, &KDirModel::dataChanged, this, &FolderModel::itemRenamed, Qt::SingleShotConnection);
+    connect(
+        m_dirModel,
+        &KDirModel::dataChanged,
+        this,
+        [=, this](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QList<int> &roles) {
+            Q_UNUSED(roles)
+            QString newFilename;
+            if (topLeft == bottomRight) {
+                newFilename = data(mapFromSource(topLeft), UrlRole).toString();
+            }
+            Q_EMIT itemRenamed(filename, newFilename);
+        },
+        Qt::SingleShotConnection);
 }
 
 int FolderModel::fileExtensionBoundary(int row)
@@ -1154,7 +1159,7 @@ void FolderModel::dragSelectedInternal(int x, int y)
     DragTracker::self()->setDragInProgress(nullptr, false);
     m_urlChangedWhileDragging = false;
 
-    if (m_dirModel->dirLister()->url() == currentUrl) {
+    if (m_dirModel->dirLister()->url() == currentUrl && !m_dragIndexes.isEmpty()) {
         const QModelIndex first(m_dragIndexes.first());
         const QModelIndex last(m_dragIndexes.last());
         m_dragIndexes.clear();
@@ -1247,7 +1252,8 @@ void FolderModel::drop(QQuickItem *target, QObject *dropEvent, int row, bool sho
             return;
         }
 
-        setSortMode(-1);
+        setUnsortedModeOnDrop();
+        //setSortMode(-1);
 
         for (const auto &url : mimeData->urls()) {
             m_dropTargetPositions.insert(url.fileName(), dropPos);
@@ -1271,7 +1277,8 @@ void FolderModel::drop(QQuickItem *target, QObject *dropEvent, int row, bool sho
 
     if (m_usedByContainment && !m_screenMapper->sharedDesktops()) {
         if (isDropBetweenSharedViews(mimeData->urls(), dropTargetFolderUrl)) {
-            setSortMode(-1);
+            setUnsortedModeOnDrop();
+            //setSortMode(-1);
             const QList<QUrl> urls = mimeData->urls();
             for (const auto &url : urls) {
                 m_dropTargetPositions.insert(url.fileName(), dropPos);
@@ -1459,6 +1466,22 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
     }
 
     return QSortFilterProxyModel::data(index, role);
+}
+
+void FolderModel::setUnsortedModeOnDrop()
+{
+    // The positioner will override old icon layout by
+    // sorted icon layout after drag and drop operation.
+    if (m_sortMode != -1) {
+        m_unsortedModeOnDrop = true;
+        setSortMode(-1);
+        m_unsortedModeOnDrop = false;
+    }
+}
+
+bool FolderModel::unsortedModeOnDrop()
+{
+    return m_unsortedModeOnDrop;
 }
 
 int FolderModel::indexForUrl(const QUrl &url) const
@@ -1761,8 +1784,13 @@ void FolderModel::createActions()
 
     m_newMenu = new KNewFileMenu(this);
     m_newMenu->setModal(false);
+    // Disallow closing the popup when action to open the dialog is triggered
+    connect(m_newMenu, &KNewFileMenu::directoryCreationStarted, this, &FolderModel::newFileMenuItemCreationStarted);
+    connect(m_newMenu, &KNewFileMenu::fileCreationStarted, this, &FolderModel::newFileMenuItemCreationStarted);
     connect(m_newMenu, &KNewFileMenu::directoryCreated, this, &FolderModel::newFileMenuItemCreated);
     connect(m_newMenu, &KNewFileMenu::fileCreated, this, &FolderModel::newFileMenuItemCreated);
+    connect(m_newMenu, &KNewFileMenu::directoryCreationRejected, this, &FolderModel::newFileMenuItemRejected);
+    connect(m_newMenu, &KNewFileMenu::fileCreationRejected, this, &FolderModel::newFileMenuItemRejected);
 
     m_actionCollection.addAction(QStringLiteral("newMenu"), m_newMenu);
 

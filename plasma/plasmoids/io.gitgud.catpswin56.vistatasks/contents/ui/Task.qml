@@ -402,6 +402,7 @@ TaskManagerApplet.SmartLauncherItem { }
 
         PlasmaExtras.MenuItem {
             enabled: model.IsShadeable
+            visible: Qt.platform.pluginName !== "wayland"
 
             checkable: true
             checked: model.IsShaded

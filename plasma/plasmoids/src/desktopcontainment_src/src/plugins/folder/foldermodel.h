@@ -9,7 +9,6 @@
 #pragma once
 
 #include <QAction>
-#include <QFileSystemWatcher>
 #include <QImage>
 #include <QItemSelection>
 #include <QMimeData>
@@ -93,6 +92,7 @@ class FolderModel : public QSortFilterProxyModel, public QQmlParserStatus
     Q_PROPERTY(QObject *newMenu READ newMenu CONSTANT)
     Q_PROPERTY(Plasma::Applet *applet READ applet WRITE setApplet NOTIFY appletChanged)
     Q_PROPERTY(bool showHiddenFiles READ showHiddenFiles WRITE setShowHiddenFiles NOTIFY showHiddenFilesChanged)
+    Q_PROPERTY(bool creatingNewItems READ creatingNewItems NOTIFY creatingNewItemsChanged)
 
 public:
     enum DataRole {
@@ -189,6 +189,9 @@ public:
     bool showHiddenFiles() const;
     void setShowHiddenFiles(bool enable);
 
+    bool creatingNewItems() const;
+    void setCreatingNewItems(bool enabled);
+
     KFileItem rootItem() const;
 
     Q_INVOKABLE void up();
@@ -252,6 +255,8 @@ public:
 
     QRectF screenGeometry();
 
+    bool unsortedModeOnDrop();
+
 Q_SIGNALS:
     void urlChanged() const;
     void listingCompleted() const;
@@ -281,9 +286,11 @@ Q_SIGNALS:
     void popupMenuAboutToShow(KIO::DropJob *dropJob, QMimeData *mimeData, int x, int y);
     void selectionChanged() const;
     void showHiddenFilesChanged() const;
-    void itemRenamed() const;
+    void itemAboutToRename(const QString &filename) const;
+    void itemRenamed(const QString &filename, const QString &newFilename) const;
     void screenGeometryChanged() const;
     void selectionDone();
+    void creatingNewItemsChanged() const;
     void hasRefreshed(bool isExplicit);
 
 protected:
@@ -304,7 +311,12 @@ private Q_SLOTS:
     void undoTextChanged(const QString &text);
     void invalidateIfComplete();
     void invalidateFilterIfComplete();
+    void newFileMenuItemCreationStarted(const QUrl &url);
     void newFileMenuItemCreated(const QUrl &url);
+    void newFileMenuItemRejected(const QUrl &url);
+
+private:
+    void setUnsortedModeOnDrop();
 
 private:
     struct DragImage {
@@ -352,6 +364,8 @@ private:
     bool m_sortDirsFirst;
     bool m_parseDesktopFiles;
     bool m_previews;
+    bool m_unsortedModeOnDrop = false;
+    bool m_creatingNewItems = false;
     // An empty previewPlugin list means use default.
     // We don't want to leak that fact to the QML side, however, so the property stays empty
     // and internally we operate on effectivePreviewPlugins instead.
@@ -368,8 +382,6 @@ private:
     Plasma::Applet *m_applet = nullptr;
     bool m_complete;
     QPoint m_menuPosition;
-    QFileSystemWatcher *watcher;
-    void addDirectoriesRecursively(const QString &resolvedNewUrl, QFileSystemWatcher *watcher);
 
     /**
      * This property is used to save the current activity when FolderModel is initialized.
