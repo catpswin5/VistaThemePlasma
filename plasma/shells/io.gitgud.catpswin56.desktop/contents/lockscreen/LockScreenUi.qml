@@ -342,7 +342,7 @@ Item {
             id: backgroundWallpaper
             anchors.fill: parent
             fillMode: Image.Stretch
-            source: Qt.resolvedUrl("/usr/share/sddm/themes/sddm-theme-mod/background")
+            source: Qt.resolvedUrl("/usr/share/sddm/themes/vista-theme-mod/background")
         }
 
         Component.onCompleted: {
