@@ -7,7 +7,7 @@ Components that are relevant to VTP:
 
 ## Splash screen details
 
-- The background image is loaded from VTP's SDDM theme (`/usr/share/sddm/themes/sddm-theme-mod/bgtexture.jpg`)
+- The background image is loaded from VTP's SDDM theme (`/usr/share/sddm/themes/vista-theme-mod/bgtexture.jpg`)
 
 ## Logout screen details 
 

@@ -16,10 +16,10 @@ using namespace KAuth;
 
 K_PLUGIN_CLASS_WITH_JSON(KcmSddmSmod, "kcm_sddmsmod.json")
 
-static QString s_defaultConfig("/usr/share/sddm/themes/sddm-theme-mod/theme.conf");
-static QString s_userConfig("/usr/share/sddm/themes/sddm-theme-mod/theme.conf.user");
-static QString s_background("/usr/share/sddm/themes/sddm-theme-mod/background");
-static QString s_defaultBackground("/usr/share/sddm/themes/sddm-theme-mod/default-background.jpg");
+static QString s_defaultConfig("/usr/share/sddm/themes/vista-theme-mod/theme.conf");
+static QString s_userConfig("/usr/share/sddm/themes/vista-theme-mod/theme.conf.user");
+static QString s_background("/usr/share/sddm/themes/vista-theme-mod/background");
+static QString s_defaultBackground("/usr/share/sddm/themes/vista-theme-mod/default-background.jpg");
 
 QString s_currentBackground = s_background;
 

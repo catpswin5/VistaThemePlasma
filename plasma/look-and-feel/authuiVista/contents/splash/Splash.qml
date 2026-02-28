@@ -52,7 +52,7 @@ Item {
         id: bg
         anchors.fill: parent
         fillMode: Image.Stretch
-        source: Qt.resolvedUrl("/usr/share/sddm/themes/sddm-theme-mod/background")
+        source: Qt.resolvedUrl("/usr/share/sddm/themes/vista-theme-mod/background")
     }
 
     Status {
@@ -84,5 +84,5 @@ Item {
         }
     }
 
-    Component.onCompleted: executable.exec("kreadconfig6 --file \"/usr/share/sddm/themes/sddm-theme-mod/theme.conf.user\" --group \"General\" --key \"background\"")
+    Component.onCompleted: executable.exec("kreadconfig6 --file \"/usr/share/sddm/themes/vista-theme-mod/theme.conf.user\" --group \"General\" --key \"background\"")
 }

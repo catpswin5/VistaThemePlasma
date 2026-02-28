@@ -8,10 +8,10 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-static QString s_defaultConfig(QStringLiteral("/usr/share/sddm/themes/sddm-theme-mod/theme.conf"));
-static QString s_userConfig(QStringLiteral("/usr/share/sddm/themes/sddm-theme-mod/theme.conf.user"));
-static QString s_background(QStringLiteral("/usr/share/sddm/themes/sddm-theme-mod/background"));
-static QString s_defaultBackground(QStringLiteral("/usr/share/sddm/themes/sddm-theme-mod/default-background.jpg"));
+static QString s_defaultConfig(QStringLiteral("/usr/share/sddm/themes/vista-theme-mod/theme.conf"));
+static QString s_userConfig(QStringLiteral("/usr/share/sddm/themes/vista-theme-mod/theme.conf.user"));
+static QString s_background(QStringLiteral("/usr/share/sddm/themes/vista-theme-mod/background"));
+static QString s_defaultBackground(QStringLiteral("/usr/share/sddm/themes/vista-theme-mod/default-background.jpg"));
 
 ActionReply KCMHelper::write(const QVariantMap &args)
 {

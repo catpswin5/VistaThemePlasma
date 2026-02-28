@@ -30,7 +30,7 @@ Image {
     }
 
     fillMode: Image.PreserveAspectCrop
-    source: Qt.resolvedUrl("/usr/share/sddm/themes/sddm-theme-mod/background")
+    source: Qt.resolvedUrl("/usr/share/sddm/themes/vista-theme-mod/background")
 
     Plasma5Support.DataSource {
         id: executable
