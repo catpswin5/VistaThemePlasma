@@ -19,6 +19,7 @@ ListView {
 
     readonly property int transitionDuration: 200
     property alias taskAnimation: taskAnimation
+    property alias addAnimation: addAnimation
     property alias resetTransition: resetTransition
     property alias resetAddTransition: resetAddTransition
 
