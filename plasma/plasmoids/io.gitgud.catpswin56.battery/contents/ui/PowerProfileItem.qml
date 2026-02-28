@@ -120,7 +120,7 @@ QtControls.ItemDelegate {
                 property string profileId: "power-saver"
                 property int value: 0
                 text: root.profileData.find(profile => profile.profile === profileId).label
-                checked: activeProfileData.profile == profileId
+                checked: activeProfileData?.profile == profileId
                 KeyNavigation.tab: balancedRadio
                 KeyNavigation.down: balancedRadio
                 KeyNavigation.backtab: root.inhibitionControllerRef
@@ -131,7 +131,7 @@ QtControls.ItemDelegate {
                 property string profileId: "balanced"
                 property int value: 1
                 text: root.profileData.find(profile => profile.profile === profileId).label
-                checked: activeProfileData.profile == profileId
+                checked: activeProfileData?.profile == profileId
                 KeyNavigation.tab: performanceRadio
                 KeyNavigation.down: performanceRadio
                 KeyNavigation.backtab: powerSaverRadio
@@ -142,7 +142,7 @@ QtControls.ItemDelegate {
                 property string profileId: "performance"
                 property int value: 2
                 text: root.profileData.find(profile => profile.profile === profileId).label
-                checked: activeProfileData.profile == profileId
+                checked: activeProfileData?.profile == profileId
                 KeyNavigation.backtab: balancedRadio
                 KeyNavigation.up: balancedRadio
                 KeyNavigation.tab: root.inhibitionControllerRef

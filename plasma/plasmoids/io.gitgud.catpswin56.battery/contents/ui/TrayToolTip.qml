@@ -34,8 +34,8 @@ ColumnLayout {
             Layout.preferredWidth: Kirigami.Units.iconSizes.medium
             Layout.preferredHeight: Kirigami.Units.iconSizes.medium
 
-            hasBattery: batterymonitor.compactRepresentationItem.batteryPluggedIn
-            percent: batterymonitor.compactRepresentationItem.batteryPercent
+            hasBattery: batterymonitor.compactRepresentationItem?.batteryPluggedIn ?? false
+            percent: batterymonitor.compactRepresentationItem?.batteryPercent ?? 0
             pluggedIn: (batterymonitor.compactRepresentationItem?.pluggedIn ?? true) && (batterymonitor.compactRepresentationItem?.batteryIsPowerSupply ?? true)
             batteryType: batterymonitor.compactRepresentationItem?.batteryType ?? 0
             broken: batterymonitor.compactRepresentationItem?.isBroken ?? false
@@ -65,7 +65,7 @@ ColumnLayout {
         PlasmaComponents.Label {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignLeft
-            text: batterymonitor.fullRepresentationItem.activeProfile
+            text: batterymonitor.fullRepresentationItem?.activeProfile ?? ""
             font.capitalization: Font.Capitalize
             color: "#1370ab"
             maximumLineCount: 1
