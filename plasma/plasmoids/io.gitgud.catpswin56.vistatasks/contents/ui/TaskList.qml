@@ -76,7 +76,7 @@ ListView {
         id: resetAddTransition
         interval: 100
         onTriggered: {
-            taskList.add = addAnimation;
+            taskList.add = taskList.addAnimation;
         }
     }
 
@@ -88,6 +88,17 @@ ListView {
             duration: 200
         }
     }
+
+    Transition {
+        id: addAnimation
+        NumberAnimation {
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: 200
+        }
+    }
+
     //populate: taskAnimation
     move: taskAnimation
 
