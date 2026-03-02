@@ -161,7 +161,7 @@ public:
         bool compositingActive{true};
         if(KWindowSystem::isPlatformX11()) compositingActive = KX11Extras::compositingActive();
 
-        if(compositingActive)
+        if(!compositingActive)
         {
             orb->setMask(*inputMaskCache);
             printf("Set input mask correctly\n");
