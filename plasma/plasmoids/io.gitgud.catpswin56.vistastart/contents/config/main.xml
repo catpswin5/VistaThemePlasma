@@ -35,7 +35,10 @@
       <default>true</default>
     </entry>
     <entry name="defaultRunnerApp" type="String">
-      <default>krunner</default>
+      <default>krunner --replace</default>
+    </entry>
+    <entry name="downloadsFolderName" type="String">
+      <default>Downloads</default>
     </entry>
 
     <entry name="numberRows" type="Int">

@@ -17,20 +17,14 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.kcmutils as KCM
-import org.kde.draganddrop 2.0 as DragDrop
-import org.kde.kirigami 2.3 as Kirigami
-import org.kde.plasma.plasmoid 2.0
-
-import org.kde.iconthemes as KIconThemes
-import org.kde.plasma.private.kicker 0.1 as Kicker
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.plasmoid
 
 KCM.SimpleKCM {
     id: configGeneral
@@ -41,25 +35,26 @@ KCM.SimpleKCM {
     property bool   cfg_useCustomButtonImage: Plasmoid.configuration.useCustomButtonImage
     property string cfg_customButtonImage: Plasmoid.configuration.customButtonImage
     
-    property alias cfg_offsetFloatingOrb: offsetFloatingOrb.checked
-    property alias cfg_orbWidth: orbWidth.value
+    property alias  cfg_offsetFloatingOrb: offsetFloatingOrb.checked
+    property alias  cfg_orbWidth: orbWidth.value
 
-    property alias cfg_useFullName: useFullName.checked
-    property alias cfg_useGenericIcons: useGenericIcons.checked
-    property alias cfg_stickOutOrb: stickOutOrb.checked
-    property alias cfg_fadeOrb: fadeOrb.checked
-    property alias cfg_disableBold: disableBold.checked
-    property alias cfg_disableSleep: disableSleep.checked
-    property alias cfg_enableShadow: enableShadow.checked
-    property alias cfg_enableAnimations: enableAnimations.checked
-    property alias cfg_hideSearchLinks: hideSearchLinks.checked
-    property alias cfg_hideLeaveMenuPadding: hideLeaveMenuPadding.checked
+    property alias  cfg_useFullName: useFullName.checked
+    property alias  cfg_useGenericIcons: useGenericIcons.checked
+    property alias  cfg_stickOutOrb: stickOutOrb.checked
+    property alias  cfg_fadeOrb: fadeOrb.checked
+    property alias  cfg_disableBold: disableBold.checked
+    property alias  cfg_disableSleep: disableSleep.checked
+    property alias  cfg_enableShadow: enableShadow.checked
+    property alias  cfg_enableAnimations: enableAnimations.checked
+    property alias  cfg_hideSearchLinks: hideSearchLinks.checked
+    property alias  cfg_hideLeaveMenuPadding: hideLeaveMenuPadding.checked
 
-    property alias cfg_numberRows: numberRows.value
+    property alias  cfg_numberRows: numberRows.value
 
     property alias  cfg_showDefaultInternetApp: showDefaultInternetApp.checked
     property alias  cfg_showDefaultEmailApp: showDefaultEmailApp.checked
     property string cfg_defaultRunnerApp
+    property string cfg_downloadsFolderName
 
     component CustomGroupBox: GroupBox {
         id: gbox
@@ -155,6 +150,22 @@ KCM.SimpleKCM {
 
                         text: configGeneral.cfg_defaultRunnerApp
                         onTextChanged: configGeneral.cfg_defaultRunnerApp = text;
+
+                        inputMethodHints: Qt.ImhNoPredictiveText
+                    }
+                }
+
+                RowLayout {
+                    Label {
+                        text: i18n("Downloads folder name:")
+                    }
+                    TextField {
+                        id: downloadsFolderName
+
+                        Layout.fillWidth: true
+
+                        text: configGeneral.cfg_downloadsFolderName
+                        onTextChanged: configGeneral.cfg_downloadsFolderName = text;
 
                         inputMethodHints: Qt.ImhNoPredictiveText
                     }
