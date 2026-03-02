@@ -209,6 +209,8 @@ void App::applyLookAndFeel()
     kdeglobalsConfig.sync();
 
     EffectsModel model;
+    model.setData(model.findByPluginId("smodpeekscript"), Qt::Checked, EffectsModel::StatusRole);
+    model.setData(model.findByPluginId("minimizeall"), Qt::Checked, EffectsModel::StatusRole);
     model.setData(model.findByPluginId("aeroglassblur"), Qt::Checked, EffectsModel::StatusRole);
     model.setData(model.findByPluginId("aeroglide"), Qt::Checked, EffectsModel::StatusRole);
     model.setData(model.findByPluginId("smodglow"), Qt::Checked, EffectsModel::StatusRole);
@@ -247,6 +249,7 @@ void App::applyLookAndFeel()
     // Apply Kvantum theme (WindowsVistaAero)
     qInfo() << QProcess::execute("kvantummanager", { "--set", "WindowsVistaAero" });
     qInfo() << QProcess::execute("plasma-apply-cursortheme", { "aero-drop", "--size", "32" });
+    qInfo() << QProcess::execute("aeroshell_update_default_rules", { "aeroshell.rules" });
 
 }
 void App::saveOotbConfig(bool reset)

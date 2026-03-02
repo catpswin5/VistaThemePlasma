@@ -20,16 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Controls as QtControls
-import QtQuick.Layouts 1.15 as QtLayouts
-import QtQuick.Dialogs 6.3 as QtDialogs
-import org.kde.plasma.plasmoid 2.0
+import QtQuick.Layouts as QtLayouts
+import QtQuick.Dialogs as QtDialogs
+import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kcmutils // For KCMLauncher
 import org.kde.config // For KAuthorized
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.workspace.calendar 2.0 as PlasmaCalendar
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.workspace.calendar as PlasmaCalendar
 
 SimpleKCM {
     id: appearancePage
@@ -45,15 +45,13 @@ SimpleKCM {
     property alias cfg_italicText: italicCheckBox.checked
 
     property alias cfg_showLocalTimezone: showLocalTimezone.checked
-    property alias cfg_disablePin: disablePin.checked
     property alias cfg_displayTimezoneAsCode: timezoneCodeRadio.checked
     property alias cfg_showSeconds: showSeconds.checked
 
     property string cfg_dateFormat: "shortDate"
-    property alias cfg_customFormat: customFormat.text
+    property alias cfg_customFormat: customFormatField.text
     property alias cfg_use24hFormat: use24hFormat.checkState
-
-    property alias cfg_offsetClock: offsetClock.checked
+    property alias cfg_showPinButton: showPinButton.checked
 
     onCfg_fontFamilyChanged: {
         // HACK by the time we populate our model and/or the ComboBox is finished the value is still undefined
@@ -105,10 +103,13 @@ SimpleKCM {
             //flat: true
 
             QtLayouts.ColumnLayout {
-
                 QtControls.CheckBox {
                     id: showSeconds
                     text: i18n("Show seconds")
+                }
+                QtControls.CheckBox {
+                    id: showPinButton
+                    text: i18n("Show pin button")
                 }
 
                 QtControls.CheckBox {
@@ -125,10 +126,6 @@ SimpleKCM {
                     text: i18n("Display time zone as:")
                 }*/
 
-                QtControls.CheckBox {
-                    id: disablePin
-                    text: i18n("Disable pin button")
-                }
 
                 QtControls.ButtonGroup {
                     buttons: timezoneColumn.children
@@ -178,8 +175,8 @@ SimpleKCM {
                                 'name': "isoDate"
                             },
                             {
-                                'label': i18n("Custom"),
-                                'name': "custom"
+                                'label': i18n("Custom Date"),
+                                'name': "customDate"
                             }
                         ]
                         onCurrentIndexChanged: cfg_dateFormat = model[currentIndex]["name"]
@@ -193,22 +190,25 @@ SimpleKCM {
                         }
                     }
                 }
+
                 QtLayouts.RowLayout {
-                    QtLayouts.Layout.fillWidth: true
+                    visible: dateFormat.currentIndex === dateFormat.model.length-1
 
                     QtControls.Label {
                         text: i18n("Custom format:")
                     }
-
                     QtControls.TextField {
-                        id: customFormat
-                        enabled: dateFormat.currentIndex == 3
-                        text: Plasmoid.configuration.customFormat
+                        id: customFormatField
+                        Component.onCompleted: {
+                            customFormatField.text = Plasmoid.configuration.customFormat
+                        }
                     }
-                }
-                QtControls.CheckBox {
-                    id: offsetClock
-                    text: i18n("Offset the clock")
+
+                    Text {
+                        id: testDate
+                        text: Qt.formatDate(new Date(), customFormatField.text)
+                    }
+
                 }
             }
         }

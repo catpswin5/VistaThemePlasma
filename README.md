@@ -9,15 +9,15 @@ This is a fork of [WackyIdeas](https://gitgud.io/wackyideas/)' [AeroThemePlasma]
 VTP is in constant development and testing. So far it has been tested on:
 
 1. Arch Linux x64 and other Arch derivatives
-2. Plasma 6.6.0, KDE Frameworks 6.23.0, Qt 6.10.2
+2. Plasma 6.6.1, KDE Frameworks 6.23.0, Qt 6.10.2
 3. 96 DPI scaling, single monitor
-4. X11, Wayland
+4. X11, Wayland*
 
-VistaThemePlasma currently lacks full Wayland support, which may result in Wayland-specific issues. 
+*VistaThemePlasma currently lacks full Wayland support, which may result in Wayland-specific issues. 
 
 ## This software comes "as is" without warranty of any kind. It's always recommended to make backups of your system just in case. I am not responsible for broken systems, please proceed with caution.
 
-[GitHub mirror](https://github.com/aeroshell-desktop/vistathemeplasma)
+[GitHub mirror](https://github.com/aeroshell-desktop/vistathemeplasma) (currently missing the latest commits)
 
 ## Installation
 

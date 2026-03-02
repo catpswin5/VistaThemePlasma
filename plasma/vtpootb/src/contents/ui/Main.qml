@@ -17,7 +17,7 @@ Window {
     id: mainWindow
     objectName: "MainWindow";
     visible: true
-    property string __title: i18n("VistaThemePlasma Out of the Box Experience")
+    property string __title: i18n("Set up VistaThemePlasma")
     title: __title
 
     color: "transparent"

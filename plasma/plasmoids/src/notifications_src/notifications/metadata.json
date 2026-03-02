@@ -10,7 +10,7 @@
                 "Name": "WackyIdeas"
             }
         ],
-        "BugReportUrl": "https://gitgud.io/catpswin56/vistathemeplasma/issues",
+        "BugReportUrl": "https://gitgud.io/aeroshell/vtp/vistathemeplasma/issues",
         "Category": "Tasks",
         "Description": "Display notifications and jobs",
         "Description[ar]": "اعرض الإشعارات والمهام",
@@ -62,14 +62,14 @@
         "Description[vi]": "Hiển thị thông báo và công việc",
         "Description[zh_CN]": "显示通知和任务",
         "Description[zh_TW]": "顯示通知與工作",
-        "EnabledByDefault": true,
+        "EnabledByDefault": false,
         "FormFactors": [
             "desktop"
         ],
         "Icon": "notification-inactive",
         "License": "GPL-2.0+",
         "Name": "Action Center",
-        "Website": "https://gitgud.io/catpswin56/vistathemeplasma"
+        "Website": "https://gitgud.io/aeroshell/vtp/vistathemeplasma"
     },
     "X-KDE-ParentApp": "org.kde.plasmashell",
     "X-Plasma-API-Minimum-Version": "6.0",

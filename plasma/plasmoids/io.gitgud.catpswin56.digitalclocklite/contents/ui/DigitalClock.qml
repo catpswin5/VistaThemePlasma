@@ -24,11 +24,12 @@ import QtQuick.Layouts
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
 import org.kde.plasma.components as PlasmaComponents3
-import org.kde.plasma.private.digitalclock
 import org.kde.plasma.extras as PlasmaExtras
 
 import org.kde.ksvg as KSvg
 import org.kde.kirigami as Kirigami
+import org.kde.plasma.clock
+import org.kde.plasma.private.digitalclock
 
 Item {
     id: main
@@ -38,6 +39,15 @@ Item {
 
     property bool showSeconds: Plasmoid.configuration.showSeconds
     property bool showLocalTimezone: Plasmoid.configuration.showLocalTimezone
+    property bool showDate: state != "horizontalSmall"
+
+    Clock {
+        id: clock
+        timeZone: Plasmoid.configuration.lastSelectedTimezone
+        trackSeconds: Plasmoid.configuration.showSeconds
+        onDateTimeChanged: main.dateTimeChanged()
+        onTimeZoneChanged: main.setupLabels()
+    }
 
     property var dateFormat: {
         if(Plasmoid.configuration.dateFormat == "custom") return Plasmoid.configuration.customFormat
@@ -56,43 +66,33 @@ Item {
     property int use24hFormat: Plasmoid.configuration.use24hFormat
 
     property string lastDate: ""
-    property int tzOffset
 
     // This is the index in the list of user selected timezones
     property int tzIndex: 0
                                         
     property QtObject dashWindow: null
 
-    function getCurrentTime(): date {
-        const data = dataSource.data[Plasmoid.configuration.lastSelectedTimezone];
-        // The order of signal propagation is unspecified, so we might get
-        // here before the dataSource has updated. Alternatively, a buggy
-        // configuration view might set lastSelectedTimezone to a new time
-        // zone before applying the new list, or it may just be set to
-        // something invalid in the config file.
-        if (data === undefined) {
-            return new Date();
-        }
-
-        // get the time for the given time zone from the dataengine
-        const now = data["DateTime"];
-        // get current UTC time
-        const msUTC = now.getTime() + (now.getTimezoneOffset() * 60000);
-        // add the dataengine TZ offset to it
-        const currentTime = new Date(msUTC + (data["Offset"] * 1000));
-        return currentTime;
-    }
-
-
-    onDateFormatChanged: { setupLabels(); }
+    onDateFormatChanged:            { setupLabels(); }
 
     onDisplayTimezoneAsCodeChanged: { setupLabels(); }
-    onStateChanged: { setupLabels(); timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)); }
+    onStateChanged:                 {
+        setupLabels();
+        timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat));
+    }
 
-    onLastSelectedTimezoneChanged: { timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)) }
-    onShowSecondsChanged:          { timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)) }
-    onShowLocalTimezoneChanged:    { timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)) }
-    onUse24hFormatChanged:         { timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)) }
+    onLastSelectedTimezoneChanged:  { timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat)) }
+    onShowSecondsChanged:           {
+        timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat))
+        main.dateTimeChanged();
+    }
+    onShowLocalTimezoneChanged:     {
+        timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat))
+        main.dateTimeChanged();
+    }
+    onUse24hFormatChanged:          {
+        timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat));
+        main.dateTimeChanged();
+    }
 
     Connections {
         target: Plasmoid.configuration
@@ -226,32 +226,7 @@ Item {
                     return Text.Raised;
                 }
                 styleColor: "transparent"
-                text: {
-                    // get the time for the given timezone from the dataengine
-                    var now = dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["DateTime"];
-                    // get current UTC time
-                    var msUTC = now.getTime() + (now.getTimezoneOffset() * 60000);
-                    // add the dataengine TZ offset to it
-                    var currentTime = new Date(msUTC + (dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Offset"] * 1000));
-
-                    main.currentTime = currentTime;
-
-                    var showTimezone = main.showLocalTimezone || (plasmoid.configuration.lastSelectedTimezone != "Local"
-                    && dataSource.data["Local"]["Timezone City"] != dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
-
-                    var timezoneString = "";
-                    var timezoneResult = "";
-
-                    if (showTimezone) {
-                        timezoneString = Plasmoid.configuration.displayTimezoneAsCode ? dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone Abbreviation"]
-                        : TimezonesI18n.i18nCity(dataSource.data[Plasmoid.configuration.lastSelectedTimezone]["Timezone City"]);
-                        timezoneResult = (main.showDate || main.oneLineMode) && Plasmoid.formFactor == PlasmaCore.Types.Horizontal ? timezoneString : timezoneString;
-                    } else {
-                        // this clears the label and that makes it hidden
-                        timezoneResult = timezoneString;
-                    }
-                    return (showTimezone ? "" : " ") + Qt.formatTime(currentTime, main.timeFormat) + " " + (showTimezone ? (" " + timezoneResult) : "");
-                }
+                //text:
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: main.state != "horizontalSmall" ? Text.AlignHCenter : Text.AlignLeft
                 leftPadding: Plasmoid.configuration.offsetClock && main.state == "horizontalSmall" ? Kirigami.Units.mediumSpacing-2 : 0
@@ -308,7 +283,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
 
-                visible: main.state != "horizontalSmall"
+                visible: main.showDate
             }
         }
     }
@@ -371,7 +346,7 @@ Item {
                 Plasmoid.configuration.lastSelectedTimezone = Plasmoid.configuration.selectedTimeZones[newIndex];
                 main.tzIndex = newIndex;
 
-                dataSource.dataChanged();
+                //dataSource.dataChanged();
                 setupLabels();
             }
         }
@@ -380,9 +355,9 @@ Item {
     PlasmaCore.ToolTipArea {
         id: timeToolTip
 
-        mainItem: ToolTipCompact {
+        mainItem: ToolTip {
             time: {
-                var now = dataSource.data[plasmoid.configuration.lastSelectedTimezone]["DateTime"];
+                var now = currentClock.dateTime;
                 return Qt.formatDate(now, "dddd, MMMM dd, yyyy");
             }
         }
@@ -394,6 +369,20 @@ Item {
         font.family: timeLabel.font.family
         font.weight: timeLabel.font.weight
         font.italic: timeLabel.font.italic
+    }
+
+    function setLabelText() {
+        var dt = clock.dateTime;
+        main.currentTime = clock.dateTime //currentTime;
+        var showTimezone = main.showLocalTimezone || (Plasmoid.configuration.lastSelectedTimezone != "Local" && !clock.isSystemTimeZone)
+        var timezoneString = "";
+        if (showTimezone) {
+            timezoneString = Plasmoid.configuration.displayTimezoneAsCode ? clock.timeZoneCode : TimeZonesI18n.i18nCity(clock.timeZone);
+        }
+        timeLabel.text = (showTimezone ? "" : " ") + Qt.formatTime(currentTime, main.timeFormat) + " " + (showTimezone ? (" " + timezoneString) : "");
+        dateLabel.text = Qt.formatDate(clock.dateTime, main.dateFormat);
+        if(!main.showDate) dateLabel.text = dateLabel.text.slice(1) + " ";
+        if(dayLabel.visible) dayLabel.text = Qt.formatDate(clock.dateTime, "dddd")
     }
 
     function timeFormatCorrection(timeFormatString) {
@@ -425,7 +414,7 @@ Item {
     }
 
     function setupLabels() {
-        dateLabel.text = Qt.formatDate(main.currentTime, main.dateFormat);
+        dateLabel.text = Qt.formatDate(clock.dateTime, main.dateFormat);
 
         // find widest character between 0 and 9
         var maximumWidthNumber = 0;
@@ -451,23 +440,19 @@ Item {
         if (main.showDate) {
             // If the date has changed, force size recalculation, because the day name
             // or the month name can now be longer/shorter, so we need to adjust applet size
-            var currentDate = Qt.formatDateTime(getCurrentTime(), "yyyy-mm-dd");
+            var currentDate = Qt.formatDateTime(clock.dateTime, "yyyy-mm-dd");
             if (main.lastDate != currentDate) {
                 doCorrections = true;
                 main.lastDate = currentDate
             }
         }
 
-        var currentTZOffset = dataSource.data["Local"]["Offset"] / 60;
-        if (currentTZOffset != tzOffset) {
-            doCorrections = true;
-            tzOffset = currentTZOffset;
-            Date.timeZoneUpdated(); // inform the QML JS engine about TZ change
-        }
-
         if (doCorrections) {
             timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat));
         }
+
+        setLabelText();
+
     }
 
     function setTimezoneIndex() {
@@ -480,22 +465,12 @@ Item {
     }
 
     Component.onCompleted: {
-
         root.initTimezones();
-        // Sort the timezones according to their offset
-        // Calling sort() directly on plasmoid.configuration.selectedTimeZones
-        // has no effect, so sort a copy and then assign the copy to it
-        var sortArray = Plasmoid.configuration.selectedTimeZones;
-        sortArray.sort(function(a, b) {
-            return dataSource.data[a]["Offset"] - dataSource.data[b]["Offset"];
-        });
-        Plasmoid.configuration.selectedTimeZones = sortArray;
+        Plasmoid.configuration.selectedTimeZones = TimeZoneUtils.sortedTimeZones(Plasmoid.configuration.selectedTimeZones);
 
         setTimezoneIndex();
-        tzOffset = -(new Date().getTimezoneOffset());
         dateTimeChanged();
         timeFormatCorrection(Qt.locale().timeFormat(Locale.ShortFormat));
-        dataSource.onDataChanged.connect(dateTimeChanged);
         dashWindow = Qt.createQmlObject("CalendarView {}", root);
     }
 }

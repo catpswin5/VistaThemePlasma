@@ -63,7 +63,7 @@
                 "Name[zh_TW]": "Marco Martin"
             }
         ],
-        "BugReportUrl": "https://gitgud.io/catpswin56/vistathemeplasma/-/issues",
+        "BugReportUrl": "https://gitgud.io/aeroshell/vtp/vistathemeplasma/-/issues",
         "Category": "Windows and Tasks",
         "EnabledByDefault": true,
         "FormFactors": [
@@ -73,7 +73,7 @@
         "Id": "io.gitgud.catpswin56.systemtray",
         "License": "GPL-2.0+",
         "Name": "System Tray (WinVista)",
-        "Website": "https://gitgud.io/catpswin56/vistathemeplasma"
+        "Website": "https://gitgud.io/aeroshell/vtp/vistathemeplasma"
     },
     "NoDisplay": false,
     "X-Plasma-API-Minimum-Version": "6.0",
