@@ -18,7 +18,6 @@ import org.kde.kscreenlocker 1.0 as ScreenLocker
 import "../components"
 
 ColumnLayout {
-    //id: sessionManager
     property Item mainPasswordBox: passwordBox
     property alias echoMode: passwordBox.echoMode
     property alias notificationMessage: notificationsLabel.text
@@ -99,50 +98,6 @@ ColumnLayout {
             height: loginButton.height
             width: loginButton.width
         }
-
-        /*AuthuiTextbox {
-            id: passwordBox
-            font.pointSize: 9
-            implicitWidth: 225
-
-            placeholderText: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Password")
-            focus: true
-            echoMode: TextInput.Password
-            inputMethodHints: Qt.ImhHiddenText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-            enabled: !authenticator.graceLocked
-            revealPasswordButtonShown: true
-
-            // In Qt this is implicitly active based on focus rather than visibility
-            // in any other application having a focussed invisible object would be weird
-            // but here we are using to wake out of screensaver mode
-            // We need to explicitly disable cursor flashing to avoid unnecessary renders
-            cursorVisible: visible
-
-            onAccepted: {
-                startLogin()
-            }
-
-            //if empty and left or right is pressed change selection in user switch
-            //this cannot be in keys.onLeftPressed as then it doesn't reach the password box
-            Keys.onPressed: {
-                if (event.key == Qt.Key_Left && !text) {
-                    userList.decrementCurrentIndex();
-                    event.accepted = true
-                }
-                if (event.key == Qt.Key_Right && !text) {
-                    userList.incrementCurrentIndex();
-                    event.accepted = true
-                }
-            }
-
-            Connections {
-                target: root
-                function onClearPassword() {
-                    passwordBox.forceActiveFocus()
-                    passwordBox.text = "";
-                }
-            }
-        }*/
         AuthuiTextbox {
             id: passwordBox
             font.pointSize: 9
@@ -152,7 +107,8 @@ ColumnLayout {
             focus: true
             echoMode: TextInput.Password
             inputMethodHints: Qt.ImhHiddenText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-            //enabled: !authenticator.graceLocked
+            enabled: !authenticator.graceLocked
+            opacity: enabled ? 1.0 : 0.5
             //revealPasswordButtonShown: true
 
             // In Qt this is implicitly active based on focus rather than visibility
@@ -180,6 +136,8 @@ ColumnLayout {
             onClicked: startLogin()
             Keys.onEnterPressed: clicked()
             Keys.onReturnPressed: clicked()
+
+            opacity: contents.enabled ? 1.0 : 0.5
         }
     }
     RowLayout {

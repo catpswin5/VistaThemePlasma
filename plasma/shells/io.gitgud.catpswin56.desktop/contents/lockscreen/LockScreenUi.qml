@@ -185,6 +185,7 @@ Item {
         if (lockScreenUi.notification) {
             lockScreenUi.notification += "\n";
         }
+        unlockingFix.restart();
         setWrongPasswordScreen(msg);
         lockScreenUi.hadPrompt = false;
     }
@@ -331,8 +332,6 @@ Item {
     MouseArea {
         id: lockScreenRoot
 
-        property bool calledUnlock: false
-
         Rectangle {
             color: "#1D5F7A"
             anchors.fill: parent
@@ -346,10 +345,8 @@ Item {
         }
 
         Component.onCompleted: {
-            if (!calledUnlock) {
-                calledUnlock = true;
-                authenticator.startAuthenticating();
-            }
+            executable.exec("kreadconfig6 --file ~/.config/kdeglobals --group Sounds --key Theme");
+            unlockingFix.restart();
         }
 
         x: parent.x
@@ -406,6 +403,15 @@ Item {
             }
         }
 
+        Timer {
+            id: unlockingFix
+            interval: 500
+            onTriggered: {
+                passwordArea.mainPasswordBox.clear();
+                authenticator.startAuthenticating();
+            }
+        }
+
 
         MainBlock {
             id: passwordArea
@@ -414,15 +420,12 @@ Item {
             focus: true
 
             // When not on page 0, disable it completely so that it absolutely cannot receive the Enter key
-            enabled: currentPage == 0
+            enabled: currentPage == 0 && !unlockingFix.running
             //enabled: !authenticator.busy
             onPasswordResult: (password) => {
                 console.log("password result signal received")
-                // Switch to the 'Welcome' screen
                 currentPage = 1;
-                console.log("begin auth")
-                authenticator.startAuthenticating();
-                console.log("respond with password")
+                console.log("responding with:", password)
                 authenticator.respond(password);
             }
 
