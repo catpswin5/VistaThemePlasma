@@ -434,7 +434,7 @@ Rectangle {
                     height: 1
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.top: anchors.top
+                    anchors.top: parent.top
                     color: "#dfdfdf"
                 }
             }
