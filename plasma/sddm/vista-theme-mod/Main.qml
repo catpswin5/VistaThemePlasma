@@ -159,7 +159,7 @@ Item
 
                 session.addItem(menuitem);
                 menuitem = session.createMenuItem();
-                menuitem.text = "On-Screen Keyboard"
+                menuitem.text = i18nd("vistathemeplasma-sddm-theme", "On-Screen Keyboard");
                 menuitem.checkable = false;
                 menuitem.icon.source = Qt.resolvedUrl("Assets/keyboard.png");
                 menuitem.triggered.connect(() => {
@@ -443,7 +443,7 @@ Item
                                     else return "Assets/input/normal.png"
                                 }
                             }
-                            placeholderText: "Password"
+                            placeholderText: i18nd("vistathemeplasma-sddm-theme", "Password")
                             selectByMouse: true
                             echoMode : TextInput.Password
                             inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
@@ -561,7 +561,7 @@ Item
                     }
 
                     contentItem: Text {
-                        text: "Switch User"
+                        text: i18nd("vistathemeplasma-sddm-theme", "Switch User")
                         color: "white"
                         font.pointSize: 11
                         font.kerning: false
@@ -622,7 +622,7 @@ Item
 
                 width: implicitWidth
 
-                text: "The user name or password is incorrect."
+                text: i18nd("vistathemeplasma-sddm-theme", "The user name or password is incorrect.")
                 renderType: Text.NativeRendering
                 Layout.alignment: Qt.AlignHCenter
                 font.pointSize: 9
@@ -660,7 +660,7 @@ Item
                 }
 
                 contentItem: Text {
-                    text: "OK"
+                    text: i18nd("vistathemeplasma-sddm-theme", "OK")
                     color: "white"
                     font.pointSize: 11
                     horizontalAlignment : Text.AlignHCenter
@@ -906,7 +906,7 @@ Item
 
             QQC2.ToolTip.visible: hovered
             QQC2.ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
-            QQC2.ToolTip.text: qsTr("Shut down")
+            QQC2.ToolTip.text: i18nd("vistathemeplasma-sddm-theme", "Shut down")
         }
 
         QQC2.Button {
@@ -961,31 +961,31 @@ Item
 
                 Component.onCompleted: {
                     var menuitem = powerMenu.createMenuItem();
-                    menuitem.text = "Restart";
+                    menuitem.text = i18nd("vistathemeplasma-sddm-theme", "Restart");
                     menuitem.triggered.connect(() => { sddm.reboot() });
                     powerMenu.addAction(menuitem);
                     powerMenu.addItem(powerMenu.createMenuSeparator());
 
                     if(sddm.canSuspend) {
                         menuitem = powerMenu.createMenuItem();
-                        menuitem.text = "Sleep";
+                        menuitem.text = i18nd("vistathemeplasma-sddm-theme", "Sleep");
                         menuitem.triggered.connect(() => { sddm.suspend() });
                         powerMenu.addAction(menuitem);
                     }
                     if(sddm.canHibernate) {
                         menuitem = powerMenu.createMenuItem();
-                        menuitem.text = "Hibernate";
+                        menuitem.text = i18nd("vistathemeplasma-sddm-theme", "Hibernate");
                         menuitem.triggered.connect(() => { sddm.hibernate() });
                         powerMenu.addAction(menuitem);
                     }
                     if(sddm.canHybridSleep) {
                         menuitem = powerMenu.createMenuItem();
-                        menuitem.text = "Hybrid Sleep";
+                        menuitem.text = i18nd("vistathemeplasma-sddm-theme", "Hybrid Sleep");
                         menuitem.triggered.connect(() => { sddm.hybridSleep() });
                         powerMenu.addAction(menuitem);
                     }
                     menuitem = powerMenu.createMenuItem();
-                    menuitem.text = "Shut down";
+                    menuitem.text = i18nd("vistathemeplasma-sddm-theme", "Shut down");
                     menuitem.triggered.connect(() => { sddm.powerOff() });
                     powerMenu.addAction(menuitem);
                 }
