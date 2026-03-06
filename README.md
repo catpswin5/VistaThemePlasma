@@ -17,7 +17,7 @@ VTP is in constant development and testing. So far it has been tested on:
 
 ## This software comes "as is" without warranty of any kind. It's always recommended to make backups of your system just in case. I am not responsible for broken systems, please proceed with caution.
 
-[GitHub mirror](https://github.com/aeroshell-desktop/vistathemeplasma) (currently missing the latest commits)
+[GitHub mirror](https://github.com/aeroshell-desktop/vistathemeplasma)
 
 ## Installation
 
