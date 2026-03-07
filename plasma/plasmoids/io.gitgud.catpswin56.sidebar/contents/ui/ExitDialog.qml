@@ -81,7 +81,7 @@ Window {
                 QQC2.Button {
                     text: i18n("Exit Sidebar")
                     onClicked: {
-                        window.close();
+                        exitDialog.close();
                         Plasmoid.internalAction("remove").trigger();
                     }
                 }

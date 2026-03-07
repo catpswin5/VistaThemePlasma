@@ -1,7 +1,7 @@
 /*
  *  SPDX-FileCopyrightText: 2011 Marco Martin <mart@kde.org>
  *  SPDX-FileCopyrightText: 2016 David Edmundson <davidedmundson@kde.org>
- *  SPDX-FileCopyrightText: 2025 catpswin56 <catpswin5@proton.me>
+ *  SPDX-FileCopyrightText: 2026 catpswin56 <catpswin5@proton.me>
  *
  *  SPDX-License-Identifier: LGPL-2.0-or-later
  */

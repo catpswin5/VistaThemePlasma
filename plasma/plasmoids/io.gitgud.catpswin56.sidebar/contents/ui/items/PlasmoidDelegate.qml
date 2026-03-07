@@ -22,9 +22,11 @@ PlasmoidItem {
 
     required property var model
 
+    readonly property string plasmoidType: (applet?.plasmoidType ?? "")
+    readonly property bool isGadget: plasmoidType == "Gadget"
+
     property int plasmoidIndex: DelegateModel.itemsIndex
     property Applet.DefaultCompactRepresentation compactRepresentation: null
-    property bool isGadget: applet?.plasmoid.pluginName.includes("io.gitgud.catpswin56.gadgets")
 
     signal loadingCompleted()
     onLoadingCompleted: delegateModel.sort();
