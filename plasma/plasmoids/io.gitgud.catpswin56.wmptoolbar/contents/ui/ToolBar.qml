@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls as QQC2
 
 import org.kde.kirigami as Kirigami
 
@@ -7,6 +8,8 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
 Item {
+    property alias volumePopup: volumePopup
+
     Image {
         id: bg
 
@@ -275,17 +278,22 @@ Item {
             spacing: 1
 
             Image {
+                id: volBtn
+
+                readonly property bool muted: mediaController.mpris2Model.currentPlayer.volume == 0.0
+
+                property double prevVolume: 0.3
                 property string buttonState: {
-                    if(volMa.containsPress) return "-pressed";
-                    if(volMa.containsMouse) return "-hover";
-                    return "";
+                    if(volMa.containsPress || muted) return "-pressed";
+                    else if(volMa.containsMouse) return "-hover";
+                    else return "";
                 }
 
-                Layout.preferredWidth: 15
+                Layout.preferredWidth: 16
                 Layout.preferredHeight: 17
 
-                source: "png/controls" + state + ".png"
-                sourceClipRect: Qt.rect(122, 4, 15, 17)
+                source: "png/controls" + buttonState + ".png"
+                sourceClipRect: Qt.rect(122, 4, 16, 17)
 
                 MouseArea {
                     id: volMa
@@ -295,20 +303,30 @@ Item {
                     preventStealing: true
                     propagateComposedEvents: true
                     hoverEnabled: true
+                    onClicked: {
+                        if(!volBtn.muted) {
+                            volBtn.prevVolume = mediaController.mpris2Model.currentPlayer.volume;
+                            mediaController.mpris2Model.currentPlayer.volume = 0.0;
+                        } else {
+                            mediaController.mpris2Model.currentPlayer.volume = volBtn.prevVolume;
+                        }
+                    }
                 }
             }
             Image {
+                id: volumePopupBtn
+
                 property string buttonState: {
                     if(volPopupMa.containsPress) return "-pressed";
                     if(volPopupMa.containsMouse) return "-hover";
                     return "";
                 }
 
-                Layout.preferredWidth: 11
+                Layout.preferredWidth: 10
                 Layout.preferredHeight: 17
 
                 source: "png/controls" + buttonState + ".png"
-                sourceClipRect: Qt.rect(137, 4, 11, 17)
+                sourceClipRect: Qt.rect(138, 4, 10, 17)
 
                 MouseArea {
                     id: volPopupMa
@@ -318,6 +336,68 @@ Item {
                     preventStealing: true
                     propagateComposedEvents: true
                     hoverEnabled: true
+                    onClicked: volumePopup.visible = !volumePopup.visible;
+                }
+
+                Image {
+                    id: volumePopup
+
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    x: -width
+
+                    source: "png/volslider-empty.png"
+
+                    visible: false
+                    onVisibleChanged: {
+                        if(visible) {
+                            toolTip.display = false;
+                        } else if(!visible && hoverHandler.hovered) {
+                            toolTipTimer.restart();
+                        }
+                    }
+
+                    QQC2.Slider {
+                        id: volumeSlider
+
+                        anchors.fill: parent
+                        anchors.rightMargin: 8
+                        anchors.leftMargin: 8
+
+                        orientation: Qt.Horizontal
+                        value: mediaController.mpris2Model.currentPlayer.volume
+                        to: 1.0
+
+                        background: Image {
+                            width: volumeSlider.value * implicitWidth
+                            height: implicitHeight
+
+                            source: "png/volslider-bar.png"
+                        }
+
+                        handle: Image {
+                            property string state: {
+                                if(hoverHand.hovered) return "-hover";
+                                else return "-normal";
+                            }
+
+                            x: volumeSlider.visualPosition * (volumeSlider.availableWidth - width)
+                            y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
+
+                            source: "png/volslider-handle" + state + ".png"
+
+                            // can't use mousearea nor taphandler or we lose the sliding ability
+                            HoverHandler { id: hoverHand }
+                        }
+
+                        onValueChanged: {
+                            // only change when it actually changes
+                            if(value > mediaController.mpris2Model.currentPlayer.volume)
+                                mediaController.mpris2Model.currentPlayer.volume = value;
+                            if(value < mediaController.mpris2Model.currentPlayer.volume)
+                                mediaController.mpris2Model.currentPlayer.volume = value;
+                        }
+                    }
                 }
             }
         }

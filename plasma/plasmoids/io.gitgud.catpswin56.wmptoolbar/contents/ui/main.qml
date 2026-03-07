@@ -12,6 +12,8 @@ PlasmoidItem {
     readonly property bool hideToolbar: !multimediaOpen && Plasmoid.configuration.hideToolbar
     readonly property bool useBasic: Plasmoid.configuration.useBasic
 
+    property alias volumePopup: toolbar.volumePopup
+
     property int lastUsedIndex: -1
     property string lastUsedName: ""
 
@@ -79,6 +81,13 @@ PlasmoidItem {
         onTriggered: toolTip.display = hoverHandler.hovered && !popup.visible;
     }
 
+    Timer {
+        id: volumePopupTimeout
+        interval: 4000
+        running: volumePopup.visible
+        onTriggered: volumePopup.visible = false;
+    }
+
     PlasmaCore.Dialog {
         id: toolTip
 
@@ -87,7 +96,7 @@ PlasmoidItem {
         type: PlasmaCore.Dialog.Dock
         location: PlasmaCore.Types.Floating // to get rid of the slide animation
         backgroundHints: PlasmaCore.Types.NoBackground
-        flags: Qt.WindowStaysOnTopHint
+        flags: Qt.WindowStaysOnTopHint | Qt.WindowDoesNotAcceptFocus
         appletInterface: root
         visualParent: root
 
@@ -159,7 +168,7 @@ PlasmoidItem {
         type: PlasmaCore.Dialog.Dock
         location: PlasmaCore.Types.Floating // to get rid of the slide animation
         backgroundHints: PlasmaCore.Types.NoBackground
-        flags: Qt.WindowStaysOnTopHint
+        flags: Qt.WindowStaysOnTopHint | Qt.WindowDoesNotAcceptFocus
         appletInterface: root
         visualParent: root
 
