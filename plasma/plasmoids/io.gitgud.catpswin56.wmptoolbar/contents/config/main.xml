@@ -14,16 +14,15 @@
       <label>Custom icon to show in toolbar</label>
       <default></default>
     </entry>
+  </group>
+
+  <group name="Tweaks">
     <entry name="hideToolbar" type="Bool">
       <label>Hide toolbar if there's no media app running</label>
       <default>true</default>
     </entry>
-    <entry name="toolbarStyle" type="Int">
-      <label>What style will be used for the toolbar. 0 = WMP 10, 1 = WMP 11</label>
-      <default>1</default>
-    </entry>
-    <entry name="wmp11Basic" type="Bool">
-      <label>Should the WMP 11 toolbar use the basic variant?</label>
+    <entry name="useBasic" type="Bool">
+      <label>Should the toolbar use the basic mode variant?</label>
       <default>false</default>
     </entry>
   </group>

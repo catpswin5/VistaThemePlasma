@@ -19,8 +19,7 @@ KCM.SimpleKCM {
     property alias cfg_toolbarIcon: toolbarIcon.currentIndex
     property string cfg_customIcon
     property alias cfg_hideToolbar: hideToolbar.checked
-    property alias cfg_toolbarStyle: toolbarStyle.currentIndex
-    property alias cfg_wmp11Basic: wmp11Basic.checked
+    property alias cfg_useBasic: useBasic.checked
 
     component CustomGroupBox: GroupBox {
         id: gbox
@@ -59,10 +58,13 @@ KCM.SimpleKCM {
             title: i18n("Apperance")
 
             ColumnLayout {
+                anchors.fill: parent
+
                 RowLayout {
                     Layout.fillWidth: true
 
-                    Text { text: i18n("Icon to show in toolbar:") }
+                    Text { Layout.fillWidth: true;  text: i18n("Icon to show in toolbar:") }
+
                     ComboBox {
                         id: toolbarIcon
 
@@ -79,42 +81,16 @@ KCM.SimpleKCM {
 
                     visible: toolbarIcon.currentIndex == 3
 
-                    Text { text: i18n("Path to custom icon:") }
+                    Text { Layout.fillWidth: true; text: i18n("Path to custom icon:") }
+
                     TextField {
                         id: customIcon
-
-                        Layout.fillWidth: true
 
                         text: Plasmoid.configuration.customIcon
                         inputMethodHints: Qt.ImhNoPredictiveText
                         onTextChanged: root.cfg_customIcon = text;
                     }
                 }
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    Text { text: i18n("Toolbar style:") }
-                    ComboBox {
-                        id: toolbarStyle
-
-                        model: [
-                            "WMP 10 (Unfinished)",
-                            "WMP 11"
-                        ]
-                    }
-                }
-            }
-        }
-        CustomGroupBox {
-            Layout.fillWidth: true
-
-            title: i18n("WMP 11 specific tweaks")
-
-            visible: toolbarStyle.currentIndex == 1
-
-            CheckBox {
-                id: wmp11Basic
-                text: i18n("Use basic variant")
             }
         }
         CustomGroupBox {
@@ -123,6 +99,10 @@ KCM.SimpleKCM {
             title: i18n("Tweaks")
 
             ColumnLayout {
+                CheckBox {
+                    id: useBasic
+                    text: i18n("Use basic variant")
+                }
                 CheckBox {
                     id: hideToolbar
                     text: i18n("Hide toolbar when there is no multimedia app running")

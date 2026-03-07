@@ -5,18 +5,12 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.extras as PlasmaExtras
 
-import "styles" as WMPStyles
-
 PlasmoidItem {
     id: root
 
     readonly property bool multimediaOpen: mediaController.mediaPlayerOpen
     readonly property bool hideToolbar: !multimediaOpen && Plasmoid.configuration.hideToolbar
-    readonly property string toolbarStyle: {
-        if(Plasmoid.configuration.toolbarStyle == 0) return "wmp10"
-        else return "wmp11"
-    }
-    readonly property bool wmp11Basic: Plasmoid.configuration.wmp11Basic
+    readonly property bool useBasic: Plasmoid.configuration.useBasic
 
     property int lastUsedIndex: -1
     property string lastUsedName: ""
@@ -24,7 +18,39 @@ PlasmoidItem {
     Layout.minimumWidth: hideToolbar ? 0 : 170
     Layout.maximumHeight: 25
 
+    Plasmoid.status: hideToolbar ? PlasmaCore.Types.HiddenStatus : PlasmaCore.Types.PassiveStatus
+
     MprisController { id: mediaController }
+
+    Instantiator {
+        model: mediaController.mpris2Model
+        delegate: PlasmaExtras.MenuItem {
+            required property int index
+            required property var model
+
+            text: model.identity + "      "
+            icon: model.iconName == "emblem-favorite" ? "bookmark_add" : model.iconName
+            checkable: true
+            checked: mediaController.currentIndex == index
+            onClicked: {
+                root.lastUsedIndex = index;
+                root.lastUsedName = model.identity;
+                mediaController.currentIndex = index;
+            }
+        }
+        onObjectAdded: (index, object) => {
+            if(object.model.identity == root.lastUsedName) mediaController.currentIndex = root.lastUsedIndex;
+            contextMenu.addMenuItem(object);
+        }
+        onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
+    }
+
+    PlasmaExtras.Menu {
+        id: contextMenu
+
+        visualParent: containerRect
+        placement: PlasmaExtras.Menu.BottomPosedLeftAlignedPopup
+    }
 
     Item {
         id: containerRect
@@ -39,81 +65,46 @@ PlasmoidItem {
 
         opacity: root.hideToolbar ? 0 : 1
 
-        Instantiator {
-            model: mediaController.mpris2Model
-            delegate: PlasmaExtras.MenuItem {
-                required property int index
-                required property var model
-
-                text: model.identity + "      "
-                icon: model.iconName == "emblem-favorite" ? "bookmark_add" : model.iconName
-                checkable: true
-                checked: mediaController.currentIndex == index
-                onClicked: {
-                    root.lastUsedIndex = index;
-                    root.lastUsedName = model.identity;
-                    mediaController.currentIndex = index;
-                }
-            }
-            onObjectAdded: (index, object) => {
-                if(object.model.identity == root.lastUsedName) mediaController.currentIndex = root.lastUsedIndex;
-                contextMenu.addMenuItem(object);
-            }
-            onObjectRemoved: (index, object) => contextMenu.removeMenuItem(object)
-        }
-
-        PlasmaExtras.Menu {
-            id: contextMenu
-
-            visualParent: containerRect
-            placement: PlasmaExtras.Menu.BottomPosedLeftAlignedPopup
-        }
-
-        WMPStyles.WMP10 { id: wmp10; anchors.fill: parent; visible: root.toolbarStyle == "wmp10" }
-        WMPStyles.WMP11 { id: wmp11; anchors.fill: parent; visible: root.toolbarStyle == "wmp11" }
+        ToolBar { id: toolbar; anchors.fill: parent }
 
         HoverHandler {
             id: hoverHandler
-            enabled: root.toolbarStyle == "wmp11"
-            onHoveredChanged: tooltipTimer.restart();
+            onHoveredChanged: toolTipTimer.restart();
         }
     }
 
     Timer {
-        id: tooltipTimer
+        id: toolTipTimer
         interval: hoverHandler.hovered ? 750 : 375
-        repeat: false
-        running: false
-        onTriggered: {
-            popup.isToolTip = true;
-            popup.opacity = hoverHandler.hovered ? 1 : 0;
-        }
+        onTriggered: toolTip.display = hoverHandler.hovered && !popup.visible;
     }
 
     PlasmaCore.Dialog {
-        id: popup
+        id: toolTip
 
-        property bool isToolTip: false
+        property bool display: false
 
         type: PlasmaCore.Dialog.Dock
         location: PlasmaCore.Types.Floating // to get rid of the slide animation
         backgroundHints: PlasmaCore.Types.NoBackground
         flags: Qt.WindowStaysOnTopHint
+        appletInterface: root
         visualParent: root
 
-        visible: opacity > 0
-        opacity: 0
-
-        Behavior on opacity {
-            enabled: popup.isToolTip
-            animation: NumberAnimation { duration: 300 }
-        }
+        visible: toolTipItem.opacity > 0
 
         mainItem: Image {
+            id: toolTipItem
+
             width: implicitWidth
             height: implicitHeight
 
-            source: popup.isToolTip ? "styles/png/wmp11/tooltip.png" : "styles/png/" + root.toolbarStyle + "/" + "frame.png"
+            source: "png/tooltip.png"
+
+            opacity: toolTip.display
+            Behavior on opacity {
+                NumberAnimation { duration: 250 }
+            }
 
             Rectangle {
                 anchors.fill: parent
@@ -123,7 +114,78 @@ PlasmoidItem {
                 topLeftRadius: 1
 
                 z: -1
-                visible: root.toolbarStyle == "wmp11"
+            }
+
+            ColumnLayout {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+
+                    leftMargin: 6
+                    rightMargin: 6
+                    topMargin: 4
+                }
+
+                spacing: 0
+
+                Text {
+                    Layout.fillWidth: true
+
+                    text: mediaController.artist
+                    color: "white"
+                    font.pointSize: 8
+                    elide: Text.ElideRight
+
+                    visible: text != ""
+
+                }
+
+                Text {
+                    Layout.fillWidth: true
+
+                    text: mediaController.track != "" ? mediaController.track : i18n("No media playing")
+                    color: "white"
+                    font.pointSize: 8
+                    elide: Text.ElideRight
+                }
+            }
+        }
+    }
+
+    PlasmaCore.Dialog {
+        id: popup
+
+        type: PlasmaCore.Dialog.Dock
+        location: PlasmaCore.Types.Floating // to get rid of the slide animation
+        backgroundHints: PlasmaCore.Types.NoBackground
+        flags: Qt.WindowStaysOnTopHint
+        appletInterface: root
+        visualParent: root
+
+        visible: false
+        onVisibleChanged: {
+            if(visible) {
+                toolTip.display = false;
+            } else if(!visible && hoverHandler.hovered) {
+                toolTipTimer.restart();
+            }
+        }
+
+        mainItem: Image {
+            width: implicitWidth
+            height: implicitHeight
+
+            source: "png/frame.png"
+
+            Rectangle {
+                anchors.fill: parent
+
+                color: "black"
+                topRightRadius: 1
+                topLeftRadius: 1
+
+                z: -1
             }
 
             Item {
@@ -136,8 +198,6 @@ PlasmoidItem {
 
                     anchors.fill: parent
                     anchors.margins: 6
-
-                    visible: !popup.isToolTip
 
                     Rectangle {
                         anchors.fill: parent
@@ -171,7 +231,7 @@ PlasmoidItem {
                         Layout.fillWidth: true
 
                         text: mediaController.artist
-                        color: popup.isToolTip ? "white" : "lightgreen"
+                        color: "lightgreen"
                         font.pointSize: 8
                         elide: Text.ElideRight
 
@@ -183,7 +243,7 @@ PlasmoidItem {
                         Layout.fillWidth: true
 
                         text: mediaController.track != "" ? mediaController.track : i18n("No media playing")
-                        color: popup.isToolTip ? "white" : "lightgreen"
+                        color: "lightgreen"
                         font.pointSize: 8
                         elide: Text.ElideRight
                     }
