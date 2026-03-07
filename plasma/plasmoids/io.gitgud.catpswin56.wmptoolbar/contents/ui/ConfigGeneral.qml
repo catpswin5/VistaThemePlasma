@@ -55,7 +55,7 @@ KCM.SimpleKCM {
         CustomGroupBox {
             Layout.fillWidth: true
 
-            title: i18n("Apperance")
+            title: i18n("Appearance")
 
             ColumnLayout {
                 anchors.fill: parent
