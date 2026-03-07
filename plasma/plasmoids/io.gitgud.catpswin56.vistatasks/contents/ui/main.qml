@@ -417,7 +417,7 @@ PlasmoidItem {
         Loader {
             id: taskListLoader
 
-            property bool libplasmaPatched: false
+            property bool aeroshellLibplasma: false
 
             anchors {
                 left: parent.left
@@ -434,19 +434,16 @@ PlasmoidItem {
 
         Component.onCompleted: {
             const testComponent = Qt.createQmlObject(`
-            import QtQuick
-            import org.kde.plasma.core as PlasmaCore
+                import QtQuick
+                import org.kde.plasma.core as PlasmaCore
 
-            PlasmaCore.ToolTipArea { windowTitle: "" }
-            `,
-            tasks,
-            "libplasmaTest"
+                PlasmaCore.ToolTipArea { windowTitle: ""; backgroundHints: PlasmaCore.Types.NoBackground }
+                `,
+                tasks,
+                "libplasmaTest"
             );
-
-            console.log("vistatasks: checking if libplasma is patched...");
-
             if(testComponent.status !== Component.Error) {
-                taskListLoader.libplasmaPatched = true;
+                taskListLoader.aeroshellLibplasma = true;
                 testComponent.destroy();
             }
         }
@@ -458,7 +455,7 @@ PlasmoidItem {
 
             spacing: 4
 
-            visible: !taskListLoader.libplasmaPatched
+            visible: !taskListLoader.aeroshellLibplasma
 
             Kirigami.Icon {
                 anchors.verticalCenter: parent.verticalCenter
@@ -474,7 +471,7 @@ PlasmoidItem {
 
                 width: parent.width - 20
 
-                text: "VistaTasks requires the libplasma patches in order to work, which are missing. Please make sure to compile them and reboot your system."
+                text: i18n("VistaTasks requires aeroshell-libplasma to be installed in your system in order to work. Please make sure to install it and reboot your system.")
                 color: "white"
                 style: Text.Outline
                 styleColor: "transparent"
