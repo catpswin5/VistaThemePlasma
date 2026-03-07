@@ -179,7 +179,9 @@ ContainmentItem {
 
         PlasmaExtras.MenuItem {
             text: i18n("Bring Gadgets to Front")
-            onClicked: window.raise(); // cba to test this under Wayland atm of writing this so praying it works
+            // cba to test this under Wayland atm of writing this so praying it works
+            // TODO FIXME No it doesn't, just started using the Wayland session as my main one.
+            onClicked: window.raise();
             enabled: !root.sidebarDock
         }
         PlasmaExtras.MenuItem {
@@ -211,6 +213,7 @@ ContainmentItem {
 
         icon.name: "gadgets-sidebar"
         tooltip: "Windows Sidebar"
+        // holy HACK
         menu: Menu {
             visible: false
             onVisibleChanged: close();
@@ -301,8 +304,7 @@ ContainmentItem {
         function sort() {
             while(unsortedItems.count > 0) {
                 const item = unsortedItems.get(0);
-                //var shouldInsert = item.model.itemId !== "" || (typeof item.model.hasApplet !== "undefined");
-                var i = determinePosition(item); //orderingManager.getItemOrder(item.model.itemId);
+                var i = determinePosition(item);
                 item.groups = "items";
                 items.move(item.itemsIndex, i);
             }

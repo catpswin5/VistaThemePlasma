@@ -124,10 +124,10 @@ PlasmoidItem {
             Image {
                 id: busy
 
+                property int frame: 0
+
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: -12
-
-                property int frame: 0
 
                 source: "../pngs/loading-circle/loading-" + frame + ".png"
 
@@ -265,10 +265,6 @@ PlasmoidItem {
     }
 
     onAppletChanged: {
-        applet.parent = representation_container;
-        applet.anchors.fill = representation_container;
-        applet.visible = true;
-
         if(applet?.Layout.minimumHeight != 1 &&
             applet?.Layout.minimumHeight != 0 &&
             applet?.Layout.minimumHeight != -1)
@@ -286,7 +282,13 @@ PlasmoidItem {
         if(plasmoidDelegate.height == 0) plasmoidDelegate.height = mainStack.delegateWidth/2;
         if(applet?.plasmoid.backgroundHints != 0) plasmoidDelegate.height += 10;
 
-        applet?.compactRepresentationItemChanged.connect(replaceCompactRepresentation);
+        if(applet.inSidebar != undefined) applet.inSidebar = true;
+
+        applet.compactRepresentationItemChanged.connect(replaceCompactRepresentation);
+
+        applet.parent = representation_container;
+        applet.anchors.fill = representation_container;
+        applet.visible = true;
 
         plasmoidDelegate.loadingCompleted();
     }

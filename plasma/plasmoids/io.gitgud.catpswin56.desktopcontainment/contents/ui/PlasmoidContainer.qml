@@ -36,7 +36,6 @@ Item {
 
     property var applet: null
     onAppletChanged: {
-        console.log("applet changed", applet);
         if(applet) {
             if(isSidebar) {
                 plasmoid_root.visible = false;
@@ -82,8 +81,6 @@ Item {
         if(isGadget && !gadgetResizable) {
             plasmoid_root.width = Qt.binding(() => minimumWidth);
             plasmoid_root.height = Qt.binding(() => minimumHeight);
-
-            console.log(minimumWidth, minimumHeight);
         } else {
             plasmoid_root.width = Qt.binding(() => implicitWidth);
             plasmoid_root.height = Qt.binding(() => implicitHeight);
