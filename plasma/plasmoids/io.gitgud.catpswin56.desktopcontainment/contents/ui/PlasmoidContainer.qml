@@ -15,7 +15,11 @@ Item {
     required property int index
 
     readonly property string id: applet?.plasmoid.pluginName
-    readonly property Item positionManager: parent.positionManager
+    readonly property QtObject positionManager: parent.positionManager
+
+    // PositionManager
+    readonly property int posIdx: index
+    readonly property string posId: id
 
     // special cases
     property bool isGadget: applet?.plasmoidType == "Gadget"
@@ -90,8 +94,6 @@ Item {
     function correctPositions() {
         plasmoid_root.checkingPosition = true;
 
-        // console.log(x, width, parent.x, parent.width);
-        // console.log(y, height, parent.y, parent.height);
 
         if((parent.width > 0 || parent.height > 0) && (parent.x >= 0 || parent.y >= 0)) {
             // ensure that the plasmoid stays within layout bounds
@@ -118,11 +120,9 @@ Item {
 
     onXChanged: {
         if(!checkingPosition) correctPositions();
-        positionManager.savePositions();
     }
     onYChanged: {
         if(!checkingPosition) correctPositions();
-        positionManager.savePositions();
     }
 
     readonly property int implicitWidth: (preferredWidth < minimumWidth ? minimumWidth : preferredWidth)
@@ -135,12 +135,10 @@ Item {
     width: implicitWidth
     onWidthChanged: {
         if(!checkingPosition) correctPositions();
-        positionManager.savePositions();
     }
     height: implicitHeight
     onHeightChanged: {
         if(!checkingPosition) correctPositions();
-        positionManager.savePositions();
     }
 
     Drag.active: dragHndMa.held

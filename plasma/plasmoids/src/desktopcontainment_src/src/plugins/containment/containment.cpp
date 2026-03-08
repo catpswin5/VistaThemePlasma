@@ -55,8 +55,15 @@ void DesktopContainment::setLayout(QObject *layout)
     m_layout = layout;
     Q_EMIT layoutChanged(layout);
 
-    for(Plasma::Applet *applet : applets())
-        QMetaObject::invokeMethod(layout, "createApplet", Q_ARG(QVariant, QVariant::fromValue(applet)), Q_ARG(int, 0), Q_ARG(int, 0));
+    for(Plasma::Applet *applet : applets()) {
+        QMetaObject::invokeMethod(layout,
+                                  "createApplet",
+                                  Q_ARG(QVariant, QVariant::fromValue(applet)),
+                                  Q_ARG(int, 0),
+                                  Q_ARG(int, 0));
+    }
+
+    Q_EMIT appletsAdded();
 }
 
 void DesktopContainment::showPlasmoidMenu(QQuickItem *appletInterface, int x, int y)

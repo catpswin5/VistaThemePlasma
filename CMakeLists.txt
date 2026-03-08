@@ -14,12 +14,18 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(FeatureSummary)
-find_package(KF6Config)
-find_package(Plasma)
+
+find_package(KF6Config REQUIRED)
+find_package(Plasma REQUIRED)
+
+find_package(Qt6 REQUIRED COMPONENTS
+    Widgets Quick Core
+)
 
 add_subdirectory(plasma)
 if(NOT INSTALL_X11_COMPONENTS)
     add_subdirectory(misc)
+    add_subdirectory(libpositionmanager)
 endif()
 
 install()

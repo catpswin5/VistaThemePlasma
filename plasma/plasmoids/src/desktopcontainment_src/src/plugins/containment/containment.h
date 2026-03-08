@@ -1,7 +1,7 @@
 /*
  *   SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
  *   SPDX-FileCopyrightText: 2016 David Edmundson <davidedmundson@kde.org>
- *   SPDX-FileCopyrightText: 2025 catpswin56 <>
+ *   SPDX-FileCopyrightText: 2026 catpswin56 <catpswin5@proton.me>
  *
  *   SPDX-License-Identifier: GPL-2.0-or-later
  */
@@ -38,14 +38,17 @@ public:
      */
     Q_INVOKABLE void showPlasmoidMenu(QQuickItem *appletInterface, int x, int y);
 
-private:
-    QObject *m_layout = nullptr;
-
 Q_SIGNALS:
     void taskCreated(Plasma::Applet *applet, int x, int y);
     void appletDeletion(Plasma::Applet *applet);
 
     void layoutChanged(QObject *layout);
+
+    // emitted after the layout changes and all applets are added
+    void appletsAdded();
+
+private:
+    QObject *m_layout = nullptr;
 };
 
 #endif

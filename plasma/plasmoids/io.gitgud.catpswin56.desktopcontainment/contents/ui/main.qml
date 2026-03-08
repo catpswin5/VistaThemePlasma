@@ -17,9 +17,11 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasma5support as Plasma5Support
 
-import org.kde.plasma.private.containmentlayoutmanager 1.0 as ContainmentLayoutManager
+import org.kde.plasma.private.containmentlayoutmanager as ContainmentLayoutManager
 
 import io.gitgud.catpswin56.desktopcontainment.folder as Folder
+
+import vistathemeplasma.positionmanager
 
 import "code/FolderTools.js" as FolderTools
 
@@ -306,89 +308,20 @@ ContainmentItem {
             }
         } // folder view
 
-        Item {
+        Connections {
+            target: Plasmoid
+
+            function onAppletsAdded() { positionManager.ensurePositions(); console.log("hi"); }
+        }
+
+        PositionManager {
             id: positionManager
 
-            property var positions
+            container: appletsLayout
+            onRefreshed: Plasmoid.configuration.plasmoidPositions = JSON.stringify(positions);
 
-            Connections {
-                target: Plasmoid.corona
-
-                function onEditModeChanged() {
-                    if(!Plasmoid.corona.editMode) positionManager.savePositions()
-                }
-            }
-
-            function savePositions() {
-                for(var i = 0; i < appletsLayout.plasmoids.length; i++) {
-                    var item = appletsLayout.plasmoids[i];
-                    if((item?.id ?? "") !== "")
-                        setPosition(item);
-                }
-                save();
-            }
-
-            function setPosition(plasmoid) {
-                var position_object = positions.find((plasmoid_position) => plasmoid_position.index === plasmoid.index)
-
-                if(typeof position_object != "undefined") {
-                    position_object.x = plasmoid.x;
-                    position_object.y = plasmoid.y;
-                    position_object.width = plasmoid.width;
-                    position_object.height = plasmoid.height;
-                }
-                else {
-                    createPositionObject(plasmoid);
-                }
-            }
-
-            function createPositionObject(plasmoid) {
-                var position_object = {
-                    "index":plasmoid.index,
-                    "id":plasmoid.id,
-                    "x":plasmoid.x,
-                    "y":plasmoid.y,
-                    "width":plasmoid.width,
-                    "height":plasmoid.height
-                };
-                positions.push(position_object);
-                save();
-            }
-
-            function save() {
-                Plasmoid.configuration.plasmoidPositions = JSON.stringify(positions);
-                Plasmoid.configuration.writeConfig();
-            }
-
-            Connections {
-                target: appletsLayout
-
-                function onPlasmoidCreated(plasmoid: var) {
-                    var position_object = positionManager.positions.find((object) => {
-                        return object.index === plasmoid.index && object.id === plasmoid.id
-                    });
-
-                    if(typeof position_object != "undefined") {
-                        plasmoid.x = position_object.x;
-                        plasmoid.y = position_object.y;
-
-                        if(!plasmoid.id.includes("io.gitgud.catpswin56.gadgets")) {
-                            plasmoid.width = position_object.width;
-                            plasmoid.height = position_object.height;
-                        }
-                        else if(plasmoid.id == "io.gitgud.catpswin56.gadgets.notes") {
-                            if(plasmoid.applet.resizable) {
-                                plasmoid.width = position_object.width;
-                                plasmoid.height = position_object.height;
-                            }
-                        }
-
-                    } else positionManager.createPositionObject(plasmoid);
-                }
-            }
-
-            Component.onCompleted: positions = JSON.parse(Plasmoid.configuration.plasmoidPositions)
-        } // position manager
+            Component.onCompleted: positionManager.positions = JSON.parse(Plasmoid.configuration.plasmoidPositions);
+        }
 
         Item {
             id: appletsLayout
@@ -407,7 +340,7 @@ ContainmentItem {
                         }
                     }
 
-                    if(typeof plasmoid !== "undefined") {
+                    if(plasmoid) {
                         plasmoid.remove();
                         appletsLayout.deleteApplet(plasmoid);
                     }
@@ -418,7 +351,10 @@ ContainmentItem {
 
             property PlasmoidContainer plasmoid_aboveAll
             property list<PlasmoidContainer> plasmoids: []
+
             property bool isDragging: false
+            onIsDraggingChanged: if(!isDragging) positionManager.refresh();
+
             property alias positionManager: positionManager
 
             function deleteApplet(plasmoid: var) {
@@ -431,23 +367,19 @@ ContainmentItem {
                     plasmoids.splice(plasmoidIndex, 1);
                     for(var i = plasmoidIndex; i < plasmoids.length; i++) plasmoids[i].index--;
 
-                    // do the same thing here but in the positions list
-                    positionManager.positions.splice(plasmoidIndex, 1);
-                    console.log(positionManager.positions);
-                    for(var i = plasmoidIndex; i < positionManager.positions.length; i++) positionManager.positions[i].index--;
-                    positionManager.save();
-                    console.log(positionManager.positions);
+                    // refresh the positions JSON array
+                    positionManager.refresh();
                 }
             }
 
             function createApplet(applet: var, x: int, y: int) {
                 // FIXME TODO: this doesn't work, fix later
                 var createAtX;
-                if(typeof x == "undefined") createAtX = 0;
+                if(!x) createAtX = 0;
                 else createAtX = x;
 
                 var createAtY;
-                if(typeof y == "undefined") createAtY = 0;
+                if(!y) createAtY = 0;
                 else createAtY = y;
 
                 var component = Qt.createComponent("PlasmoidContainer.qml", appletsLayout);
@@ -461,9 +393,10 @@ ContainmentItem {
                     });
                     if(!plasmoid.isSidebar) plasmoids.push(plasmoid);
 
+                } else if(component.status == Component.Error) {
+                    console.log("desktop: Error creating plasmoid container:\n", component.errorString());
+
                 }
-                else if(component.status == Component.Error)
-                    console.log("vistadesktop: Error creating plasmoid container:\n", component.errorString());
 
             }
 
@@ -504,5 +437,7 @@ ContainmentItem {
     }
 
     // set the plasmoid layout after creation, so the C++ backend can add the applets
-    Component.onCompleted: Plasmoid.layout = appletsLayout;
+    Component.onCompleted: {
+        Plasmoid.layout = appletsLayout;
+    }
 }

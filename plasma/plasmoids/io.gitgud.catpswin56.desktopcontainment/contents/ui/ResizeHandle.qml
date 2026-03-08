@@ -36,6 +36,7 @@ Rectangle {
                 return Qt.SizeVerCursor;
         }
         onPressed: (event) => pressPoint = Qt.point(Math.round(event.x), Math.round(event.y));
+        onReleased: parentObject.positionManager.refresh();
         onPressedChanged: {
             if(!pressed) {
                 pressPoint = Qt.point(0, 0);
