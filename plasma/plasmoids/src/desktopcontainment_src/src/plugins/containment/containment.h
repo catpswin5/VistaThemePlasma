@@ -25,7 +25,7 @@ public:
     explicit DesktopContainment(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
     // Creates an applet
-    Q_INVOKABLE void newTask(const QString &task, const int &x, const int &y);
+    Q_INVOKABLE void newTask(const QString &task);
 
     // cleans all instances of a given applet
     Q_INVOKABLE void cleanupTask(const QString &task);

@@ -10,7 +10,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 
 Item {
-    id: plasmoid_root
+    id: containerRoot
 
     required property int index
 
@@ -42,7 +42,7 @@ Item {
     onAppletChanged: {
         if(applet) {
             if(isSidebar) {
-                plasmoid_root.visible = false;
+                containerRoot.visible = false;
                 applet.isVTPcontainment = true;
                 applet.desktopContainment = root;
                 applet.appletsLayout = appletsLayout;
@@ -55,7 +55,7 @@ Item {
             }
 
             applet.Plasmoid.destroyedChanged.connect(function() {
-               if(applet.Plasmoid.destroyedChanged.destroyed) plasmoid_root.remove();
+               if(applet.Plasmoid.destroyedChanged.destroyed) containerRoot.remove();
             });
 
             applet.parent = representation_container;
@@ -63,8 +63,9 @@ Item {
             applet.visible = true;
 
             updateSizes();
+        } else {
+            containerRoot.remove();
         }
-        else plasmoid_root.remove();
     }
 
     function remove() {
@@ -73,56 +74,63 @@ Item {
     }
 
     function updateSizes() {
-        if(applet.Layout.minimumWidth) plasmoid_root.minimumWidth = Qt.binding(() => applet?.Layout.minimumWidth);
-        if(applet.Layout.minimumHeight) plasmoid_root.minimumHeight = Qt.binding(() => applet?.Layout.minimumHeight);
+        if(applet.Layout.minimumWidth) containerRoot.minimumWidth = Qt.binding(() => applet?.Layout.minimumWidth);
+        if(applet.Layout.minimumHeight) containerRoot.minimumHeight = Qt.binding(() => applet?.Layout.minimumHeight);
 
-        if(plasmoid_root.minimumWidth <= 1) plasmoid_root.minimumWidth = Kirigami.Units.gridUnit*8;
-        if(plasmoid_root.minimumHeight <= 1) plasmoid_root.minimumHeight = Kirigami.Units.gridUnit*8;
+        if(containerRoot.minimumWidth <= 1) containerRoot.minimumWidth = Kirigami.Units.gridUnit*8;
+        if(containerRoot.minimumHeight <= 1) containerRoot.minimumHeight = Kirigami.Units.gridUnit*8;
 
-        if(applet.Layout.preferredWidth >= plasmoid_root.minimumWidth) plasmoid_root.preferredWidth = Qt.binding(() => applet?.Layout.preferredWidth);
-        if(applet.Layout.preferredHeight >= plasmoid_root.minimumHeight) plasmoid_root.preferredHeight = Qt.binding(() => applet?.Layout.preferredHeight);
+        if(applet.Layout.preferredWidth >= containerRoot.minimumWidth) containerRoot.preferredWidth = Qt.binding(() => applet?.Layout.preferredWidth);
+        if(applet.Layout.preferredHeight >= containerRoot.minimumHeight) containerRoot.preferredHeight = Qt.binding(() => applet?.Layout.preferredHeight);
 
         if(isGadget && !gadgetResizable) {
-            plasmoid_root.width = Qt.binding(() => minimumWidth);
-            plasmoid_root.height = Qt.binding(() => minimumHeight);
+            containerRoot.width = Qt.binding(() => minimumWidth);
+            containerRoot.height = Qt.binding(() => minimumHeight);
         } else {
-            plasmoid_root.width = Qt.binding(() => implicitWidth);
-            plasmoid_root.height = Qt.binding(() => implicitHeight);
+            containerRoot.width = Qt.binding(() => implicitWidth);
+            containerRoot.height = Qt.binding(() => implicitHeight);
         }
     }
 
     function correctPositions() {
-        plasmoid_root.checkingPosition = true;
-
+        containerRoot.checkingPosition = true;
 
         if((parent.width > 0 || parent.height > 0) && (parent.x >= 0 || parent.y >= 0)) {
             // ensure that the plasmoid stays within layout bounds
-            if(plasmoid_root.x + plasmoid_root.width > parent.x + parent.width)
-                plasmoid_root.x = (parent.x + parent.width) - plasmoid_root.width;
-            if(plasmoid_root.y + plasmoid_root.height > parent.y + parent.height)
-                plasmoid_root.y = (parent.y + parent.height) - plasmoid_root.height;
+            if(containerRoot.x + containerRoot.width > parent.x + parent.width) {
+                containerRoot.x = (parent.x + parent.width) - containerRoot.width;
+            }
+            if(containerRoot.y + containerRoot.height > parent.y + parent.height) {
+                containerRoot.y = (parent.y + parent.height) - containerRoot.height;
+            }
 
-            if(plasmoid_root.x < parent.x)
-                plasmoid_root.x = parent.x;
-            if(plasmoid_root.y < parent.y)
-                plasmoid_root.y = parent.y;
+            if(containerRoot.x < parent.x) {
+                containerRoot.x = parent.x;
+            }
+            if(containerRoot.y < parent.y) {
+                containerRoot.y = parent.y;
+            }
 
         } else {
             waiter.start(); // wait for sizes or positions to be correct
             return;
         }
 
-        plasmoid_root.x = Math.floor(plasmoid_root.x);
-        plasmoid_root.y = Math.floor(plasmoid_root.y);
+        containerRoot.x = Math.floor(containerRoot.x);
+        containerRoot.y = Math.floor(containerRoot.y);
 
-        plasmoid_root.checkingPosition = false;
+        containerRoot.checkingPosition = false;
     }
 
     onXChanged: {
-        if(!checkingPosition) correctPositions();
+        if(!checkingPosition) {
+            correctPositions();
+        }
     }
     onYChanged: {
-        if(!checkingPosition) correctPositions();
+        if(!checkingPosition) {
+            correctPositions();
+        }
     }
 
     readonly property int implicitWidth: (preferredWidth < minimumWidth ? minimumWidth : preferredWidth)
@@ -134,11 +142,15 @@ Item {
 
     width: implicitWidth
     onWidthChanged: {
-        if(!checkingPosition) correctPositions();
+        if(!checkingPosition) {
+            correctPositions();
+        }
     }
     height: implicitHeight
     onHeightChanged: {
-        if(!checkingPosition) correctPositions();
+        if(!checkingPosition) {
+            correctPositions();
+        }
     }
 
     Drag.active: dragHndMa.held
@@ -150,7 +162,7 @@ Item {
         if(parent.plasmoid_aboveAll)
             parent.plasmoid_aboveAll.z = 0;
 
-        parent.plasmoid_aboveAll = plasmoid_root;
+        parent.plasmoid_aboveAll = containerRoot;
         parent.plasmoid_aboveAll.z = 1;
     }
 
@@ -159,17 +171,17 @@ Item {
 
         interval: 100
         repeat: false
-        onTriggered: plasmoid_root.correctPositions();
+        onTriggered: containerRoot.correctPositions();
     }
 
     HoverHandler {
         id: plasmoidMa
         blocking: true
-        parent: plasmoid_root
+        parent: containerRoot
         margin: 1
     }
     TapHandler {
-        onPressedChanged: plasmoid_root.setAbove();
+        onPressedChanged: containerRoot.setAbove();
     }
 
     Item {
@@ -199,13 +211,13 @@ Item {
             objectName: "io.gitgud.catpswin56.desktopcontainment.representation_container"
 
             anchors.fill: plasmoidBg
-            anchors.margins: !plasmoid_root.isGadget ? 5 : 0
+            anchors.margins: !containerRoot.isGadget ? 5 : 0
 
             Kirigami.Theme.inherit: false
             Kirigami.Theme.colorSet: (backgroundControl.bgEnabled || !backgroundControl.canConfigureBg) || isGadget
                                      ? Kirigami.Theme.View : Kirigami.Theme.Complementary
 
-            clip: !plasmoid_root.isGadget
+            clip: !containerRoot.isGadget
 
             Loader {
                 id: shadow
@@ -265,7 +277,7 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
 
-            onHeightChanged: if(plasmoid_root.height < height) plasmoid_root.height += height;
+            onHeightChanged: if(containerRoot.height < height) containerRoot.height += height;
 
             spacing: 0
 
@@ -280,17 +292,18 @@ Item {
 
                 pixmap: Qt.resolvedUrl("pngs/gadget-remove.png")
                 count: 3
-                onClicked: plasmoid_root.remove();
+                onClicked: containerRoot.remove();
             }
 
             SegmentedControl {
                 id: configure
 
-                property var action: plasmoid_root.applet?.plasmoid.internalAction("configure")
+                property var action: containerRoot.applet?.plasmoid.internalAction("configure")
 
                 pixmap: Qt.resolvedUrl("pngs/gadget-configure.png")
                 count: 3
-                onClicked: action.trigger()
+                onClicked: action.trigger();
+
                 visible: action != null
             }
 
@@ -303,9 +316,13 @@ Item {
                 pixmap: Qt.resolvedUrl("pngs/gadget-background-" + (bgEnabled ? "disabled" : "enabled") + ".png")
                 count: 3
                 onClicked: {
-                    if(bgEnabled) applet.plasmoid.userBackgroundHints = PlasmaCore.Types.ShadowBackground;
-                    else applet.plasmoid.userBackgroundHints = applet.plasmoid.backgroundHints;
+                    if(bgEnabled) {
+                        applet.plasmoid.userBackgroundHints = PlasmaCore.Types.ShadowBackground;
+                    } else {
+                        applet.plasmoid.userBackgroundHints = applet.plasmoid.backgroundHints;
+                    }
                 }
+
                 visible: canConfigureBg
             }
 
@@ -330,21 +347,21 @@ Item {
 
                     drag.smoothed: false
                     drag.threshold: 0
-                    drag.target: held ? plasmoid_root : undefined
+                    drag.target: held ? containerRoot : undefined
                     drag.axis: Drag.XAndYAxis
 
                     onReleased: event => {
                         if(held) held = false;
-                        plasmoid_root.parent.isDragging = false;
+                        containerRoot.parent.isDragging = false;
                     }
                     onPressed: event => {
-                        plasmoid_root.setAbove();
-                        dragHndMa.beginDrag = Qt.point(plasmoid_root.x, plasmoid_root.y);
+                        containerRoot.setAbove();
+                        dragHndMa.beginDrag = Qt.point(containerRoot.x, containerRoot.y);
                         dragThreshold = Qt.point(mouseX, mouseY);
-                        plasmoid_root.parent.isDragging = true;
+                        containerRoot.parent.isDragging = true;
                     }
                     onExited: if((dragThreshold.x !== -1 && dragThreshold.y !== -1)) held = true;
-                    onPositionChanged: currentDrag = Qt.point(plasmoid_root.x, plasmoid_root.y);
+                    onPositionChanged: currentDrag = Qt.point(containerRoot.x, containerRoot.y);
                 }
             }
         }
@@ -413,6 +430,5 @@ Item {
 
     Component.onCompleted: {
         correctPositions();
-        if(!isSidebar) parent.plasmoidCreated(plasmoid_root);
     }
 }

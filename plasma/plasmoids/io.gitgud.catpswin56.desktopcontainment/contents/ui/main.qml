@@ -264,8 +264,11 @@ ContainmentItem {
                     event.ignore();
                     return;
                 }
-                console.log(event.x, event.y, mapToItem(appletsLayout, event.x, event.y).x,  mapToItem(appletsLayout, event.x, event.y).y)
-                Plasmoid.newTask(plasmoidId, mapToItem(appletsLayout, event.x, event.y).x, mapToItem(appletsLayout, event.x, event.y).y);
+
+                appletsLayout.pendingX = event.x;
+                appletsLayout.pendingY = event.y;
+
+                Plasmoid.newTask(plasmoidId);
             }
         }
 
@@ -311,7 +314,7 @@ ContainmentItem {
         Connections {
             target: Plasmoid
 
-            function onAppletsAdded() { positionManager.ensurePositions(); console.log("hi"); }
+            function onAppletsAdded() { positionManager.ensurePositions(); }
         }
 
         PositionManager {
@@ -325,6 +328,48 @@ ContainmentItem {
 
         Item {
             id: appletsLayout
+
+            property int pendingX: 0
+            property int pendingY: 0
+
+            property PlasmoidContainer plasmoid_aboveAll
+            property list<PlasmoidContainer> plasmoids: []
+
+            // refresh the JSON array once dragging is finished
+            property bool isDragging: false
+            onIsDraggingChanged: if(!isDragging) positionManager.refresh();
+
+            property alias positionManager: positionManager
+
+            anchors.fill: parent
+
+            function appletDeleted() {
+                positionManager.refresh();
+            }
+
+            function createApplet(applet: var, x: int, y: int) {
+                var component = Qt.createComponent("PlasmoidContainer.qml", appletsLayout);
+
+                if(component.status == Component.Ready) {
+                    var plasmoid = component.createObject(appletsLayout, {
+                        x: pendingX,
+                        y: pendingY,
+                        index: plasmoids.length,
+                        applet: root.itemFor(applet)
+                    });
+
+                    if(!plasmoid.isSidebar) {
+                        plasmoids.push(plasmoid);
+                    }
+
+                    pendingX = 0;
+                    pendingY = 0;
+
+                } else if(component.status == Component.Error) {
+                    console.log("desktop: Error creating plasmoid container:\n", component.errorString());
+
+                }
+            }
 
             Connections {
                 target: Containment
@@ -342,66 +387,10 @@ ContainmentItem {
 
                     if(plasmoid) {
                         plasmoid.remove();
-                        appletsLayout.deleteApplet(plasmoid);
                     }
                 }
             }
-
-            signal plasmoidCreated(var plasmoid)
-
-            property PlasmoidContainer plasmoid_aboveAll
-            property list<PlasmoidContainer> plasmoids: []
-
-            property bool isDragging: false
-            onIsDraggingChanged: if(!isDragging) positionManager.refresh();
-
-            property alias positionManager: positionManager
-
-            function deleteApplet(plasmoid: var) {
-                if(plasmoid) {
-                    var plasmoidIndex = plasmoid.index;
-
-                    plasmoid.remove();
-
-                    // remove the plasmoid from the plasmoids list and reorder the others
-                    plasmoids.splice(plasmoidIndex, 1);
-                    for(var i = plasmoidIndex; i < plasmoids.length; i++) plasmoids[i].index--;
-
-                    // refresh the positions JSON array
-                    positionManager.refresh();
-                }
-            }
-
-            function createApplet(applet: var, x: int, y: int) {
-                // FIXME TODO: this doesn't work, fix later
-                var createAtX;
-                if(!x) createAtX = 0;
-                else createAtX = x;
-
-                var createAtY;
-                if(!y) createAtY = 0;
-                else createAtY = y;
-
-                var component = Qt.createComponent("PlasmoidContainer.qml", appletsLayout);
-
-                if(component.status == Component.Ready) {
-                    var plasmoid = component.createObject(appletsLayout, {
-                        x: createAtX,
-                        y: createAtY,
-                        index: plasmoids.length,
-                        applet: root.itemFor(applet)
-                    });
-                    if(!plasmoid.isSidebar) plasmoids.push(plasmoid);
-
-                } else if(component.status == Component.Error) {
-                    console.log("desktop: Error creating plasmoid container:\n", component.errorString());
-
-                }
-
-            }
-
-            anchors.fill: parent
-        } // plasmoid layout
+        }
 
         Plasma5Support.DataSource {
             id: execEngine

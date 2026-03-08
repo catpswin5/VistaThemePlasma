@@ -22,13 +22,9 @@ DesktopContainment::DesktopContainment(QObject *parent, const KPluginMetaData &d
     QObject::connect(this, &Plasma::Containment::appletAboutToBeAdded, this, [=](Plasma::Applet *applet){
         if(m_layout) QMetaObject::invokeMethod(m_layout, "createApplet", Q_ARG(QVariant, QVariant::fromValue(applet)), Q_ARG(int, 0), Q_ARG(int, 0));
     });
-
-    QObject::connect(this, &Plasma::Containment::appletAboutToBeRemoved, this, [=](Plasma::Applet *applet){
-        if(m_layout) QMetaObject::invokeMethod(m_layout, "deleteApplet", Q_ARG(QVariant, QVariant::fromValue(applet)));
-    });
 }
 
-void DesktopContainment::newTask(const QString &task, const int &x = 0, const int &y = 0)
+void DesktopContainment::newTask(const QString &task)
 {
     Plasma::Applet *createdApplet = createApplet(task, QVariantList());
 }
