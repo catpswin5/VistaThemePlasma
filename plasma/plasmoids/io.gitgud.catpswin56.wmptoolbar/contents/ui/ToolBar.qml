@@ -289,11 +289,11 @@ Item {
                     else return "";
                 }
 
-                Layout.preferredWidth: 16
+                Layout.preferredWidth: 15
                 Layout.preferredHeight: 17
 
                 source: "png/controls" + buttonState + ".png"
-                sourceClipRect: Qt.rect(122, 4, 16, 17)
+                sourceClipRect: Qt.rect(122, 4, 15, 17)
 
                 MouseArea {
                     id: volMa
@@ -322,11 +322,11 @@ Item {
                     return "";
                 }
 
-                Layout.preferredWidth: 10
+                Layout.preferredWidth: 11
                 Layout.preferredHeight: 17
 
                 source: "png/controls" + buttonState + ".png"
-                sourceClipRect: Qt.rect(138, 4, 10, 17)
+                sourceClipRect: Qt.rect(137, 4, 11, 17)
 
                 MouseArea {
                     id: volPopupMa
