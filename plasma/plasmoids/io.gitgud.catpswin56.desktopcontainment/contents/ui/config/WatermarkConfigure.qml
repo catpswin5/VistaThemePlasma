@@ -19,7 +19,7 @@ Window {
     onDone: destroy();
 
     minimumWidth: width
-    minimumHeight: height
+    minimumHeight: column.height
     width: 418
     height: column.height
     maximumWidth: width
@@ -28,6 +28,8 @@ Window {
     title: i18n("Desktop")
 
     FontMetrics { id: systemFont; font: color.font }
+
+    visible: height > 0
 
     ColumnLayout {
         id: column
@@ -48,10 +50,13 @@ Window {
             RowLayout {
                 id: row
 
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.margins: 12
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+
+                    margins: 12
+                }
 
                 spacing: 8
 
