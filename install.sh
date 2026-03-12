@@ -101,6 +101,16 @@ then
 fi
 cd "$CUR_DIR/repos"
 
+# Aeroshell SDDM KCM
+git clone https://gitgud.io/aeroshell/aeroshell-sddm-kcm.git aeroshell-sddm-kcm
+cd aeroshell-sddm-kcm
+git pull
+cmake $USE_NINJA -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
+cmake --build build || exit 1
+$SU_CMD cmake --install build || exit 1
+cp build/install_manifest.txt "$CUR_DIR/manifest/aeroshell-sddm-kcm_install_manifest.txt"
+cd "$CUR_DIR/repos"
+
 # Vistathemeplasma icons
 git clone https://gitgud.io/aeroshell/vtp/vistathemeplasma-icons vistathemeplasma-icons
 cd vistathemeplasma-icons

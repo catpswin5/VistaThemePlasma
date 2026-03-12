@@ -423,9 +423,7 @@ Item {
             enabled: currentPage == 0 && !unlockingFix.running
             //enabled: !authenticator.busy
             onPasswordResult: (password) => {
-                console.log("password result signal received")
                 currentPage = 1;
-                console.log("responding with:", password)
                 authenticator.respond(password);
             }
 

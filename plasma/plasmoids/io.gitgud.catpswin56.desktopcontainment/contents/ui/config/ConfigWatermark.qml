@@ -124,7 +124,6 @@ Item {
                 horizontalAlignment: watermark.horizontalAlignment
             });
             watermarkConfigure.done.connect(watermarkManager.setWatermark);
-            watermarkConfigure.show();
         }
 
         function moveDown(index: int) {
