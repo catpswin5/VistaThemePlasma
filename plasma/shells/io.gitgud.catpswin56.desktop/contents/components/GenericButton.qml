@@ -1,32 +1,32 @@
-import QtQuick 2.4
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.1
-import Qt5Compat.GraphicalEffects
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.extras as PlasmaExtras
 
 Control {
     id: genericButton
-    signal clicked
 
-    property string text: "";
-    property var iconSource: "";
-    property int iconSize: Kirigami.Units.iconSizes.smallMedium;
-    property alias label: btnLabel
+    signal clicked()
+
+    property string text: ""
+    property string iconSource: ""
+    property string iconImage: ""
+    property int    iconSize: Kirigami.Units.iconSizes.smallMedium
+    property alias  label: btnLabel
 
     implicitWidth: {
-        if(text !== "") return label.implicitWidth + Kirigami.Units.largeSpacing*2;
-        else return iconSize + Kirigami.Units.largeSpacing;
+        if(text !== "") return label.implicitWidth + Kirigami.Units.largeSpacing * 2;
+        else return iconSize + ((Kirigami.Units.largeSpacing * 2) - 2);
     }
-
     implicitHeight: {
-        if(text !== "") return label.implicitHeight + Kirigami.Units.largeSpacing;
-        else return iconSize + Kirigami.Units.largeSpacing;
+        if(text !== "") return label.implicitHeight + (Kirigami.Units.largeSpacing - 1);
+        else return iconSize + Kirigami.Units.smallSpacing;
     }
 
     Keys.priority: Keys.AfterItem
@@ -38,50 +38,71 @@ Control {
 
     KSvg.FrameSvgItem {
         id: texture
-        z: -1
+
         anchors.fill: parent
+
         imagePath: Qt.resolvedUrl("../images/button.svg");
         prefix: {
             var result = "";
+
             if(genericButton.focus) result = "focus-";
             if(buttonMA.containsPress) result = "pressed";
             else if(buttonMA.containsMouse) result += "hover";
             else result += "normal";
+
             return result;
         }
     }
-    MouseArea {
-        id: buttonMA
-        z: 99
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton;
-        onClicked: {
-            genericButton.clicked();
-        }
-    }
+
     Kirigami.Icon {
         id: btnIcon
-        z: 0
+
         anchors.centerIn: genericButton
+
         width: genericButton.iconSize
         height: width
-        animated: false
-        //usesPlasmaTheme: false
+
         source: genericButton.iconSource
+
         visible: genericButton.iconSource !== ""
     }
+
+    Image {
+        id: btnImage
+
+        anchors.centerIn: genericButton
+
+        width: genericButton.iconSize
+        height: width
+
+        source: genericButton.iconImage
+
+        visible: genericButton.iconImage !== ""
+    }
+
     PlasmaComponents.Label {
         id: btnLabel
-        z: 0
+
         anchors.fill: parent
+
         text: genericButton.text
-        visible: genericButton.text !== ""
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
         renderType: Text.NativeRendering
         font.hintingPreference: Font.PreferFullHinting
         font.kerning: false
+
+        visible: genericButton.text !== ""
+    }
+
+    MouseArea {
+        id: buttonMA
+
+        anchors.fill: parent
+
+        hoverEnabled: true
+        acceptedButtons: Qt.LeftButton
+        onClicked: genericButton.clicked();
     }
 }

@@ -4,42 +4,39 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.15
-
-import Qt5Compat.GraphicalEffects
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
 
 RowLayout {
     id: root
 
-    property string statusText
-    property int spinnum: 0
-    property bool speen
+    property alias statusText: welcomeLbl.text
+    property int   spinnum: 0
+    property bool  speen
 
     spacing: 8
-    Image {
-        id: loadingspinner
-        source: "../images/100/spin"+root.spinnum+".png"
-    }
-    Label {
-        id: welcomeLbl
-        z: 1
-        text: root.statusText
-        color: "#FFFFFF"
-        font.pointSize: 18
-        renderType: Text.NativeRendering
-        font.hintingPreference: Font.PreferFullHinting
-        font.kerning: false
-    }
 
     Timer {
         id: spinner
         running: root.speen
         repeat: true
-        onTriggered: {
-            root.spinnum = (root.spinnum + 1) % 17;
-        }
+        onTriggered: root.spinnum = (root.spinnum + 1) % 17;
         interval: 53
+    }
+
+    Image {
+        id: loadingspinner
+        source: "../images/spinner/100/spin" + root.spinnum + ".png"
+    }
+
+    Label {
+        id: welcomeLbl
+
+        color: "#FFFFFF"
+        font.pointSize: 18
+        renderType: Text.NativeRendering
+        font.hintingPreference: Font.PreferFullHinting
+        font.kerning: false
     }
 }
