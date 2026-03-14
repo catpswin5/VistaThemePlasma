@@ -413,7 +413,9 @@ Rectangle {
 
         Window {
             id: messageDialog
+
             property var item
+
             modality: Qt.WindowModal
             title: i18nd("plasma_shell_org.kde.plasma.desktop", "Confirm changes")
             minimumWidth: contents.implicitWidth
@@ -421,9 +423,7 @@ Rectangle {
             minimumHeight: contents.implicitHeight
             maximumHeight: minimumHeight
             flags: Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint | Qt.Dialog
-            onClosing: {
 
-            }
             Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -535,9 +535,18 @@ Rectangle {
         }
 
         footer: QQC2.Pane {
-
             padding: Kirigami.Units.largeSpacing
 
+            background: Rectangle {
+                color: "#f0f0f0"
+                Rectangle {
+                    height: 1
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    color: "#dfdfdf"
+                }
+            }
             contentItem: RowLayout {
                 id: buttonsRow
                 spacing: Kirigami.Units.smallSpacing
