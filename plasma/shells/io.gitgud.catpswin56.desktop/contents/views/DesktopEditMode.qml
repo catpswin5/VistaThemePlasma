@@ -18,6 +18,8 @@ import org.kde.kcmutils as KCM
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PC
 
+import aeroshell.utils as AeroShellUtils
+
 import "../components"
 
 Item {
@@ -35,11 +37,13 @@ Item {
         anchors.fill: parent
     }
 
+    AeroShellUtils.SDDM { id: sddm }
+
     Image {
         id: bg
         anchors.fill: parent
         fillMode: Image.Stretch
-        source: Qt.resolvedUrl("/usr/share/sddm/themes/vista-theme-mod/background")
+        source: Qt.resolvedUrl("/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background")
     }
 
     Rectangle {

@@ -27,6 +27,8 @@ import QtMultimedia
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasma5support as Plasma5Support
 
+import aeroshell.utils as AeroShellUtils
+
 import "../components"
 
 Item {
@@ -48,11 +50,13 @@ Item {
 
     property int framenumber: 1
 
+    AeroShellUtils.SDDM { id: sddm }
+
     Image {
         id: bg
         anchors.fill: parent
         fillMode: Image.Stretch
-        source: Qt.resolvedUrl("/usr/share/sddm/themes/vista-theme-mod/background")
+        source: Qt.resolvedUrl("/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background")
     }
 
     Status {

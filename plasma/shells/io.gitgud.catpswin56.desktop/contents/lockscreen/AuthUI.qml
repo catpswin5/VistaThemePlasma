@@ -19,6 +19,8 @@ import org.kde.kirigamiaddons.sounds
 import org.kde.plasma.workspace.components as PW
 import org.kde.plasma.plasma5support as Plasma5Support
 
+import aeroshell.utils as AeroShellUtils
+
 import "../components" as Components
 
 Item {
@@ -181,10 +183,12 @@ Item {
         ScriptAction { script: quitDelay.start(); }
     }
 
+    AeroShellUtils.SDDM { id: sddm }
+
     Image {
         id: wallpaper
         anchors.fill: parent
-        source: "/usr/share/sddm/themes/vista-theme-mod/background"
+        source: "/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background"
     }
 
     QQC2.StackView {

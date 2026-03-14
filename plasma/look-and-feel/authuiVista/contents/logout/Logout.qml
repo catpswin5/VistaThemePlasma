@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 
+import Qt5Compat.GraphicalEffects
+
 import org.kde.kirigami as Kirigami
 import org.kde.ksvg as KSvg
 import org.kde.kcmutils as KCMUtils
@@ -10,7 +12,7 @@ import org.kde.plasma.plasma5support as Plasma5Support
 
 import org.kde.plasma.private.sessions
 
-import Qt5Compat.GraphicalEffects
+import aeroshell.utils as AeroShellUtils
 
 Image {
     id: root
@@ -25,12 +27,12 @@ Image {
     signal cancelRequested()
     signal lockScreenRequested()
 
-    SessionManagement {
-        id: sessMan
-    }
+    SessionManagement { id: sessMan }
+
+    AeroShellUtils.SDDM { id: sddm }
 
     fillMode: Image.PreserveAspectCrop
-    source: Qt.resolvedUrl("/usr/share/sddm/themes/vista-theme-mod/background")
+    source: Qt.resolvedUrl("/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background")
 
     Plasma5Support.DataSource {
         id: executable
