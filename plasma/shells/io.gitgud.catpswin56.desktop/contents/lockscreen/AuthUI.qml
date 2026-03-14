@@ -191,291 +191,301 @@ Item {
         source: "/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background"
     }
 
-    QQC2.StackView {
-        id: pageView
+    Item {
+        id: uiRoot
 
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
 
-        initialItem: mainPage
-        replaceEnter: Transition {}
-        replaceExit: Transition {}
+        QQC2.StackView {
+            id: pageView
 
-        Item {
-            id: mainPage
+            anchors.fill: parent
 
-            visible: pageView.currentItem == mainPage
+            initialItem: mainPage
+            replaceEnter: Transition {}
+            replaceExit: Transition {}
 
-            ColumnLayout {
-                id: loginColumn
+            Item {
+                id: mainPage
 
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: Math.round(bigSpaceForNoReason.height / 2)
-
-                spacing: 0
-
-                PFPContainer {
-                    Layout.alignment: Qt.AlignHCenter
-                    avatarPath: kscreenlocker_userImage
-                }
-
-                CorrectedLabel {
-                    id: usernameDelegate
-
-                    Layout.alignment: Qt.AlignHCenter
-
-                    font.pointSize: 18
-                    text: kscreenlocker_userName
-                    color: "white"
-                }
-
-                CorrectedLabel {
-                    Layout.alignment: Qt.AlignHCenter
-                    color: "white"
-                    text: i18nd("kscreenlocker_greet", "Locked")
-                }
-
-                Item { implicitHeight: Kirigami.Units.smallSpacing - 1 }
-
-                RowLayout {
-                    Layout.alignment: Qt.AlignHCenter
-
-                    spacing: Kirigami.Units.smallSpacing
-
-                    Item { implicitWidth: login.width }
-
-                    QQC2.TextField {
-                        id: password
-
-                        Layout.alignment: Qt.AlignHCenter
-
-                        implicitWidth: 225
-
-                        enabled: loginMa.enabled
-                        font.pointSize: 9
-                        text: PasswordSync.password
-                        padding: 4
-                        placeholderText: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Password")
-                        echoMode: TextInput.Password
-                        inputMethodHints: Qt.ImhHiddenText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-                        background: BorderImage {
-                            anchors.fill: parent
-
-                            border {
-                                left: 4
-                                right: 4
-                                top: 4
-                                bottom: 4
-                            }
-                            source: {
-                                if(password.focus && password.enabled) return "../images/textbox/focus.png";
-                                else if(password.hovered && password.enabled) return "../images/textbox/hover.png";
-                                else if(password.enabled) return "../images/textbox/normal.png";
-                                else return "../images/textbox/disabled.png";
-                            }
-                        }
-
-                        Keys.onEnterPressed: root.beginAuth();
-                        Keys.onReturnPressed: root.beginAuth();
-                        Keys.onEscapePressed: {
-                            password.text = ""
-                            password.text = Qt.binding(() => PasswordSync.password)
-                        }
-
-                        Binding {
-                            target: PasswordSync
-                            property: "password"
-                            value: password.text
-                        }
-                    }
-
-                    Image {
-                        id: login
-
-                        activeFocusOnTab: true
-
-                        source: {
-                            if(loginMa.pressed && loginMa.enabled) return "../images/login-pressed.png";
-                            else if(loginMa.containsMouse && loginMa.enabled) return "../images/login-hover.png";
-                            else return "../images/login-normal.png";
-                        }
-
-                        opacity: loginMa.enabled ? 1.0 : 0.5
-
-                        MouseArea {
-                            id: loginMa
-
-                            anchors.fill: parent
-
-                            hoverEnabled: true
-                            enabled: !authenticator.busy
-                            onClicked: root.beginAuth();
-                        }
-                    }
-                }
+                visible: pageView.currentItem == mainPage
 
                 ColumnLayout {
-                    id: bigSpaceForNoReason
+                    id: loginColumn
 
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 61
+                    anchors.centerIn: parent
+                    anchors.verticalCenterOffset: Math.round(bigSpaceForNoReason.height / 2)
 
-                    InfoLabel {
-                        Layout.fillWidth: true
+                    spacing: 0
 
-                        text: i18nd("kscreenlocker_greet", "Caps Lock is on");
-                        icon.source: "dialog-warning"
-                    }
-
-                    InfoLabel {
-                        Layout.fillWidth: true
-
-                        text: i18nd("kscreenlocker_greet", "(or place your fingerprint on the reader)")
-                        icon.source: "dialog-information"
-
-                        visible: authenticator.authenticatorTypes & ScreenLocker.Authenticator.Fingerprint
-                    }
-                    InfoLabel {
-                        Layout.fillWidth: true
-
-                        text: i18nd("kscreenlocker_greet", "(or use your smartcard)")
-                        icon.source: "dialog-information"
-
-                        visible: authenticator.authenticatorTypes & ScreenLocker.Authenticator.Smartcard
-                    }
-
-                    Item { Layout.fillHeight: true }
-                }
-
-                Components.GenericButton {
-                    id: switchUser
-
-                    Layout.alignment: Qt.AlignHCenter
-
-                    implicitWidth: 108
-                    implicitHeight: 30
-
-                    focusPolicy: Qt.TabFocus
-                    text: i18nd("kscreenlocker_greet", "Switch User")
-                    label.font.pointSize: 11
-
-                    onClicked: root.switchUserClicked()
-                }
-            }
-        }
-
-        Item {
-            id: welcomePage
-
-            visible: pageView.currentItem == welcomePage
-
-            Components.Status {
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: -36
-
-                statusText: i18nd("okular", "Welcome")
-                speen: welcomePage.visible
-            }
-        }
-
-        Item {
-            id: statusPage
-
-            visible: pageView.currentItem == statusPage
-            onVisibleChanged: k.forceActiveFocus();
-
-            ColumnLayout {
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: Math.round(loginColumn.height / 2)
-
-                spacing: 40
-
-                RowLayout {
-                    Kirigami.Icon {
-                        implicitHeight: 32
-                        implicitWidth: 32
-
-                        source: root.notificationIcon
+                    PFPContainer {
+                        Layout.alignment: Qt.AlignHCenter
+                        avatarPath: kscreenlocker_userImage
                     }
 
                     CorrectedLabel {
-                        Layout.alignment: Qt.AlignVCenter
+                        id: usernameDelegate
+
+                        Layout.alignment: Qt.AlignHCenter
+
+                        font.pointSize: 18
+                        text: kscreenlocker_userName
                         color: "white"
-                        text: root.notification
+                    }
+
+                    CorrectedLabel {
+                        Layout.alignment: Qt.AlignHCenter
+                        color: "white"
+                        text: i18nd("kscreenlocker_greet", "Locked")
+                    }
+
+                    Item { implicitHeight: Kirigami.Units.smallSpacing - 1 }
+
+                    RowLayout {
+                        Layout.alignment: Qt.AlignHCenter
+
+                        spacing: Kirigami.Units.smallSpacing
+
+                        Item { implicitWidth: login.width }
+
+                        QQC2.TextField {
+                            id: password
+
+                            Layout.alignment: Qt.AlignHCenter
+
+                            implicitWidth: 225
+
+                            enabled: loginMa.enabled
+                            font.pointSize: 9
+                            text: PasswordSync.password
+                            padding: 4
+                            placeholderText: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Password")
+                            echoMode: TextInput.Password
+                            inputMethodHints: Qt.ImhHiddenText | Qt.ImhSensitiveData | Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
+                            background: BorderImage {
+                                anchors.fill: parent
+
+                                border {
+                                    left: 4
+                                    right: 4
+                                    top: 4
+                                    bottom: 4
+                                }
+                                source: {
+                                    if(password.focus && password.enabled) return "../images/textbox/focus.png";
+                                    else if(password.hovered && password.enabled) return "../images/textbox/hover.png";
+                                    else if(password.enabled) return "../images/textbox/normal.png";
+                                    else return "../images/textbox/disabled.png";
+                                }
+                            }
+
+                            Keys.onEnterPressed: root.beginAuth();
+                            Keys.onReturnPressed: root.beginAuth();
+                            Keys.onEscapePressed: {
+                                password.text = ""
+                                password.text = Qt.binding(() => PasswordSync.password)
+                            }
+
+                            Binding {
+                                target: PasswordSync
+                                property: "password"
+                                value: password.text
+                            }
+                        }
+
+                        Image {
+                            id: login
+
+                            activeFocusOnTab: true
+
+                            source: {
+                                if(loginMa.pressed && loginMa.enabled) return "../images/login-pressed.png";
+                                else if(loginMa.containsMouse && loginMa.enabled) return "../images/login-hover.png";
+                                else return "../images/login-normal.png";
+                            }
+
+                            opacity: loginMa.enabled ? 1.0 : 0.5
+
+                            MouseArea {
+                                id: loginMa
+
+                                anchors.fill: parent
+
+                                hoverEnabled: true
+                                enabled: !authenticator.busy
+                                onClicked: root.beginAuth();
+                            }
+                        }
+                    }
+
+                    ColumnLayout {
+                        id: bigSpaceForNoReason
+
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 61
+
+                        InfoLabel {
+                            Layout.fillWidth: true
+
+                            text: i18nd("kscreenlocker_greet", "Caps Lock is on");
+                            icon.source: "dialog-warning"
+                        }
+
+                        InfoLabel {
+                            Layout.fillWidth: true
+
+                            text: i18nd("kscreenlocker_greet", "(or place your fingerprint on the reader)")
+                            icon.source: "dialog-information"
+
+                            visible: authenticator.authenticatorTypes & ScreenLocker.Authenticator.Fingerprint
+                        }
+                        InfoLabel {
+                            Layout.fillWidth: true
+
+                            text: i18nd("kscreenlocker_greet", "(or use your smartcard)")
+                            icon.source: "dialog-information"
+
+                            visible: authenticator.authenticatorTypes & ScreenLocker.Authenticator.Smartcard
+                        }
+
+                        Item { Layout.fillHeight: true }
+                    }
+
+                    Components.GenericButton {
+                        id: switchUser
+
+                        Layout.alignment: Qt.AlignHCenter
+
+                        implicitWidth: 108
+                        implicitHeight: 30
+
+                        focusPolicy: Qt.TabFocus
+                        text: i18nd("kscreenlocker_greet", "Switch User")
+                        label.font.pointSize: 11
+
+                        onClicked: root.switchUserClicked()
                     }
                 }
+            }
 
-                Components.GenericButton {
-                    id: k
+            Item {
+                id: welcomePage
 
-                    signal accepted()
-                    onAccepted: {
-                        pageView.replaceCurrentItem(mainPage);
-                        root.resetFocus(true);
+                visible: pageView.currentItem == welcomePage
+
+                Components.Status {
+                    anchors.centerIn: parent
+                    anchors.verticalCenterOffset: -36
+
+                    statusText: i18nd("okular", "Welcome")
+                    speen: welcomePage.visible
+                }
+            }
+
+            Item {
+                id: statusPage
+
+                visible: pageView.currentItem == statusPage
+                onVisibleChanged: k.forceActiveFocus();
+
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    anchors.verticalCenterOffset: Math.round(loginColumn.height / 2)
+
+                    spacing: 40
+
+                    RowLayout {
+                        Kirigami.Icon {
+                            implicitHeight: 32
+                            implicitWidth: 32
+
+                            source: root.notificationIcon
+                        }
+
+                        CorrectedLabel {
+                            Layout.alignment: Qt.AlignVCenter
+                            color: "white"
+                            text: root.notification
+                        }
                     }
 
-                    Layout.alignment: Qt.AlignHCenter
+                    Components.GenericButton {
+                        id: k
 
-                    implicitWidth: 93
-                    implicitHeight: 28
+                        signal accepted()
+                        onAccepted: {
+                            pageView.replaceCurrentItem(mainPage);
+                            root.resetFocus(true);
+                        }
 
-                    font.pointSize: 11
-                    focusPolicy: Qt.TabFocus
-                    Accessible.name: "OK"
-                    text: "OK"
-                    onClicked: accepted()
+                        Layout.alignment: Qt.AlignHCenter
 
-                    Keys.onReturnPressed: accepted()
-                    Keys.onEnterPressed: accepted()
+                        implicitWidth: 93
+                        implicitHeight: 28
+
+                        font.pointSize: 11
+                        focusPolicy: Qt.TabFocus
+                        Accessible.name: "OK"
+                        text: "OK"
+                        onClicked: accepted()
+
+                        Keys.onReturnPressed: accepted()
+                        Keys.onEnterPressed: accepted()
+                    }
                 }
             }
         }
-    }
 
-    RowLayout {
-        anchors {
-            left: parent.left
-            bottom: parent.bottom
+        RowLayout {
+            anchors {
+                left: parent.left
+                bottom: parent.bottom
 
-            margins: 34
-        }
-
-        spacing: Kirigami.Units.largeSpacing
-
-        Components.GenericButton {
-            id: easeOfAccess
-            iconSource: "access"
-        }
-
-        Components.GenericButton {
-            id: switchLayoutButton
-
-            Layout.fillHeight: true
-
-            label.font.pointSize: 9
-            label.font.capitalization: Font.AllUppercase
-            focusPolicy: Qt.TabFocus
-            Accessible.description: i18ndc("plasma_lookandfeel_org.kde.lookandfeel", "Button to change keyboard layout", "Switch layout")
-            text: keyboardLayoutSwitcher.layoutNames.shortName
-            onClicked: keyboardLayoutSwitcher.keyboardLayout.switchToNextLayout()
-
-            visible: keyboardLayoutSwitcher.hasMultipleKeyboardLayouts
-
-            PW.KeyboardLayoutSwitcher {
-                id: keyboardLayoutSwitcher
-
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton
+                margins: 34
             }
-        }
 
-        Components.GenericButton {
-            Layout.fillHeight: true
+            spacing: Kirigami.Units.largeSpacing
 
-            implicitWidth: easeOfAccess.width
+            Components.GenericButton {
+                id: easeOfAccess
+                iconSource: "access"
+                opacity: pageView.currentItem == mainPage
+            }
 
-            iconSize: Kirigami.Units.iconSizes.small
-            iconSource: "keyboard"
-            onClicked: inputPanel.showHide();
+            Components.GenericButton {
+                id: switchLayoutButton
+
+                Layout.fillHeight: true
+
+                label.font.pointSize: 9
+                label.font.capitalization: Font.AllUppercase
+                focusPolicy: Qt.TabFocus
+                Accessible.description: i18ndc("plasma_lookandfeel_org.kde.lookandfeel", "Button to change keyboard layout", "Switch layout")
+                text: keyboardLayoutSwitcher.layoutNames.shortName
+                onClicked: keyboardLayoutSwitcher.keyboardLayout.switchToNextLayout()
+
+                visible: keyboardLayoutSwitcher.hasMultipleKeyboardLayouts
+
+                PW.KeyboardLayoutSwitcher {
+                    id: keyboardLayoutSwitcher
+
+                    anchors.fill: parent
+                    acceptedButtons: Qt.NoButton
+                }
+            }
+
+            Components.GenericButton {
+                Layout.fillHeight: true
+
+                implicitWidth: easeOfAccess.width
+
+                iconSize: Kirigami.Units.iconSizes.small
+                iconSource: "keyboard"
+                onClicked: inputPanel.showHide();
+
+                opacity: pageView.currentItem == mainPage
+            }
         }
     }
 
@@ -488,6 +498,12 @@ Item {
         }
 
         source: "../images/branding.png"
+
+        visible: opacity > 0
+        opacity: !inputPanel.keyboardActive
+        Behavior on opacity {
+            NumberAnimation { duration: 250 }
+        }
     }
 
     Loader {
@@ -495,10 +511,16 @@ Item {
 
         readonly property bool keyboardActive: item ? item.active : false
 
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: root.bottom
+
+            leftMargin: Kirigami.Units.gridUnit*12
+            rightMargin: Kirigami.Units.gridUnit*12
+        }
 
         function showHide() {
-            console.log("toggling");
             state = state == "hidden" ? "visible" : "hidden";
         }
 
@@ -508,30 +530,35 @@ Item {
 
         onKeyboardActiveChanged: {
             if (keyboardActive) {
+                inputPanel.z = 99;
                 state = "visible";
             } else {
                 state = "hidden";
             }
         }
 
-        onYChanged: console.log(y);
-
         state: "hidden"
         states: [
             State {
                 name: "visible"
-
+                PropertyChanges {
+                    target: uiRoot
+                    height: root.height - inputPanel.height;
+                }
                 PropertyChanges {
                     target: inputPanel
-                    y: root.height - inputPanel.height
+                    y: uiRoot.height - inputPanel.height
                 }
             },
             State {
                 name: "hidden"
-
+                PropertyChanges {
+                    target: uiRoot
+                    height: root.height;
+                }
                 PropertyChanges {
                     target: inputPanel
-                    y: root.height
+                    y: uiRoot.height - uiRoot.height/4
                 }
             }
         ]
@@ -539,7 +566,6 @@ Item {
             Transition {
                 from: "hidden"
                 to: "visible"
-
                 SequentialAnimation {
                     ScriptAction {
                         script: {
@@ -547,27 +573,45 @@ Item {
                             Qt.inputMethod.show();
                         }
                     }
-
-                    NumberAnimation {
-                        target: inputPanel
-                        property: "y"
-                        duration: Kirigami.Units.longDuration
-                        easing.type: Easing.OutQuad
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: uiRoot
+                            property: "height"
+                            duration: Kirigami.Units.longDuration
+                            easing.type: Easing.InOutQuad
+                        }
+                        NumberAnimation {
+                            target: inputPanel
+                            property: "y"
+                            duration: Kirigami.Units.longDuration
+                            easing.type: Easing.OutQuad
+                        }
                     }
                 }
             },
             Transition {
                 from: "visible"
                 to: "hidden"
-
                 SequentialAnimation {
-                    NumberAnimation {
-                        target: inputPanel
-                        property: "y"
-                        duration: Kirigami.Units.longDuration
-                        easing.type: Easing.InQuad
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: uiRoot
+                            property: "height"
+                            duration: Kirigami.Units.longDuration
+                            easing.type: Easing.InOutQuad
+                        }
+                        NumberAnimation {
+                            target: inputPanel
+                            property: "y"
+                            duration: Kirigami.Units.longDuration
+                            easing.type: Easing.InQuad
+                        }
+                        OpacityAnimator {
+                            target: inputPanel
+                            duration: Kirigami.Units.longDuration
+                            easing.type: Easing.InQuad
+                        }
                     }
-
                     ScriptAction {
                         script: {
                             inputPanel.item.activated = false;

@@ -19,6 +19,7 @@ Control {
     property string iconImage: ""
     property int    iconSize: Kirigami.Units.iconSizes.smallMedium
     property alias  label: btnLabel
+    property bool   checked: false
 
     implicitWidth: {
         if(text !== "") return label.implicitWidth + Kirigami.Units.largeSpacing * 2;
@@ -46,7 +47,7 @@ Control {
             var result = "";
 
             if(genericButton.focus) result = "focus-";
-            if(buttonMA.containsPress) result = "pressed";
+            if(buttonMA.containsPress || root.checked) result = "pressed";
             else if(buttonMA.containsMouse) result += "hover";
             else result += "normal";
 
