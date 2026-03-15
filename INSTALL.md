@@ -13,14 +13,14 @@
 
 It's necessary to have KDE Plasma already installed on your system (plasma-workspace and plasma-desktop) in order to get all the Plasma-specific dependencies for VistaThemePlasma.
 
-Before installing VistaThemePlasma, it's important to know which display server you're running on (Wayland or X11). This can be checked using Plasma's Info Center page in the settings. It's recommended to run VistaThemePlasma on X11 for now, as it's generally the more stable and feature rich experience (certain restrictions on the Wayland session make some effects and features impossible to achieve, this should hopefully be addressed in the future).
+Before installing VistaThemePlasma, it's important to know which display server you're running on (Wayland or X11). This can be checked using Plasma's Info Center page in the settings. It's recommended, **but optional**, to run VistaThemePlasma on X11 for now, as it's generally the more stable and feature rich experience (certain restrictions on the Wayland session make some effects and features impossible to achieve, this should hopefully be addressed in the future).
 
 ### Arch Linux
 
 Required packages:
 
 ```bash
-pacman -S git cmake extra-cmake-modules ninja curl unzip qt6-virtualkeyboard qt6-multimedia qt6-5compat qt6-wayland plasma-wayland-protocols plasma5support kvantum sddm sddm-kcm base-devel plasma-nm plasma-pa plasma-workspace plasma-desktop kwin-x11 plasma-x11-session
+pacman -S git cmake extra-cmake-modules ninja curl unzip qt6-virtualkeyboard qt6-multimedia qt6-5compat qt6-wayland plasma-wayland-protocols plasma5support kvantum sddm sddm-kcm base-devel plasma-nm plasma-pa plasma-workspace plasma-desktop
 ```
 
 Since Plasma 6.4, the X11 session has been separated from the main codebase. On Arch Linux, additional dependencies for X11 include:
@@ -125,10 +125,10 @@ Make sure to not accidentally delete any other already existing stuff inside the
 
 # NOTE FOR OTHER DISTROS
 
-The script relies on `LIBEXEC_DIR` in order to determine the location of `/usr/$LIBEXEC_DIR/plasma-dbus-run-session-if-needed`, needed for the Wayland session to properly start. By default, this is set to `lib`. If you're installing VTP on a distribution where this is different, such as Fedora, this needs to be set to the appropriate value for your specific distribution. For example, on Fedora, `LIBEXEC_DIR` should be `libexec`:
+The script relies on `LIBEXEC_DIR` and `UAC_LIBEXEC_DIR` in order to determine the location of `/usr/$LIBEXEC_DIR/plasma-dbus-run-session-if-needed` and `/usr/$UAC_LIBEXEC_DIR/polkit-kde-authentication-agent-1` respectively. By default, both are set to `lib`. If you're installing ATP on a distribution where this is different, such as Fedora, these values need to be set to the appropriate values for your specific distribution. For example, on Fedora, `LIBEXEC_DIR` should be `libexec`, and `UAC_LIBEXEC_DIR` should be `libexec/kf6`:
 
 ```bash
-$ LIBEXEC_DIR=libexec bash install.sh --ninja
+$ LIBEXEC_DIR=libexec UAC_LIBEXEC_DIR=libexec/kf6 bash install.sh --ninja
 ```
 
 Additionally, for distros that don't ship the X11 version of KWin, pass the argument `--skip-x11` to the install script in order to avoid building components that depend on X11. 
@@ -162,7 +162,7 @@ This will go through almost every build directory and run `sudo make uninstall` 
 
 ```bash
 # On Arch Linux
-$ sudo pacman -Sy libplasma
+$ sudo pacman -S libplasma
 ```
 
 ### Fonts 
@@ -212,7 +212,7 @@ This should be run outside of the VistaThemePlasma session, preferrably in a reg
 Afterwards, `libplasma` and `polkit-kde-agent` should be reinstalled using your distro's package manager. For example, on Arch Linux:
 
 ```bash
-sudo pacman -Sy libplasma polkit-kde-agent
+sudo pacman -S libplasma polkit-kde-agent
 ```
 
 ### Manual uninstallation
