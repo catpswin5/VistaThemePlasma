@@ -35,11 +35,24 @@ Item {
     id: root
     z: -9
 
-    property int stage
-
+    property var stage
     onStageChanged: {
-        if (stage == 6) {
+        if(stage == 5 || stage == "aeroShellLoaded") {
             transitionAnim.opacity = 1;
+        }
+    }
+
+    SequentialAnimation {
+        id: fadeExit
+
+        NumberAnimation { target: fadeRect; property: "opacity"; from: 0; to: 1; duration: 600 }
+        ScriptAction {
+            script: {
+                // for aeroshell-splash
+                if(splashApp) {
+                    splashApp.exit();
+                }
+            }
         }
     }
 
@@ -48,15 +61,13 @@ Item {
         anchors.fill: parent
     }
 
-    property int framenumber: 1
-
     AeroShellUtils.SDDM { id: sddm }
 
     Image {
         id: bg
         anchors.fill: parent
         fillMode: Image.Stretch
-        source: Qt.resolvedUrl("/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background")
+        source: sddm.currentBackground
     }
 
     Status {
@@ -79,14 +90,9 @@ Item {
     }
 
     Rectangle {
-        id: transitionAnim
-        opacity: 0
-        color: "black"
+        id: fadeRect
         anchors.fill: parent
-        Behavior on opacity {
-            NumberAnimation { duration: 640; }
-        }
+        color: "black"
+        opacity: 0
     }
-
-    Component.onCompleted: executable.exec("kreadconfig6 --file \"/usr/share/sddm/themes/vista-theme-mod/theme.conf.user\" --group \"General\" --key \"background\"")
 }

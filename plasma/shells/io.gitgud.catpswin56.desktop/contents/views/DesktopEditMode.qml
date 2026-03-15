@@ -43,7 +43,7 @@ Item {
         id: bg
         anchors.fill: parent
         fillMode: Image.Stretch
-        source: Qt.resolvedUrl("/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background")
+        source: sddm.currentBackground
     }
 
     Rectangle {

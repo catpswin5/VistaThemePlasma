@@ -31,8 +31,12 @@ Image {
 
     AeroShellUtils.SDDM { id: sddm }
 
-    fillMode: Image.PreserveAspectCrop
-    source: Qt.resolvedUrl("/usr/share/sddm/themes/" + sddm.currentSDDMTheme + "/background")
+    fillMode: Image.Stretch
+    source: sddm.currentBackground
+
+    Text {
+        text: sddm.currentTheme
+    }
 
     Plasma5Support.DataSource {
         id: executable

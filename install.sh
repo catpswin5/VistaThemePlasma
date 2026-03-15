@@ -40,7 +40,7 @@ mkdir -p manifest
 cd repos
 
 # libplasma last
-git clone https://gitgud.io/aeroshell/libplasma.git libplasma
+git clone --depth=1 https://gitgud.io/aeroshell/libplasma.git libplasma
 cd libplasma
 git pull
 cmake $USE_NINJA -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
