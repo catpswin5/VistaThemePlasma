@@ -25,6 +25,46 @@ ContainmentItem {
     width: 640
     height: 40
 
+    // filled in by the shell (Panel.qml) with the plasma-workspace PanelView
+    property var panel: null
+
+    property int panelThickness: root.panel.thickness
+    property bool panelFloating: root.panel.floating
+    property bool panelFloatingApplets: root.panel.floatingApplets
+
+    onPanelThicknessChanged: {
+        if(root.panel) {
+            if(root.panel.userConfiguring) {
+                Plasmoid.configuration.panelThickness = root.panel.thickness;
+                Plasmoid.configuration.writeConfig();
+            }
+        }
+    }
+    onPanelFloatingChanged: {
+        if(root.panel) {
+            if(root.panel.userConfiguring) {
+                Plasmoid.configuration.panelFloating = root.panel.floating;
+                Plasmoid.configuration.writeConfig();
+            }
+        }
+    }
+    onPanelFloatingAppletsChanged: {
+        if(root.panel) {
+            if(root.panel.userConfiguring) {
+                Plasmoid.configuration.panelFloatingApplets = root.panel.floatingApplets;
+                Plasmoid.configuration.writeConfig();
+            }
+        }
+    }
+
+    onPanelChanged: {
+        if(root.panel) {
+            root.panel.floating = Plasmoid.configuration.panelFloating;
+            root.panel.floatingApplets = Plasmoid.configuration.panelFloatingApplets;
+            root.panel.thickness = Plasmoid.configuration.panelThickness;
+        }
+    }
+
 //BEGIN properties
     Layout.preferredWidth: fixedWidth || currentLayout.implicitWidth + currentLayout.horizontalDisplacement
     Layout.preferredHeight: fixedHeight || currentLayout.implicitHeight + currentLayout.verticalDisplacement

@@ -21,6 +21,17 @@ import org.kde.plasma.plasmoid 2.0
 Item {
     id: root
 
+    Connections {
+        target: root
+
+        function onContainmentChanged() {
+            // HACK: add PanelView into the containment so that it can be used
+            if (containment.panel !== undefined) {
+                containment.panel = panel;
+            }
+        }
+    }
+
     property Item containment
     property bool floatingPrefix: floatingPanelSvg.usedPrefix === "floating"
     readonly property bool verticalPanel: containment?.plasmoid?.formFactor === PlasmaCore.Types.Vertical
@@ -206,24 +217,34 @@ Item {
     property bool floating: panel.floating
     property bool hasCompositing: KWindowSystem.isPlatformX11 ? KX11Extras.compositingActive : true
     readonly property bool screenCovered: touchingWindow && panel.visibilityMode == Panel.Global.NormalPanel
-    property var stateTriggers: [floating, screenCovered, isOpaque, isAdaptive, isTransparent, hasCompositing, containment]
+    property var stateTriggers: [floating, touchingWindow, isOpaque, isAdaptive, isTransparent, hasCompositing, containment, panel.floatingApplets]
     onStateTriggersChanged: {
         let opaqueApplets = false
         let floatingApplets = false
-        if ((!floating || screenCovered) && (isOpaque || (screenCovered && isAdaptive))) {
+        if ((!floating || touchingWindow) && (isOpaque || (touchingWindow && isAdaptive))) {
             panelOpacity = 1
             opaqueApplets = true
             floatingnessTarget = 0
-        } else if ((!floating || screenCovered) && (isTransparent || (!screenCovered && isAdaptive))) {
+            floatingApplets = (panel.floatingApplets && !floating)
+        } else if ((!floating || touchingWindow) && (isTransparent || (!touchingWindow && isAdaptive))) {
             panelOpacity = 0
             floatingnessTarget = 0
-        } else if ((floating && !screenCovered) && (isTransparent || isAdaptive)) {
+            floatingApplets = (panel.floatingApplets && !floating)
+        } else if ((floating && !touchingWindow) && (isTransparent || isAdaptive)) {
             panelOpacity = 0
             floatingnessTarget = 1
             floatingApplets = true
-        } else if (floating && !screenCovered && isOpaque) {
+        } else if (floating && !touchingWindow && isOpaque) {
             panelOpacity = 1
             opaqueApplets = true
+            floatingnessTarget = 1
+            floatingApplets = true
+        }
+
+        // Exceptions: panels with not NormalPanel visibilityMode
+        // should never de-float, and we should not have transparent
+        // panels when on X11 with compositing not active.
+        if (panel.visibilityMode != Panel.Global.NormalPanel && floating) {
             floatingnessTarget = 1
             floatingApplets = true
         }
@@ -231,6 +252,7 @@ Item {
             opaqueApplets = false
             panelOpacity = 0
         }
+
         // Not using panelOpacity to check as it has a NumberAnimation, and it will thus
         // be still read as the initial value here, before the animation starts.
         if (containment) {

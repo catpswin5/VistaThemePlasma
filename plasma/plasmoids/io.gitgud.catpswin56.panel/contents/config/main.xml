@@ -9,6 +9,15 @@
     <entry name="AppletOrder" type="String">
       <label>encoded order of items</label>
     </entry>
+    <entry name="panelThickness" type="Int">
+      <default>30</default>
+    </entry>
+    <entry name="panelFloating" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="panelFloatingApplets" type="Bool">
+      <default>true</default>
+    </entry>
   </group>
 
 </kcfg>
