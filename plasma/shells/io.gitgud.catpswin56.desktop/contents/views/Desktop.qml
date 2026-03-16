@@ -5,17 +5,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
 
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.components as PC
-import org.kde.kwindowsystem 1.0
+import org.kde.kirigami as Kirigami
+import org.kde.kwindowsystem
+
 import org.kde.plasma.activityswitcher as ActivitySwitcher
+import org.kde.plasma.workspace.dbus as DBus
+
 import "../activitymanager"
 import "../explorer"
-import org.kde.kirigami 2.20 as Kirigami
 
 Item {
     id: root
@@ -308,6 +309,23 @@ Item {
                 internal.oldContainment.visible = false;
             }
             internal.oldContainment = containment;
+        }
+
+        loadDelay.start();
+    }
+
+    Timer {
+        id: loadDelay
+        interval: 500
+        onTriggered: {
+            DBus.SessionBus.asyncCall({
+                service: "org.kde.KSplash",
+                path: "/KSplash",
+                iface: "org.kde.KSplash",
+                member: "setStage",
+                arguments: ["aeroShellLoaded"],
+                signature: "(s)"
+            });
         }
     }
 

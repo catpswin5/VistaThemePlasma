@@ -37,8 +37,8 @@ Item {
 
     property var stage
     onStageChanged: {
-        if(stage == 5 || stage == "aeroShellLoaded") {
-            transitionAnim.opacity = 1;
+        if(stage === 5 || stage === "aeroShellLoaded") {
+            fadeExit.start();
         }
     }
 

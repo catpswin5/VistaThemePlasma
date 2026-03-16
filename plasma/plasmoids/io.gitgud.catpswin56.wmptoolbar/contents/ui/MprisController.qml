@@ -27,7 +27,7 @@ Item {
     readonly property int shuffle: mpris2Model.currentPlayer?.shuffle ?? 0
     readonly property int loopStatus: mpris2Model.currentPlayer?.loopStatus ?? 0
 
-    property bool mediaPlayerOpen: identity != ""
+    readonly property bool mediaPlayerOpen: identity != ""
 
     function previous() {
         mpris2Model.currentPlayer.Previous();

@@ -271,7 +271,7 @@ Item {
             }
         }
 
-        RowLayout { // TODO: add functionality for changing volume
+        RowLayout {
             Layout.topMargin: -2
             Layout.leftMargin: -3
 
@@ -284,8 +284,8 @@ Item {
 
                 property double prevVolume: 0.3
                 property string buttonState: {
-                    if(volMa.containsPress || muted) return "-pressed";
-                    else if(volMa.containsMouse) return "-hover";
+                    if((volMa.containsPress || muted) && enabled) return "-pressed";
+                    else if(volMa.containsMouse && enabled) return "-hover";
                     else return "";
                 }
 
@@ -295,6 +295,9 @@ Item {
                 source: "png/controls" + buttonState + ".png"
                 sourceClipRect: Qt.rect(122, 4, 15, 17)
 
+                enabled: mediaController.mediaPlayerOpen
+                opacity: enabled ? 1.0 : 0.5
+
                 MouseArea {
                     id: volMa
 
@@ -303,6 +306,7 @@ Item {
                     preventStealing: true
                     propagateComposedEvents: true
                     hoverEnabled: true
+                    enabled: parent.enabled
                     onClicked: {
                         if(!volBtn.muted) {
                             volBtn.prevVolume = mediaController.mpris2Model.currentPlayer.volume;
@@ -317,8 +321,8 @@ Item {
                 id: volumePopupBtn
 
                 property string buttonState: {
-                    if(volPopupMa.containsPress) return "-pressed";
-                    if(volPopupMa.containsMouse) return "-hover";
+                    if(volPopupMa.containsPress && enabled) return "-pressed";
+                    if(volPopupMa.containsMouse && enabled) return "-hover";
                     return "";
                 }
 
@@ -328,6 +332,9 @@ Item {
                 source: "png/controls" + buttonState + ".png"
                 sourceClipRect: Qt.rect(137, 4, 11, 17)
 
+                enabled: mediaController.mediaPlayerOpen
+                opacity: enabled ? 1.0 : 0.5
+
                 MouseArea {
                     id: volPopupMa
 
@@ -336,6 +343,7 @@ Item {
                     preventStealing: true
                     propagateComposedEvents: true
                     hoverEnabled: true
+                    enabled: parent.enabled
                     onClicked: volumePopup.visible = !volumePopup.visible;
                 }
 
