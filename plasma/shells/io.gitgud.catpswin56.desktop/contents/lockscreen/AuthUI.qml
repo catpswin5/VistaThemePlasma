@@ -89,6 +89,9 @@ Item {
         target: authenticator
 
         function onFailed() {
+            if (kind != 0) { // if this is coming from the noninteractive authenticators
+                return;
+            }
             showMessage(i18nd("kscreenlocker_greet", "The user name or password is incorrect."), "dialog-error");
         }
         function onBusyChanged() {
