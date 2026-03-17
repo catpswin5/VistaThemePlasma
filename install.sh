@@ -4,7 +4,6 @@ CUR_DIR=${PWD}
 SU_CMD=sudo
 USE_NINJA=
 NINJA_PARAM=
-QMLDISTANCEFIELD_PARAM=
 if [[ "$*" == *"--ninja"* ]]
 then
     if [[ -z "$(command -v ninja)" ]]; then
