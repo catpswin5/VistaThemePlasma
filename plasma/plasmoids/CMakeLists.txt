@@ -6,7 +6,7 @@ set(plasmoids
     io.gitgud.catpswin56.digitalclocklite
     io.gitgud.catpswin56.networkmanagement
     io.gitgud.catpswin56.volume
-    io.gitgud.wackyideas.keyboardlayout
+    io.gitgud.catpswin56.keyboardlayout
 
     io.gitgud.catpswin56.vistastart
     io.gitgud.catpswin56.quicklaunch

@@ -92,7 +92,7 @@ var langIds = ["as",    // Assamese
                "zh_TW"] // Traditional Chinese
 
 if (langIds.indexOf(languageId) != -1) {
-    panel.addWidget("org.kde.plasma.keyboardlayout");
+    panel.addWidget("io.gitgud.catpswin56.keyboardlayout");
 }
 
 panel.addWidget("io.gitgud.catpswin56.wmptoolbar")

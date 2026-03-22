@@ -58,7 +58,7 @@
         "Description[zh_TW]": "顯示/切換鍵盤佈局",
         "EnabledByDefault": true,
         "Icon": "input-keyboard",
-        "Id": "io.gitgud.wackyideas.keyboardlayout",
+        "Id": "io.gitgud.catpswin56.keyboardlayout",
         "License": "GPL-2.0+",
         "Name": "Keyboard Layout Switcher",
         "Name[af]": "Sleutelbord Uitleg",
