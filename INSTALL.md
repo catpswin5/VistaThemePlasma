@@ -103,8 +103,14 @@ It's highly recommended to use git for downloading VistaThemePlasma as updating 
 Run the following script:
 
 ```sh
-$ bash install.sh [--ninja]  [--skip-x11] # --ninja to reduce build times, --skip-x11 to skip building X11 components
+$ bash install.sh [--skip-x11] # --skip-x11 to skip building X11 components
 ``` 
+
+**NOTE:** The `--ninja` argument has been replaced for `CMAKE_GENERATOR`. Set `CMAKE_GENERATOR=Ninja` before running the script if you wish to use Ninja instead. Like so:
+
+```sh
+$ CMAKE_GENERATOR=Ninja bash install.sh # pass any other arguments after this
+```
 
 This will clone every repository needed for VistaThemePlasma and build everything from source.
 
@@ -114,7 +120,7 @@ You can also run the install script like this:
 $ chmod +x install.sh && ./install.sh 
 ```
 
-**NOTE:** If you happen to experience font rendering issues with HiDPI in QML applications after logging in, open the file named ``vistathemeplasmarc`` within ``~/.config/``, and add the following contents into it:
+**NOTE:** If you happen to experience font rendering issues with HiDPI in QML applications after logging in, open the file named `vistathemeplasmarc` within `~/.config/`, and add the following contents into it:
 
 ```ini
 [General]
