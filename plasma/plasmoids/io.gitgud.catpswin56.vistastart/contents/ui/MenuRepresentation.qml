@@ -48,7 +48,7 @@ PlasmaCore.Dialog {
     flags: Qt.WindowStaysOnTopHint //| Qt.Popup // Set to popup so that it is still considered a plasmoid popup, despite being a floating dialog window.
 	hideOnWindowDeactivate: true
 
-	title: "sevenstart-menurepresentation"
+	title: "aeroshell-menurepresentation"
     
     backgroundHints: PlasmaCore.Types.NoBackground
 
@@ -301,7 +301,7 @@ PlasmaCore.Dialog {
 				location: "Floating"
 
 				type: "Notification"
-				title: "seventasks-floatingavatar"
+				title: "aeroshell-floatingavatar"
 				x: 0
 				y: 0
 				backgroundHints: PlasmaCore.Types.NoBackground // To prevent the dialog background SVG from being rendered, we want a fully transparent window.
