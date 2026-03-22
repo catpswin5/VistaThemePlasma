@@ -28,6 +28,10 @@ Item {
 
     signal switchUserClicked()
 
+    readonly property bool hasMessage: notification != "" || notificationIcon != ""
+    // don't show more messages after accepting
+    property bool showedMessage: false
+
     property string notification
     property string notificationIcon
 
@@ -41,18 +45,24 @@ Item {
 
     function beginAuth() {
         if(!authenticator.graceLocked && password.enabled) {
+            root.showedMessage = false;
             authenticator.startAuthenticating();
             pageView.replaceCurrentItem(welcomePage);
         }
     }
 
     function showMessage(message: string, icon: string) {
-        if(!statusPage.visible) {
+        if(!root.hasMessage && !authTimeout.running && !root.showedMessage) {
             pageView.replaceCurrentItem(statusPage);
             k.forceActiveFocus();
         }
         root.notification = message;
         root.notificationIcon = icon;
+    }
+
+    function clearMessage() {
+        root.notification = "";
+        root.notificationIcon = "";
     }
 
     component CorrectedLabel: Text {
@@ -88,17 +98,11 @@ Item {
     Connections {
         target: authenticator
 
-        function onFailed() {
+        function onFailed(kind) {
             if (kind != 0) { // if this is coming from the noninteractive authenticators
                 return;
             }
             showMessage(i18nd("kscreenlocker_greet", "The user name or password is incorrect."), "dialog-error");
-        }
-        function onBusyChanged() {
-            if(!authenticator.busy) {
-                root.notification = "";
-                root.notificationIcon = "";
-            }
         }
         function onInfoMessageChanged() {
             showMessage(authenticator.infoMessage, "dialog-information");
@@ -195,19 +199,23 @@ Item {
         source: sddm.currentBackground
     }
 
+    Timer {
+        id: authTimeout
+        interval: 3000
+        onTriggered: {
+            if(root.hasMessage) {
+                pageView.replaceCurrentItem(statusPage);
+                k.forceActiveFocus();
+            }
+        }
+    }
+
     Item {
         id: uiRoot
 
         width: parent.width
         height: parent.height
 
-        Timer {
-            id: authTimeout
-            interval: 3000
-            onTriggered: {
-                password.enabled = true;
-            }
-        }
         QQC2.StackView {
             id: pageView
 
@@ -217,13 +225,9 @@ Item {
             replaceEnter: Transition {}
             replaceExit: Transition {}
 
-            property bool firstTime: false
             onCurrentItemChanged: {
-                if(currentItem == mainPage && firstTime) {
-                    password.enabled = false;
+                if(currentItem === welcomePage) {
                     authTimeout.start();
-                } else {
-                    firstTime = true;
                 }
             }
 
@@ -382,19 +386,21 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
 
                         implicitWidth: 108
-                        implicitHeight: 30
+                        implicitHeight: 28
 
                         focusPolicy: Qt.TabFocus
                         text: i18nd("kscreenlocker_greet", "Switch User")
-                        label.font.pointSize: 11
+                        font.pointSize: 11
 
                         onClicked: root.switchUserClicked()
                     }
                 }
             }
 
-            Item {
+            MouseArea {
                 id: welcomePage
+
+                cursorShape: Qt.BlankCursor
 
                 visible: pageView.currentItem == welcomePage
 
@@ -440,7 +446,9 @@ Item {
                         signal accepted()
                         onAccepted: {
                             pageView.replaceCurrentItem(mainPage);
+                            root.clearMessage();
                             root.resetFocus(true);
+                            root.showedMessage = true;
                         }
 
                         Layout.alignment: Qt.AlignHCenter
@@ -482,8 +490,8 @@ Item {
 
                 Layout.fillHeight: true
 
-                label.font.pointSize: 9
-                label.font.capitalization: Font.AllUppercase
+                font.pointSize: 9
+                font.capitalization: Font.AllUppercase
                 focusPolicy: Qt.TabFocus
                 Accessible.description: i18ndc("plasma_lookandfeel_org.kde.lookandfeel", "Button to change keyboard layout", "Switch layout")
                 text: keyboardLayoutSwitcher.layoutNames.shortName
