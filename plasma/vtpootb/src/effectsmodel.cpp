@@ -30,6 +30,7 @@
 static QString translatedCategory(const QString &category)
 {
     static const QList<QString> knownCategories = {
+        QStringLiteral("AeroShell"),
         QStringLiteral("Accessibility"),
         QStringLiteral("Appearance"),
         QStringLiteral("Focus"),
@@ -40,6 +41,7 @@ static QString translatedCategory(const QString &category)
         QStringLiteral("Window Open/Close Animation")};
 
         static const QList<QString> translatedCategories = {
+            i18nc("Category of Desktop Effects, used as section header", "AeroShell"),
             i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
             i18nc("Category of Desktop Effects, used as section header", "Appearance"),
             i18nc("Category of Desktop Effects, used as section header", "Focus"),

@@ -22,6 +22,7 @@
 
 App::App()
 {
+    model.load();
     KConfig ootbConfig(QStringLiteral("vistathemeplasmarc"));
     m_firstTime = ootbConfig.group(QStringLiteral("OOTB")).readEntry(QStringLiteral("wizardRun"), false);
     Q_EMIT firstTimeChanged();
@@ -209,31 +210,32 @@ void App::applyLookAndFeel()
     kdeglobalsConfig.sync();
 
     EffectsModel model;
-    model.setData(model.findByPluginId("smodpeekscript"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("minimizeall"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("aeroglassblur"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("aeroglide"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("smodglow"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("smodpeekeffect"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("libkwin_effect_smodsnap"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("launchfeedback"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("fadingpopupsaero"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("squashaero"), Qt::Checked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("dimscreenaero"), Qt::Checked, EffectsModel::StatusRole);
+    model.updateEffectStatus(model.findByPluginId("smodpeekscript"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("minimizeall"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("aeroglassblur"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("aeroglide"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("smodglow"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("smodpeekeffect"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("libkwin_effect_smodsnap"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("launchfeedback"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("fadingpopupsaero"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("squashaero"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("dimscreenaero"), EffectsModel::Status::Enabled);
+    model.updateEffectStatus(model.findByPluginId("aeroshell-thumbnails"), EffectsModel::Status::Disabled);
 
-    model.setData(model.findByPluginId("blur"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("contrast"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("login"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("logout"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("maximize"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("scale"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("squash"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("slide"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("fade"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("slidingpopups"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("dialogparent"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("fadingpopups"), Qt::Unchecked, EffectsModel::StatusRole);
-    model.setData(model.findByPluginId("windowaperture"), Qt::Unchecked, EffectsModel::StatusRole);
+    model.updateEffectStatus(model.findByPluginId("blur"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("contrast"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("login"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("logout"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("maximize"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("scale"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("squash"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("slide"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("fade"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("slidingpopups"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("dialogparent"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("fadingpopups"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("windowaperture"), EffectsModel::Status::Disabled);
     model.save();
 
     QDBusMessage kwinDbus = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/KWin"),
