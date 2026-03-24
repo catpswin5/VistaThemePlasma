@@ -73,17 +73,8 @@ Item {
     readonly property bool stickOutOrb: (Plasmoid.location == PlasmaCore.Types.TopEdge || Plasmoid.location == PlasmaCore.Types.BottomEdge) && Plasmoid.configuration.stickOutOrb && kicker.height <= 30 && !editMode
     readonly property bool useCustomButtonImage: (Plasmoid.configuration.useCustomButtonImage)
     readonly property bool vertical: (Plasmoid.formFactor == PlasmaCore.Types.Vertical)
-    readonly property bool enableShadow: (Plasmoid.configuration.enableShadow)
 
 	property vector2d orbPos: Qt.vector2d(0, 0)
-
-    onEnableShadowChanged: {
-        //Plasmoid.enableShadow(Plasmoid.configuration.enableShadow);
-        if(dashWindow) {
-            dashWindow.firstTimeShadowSetup = false;
-        }
-    }
-
 
     // If the url is empty (default value), then use the fallback url. Otherwise, return the url path relative to
     // the location of the source code.
@@ -114,9 +105,7 @@ Item {
     function showMenu() {
         dashWindow.visible = !dashWindow.visible;
         dashWindow.showingAllPrograms = false;
-        maskTimer.start();
         if(KWindowSystem.isPlatformX11) Plasmoid.setActiveWin(dashWindow);
-        Plasmoid.setDialogAppearance(dashWindow, dashWindow.dialogBackgroundTexture.mask);
         dashWindow.m_searchField.focus = true;
         orb.raise();
 
@@ -159,7 +148,6 @@ Item {
         dashWindow = Qt.createQmlObject("MenuRepresentation {}", kicker);
         orb = Qt.createQmlObject("StartOrb {}", kicker);
 
-        maskTimer.start();
         orbTimer.start();
         Plasmoid.activated.connect(function () {
             showMenu();
@@ -270,17 +258,8 @@ Item {
             Plasmoid.setOrb(orb);
             // Currently hardcoded, will make it configurable soon, when it's been properly tested and hopefully slightly refactored.
             Plasmoid.setMask(Qt.resolvedUrl("./orbs/mask.png"), false);
-            Plasmoid.setDashWindow(dashWindow, dashWindow.dialogBackgroundTexture.mask, dashWindow.dialogBackgroundTexture.imagePath);
             updateSizeHints();
             positionOrb();
-        }
-    }
-
-    Timer {
-        id: maskTimer
-        interval: 25
-        onTriggered: {
-            Plasmoid.setDialogAppearance(dashWindow, dashWindow.dialogBackgroundTexture.mask);
         }
     }
 }

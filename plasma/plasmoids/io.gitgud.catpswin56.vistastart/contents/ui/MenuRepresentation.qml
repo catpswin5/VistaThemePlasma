@@ -46,11 +46,15 @@ PlasmaCore.Dialog {
     objectName: "popupWindow"
     location: "Floating" // To make the panel display all 4 borders, the panel will be positioned at a corner.
     flags: Qt.WindowStaysOnTopHint //| Qt.Popup // Set to popup so that it is still considered a plasmoid popup, despite being a floating dialog window.
-	hideOnWindowDeactivate: true
+    hideOnWindowDeactivate: true
+    appletInterface: kicker
 
 	title: "aeroshell-menurepresentation"
     
-    backgroundHints: PlasmaCore.Types.NoBackground
+	shadowBordersSync: false
+	shadowEnabled: Plasmoid.configuration.enableShadow
+	marginsEnabled: false
+    customImagePath: Qt.resolvedUrl("svgs/dialog.svgz")
 
     property int iconSize: Kirigami.Units.iconSizes.medium
     property int iconSizeSide: Kirigami.Units.iconSizes.smallMedium
@@ -66,7 +70,6 @@ PlasmaCore.Dialog {
     property bool searching: (searchField.text != "")
     property bool showingAllPrograms: false
     property bool firstTimePopup: false // To make sure the user icon is displayed properly.
-    property bool firstTimeShadowSetup: false
 
     property int animationDuration: Plasmoid.configuration.enableAnimations ? Kirigami.Units.longDuration*1.5 : 0
 
@@ -93,7 +96,6 @@ PlasmaCore.Dialog {
 	property alias m_lockButton: lock
 	property alias m_searchField: searchField
 	property alias m_delayTimer: delayTimer
-	property alias dialogBackgroundTexture: dialogBackground
 
 	property SidePanelItemDelegate m_recentsSidePanelItem
 
@@ -102,16 +104,9 @@ PlasmaCore.Dialog {
 	function setFloatingAvatarPosition()  {
 		// It's at this point where everything actually gets properly initialized and we don't have to worry about
 		// random unpredictable values, so we can safely allow the popup icon to show up.
-		iconUser.x = root.x + sidePanel.x+sidePanel.width/2-Kirigami.Units.iconSizes.huge/2 + Kirigami.Units.smallSpacing/2 - 1;
-		iconUser.y = root.y-Kirigami.Units.iconSizes.huge/2 + Kirigami.Units.smallSpacing;
+		iconUser.x = (root.x + sidePanel.x + sidePanel.width / 2) - iconUser.width / 2;
+		iconUser.y = (root.y - iconUser.height / 2) + Kirigami.Units.smallSpacing;
 		firstTimePopup = true;
-	}
-
-	onXChanged: {
-		Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
-	}
-	onYChanged: {
-		Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
 	}
 
     onVisibleChanged: {
@@ -123,27 +118,17 @@ PlasmaCore.Dialog {
 			searchField.forceActiveFocus();
 			rootModel.refresh();
 			setFloatingAvatarPosition();
-			Plasmoid.setDialogAppearance(root, dialogBackground.mask);
-			Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
-
-			if(!firstTimeShadowSetup) {
-				shadow_fix.start()
-			}
         }
 		resetRecents(); // Resets the recents model to prevent errors and crashes.
     }
     onHeightChanged: {
 		popupPosition();
 		setFloatingAvatarPosition();
-		Plasmoid.setDialogAppearance(root, dialogBackground.mask);
-		Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
     }
 
     onWidthChanged: {
 		popupPosition();
 		setFloatingAvatarPosition();
-		Plasmoid.setDialogAppearance(root, dialogBackground.mask);
-		Plasmoid.syncBorders(Qt.rect(x, y, width, height), Plasmoid.location);
     }
 
     onSearchingChanged: {
@@ -236,15 +221,6 @@ PlasmaCore.Dialog {
         focus: true
 		clip: false
 
-		Timer {
-			id: shadow_fix
-			interval: 25
-			onTriggered: {
-				Plasmoid.enableShadow(Plasmoid.configuration.enableShadow);
-				Plasmoid.syncBorders(Qt.rect(dashWindow.x, dashWindow.y, dashWindow.width, dashWindow.height), Plasmoid.location);
-				firstTimeShadowSetup = true;
-			}
-		}
 		Timer { // Janky wayland problems require janky solutions
 			id: wayland_fix
 			interval: 25
@@ -298,15 +274,18 @@ PlasmaCore.Dialog {
 		Item {
 			PlasmaCore.Dialog {
         		id: iconUser
-				location: "Floating"
 
+        		x: 0
+        		y: 0
+
+				location: "Floating"
 				type: "Notification"
 				title: "aeroshell-floatingavatar"
-				x: 0
-				y: 0
 				backgroundHints: PlasmaCore.Types.NoBackground // To prevent the dialog background SVG from being rendered, we want a fully transparent window.
+
 				visible: root.visible && compositingEnabled && Plasmoid.location != PlasmaCore.Types.TopEdge
 				opacity: iconUser.visible && firstTimePopup // To prevent even more NP-hard unpredictable behavior
+
 				mainItem: FloatingIcon {
 					id: compositingIcon
 					visible: compositingEnabled
@@ -429,13 +408,6 @@ PlasmaCore.Dialog {
 			id: contextMenu
 			visualParent: moreBtn
 			placement: PlasmaExtras.Menu.RightPosedTopAlignedPopup
-		}
-
-		KSvg.FrameSvgItem {
-			id: dialogBackground
-			anchors.fill: parent
-			imagePath: Qt.resolvedUrl("svgs/dialog.svgz");
-			//opacity: 0
 		}
 
         Rectangle {
@@ -1310,6 +1282,5 @@ PlasmaCore.Dialog {
 		faves.listView.currentIndex = -1;
 		
 		popupPosition();
-		Plasmoid.setDialogAppearance(root, dialogBackground.mask);
 	}
 }
