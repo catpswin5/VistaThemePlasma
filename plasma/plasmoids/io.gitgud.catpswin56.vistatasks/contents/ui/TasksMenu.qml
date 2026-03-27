@@ -59,8 +59,7 @@ PlasmaCore.Dialog {
     property int taskY: 0
 
     readonly property int menuItemHeight: Kirigami.Units.smallSpacing*5
-    readonly property int menuWidth: 238
-    readonly property int slide: Kirigami.Units.smallSpacing*3
+    readonly property int menuWidth: 200
     property bool finishedAnimating: false
 
     property bool showAllPlaces: false
@@ -70,7 +69,6 @@ PlasmaCore.Dialog {
     property color backgroundColorStatic: "#f1f6fb"
     property color backgroundColorGradient: "white"
     property color borderColor: "#ccd9ea"
-    property alias sliderAnimation: sliderAnimation
 
     // Functions inherited from the original ContextMenu
     function get(modelProp) {
@@ -128,24 +126,15 @@ PlasmaCore.Dialog {
     property alias tMenu: tasksMenu
     property int xpos: -1 // Variable is used to keep track of the original x position which sometimes gets changed for no reason.
     visible: false
-    opacity: 0
     objectName: "tasksMenuDialog"
     hideOnWindowDeactivate: true // Makes it so that the context menu disappears if it gets forcibly out of focus by an external event.
     flags: Qt.WindowStaysOnTopHint | Qt.Dialog
 
-    // Used to animate the context menu appearing and disappearing.
-    Behavior on opacity {
-        NumberAnimation { duration: 100; }
-    }
-    Behavior on y {
-        NumberAnimation {
-            id: sliderAnimation
-            onRunningChanged: {
-                Plasmoid.setMouseGrab(true, tasksMenu);
-            }
-            duration: 150;
-        }
-    }
+    shadowBordersSync: false
+    shadowEnabled: true
+    marginsEnabled: false
+    customImagePath: Qt.resolvedUrl("svgs/jumplist.svgz")
+    appletInterface: tasks
 
     // Tries to detect when the x position resets to 0.
     onXChanged: {
@@ -160,20 +149,20 @@ PlasmaCore.Dialog {
         var globalPos = parent.mapToGlobal(tasks.x, tasks.y);
         var screen = tasks.screenGeometry;
 
-        tasksMenu.y = globalPos.y - tasksMenu.height - ((menuitems.isEmpty() && KWindowSystem.isPlatformWayland) ? Kirigami.Units.smallSpacing*3 : 0); // Wayland bugs out with small jumplists for some reason
+        tasksMenu.y = globalPos.y - tasksMenu.height; // Wayland bugs out with small jumplists for some reason
 
         var parentPos = parent.mapToGlobal(taskX, taskY);
         xpos = parentPos.x + taskWidth / 2;
         tasksMenu.x = parentPos.x + taskWidth / 2;
-        xpos = parentPos.x +  taskWidth / 2 - Kirigami.Units.largeSpacing + 1;
+        xpos = parentPos.x +  taskWidth / 2;
         xpos -= menuWidth / 2;
         if(xpos <= screen.x) {
             xpos = screen.x + Kirigami.Units.largeSpacing;
             tasksMenu.x = screen.x + Kirigami.Units.largeSpacing;
         }
         if((xpos+tasksMenu.menuWidth) > (screen.x+screen.width)) {
-            xpos = screen.x + screen.width - tasksMenu.menuWidth - Kirigami.Units.largeSpacing*3;
-            tasksMenu.x = screen.x + screen.width - tasksMenu.menuWidth - Kirigami.Units.largeSpacing*3;
+            xpos = screen.x + screen.width - tasksMenu.menuWidth;
+            tasksMenu.x = screen.x + screen.width - tasksMenu.menuWidth;
         }
         tasksMenu.x = xpos;
 
@@ -197,8 +186,6 @@ PlasmaCore.Dialog {
     function show() {
         loadDynamicLauncherActions(get(atm.LauncherUrlWithoutIcon));
         visible = true;
-        if(KWindowSystem.isPlatformX11) tasksMenu.y -= slide;
-        opacity = 1;
         Qt.callLater(() => {Plasmoid.setMouseGrab(true, tasksMenu); tasksMenu.x = xpos;});
         if(xpos !== tasksMenu.x) tasksMenu.x = xpos;
         openTimer.start();
@@ -206,8 +193,6 @@ PlasmaCore.Dialog {
     // Closes the menu gracefully, by first showing a fade out animation before freeing the object from memory.
     function closeMenu() {
         Plasmoid.disableBlurBehind(tasksMenu);
-        if(KWindowSystem.isPlatformX11) tasksMenu.y += slide;
-        opacity = 0;
         closeTimer.start();
     }
 
@@ -391,8 +376,6 @@ PlasmaCore.Dialog {
 
     function delayedMenu(delay, func) {
         Plasmoid.disableBlurBehind(tasksMenu);
-        tasksMenu.y += slide;
-        opacity = 0;
         delayTimer.interval = delay;
         delayTimer.repeat = false;
         delayTimer.triggered.connect(func);
@@ -408,7 +391,6 @@ PlasmaCore.Dialog {
         Layout.maximumHeight: staticMenuItems.height + menuitems.height + Kirigami.Units.smallSpacing*3 - (!menuitems.isEmpty() ? 0 : Kirigami.Units.smallSpacing*2)
         // This is the last resort to avoiding the dialog displacement bug. It's set to correct the x position at a delay of 18ms.
         // This may result in a brief but noticeable jump in position when the context menu is shown.
-        //enabled: !sliderAnimation.running;
         Timer {
             id: delayTimer
         }
@@ -438,8 +420,6 @@ PlasmaCore.Dialog {
                 bottom: staticMenuItems.top
                 bottomMargin: 10
             }
-
-            onHeightChanged: if(sliderAnimation.running) tasksMenu.y -= tasksMenu.slide;
 
             spacing: Kirigami.Units.smallSpacing/2
 
@@ -500,18 +480,6 @@ PlasmaCore.Dialog {
             }
         }
 
-        BorderImage {
-            anchors.fill: parent
-            anchors.margins: -2
-
-            border {
-                left: 6
-                right: 6
-                top: 6
-                bottom: 6
-            }
-            source: "pngs/jumplist-bg.png"
-        }
         function decreaseItemIndex() {
             currentItemIndex--;
             if(currentItemIndex < 0) {
@@ -585,7 +553,7 @@ PlasmaCore.Dialog {
         Connections {
             target: Plasmoid;
             function onMouseEventDetected(mouse) {
-                if(!fscope.contains(Plasmoid.getPosition(fscope)) && !sliderAnimation.running) {
+                if(!fscope.contains(Plasmoid.getPosition(fscope))) {
                     tasksMenu.closeMenu();
                 }
             }
@@ -596,7 +564,7 @@ PlasmaCore.Dialog {
     Component.onCompleted: {
         backend.showAllPlaces.connect(showContextMenuWithAllPlaces)
         tasksMenu.backgroundHints = 2; // Sets the dialog background to the solid SVG variant.
-        tasksMenu.y = tasksMenu.taskY - tasksMenu.slide;
+        tasksMenu.y = tasksMenu.taskY;
         Plasmoid.setMouseGrab(true, tasksMenu);
     }
     Component.onDestruction: {

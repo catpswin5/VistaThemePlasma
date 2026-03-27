@@ -34,7 +34,7 @@ PlasmaCore.ToolTipArea {
     location: Plasmoid.location
     backgroundHints: Plasmoid.configuration.showPreviews ? "StandardBackground" : "SolidBackground"
     interactive: Plasmoid.configuration.extPreviewFunc || model.ChildCount > 0
-    windowTitle: "seventasks-tooltip"
+    windowTitle: "aeroshell-thumbnail"
 
     onAboutToShow: updateToolTipBindings();
 
