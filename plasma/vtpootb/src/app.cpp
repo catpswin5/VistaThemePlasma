@@ -83,7 +83,7 @@ void App::syncPlasmaWithSDDM()
 
     args[QStringLiteral("kde_settings.conf/General/GreeterEnvironment")] = QStringLiteral("QML_DISABLE_DISTANCEFIELD=1");
     args[QStringLiteral("kde_settings.conf/Theme/Current")] = QStringLiteral("vista-theme-mod");
-    args[QStringLiteral("kde_settings.conf/Theme/CursorTheme")] = QStringLiteral("aero-drop");
+    args[QStringLiteral("kde_settings.conf/Theme/CursorTheme")] = QStringLiteral("vista-aero-drop");
 
     if (!cursorSize.isNull()) {
         args[QStringLiteral("kde_settings.conf/Theme/CursorSize")] = cursorSize;
@@ -250,7 +250,7 @@ void App::applyLookAndFeel()
     qInfo() << QProcess::startDetached("plasma-apply-lookandfeel", { "-a", "authuiVista" });
     // Apply Kvantum theme (WindowsVistaAero)
     qInfo() << QProcess::execute("kvantummanager", { "--set", "WindowsVistaAero" });
-    qInfo() << QProcess::execute("plasma-apply-cursortheme", { "aero-drop", "--size", "32" });
+    qInfo() << QProcess::execute("plasma-apply-cursortheme", { "vista-aero-drop", "--size", "32" });
     qInfo() << QProcess::execute("aeroshell_update_default_rules", { "aeroshell.rules" });
 
 }
@@ -260,7 +260,7 @@ void App::saveOotbConfig(bool reset)
     KConfig ootbConfig(QStringLiteral("vistathemeplasmarc"));
     ootbConfig.group(QStringLiteral("OOTB")).writeEntry(QStringLiteral("wizardRun"), reset);
     ootbConfig.sync();
-    qInfo() << QProcess::execute("plasma-apply-cursortheme", { "aero-drop", "--size", "32" });
+    qInfo() << QProcess::execute("plasma-apply-cursortheme", { "vista-aero-drop", "--size", "32" });
 }
 
 #include "moc_app.cpp"

@@ -34,7 +34,7 @@ ActionReply OotbAuthHelper::apply(const QVariantMap &args)
     Q_UNUSED(args);
     QString path = QStringLiteral("/usr/share/icons/default/index.theme");
     QString groupName = QStringLiteral("Icon Theme");
-    QString cursorTheme = QStringLiteral("aero-drop");
+    QString cursorTheme = QStringLiteral("vista-aero-drop");
     QSharedPointer<KConfig> cursorConfig = openConfig(path);
     if(!cursorConfig)
     {
