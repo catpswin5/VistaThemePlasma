@@ -44,7 +44,7 @@ Item {
     Image {
         anchors.fill: imgAuthor
         source: "/usr/share/vistathemeplasma/fallback-picture.png"
-        visible: imgAuthor.status === Image.Null || imgAuthor.status === Image.Error
+        visible: (imgAuthor.status === Image.Null || imgAuthor.status === Image.Error) && imgAuthor.visible
     }
 
     Image {
@@ -67,7 +67,7 @@ Item {
         smooth: true
         mipmap: true
 
-        visible: false
+        visible: opacity > 0
         opacity: imgAuthorIcon.source === ""
         Behavior on opacity {
             NumberAnimation { duration: 350 }
