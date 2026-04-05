@@ -28,26 +28,10 @@ Item {
         width: 126
         height: 126
 
-        LinearGradient {
-            id: gradient
-
-            anchors.fill: parent
-
-            start: Qt.point(0,0)
-            end: Qt.point(gradient.width, gradient.height)
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#eeecee" }
-                GradientStop { position: 1.0; color: "#a39ea3" }
-            }
-        }
-
-        Kirigami.Icon {
-            anchors.fill: parent
-            anchors.margins: Kirigami.Units.gridUnit * 0.5 // because mockup says so...
-
-            source: "user-symbolic"
-
-            visible: (face.status == Image.Error || face.status == Image.Null)
+        Image {
+            anchors.fill: face
+            source: "/usr/share/vistathemeplasma/fallback-picture.png"
+            visible: face.status === Image.Null || face.status === Image.Error
         }
 
         Image {

@@ -43,7 +43,7 @@ Item {
 
     Image {
         anchors.fill: imgAuthor
-        source: "/usr/share/vistathemeplasma/fallback-user.png"
+        source: "/usr/share/vistathemeplasma/fallback-picture.png"
         visible: imgAuthor.status === Image.Null || imgAuthor.status === Image.Error
     }
 
