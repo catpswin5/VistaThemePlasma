@@ -76,6 +76,6 @@ ActionReply OotbAuthHelper::apply(const QVariantMap &args)
     return ActionReply::SuccessReply();
 }
 
-KAUTH_HELPER_MAIN("io.gitgud.wackyideas.ootb", OotbAuthHelper)
+KAUTH_HELPER_MAIN("io.gitgud.catpswin56.ootb", OotbAuthHelper)
 
 #include "moc_ootbauthhelper.cpp"

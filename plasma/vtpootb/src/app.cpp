@@ -209,13 +209,12 @@ void App::applyLookAndFeel()
     kdeglobalsConfig.group(QStringLiteral("WM")).writeEntry(QStringLiteral("activeFont"), font);
     kdeglobalsConfig.sync();
 
-    EffectsModel model;
     model.updateEffectStatus(model.findByPluginId("smodpeekscript"), EffectsModel::Status::Disabled);
     model.updateEffectStatus(model.findByPluginId("minimizeall"), EffectsModel::Status::Enabled);
     model.updateEffectStatus(model.findByPluginId("aeroglassblur"), EffectsModel::Status::Enabled);
     model.updateEffectStatus(model.findByPluginId("aeroglide"), EffectsModel::Status::Enabled);
     model.updateEffectStatus(model.findByPluginId("smodglow"), EffectsModel::Status::Enabled);
-    model.updateEffectStatus(model.findByPluginId("smodpeekeffect"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("smodpeekeffect"), EffectsModel::Status::Enabled);
     model.updateEffectStatus(model.findByPluginId("libkwin_effect_smodsnap"), EffectsModel::Status::Enabled);
     model.updateEffectStatus(model.findByPluginId("launchfeedback"), EffectsModel::Status::Enabled);
     model.updateEffectStatus(model.findByPluginId("fadingpopupsaero"), EffectsModel::Status::Enabled);
