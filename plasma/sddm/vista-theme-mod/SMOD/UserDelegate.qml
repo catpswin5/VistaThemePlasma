@@ -32,20 +32,6 @@ Item {
                 visible: false
             }
 
-            LinearGradient {
-                id: gradient
-
-                anchors.fill: parent
-                anchors.centerIn: parent
-
-                start: Qt.point(0,0)
-                end: Qt.point(gradient.width, gradient.height)
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#eeecee" }
-                    GradientStop { position: 1.0; color: "#a39ea3" }
-                }
-            }
-
             Image {
                 id: avatarmini
 
@@ -55,7 +41,11 @@ Item {
                 source: model.icon
                 fillMode: Image.PreserveAspectCrop
 
-                onStatusChanged: if (avatarmini.status == Image.Error) avatarmini.source = "../Assets/user/fallback.png";
+                onSourceChanged: {
+                    if (source == "file:///usr/share/sddm/faces/.face.icon") {
+                        source = "/usr/share/vistathemeplasma/fallback-picture.png";
+                    }
+                }
 
                 layer.enabled: true
                 layer.effect: OpacityMask {

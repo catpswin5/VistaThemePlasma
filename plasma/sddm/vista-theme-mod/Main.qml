@@ -24,6 +24,9 @@ Item
 
     property bool m_forceUserSelect: config.boolValue("forceUserSelect")
 
+    property string m_username: ""
+    property var m_icon: ""
+
     enum LoginPage {
         Startup,
         SelectUser,
@@ -54,8 +57,9 @@ Item
         if(pages.currentIndex === Main.LoginPage.Login && switchuser.enabled) {
             password.text = ""
             pages.currentIndex = Main.LoginPage.SelectUser
-        } else if(pages.currentIndex === Main.LoginPage.LoginFailed)
+        } else if(pages.currentIndex === Main.LoginPage.LoginFailed) {
             pages.currentIndex = Main.LoginPage.Login
+        }
     }
 
     Rectangle {
@@ -96,22 +100,21 @@ Item
 
         SMOD.UserDelegate {
             Keys.onReturnPressed: {
-                if(focus) {
-                    let username = model.name
+                if (focus) {
+                    let username = model.name;
+                    let realname = model.realName;
 
-                    if(username != null) {
-                        let realname = model.realName
-                        let pic = model.icon
-                        let needspassword = model.needsPassword
+                    let pic = model.icon;
+                    let needspassword = model.needsPassword;
 
-                        if(needspassword) {
-                            userNameLabel.text = realname
-                            avatar.source = pic
+                    if (needspassword) {
+                        root.m_username = realname == "" ? username : realname;
+                        root.m_icon = pic;
 
-                            listView.currentIndex = index
-                            pages.currentIndex = Main.LoginPage.Login
-                        }
-                        else sddm.login(username, password.text, session.index)
+                        listView.currentIndex = index;
+                        pages.currentIndex = Main.LoginPage.Login;
+                    } else {
+                        sddm.login(username, password.text, session.index)
                     }
                 }
             }
@@ -229,22 +232,20 @@ Item
         currentIndex: executable.startupEnabled ? Main.LoginPage.Startup : Main.LoginPage.SelectUser
 
         function startSingleUserMode() {
-            let singleusermode = userModel.count < 2 && !m_forceUserSelect
+            let singleusermode = userModel.count < 2 && !m_forceUserSelect;
 
             if (singleusermode) {
                 let index = 0;
-                let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole)
 
-                if (username != null) {
-                    let userDisplayName = userModel.data(userModel.index(index, 0), Main.UserRoles.RealNameRole)
-                    let userPicture = userModel.data(userModel.index(index, 0), Main.UserRoles.IconRole)
+                let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole);
+                let realname = userModel.data(userModel.index(index, 0), Main.UserRoles.RealNameRole);
+                let userPicture = userModel.data(userModel.index(index, 0), Main.UserRoles.IconRole);
 
-                    userNameLabel.text = userDisplayName
-                    avatar.source = userPicture
+                root.m_username = realname == "" ? username : realname;
+                root.m_icon = userPicture;
 
-                    pages.currentIndex = Main.LoginPage.Login
-                    return true;
-                }
+                pages.currentIndex = Main.LoginPage.Login;
+                return true;
             }
             pages.currentIndex = Main.LoginPage.SelectUser;
             return false;
@@ -293,25 +294,24 @@ Item
                     anchors.fill: parent
 
                     onClicked: (mouse) => {
-                        let posInGridView = Qt.point(mouse.x, mouse.y)
-                        let posInContentItem = mapToItem(listView.contentItem, posInGridView)
-                        let index = listView.indexAt(posInContentItem.x, posInContentItem.y)
+                        let posInGridView = Qt.point(mouse.x, mouse.y);
+                        let posInContentItem = mapToItem(listView.contentItem, posInGridView);
+                        let index = listView.indexAt(posInContentItem.x, posInContentItem.y);
 
-                        let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole)
+                        let username = userModel.data(userModel.index(index, 0), Main.UserRoles.NameRole);
+                        let realname = userModel.data(userModel.index(index, 0), Main.UserRoles.RealNameRole);
 
-                        if (username != null) {
-                            let realname = userModel.data(userModel.index(index, 0), Main.UserRoles.RealNameRole)
-                            let pic = userModel.data(userModel.index(index, 0), Main.UserRoles.IconRole)
-                            let needspassword = userModel.data(userModel.index(index, 0), Main.UserRoles.NeedsPasswordRole)
+                        let pic = userModel.data(userModel.index(index, 0), Main.UserRoles.IconRole);
+                        let needspassword = userModel.data(userModel.index(index, 0), Main.UserRoles.NeedsPasswordRole);
 
-                            if (needspassword) {
-                                userNameLabel.text = realname == "" ? username : realname;
-                                avatar.source = pic
+                        if (needspassword) {
+                            root.m_username = realname == "" ? username : realname;
+                            root.m_icon = pic;
 
-                                listView.currentIndex = index
-                                pages.currentIndex = Main.LoginPage.Login
-                            }
-                            else sddm.login(username, password.text, session.index)
+                            listView.currentIndex = index;
+                            pages.currentIndex = Main.LoginPage.Login;
+                        } else {
+                            sddm.login(username, password.text, session.index);
                         }
                     }
                 }
@@ -353,22 +353,6 @@ Item
                             visible: false
                         }
 
-                        LinearGradient {
-                            id: gradient
-
-                            anchors.fill: parent
-                            anchors.centerIn: parent
-
-                            start: Qt.point(0,0)
-                            end: Qt.point(gradient.width, gradient.height)
-                            gradient: Gradient {
-                                GradientStop { position: 0.0; color: "#eeecee" }
-                                GradientStop { position: 1.0; color: "#a39ea3" }
-                            }
-
-                            z: -1
-                        }
-
                         Image {
                             id: avatar
 
@@ -376,9 +360,13 @@ Item
                             anchors.centerIn: parent
 
                             fillMode: Image.PreserveAspectCrop
-                            source: ""
+                            source: root.m_icon
 
-                            onStatusChanged: if (avatar.status == Image.Error) avatar.source = "Assets/user/normal.png";
+                            onSourceChanged: {
+                                if (source == "file:///usr/share/sddm/faces/.face.icon") {
+                                    source = "/usr/share/vistathemeplasma/fallback-picture.png";
+                                }
+                            }
 
                             layer.enabled: true
                             layer.effect: OpacityMask {
@@ -406,7 +394,7 @@ Item
 
                         Layout.alignment: Qt.AlignHCenter
 
-                        text: ""
+                        text: root.m_username
                         color: "white"
                         font.pixelSize: 23
                         font.kerning: false

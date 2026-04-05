@@ -1,7 +1,5 @@
 import QtQuick
 
-import Qt5Compat.GraphicalEffects
-
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 
@@ -43,25 +41,9 @@ Item {
         }
     }
 
-    LinearGradient {
-        id: gradient
-
+    Image {
         anchors.fill: imgAuthor
-
-        start: Qt.point(0,0)
-        end: Qt.point(gradient.width, gradient.height)
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#eeecee" }
-            GradientStop { position: 1.0; color: "#a39ea3" }
-        }
-    }
-
-    Kirigami.Icon {
-        anchors.fill: imgAuthor
-        anchors.margins: Kirigami.Units.largeSpacing
-
-        source: "preferences-desktop-user"
-
+        source: "/usr/share/vistathemeplasma/fallback-user.png"
         visible: imgAuthor.status === Image.Null || imgAuthor.status === Image.Error
     }
 

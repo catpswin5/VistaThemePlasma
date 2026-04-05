@@ -1,9 +1,0 @@
-[Domain]
-Name=VistaThemePlasma SDDM SMOD settings
-Icon=system-lock-screen
-URL=https://gitgud.io/catpswin56/vistathemeplasma
-
-[io.gitgud.catpswin56.kcmsddmsmod.write]
-Name=Write to SDDM config
-Description=Write to the SDDM SMOD theme configuration
-Policy=auth_admin
