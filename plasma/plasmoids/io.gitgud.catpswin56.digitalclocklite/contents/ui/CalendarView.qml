@@ -111,7 +111,7 @@ PlasmaCore.Dialog {
 
     property bool debug: false
 
-    property bool isExpanded: Plasmoid.expanded
+    property bool isExpanded: root.expanded
 
     onIsExpandedChanged: {
         // clear all the selections when the plasmoid is showing/hiding
@@ -504,9 +504,9 @@ PlasmaCore.Dialog {
 				bottom: parent.bottom
 				left: parent.left
 				right: parent.right
-				leftMargin: dialogSvg.margins.left + (calendar.compositionEnabled ? 0 : 2)
-				rightMargin: dialogSvg.margins.right + (calendar.compositionEnabled ? 0 : 2)
-				bottomMargin: dialogSvg.margins.bottom + (calendar.compositionEnabled ? 0 : 2)
+				leftMargin: dialogSvg.margins.left
+				rightMargin: dialogSvg.margins.right
+				bottomMargin: dialogSvg.margins.bottom
 
 			}
 			height: 40 + Kirigami.Units.smallSpacing / 2
@@ -560,9 +560,11 @@ PlasmaCore.Dialog {
 		ToolButton {
 			id: pinButton
 
-			visible: Plasmoid.configuration.showPinButton
+			visible: !Plasmoid.configuration.disablePin
 			onVisibleChanged: {
-				if(!visible) Plasmoid.configuration.pin = false;
+				if (!visible) {
+                    Plasmoid.configuration.pin = false;
+                }
 			}
 			anchors.bottom: parent.bottom
 			anchors.right: parent.right

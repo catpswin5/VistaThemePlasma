@@ -35,6 +35,7 @@ KCM.SimpleKCM {
 
     property alias cfg_showWeekNumbers: showWeekNumbers.checked
     property int cfg_firstDayOfWeek
+    property alias cfg_shortCalendarDay: shortCalendarDay.checked
 
     PlasmaCalendar.EventPluginsManager {
         id: eventPluginsManager
@@ -73,6 +74,11 @@ KCM.SimpleKCM {
                 onActivated: cfg_firstDayOfWeek = model[index].day
                 currentIndex: model.findIndex(item => item.day === cfg_firstDayOfWeek)
             }
+        }
+
+        QtControls.CheckBox {
+            id: shortCalendarDay
+            text: i18n("Shorten calendar day labels")
         }
 
         CustomGroupBox {

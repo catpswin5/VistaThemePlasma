@@ -80,8 +80,8 @@ PC3.Slider {
 
     ToolTip {
         id: tooltip
-        x: -(handle.width + Kirigami.Units.smallSpacing)
-        y: -(handle.height / 2)
+        x: parent.x - (width + Kirigami.Units.smallSpacing)
+        y: (parent.height / 2) - (height / 2)
         parent: control.handle
         visible: control.pressed
         text: Math.round(control.value / PulseAudio.NormalVolume * 100.0)
