@@ -130,6 +130,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 // elide: Text.ElideRight
                 fontSizeMode: Text.HorizontalFit
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize - (Plasmoid.configuration.shortCalendarDay ? 0 : 1)
             }
         }
 
