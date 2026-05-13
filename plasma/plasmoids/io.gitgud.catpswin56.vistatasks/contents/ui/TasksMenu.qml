@@ -188,12 +188,11 @@ PlasmaCore.Dialog {
         visible = true;
         Qt.callLater(() => {Plasmoid.setMouseGrab(true, tasksMenu); tasksMenu.x = xpos;});
         if(xpos !== tasksMenu.x) tasksMenu.x = xpos;
-        openTimer.start();
     }
     // Closes the menu gracefully, by first showing a fade out animation before freeing the object from memory.
     function closeMenu() {
         Plasmoid.disableBlurBehind(tasksMenu);
-        closeTimer.start();
+        tasksMenu.destroy();
     }
 
     function loadDynamicLauncherActions(launcherUrl) {
@@ -393,18 +392,6 @@ PlasmaCore.Dialog {
         // This may result in a brief but noticeable jump in position when the context menu is shown.
         Timer {
             id: delayTimer
-        }
-        Timer {
-            id: openTimer
-            interval: 25
-            repeat: false
-            onTriggered: tasksMenu.x = xpos;
-        }
-        // Timer used to free the object from memory after the fade out animation has finished.
-        Timer {
-            id: closeTimer
-            interval: 150
-            onTriggered: tasksMenu.destroy();
         }
 
         ColumnLayout {

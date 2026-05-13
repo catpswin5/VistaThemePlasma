@@ -44,7 +44,6 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        enabled: !tasksMenu.sliderAnimation.running
         onClicked: {
             tasksMenu.setCurrentItem(wrapperItem);
             tasksMenuItem.clicked();
