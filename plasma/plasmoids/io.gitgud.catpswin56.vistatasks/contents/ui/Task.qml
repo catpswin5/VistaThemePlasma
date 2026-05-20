@@ -1318,7 +1318,7 @@ TaskManagerApplet.SmartLauncherItem { }
                 Layout.minimumHeight: iconSize
                 Layout.maximumHeight: iconSize
 
-                Layout.leftMargin: (label.visible ? Kirigami.Units.smallSpacing : 0)
+                Layout.leftMargin: Kirigami.Units.smallSpacing
 
                 source: model.decoration
                 antialiasing: false
@@ -1333,14 +1333,53 @@ TaskManagerApplet.SmartLauncherItem { }
 
                 visible: model.ChildCount > 0
 
+                font.hintingPreference: Font.PreferFullHinting
+                font.kerning: Screen.devicePixelRatio == 1.0
                 textFormat: Text.PlainText
                 verticalAlignment: Text.AlignVCenter
                 maximumLineCount: 1
-                style: Text.Outline
-                styleColor: "#02ffffff"
+                bottomPadding: 2
                 font.bold: true
 
                 Accessible.ignored: true
+
+                PlasmaComponents3.Label {
+                    anchors.fill: parent
+                    anchors.rightMargin: 1
+                    anchors.leftMargin: -1
+
+                    color: "#32000000"
+                    font.hintingPreference: parent.font.hintingPreference
+                    font.kerning: parent.font.kerning
+                    font.bold: parent.font.bold
+                    text: parent.text
+                    elide: parent.elide
+                    textFormat: parent.textFormat
+                    maximumLineCount: parent.maximumLineCount
+                    verticalAlignment: parent.verticalAlignment
+                    wrapMode: parent.wrapMode
+                    bottomPadding: parent.bottomPadding
+
+                    z: -1
+                }
+
+                PlasmaComponents3.Label {
+                    anchors.fill: parent
+
+                    color: "#FFFFFFFF"
+                    font.hintingPreference: parent.font.hintingPreference
+                    font.kerning: parent.font.kerning
+                    font.bold: parent.font.bold
+                    text: parent.text
+                    elide: parent.elide
+                    textFormat: parent.textFormat
+                    maximumLineCount: parent.maximumLineCount
+                    verticalAlignment: parent.verticalAlignment
+                    wrapMode: parent.wrapMode
+                    bottomPadding: parent.bottomPadding
+
+                    z: -2
+                }
 
                 // use State to avoid unnecessary re-evaluation when the label is invisible
                 states: State {
@@ -1357,19 +1396,19 @@ TaskManagerApplet.SmartLauncherItem { }
             PlasmaComponents3.Label {
                 id: label
 
-                visible: (!iconsOnly && !model.IsLauncher
-                    && (parent.width - iconBox.height - Kirigami.Units.smallSpacing) >= LayoutMetrics.spaceRequiredToShowText())
+                visible: true
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                wrapMode: (maximumLineCount == 1) ? Text.NoWrap : Text.Wrap
+				font.hintingPreference: Font.PreferFullHinting
+				font.kerning: Screen.devicePixelRatio == 1.0
+                wrapMode: Text.NoWrap
                 elide: Text.ElideRight
                 textFormat: Text.PlainText
                 verticalAlignment: Text.AlignVCenter
-                maximumLineCount: 1//Plasmoid.configuration.maxTextLines || undefined
-                style: Text.Outline
-                styleColor: "#02ffffff"
+                maximumLineCount: 1
+                bottomPadding: 2
 
                 Accessible.ignored: true
 
@@ -1382,6 +1421,45 @@ TaskManagerApplet.SmartLauncherItem { }
                         target: label
                         text: model.display
                     }
+                }
+
+                // hacks to make font rendering closer to ClearType.
+                // subpixel rendering without this genuinely looks horrible
+                // TODO: maybe turn this into a reusable component
+                PlasmaComponents3.Label {
+                    anchors.fill: parent
+                    anchors.rightMargin: 1
+                    anchors.leftMargin: -1
+
+                    color: "#32000000"
+                    font.hintingPreference: parent.font.hintingPreference
+                    font.kerning: parent.font.kerning
+                    text: parent.text
+                    elide: parent.elide
+                    textFormat: parent.textFormat
+                    maximumLineCount: parent.maximumLineCount
+                    verticalAlignment: parent.verticalAlignment
+                    wrapMode: parent.wrapMode
+                    bottomPadding: parent.bottomPadding
+
+                    z: -1
+                }
+
+                PlasmaComponents3.Label {
+                    anchors.fill: parent
+
+                    color: "#FFFFFFFF"
+                    font.hintingPreference: parent.font.hintingPreference
+                    font.kerning: parent.font.kerning
+                    text: parent.text
+                    elide: parent.elide
+                    textFormat: parent.textFormat
+                    maximumLineCount: parent.maximumLineCount
+                    verticalAlignment: parent.verticalAlignment
+                    wrapMode: parent.wrapMode
+                    bottomPadding: parent.bottomPadding
+
+                    z: -2
                 }
             }
 
