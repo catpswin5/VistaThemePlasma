@@ -34,10 +34,6 @@ Image {
     fillMode: Image.Stretch
     source: sddm.currentBackground
 
-    Text {
-        text: sddm.currentTheme
-    }
-
     Plasma5Support.DataSource {
         id: executable
         engine: "executable"
