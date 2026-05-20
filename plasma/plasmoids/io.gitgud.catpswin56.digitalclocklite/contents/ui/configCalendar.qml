@@ -78,7 +78,7 @@ KCM.SimpleKCM {
 
         QtControls.CheckBox {
             id: shortCalendarDay
-            text: i18n("Shorten calendar day labels")
+            text: i18n("Shorten calendar week day labels")
         }
 
         CustomGroupBox {

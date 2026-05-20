@@ -105,7 +105,7 @@ Item {
         rows: daysCalendar.rows + (daysCalendar.headerModel ? 1 : 0)
 
         spacing: 0//root.borderWidth
-        columnSpacing: parent.squareCell ? (daysCalendar.width - daysCalendar.columns * (daysCalendar.cellWidth - root.borderWidth)) / daysCalendar.columns : root.borderWidth
+        columnSpacing: root.borderWidth
         property bool containsEventItems: false // FIXME
         property bool containsTodoItems: false // FIXME
 
@@ -130,7 +130,6 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 // elide: Text.ElideRight
                 fontSizeMode: Text.HorizontalFit
-                font.pointSize: Kirigami.Theme.defaultFont.pointSize - (Plasmoid.configuration.shortCalendarDay ? 0 : 1)
             }
         }
 

@@ -97,7 +97,7 @@ PlasmaCore.Dialog {
 
     readonly property bool showAgenda: Plasmoid.configuration.enabledCalendarPlugins.length > 0
 
-    property int _minimumWidth: 336
+    property int _minimumWidth: Plasmoid.configuration.shortCalendarDay ? 336 : 360
     property int _minimumHeight: 247
 
     readonly property int agendaViewWidth: _minimumHeight
@@ -176,7 +176,7 @@ PlasmaCore.Dialog {
 				//The calendar itself, on the left side of the dialog
 				Item {
 					id: cal
-					Layout.preferredWidth: 168
+					Layout.preferredWidth: Plasmoid.configuration.shortCalendarDay ? 168 : 192
 					Layout.preferredHeight: 150
 					Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 					Layout.topMargin: Kirigami.Units.largeSpacing + Kirigami.Units.mediumSpacing
