@@ -560,7 +560,7 @@ PlasmaCore.Dialog {
 		ToolButton {
 			id: pinButton
 
-			visible: !Plasmoid.configuration.disablePin
+			visible: Plasmoid.configuration.showPinButton
 			onVisibleChanged: {
 				if (!visible) {
                     Plasmoid.configuration.pin = false;
