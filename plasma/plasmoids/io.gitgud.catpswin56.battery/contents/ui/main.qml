@@ -126,7 +126,10 @@ PlasmoidItem {
         return PlasmaCore.Types.PassiveStatus;
     }
 
-    toolTipItem: TrayToolTip {  }
+    toolTipItem: TrayToolTip {
+        batteryControl: batteryControl
+        powerProfilesControl: powerProfilesControl
+    }
 
     toolTipMainText: {
         if (batteryControl.hasInternalBatteries && !batteryControl.hasCumulative) {

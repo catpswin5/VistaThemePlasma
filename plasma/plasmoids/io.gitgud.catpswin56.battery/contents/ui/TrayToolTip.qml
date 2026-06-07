@@ -17,6 +17,9 @@ import org.kde.ksvg as KSvg
 ColumnLayout {
     id: mainLayout
 
+    property var batteryControl
+    property var powerProfilesControl
+
     anchors.fill: parent
     anchors.topMargin: 8
     anchors.leftMargin: 10
@@ -34,11 +37,11 @@ ColumnLayout {
             Layout.preferredWidth: Kirigami.Units.iconSizes.medium
             Layout.preferredHeight: Kirigami.Units.iconSizes.medium
 
-            hasBattery: batterymonitor.compactRepresentationItem?.batteryPluggedIn ?? false
-            percent: batterymonitor.compactRepresentationItem?.batteryPercent ?? 0
-            pluggedIn: (batterymonitor.compactRepresentationItem?.pluggedIn ?? true) && (batterymonitor.compactRepresentationItem?.batteryIsPowerSupply ?? true)
-            batteryType: batterymonitor.compactRepresentationItem?.batteryType ?? 0
-            broken: batterymonitor.compactRepresentationItem?.isBroken ?? false
+            hasBattery: batteryControl.pluggedIn
+            percent: batteryControl.percent
+            pluggedIn: batteryControl.pluggedIn
+            batteryType: batteryControl.type
+            broken: batteryControl.capacity > 0 && batteryControl.capacity < 50
         }
 
         PlasmaComponents.Label {
@@ -65,7 +68,13 @@ ColumnLayout {
         PlasmaComponents.Label {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignLeft
-            text: batterymonitor.fullRepresentationItem?.activeProfile ?? ""
+            text: {
+                if (powerProfilesControl.activeProfile == "") {
+                    return i18n("Unknown")
+                } else {
+                    return powerProfilesControl.activeProfile;
+                }
+            }
             font.capitalization: Font.Capitalize
             color: "#1370ab"
             maximumLineCount: 1
