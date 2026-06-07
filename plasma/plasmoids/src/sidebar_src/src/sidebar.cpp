@@ -14,7 +14,6 @@
 #include <QScreen>
 #include <QStandardItemModel>
 
-#include <PlasmaQuick/PlasmaShellWaylandIntegration>
 #include <LayerShellQt/Window>
 
 #include <KX11Extras>
@@ -88,93 +87,56 @@ void Sidebar::showPlasmoidMenu(QQuickItem *appletInterface, int x, int y)
     desktopMenu->popup(pos.toPoint());
 }
 
-void Sidebar::configureWindow(QWindow *window, const QRectF &rect, const bool &reserveSpace, const bool &right)
+QQuickWindow *Sidebar::window() const
 {
-    if(reserveSpace) KWindowEffects::enableBlurBehind(window, true, QRegion(0,0, 0, 0));
-    else if(!reserveSpace && m_docked) KWindowEffects::enableBlurBehind(window, false, QRegion(0,0, 0, 0));
+    return m_window;
+}
 
-    if(KWindowSystem::isPlatformX11())
-    {
-        WId windowId = window->winId();
+void Sidebar::setWindow(QQuickWindow *window)
+{
+    if (m_window) {
+        disconnect(m_window, nullptr, this, nullptr);
 
-        if(!m_docked) KX11Extras::setType(windowId, NET::Normal);
-
-        NET::States states;
-        states |= NET::SkipTaskbar;
-        states |= NET::SkipPager;
-        states |= NET::SkipSwitcher;
-        // states |= NET::KeepBelow;
-
-        KX11Extras::setOnAllDesktops(windowId, true);
-        KX11Extras::setState(windowId, states);
-
-        if(!reserveSpace && m_docked) {
-            KX11Extras::setExtendedStrut(windowId,
-                                         0, 0, 0,
-                                         0, 0, 0,
-                                         0, 0, 0,
-                                         0, 0, 0);
-            m_docked = false;
-            KX11Extras::setType(windowId, NET::Normal);
-        }
-        if(reserveSpace) {
-            KX11Extras::setType(windowId, NET::Dock);
-
-            if(!right) {
-                KX11Extras::setExtendedStrut(windowId,
-                                             rect.width(), rect.y(), rect.y() + rect.height(),
-                                             0, 0, 0,
-                                             0, 0, 0,
-                                             0, 0, 0);
-
-            }
-            else {
-                KX11Extras::setExtendedStrut(windowId,
-                                             0, 0, 0,
-                                             rect.width(), rect.y(), rect.y() + rect.height(),
-                                             0, 0, 0,
-                                             0, 0, 0);
-
-            }
-
-            m_docked = true;
-        }
+        m_window = nullptr;
+        m_layerWindow = nullptr;
     }
-    else
-    {
-        // why is docking a window this complicated under Wayland bro
-        LayerShellQt::Window *layerWindow = LayerShellQt::Window::get(window);
-        PlasmaShellWaylandIntegration *shellWindow = PlasmaShellWaylandIntegration::get(window);
 
-        if(layerWindow) {
-            LayerShellQt::Window::Anchors anchors;
-            anchors.setFlag(LayerShellQt::Window::AnchorTop);
-            anchors.setFlag(LayerShellQt::Window::AnchorBottom);
+    m_window = window;
+    m_layerWindow = LayerShellQt::Window::get(window);
 
-            if(right) anchors.setFlag(LayerShellQt::Window::AnchorRight);
-            else anchors.setFlag(LayerShellQt::Window::AnchorLeft);
+    connect(m_window, &QQuickWindow::visibleChanged, this, &Sidebar::configureWindow);
+    connect(m_window, &QQuickWindow::xChanged,       this, &Sidebar::configureWindow);
+    connect(m_window, &QQuickWindow::yChanged,       this, &Sidebar::configureWindow);
+    connect(m_window, &QQuickWindow::widthChanged,   this, &Sidebar::configureWindow);
+    connect(m_window, &QQuickWindow::heightChanged,  this, &Sidebar::configureWindow);
 
-            layerWindow->setAnchors(anchors);
-            layerWindow->setLayer(LayerShellQt::Window::LayerBottom);
+    Q_EMIT windowChanged();
+}
 
-            shellWindow->setPanelBehavior(QtWayland::org_kde_plasma_surface::panel_behavior_always_visible);
+bool Sidebar::reserveScreenArea() const
+{
+    return m_reserveScreenArea;
+}
 
-            if(!reserveSpace && m_docked) {
-                layerWindow->setExclusiveZone(0);
+void Sidebar::setReserveScreenArea(bool reserveScreenArea)
+{
+    m_reserveScreenArea = reserveScreenArea;
+    Q_EMIT reserveScreenAreaChanged();
 
-                shellWindow->setRole(QtWayland::org_kde_plasma_surface::role_normal);
+    configureWindow();
+}
 
-                m_docked = false;
-            }
-            if(reserveSpace) {
-                shellWindow->setRole(QtWayland::org_kde_plasma_surface::role_panel);
+bool Sidebar::positionRight() const
+{
+    return m_positionRight;
+}
 
-                layerWindow->setExclusiveZone(rect.width());
+void Sidebar::setPositionRight(bool positionRight)
+{
+    m_positionRight = positionRight;
+    Q_EMIT positionRightChanged();
 
-                m_docked = true;
-            }
-        }
-    }
+    configureWindow();
 }
 
 QPoint Sidebar::cursorPosition()
@@ -198,28 +160,105 @@ QPointF Sidebar::popupPosition(QQuickItem *visualParent, int x, int y)
     return pos;
 }
 
-void Sidebar::reorderItemBefore(QQuickItem *before, QQuickItem *after)
+void Sidebar::configureWindow()
 {
-    if (!before || !after) {
+    if (!m_window) {
         return;
     }
 
-    before->setVisible(false);
-    before->setParentItem(after->parentItem());
-    before->stackBefore(after);
-    before->setVisible(true);
-}
-
-void Sidebar::reorderItemAfter(QQuickItem *after, QQuickItem *before)
-{
-    if (!before || !after) {
-        return;
+    if (m_reserveScreenArea) {
+        KWindowEffects::enableBlurBehind(m_window, true, QRegion());
+    } else if (!m_reserveScreenArea && m_docked) {
+        KWindowEffects::enableBlurBehind(m_window, false, QRegion());
     }
 
-    after->setVisible(false);
-    after->setParentItem(before->parentItem());
-    after->stackAfter(before);
-    after->setVisible(true);
+    disconnect(m_window, &QQuickWindow::visibleChanged, this, &Sidebar::configureWindow);
+
+    bool previousVal = m_window->isVisible();
+    m_window->setVisible(false);
+
+    QRect rect = m_window->geometry();
+
+    if (KWindowSystem::isPlatformX11()) {
+        WId windowId = m_window->winId();
+
+        if (!m_docked) {
+            KX11Extras::setType(windowId, NET::Normal);
+        }
+
+        NET::States states;
+        states |= NET::SkipTaskbar;
+        states |= NET::SkipPager;
+        states |= NET::SkipSwitcher;
+
+        KX11Extras::setOnAllDesktops(windowId, true);
+        KX11Extras::setState(windowId, states);
+
+        if (!m_reserveScreenArea && m_docked) {
+            m_window->setX(m_window->screen()->geometry().width() - rect.width());
+            m_window->setY(0);
+            m_window->setHeight(m_window->screen()->availableGeometry().height());
+
+            KX11Extras::setExtendedStrut(windowId,
+                                         0, 0, 0,
+                                         0, 0, 0,
+                                         0, 0, 0,
+                                         0, 0, 0);
+            m_docked = false;
+            KX11Extras::setType(windowId, NET::Normal);
+        }
+
+        if (m_reserveScreenArea) {
+            KX11Extras::setType(windowId, NET::Dock);
+
+            if (!m_positionRight) {
+                KX11Extras::setExtendedStrut(windowId,
+                                             rect.width(), rect.y(), rect.y() + rect.height(),
+                                             0, 0, 0,
+                                             0, 0, 0,
+                                             0, 0, 0);
+
+            } else {
+                KX11Extras::setExtendedStrut(windowId,
+                                             0, 0, 0,
+                                             rect.width(), rect.y(), rect.y() + rect.height(),
+                                             0, 0, 0,
+                                             0, 0, 0);
+
+            }
+
+            m_docked = true;
+        }
+    } else {
+        if (m_layerWindow) {
+            LayerShellQt::Window::Anchors anchors;
+            anchors.setFlag(LayerShellQt::Window::AnchorTop);
+            anchors.setFlag(LayerShellQt::Window::AnchorBottom);
+
+            if (m_positionRight) {
+                anchors.setFlag(LayerShellQt::Window::AnchorRight);
+            } else {
+                anchors.setFlag(LayerShellQt::Window::AnchorLeft);
+            }
+
+            m_layerWindow->setAnchors(anchors);
+            m_layerWindow->setLayer(LayerShellQt::Window::LayerBottom);
+
+            if (!m_reserveScreenArea && m_docked) {
+                m_layerWindow->setExclusiveZone(0);
+                m_docked = false;
+            }
+
+            if (m_reserveScreenArea) {
+                m_layerWindow->setExclusiveZone(rect.width());
+                m_docked = true;
+            }
+        }
+    }
+
+    m_window->setVisible(previousVal);
+
+    connect(m_window, &QQuickWindow::visibleChanged, this, &Sidebar::configureWindow);
 }
 
 K_PLUGIN_CLASS(Sidebar)

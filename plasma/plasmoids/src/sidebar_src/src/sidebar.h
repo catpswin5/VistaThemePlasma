@@ -1,7 +1,7 @@
 /*
  *   SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
  *   SPDX-FileCopyrightText: 2016 David Edmundson <davidedmundson@kde.org>
- *   SPDX-FileCopyrightText: 2025 catpswin56 <>
+ *   SPDX-FileCopyrightText: 2026 catpswin56 <catpswin5@proton.me>
  *
  *   SPDX-License-Identifier: GPL-2.0-or-later
  */
@@ -9,15 +9,26 @@
 #ifndef SIDEBAR_H
 #define SIDEBAR_H
 
+#include <QObject>
 #include <QCursor>
+#include <QQuickWindow>
 
 #include <Plasma/Containment>
+
+namespace LayerShellQt
+{
+class Window;
+}
 
 class QQuickItem;
 
 class Sidebar : public Plasma::Containment
 {
     Q_OBJECT
+
+    Q_PROPERTY(QQuickWindow *window READ window WRITE setWindow NOTIFY windowChanged)
+    Q_PROPERTY(bool reserveScreenArea READ reserveScreenArea WRITE setReserveScreenArea NOTIFY reserveScreenAreaChanged)
+    Q_PROPERTY(bool positionRight READ positionRight WRITE setPositionRight NOTIFY positionRightChanged)
 public:
     explicit Sidebar(QObject *parent, const KPluginMetaData &data, const QVariantList &args);
 
@@ -32,8 +43,14 @@ public:
      */
     Q_INVOKABLE void showPlasmoidMenu(QQuickItem *appletInterface, int x, int y);
 
-    // Configure the sidebar window
-    Q_INVOKABLE void configureWindow(QWindow *window, const QRectF &rect, const bool &reserveSpace, const bool &right);
+    QQuickWindow *window() const;
+    void setWindow(QQuickWindow *window);
+
+    bool reserveScreenArea() const;
+    void setReserveScreenArea(bool reserveScreenArea);
+
+    bool positionRight() const;
+    void setPositionRight(bool positionRight);
 
     /**
      * Returns the cursor position. This only exists because there's no way
@@ -47,25 +64,23 @@ public:
      */
     Q_INVOKABLE QPointF popupPosition(QQuickItem *visualParent, int x, int y);
 
-    /**
-     * Reparent the item "before" with the same parent as the item "after",
-     * then restack it before it, using QQuickITem::stackBefore.
-     * used to quickly reorder icons in the systray (or hidden popup)
-     * @see QQuickITem::stackBefore
-     */
-    Q_INVOKABLE void reorderItemBefore(QQuickItem *before, QQuickItem *after);
+public Q_SLOTS:
+    Q_INVOKABLE void configureWindow();
 
-    /**
-     * Reparent the item "after" with the same parent as the item "before",
-     * then restack it after it, using QQuickITem::stackAfter.
-     * used to quickly reorder icons in the systray (or hidden popup)
-     * @see QQuickITem::stackAfter
-     */
-    Q_INVOKABLE void reorderItemAfter(QQuickItem *after, QQuickItem *before);
+Q_SIGNALS:
+    void windowChanged();
+    void reserveScreenAreaChanged();
+    void positionRightChanged();
 
 private:
     bool m_docked = false;
     bool m_X11_underlap = false;
+
+    QQuickWindow *m_window = nullptr;
+    bool m_reserveScreenArea = false;
+    bool m_positionRight = false;
+
+    LayerShellQt::Window *m_layerWindow = nullptr;
 };
 
 #endif

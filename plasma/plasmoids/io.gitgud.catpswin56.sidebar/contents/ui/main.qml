@@ -76,20 +76,17 @@ ContainmentItem {
         return width;
     }
     onSidebarWidthChanged: {
-        configureWindow.start();
         mainStack.resetPos();
     }
 
     readonly property int sidebarLocation: Plasmoid.configuration.location
     onSidebarLocationChanged: {
         updateDesktopBindings();
-        configureWindow.start();
     }
 
     readonly property bool sidebarDock: Plasmoid.configuration.dock
     onSidebarDockChanged: {
         updateDesktopBindings();
-        configureWindow.start();
     }
 
     property bool sidebarCollapsed: Plasmoid.configuration.collapsed
@@ -335,6 +332,7 @@ ContainmentItem {
         id: window
 
         root: root
+        visible: !root.sidebarCollapsed
 
         Item {
             id: windowRoot
@@ -483,28 +481,14 @@ ContainmentItem {
         }
     }
 
-    // delay the configuration on creation so it gets configured correctly
-    Timer {
-        id: configureWindow
-
-        interval: 100
-        onTriggered: {
-            window.setPos();
-            Plasmoid.configureWindow(window,
-                                     Qt.rect(window.x, window.y, root.sidebarWidth, window.height),
-                                     root.sidebarDock,
-                                     !root.sidebarLocation);
-            window.visible = true;
-        }
-    }
-
     Component.onCompleted: {
         var applets = Containment.applets;
         for (var i = 0 ; i < applets.length; i++) {
             addApplet(applets[i]);
         }
 
-        window.setPos();
-        configureWindow.start();
+        Plasmoid.window = window;
+        Plasmoid.reserveScreenArea = Qt.binding(() => root.sidebarDock);
+        Plasmoid.positionRight = Qt.binding(() => !root.sidebarLocation);
     }
 }

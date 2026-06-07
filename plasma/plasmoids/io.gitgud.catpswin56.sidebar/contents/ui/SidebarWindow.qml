@@ -7,9 +7,6 @@ Window {
 
     required property ContainmentItem root
 
-    property var screenRect: Plasmoid.availableScreenRect
-    onScreenRectChanged: setPos();
-
     width: root.sidebarWidth
     height: Plasmoid.availableScreenRect.height
 
@@ -17,13 +14,7 @@ Window {
     flags: Qt.FramelessWindowHint
     color: "transparent"
 
-    onVisibleChanged: {
-        if(visible) {
-            setPos();
-            configureWindow.start();
-        }
-    }
-
+    // TODO: move this to a kwin effect instead
     SequentialAnimation {
         id: slide_animation_root
 
@@ -35,15 +26,6 @@ Window {
             duration: 125
         }
         ScriptAction { script: { window.visible = !root.sidebarCollapsed; } }
-    }
-
-    function setPos() {
-        var availableScreenSpace = Plasmoid.availableScreenRect;
-
-        if(root.sidebarLocation) x = availableScreenSpace.x;
-        else x = (availableScreenSpace.width + availableScreenSpace.x) - width;
-
-        y = availableScreenSpace.y;
     }
 
     function openClose() {
