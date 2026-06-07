@@ -37,7 +37,7 @@ ColumnLayout {
             Layout.preferredWidth: Kirigami.Units.iconSizes.medium
             Layout.preferredHeight: Kirigami.Units.iconSizes.medium
 
-            hasBattery: batteryControl.pluggedIn
+            hasBattery: batteryControl.hasBatteries
             percent: batteryControl.percent
             pluggedIn: batteryControl.pluggedIn
             batteryType: batteryControl.type
