@@ -104,7 +104,7 @@ Item {
     }
     function showMenu() {
         dashWindow.visible = !dashWindow.visible;
-        dashWindow.showingAllPrograms = false;
+        dashWindow.showingAllPrograms = dashWindow.mainItemCount == 0;
         if(KWindowSystem.isPlatformX11) Plasmoid.setActiveWin(dashWindow);
         dashWindow.m_searchField.focus = true;
         orb.raise();

@@ -31,10 +31,10 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.extras as PlasmaExtras
 
 import org.kde.plasma.private.kicker as Kicker
-import org.kde.coreaddons 1.0 as KCoreAddons // kuser
+import org.kde.coreaddons as KCoreAddons // kuser
 import org.kde.kitemmodels as KItemModels
 
-import org.kde.kwindowsystem 1.0
+import org.kde.kwindowsystem
 import org.kde.ksvg as KSvg
 import org.kde.plasma.plasma5support as Plasma5Support
 import org.kde.kirigami as Kirigami
@@ -63,6 +63,8 @@ PlasmaCore.Dialog {
     property int cellHeight: iconSize + Kirigami.Units.smallSpacing - Kirigami.Units.smallSpacing/2
 
 	property int cellCount: Plasmoid.configuration.numberRows + faves.getFavoritesCount()
+
+	property int mainItemCount: faves.count + recents.count
 
 	property int shutdownIndex: -1
 	property int sleepIndex: -1
