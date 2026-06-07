@@ -151,7 +151,7 @@ PlasmaCore.ToolTipArea {
     readonly property bool highlighted: dragArea.containsMouse
         || (task.contextMenu && task.contextMenu.status === PlasmaExtras.Menu.Open)
         || (task.jumpList)
-        || tasksRoot.toolTipOpen && taskThumbnail.taskIndex == model.index
+        || (tasksRoot.toolTipOpen && taskThumbnail.taskIndex == model.index)
 
     readonly property bool animateLabel: !model.IsStartup && !model.IsLauncher
     readonly property bool shouldHideOnRemoval: model.IsStartup || model.IsLauncher
@@ -1234,7 +1234,7 @@ TaskManagerApplet.SmartLauncherItem { }
         KSvg.FrameSvgItem {
             id: frame
 
-            property bool isHovered: task.highlighted && !attentionIndicator.requiresAttention
+            property bool isHovered: task.highlighted
             property bool isActive: model.IsActive || dragArea.containsPress || dragArea.held || task.wasActive
             property bool doHoverFade: Plasmoid.configuration.hoverFadeAnim && Plasmoid.configuration.disableHottracking
             property string basePrefix: {
@@ -1275,7 +1275,7 @@ TaskManagerApplet.SmartLauncherItem { }
             id: taskProgressOverlayLoader
 
             anchors.fill: frame
-            anchors.margins: -1
+            anchors.margins: 1
 
             asynchronous: true
             active: (model.IsWindow && task.smartLauncherItem && task.smartLauncherItem.progressVisible) && Plasmoid.configuration.showProgress
@@ -1292,17 +1292,17 @@ TaskManagerApplet.SmartLauncherItem { }
 
             property int rightMargin: Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
             property int leftMargin: {
-                if(model.IsActive) return Kirigami.Units.smallSpacing*2 - Kirigami.Units.smallSpacing/4;
+                if(frame.isActive) return Kirigami.Units.smallSpacing*2 - Kirigami.Units.smallSpacing/4;
                 else return Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2;
             }
 
             anchors {
-                fill: model.IsLauncher ? launcherFrame : frame
+                fill: frame
 
                 bottomMargin: Kirigami.Units.smallSpacing
                 rightMargin: rightMargin
                 leftMargin: leftMargin
-                topMargin: model.IsActive ? Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing/2 : Kirigami.Units.smallSpacing
+                topMargin: frame.isActive ? Kirigami.Units.smallSpacing + Kirigami.Units.smallSpacing / 2 : Kirigami.Units.smallSpacing
             }
 
 
@@ -1321,11 +1321,8 @@ TaskManagerApplet.SmartLauncherItem { }
                 Layout.leftMargin: Kirigami.Units.smallSpacing
 
                 source: model.decoration
+                onSourceChanged: containerRect.glowColor = Plasmoid.getDominantColor(iconBox.source);
                 antialiasing: false
-
-                onSourceChanged: {
-                    containerRect.glowColor = Plasmoid.getDominantColor(iconBox.source);
-                }
             }
 
             PlasmaComponents3.Label {

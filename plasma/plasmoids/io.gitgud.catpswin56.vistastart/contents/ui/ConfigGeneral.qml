@@ -54,7 +54,6 @@ KCM.SimpleKCM {
     property alias  cfg_showDefaultInternetApp: showDefaultInternetApp.checked
     property alias  cfg_showDefaultEmailApp: showDefaultEmailApp.checked
     property string cfg_defaultRunnerApp
-    property string cfg_downloadsFolderName
 
     component CustomGroupBox: GroupBox {
         id: gbox
@@ -150,22 +149,6 @@ KCM.SimpleKCM {
 
                         text: configGeneral.cfg_defaultRunnerApp
                         onTextChanged: configGeneral.cfg_defaultRunnerApp = text;
-
-                        inputMethodHints: Qt.ImhNoPredictiveText
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: i18n("Downloads folder name:")
-                    }
-                    TextField {
-                        id: downloadsFolderName
-
-                        Layout.fillWidth: true
-
-                        text: configGeneral.cfg_downloadsFolderName
-                        onTextChanged: configGeneral.cfg_downloadsFolderName = text;
 
                         inputMethodHints: Qt.ImhNoPredictiveText
                     }

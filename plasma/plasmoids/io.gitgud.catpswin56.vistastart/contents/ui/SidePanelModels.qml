@@ -77,7 +77,7 @@ Item {
             description: i18n("Find Internet downloads and links to favorite websites."),
             itemIcon: "folder-download",
             itemIconFallback: "folder-download",
-            executableString: StandardPaths.writableLocation(StandardPaths.HomeLocation) + "/" + Plasmoid.configuration.downloadsFolderName,
+            executableString: StandardPaths.writableLocation(StandardPaths.DownloadLocation),
             menuModel: null,
             executeProgram: false
         },
