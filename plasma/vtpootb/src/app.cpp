@@ -232,6 +232,7 @@ void App::applyLookAndFeel()
     model.updateEffectStatus(model.findByPluginId("slide"), EffectsModel::Status::Disabled);
     model.updateEffectStatus(model.findByPluginId("fade"), EffectsModel::Status::Disabled);
     model.updateEffectStatus(model.findByPluginId("slidingpopups"), EffectsModel::Status::Disabled);
+    model.updateEffectStatus(model.findByPluginId("slidingnotifications"), EffectsModel::Status::Disabled);
     model.updateEffectStatus(model.findByPluginId("dialogparent"), EffectsModel::Status::Disabled);
     model.updateEffectStatus(model.findByPluginId("fadingpopups"), EffectsModel::Status::Disabled);
     model.updateEffectStatus(model.findByPluginId("windowaperture"), EffectsModel::Status::Disabled);

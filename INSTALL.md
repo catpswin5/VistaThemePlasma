@@ -20,7 +20,7 @@ Before installing VistaThemePlasma, it's important to know which display server 
 Required packages:
 
 ```bash
-pacman -S git cmake extra-cmake-modules ninja curl unzip qt6-virtualkeyboard qt6-multimedia qt6-5compat qt6-wayland plasma-wayland-protocols plasma5support kvantum sddm sddm-kcm base-devel plasma-nm plasma-pa plasma-workspace plasma-desktop
+pacman -S git cmake extra-cmake-modules ninja curl unzip qt6-virtualkeyboard qt6-multimedia qt6-5compat qt6-wayland plasma-wayland-protocols plasma5support kvantum sddm sddm-kcm base-devel plasma-nm plasma-pa plasma-workspace plasma-desktop wayland-protocols vulkan-headers
 ```
 
 Since Plasma 6.4, the X11 session has been separated from the main codebase. On Arch Linux, additional dependencies for X11 include:
@@ -150,6 +150,7 @@ Update and do `git pull` on the cloned repository to get new changes:
 ```bash
 $ cd /path/to/vistathemeplasma
 $ git pull
+$ git checkout "Plasma/6.7" # Switch to a new branch, if needed
 ```
 
 Re-run the install script as described in [Getting started](#started). The script will automatically pull changes for all cloned repositories and rebuild them. In case something needs to be rebuilt completely, simply delete the repository folder causing the build error, and re-run the install script.
@@ -173,7 +174,7 @@ $ sudo pacman -S libplasma
 
 ### Fonts 
 
-On Arch Linux, use [this script](https://gitgud.io/aeroshell/aeroshell-workspace/-/blob/Plasma/6.6/scripts/install_fonts_arch.sh) to extract fonts and install them as an Arch package from a valid Windows 7 ISO. A 32-bit Windows 7 ISO is recommended for faster download speeds.
+On Arch Linux, use [this script](https://gitgud.io/aeroshell/aeroshell-workspace/-/blob/Plasma/6.7/scripts/install_fonts_arch.sh) to extract fonts and install them as an Arch package from a valid Windows 7 ISO. A 32-bit Windows 7 ISO is recommended for faster download speeds.
 
 ## Optional <a name="optional"></a>
 

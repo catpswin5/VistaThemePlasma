@@ -1,7 +1,6 @@
-#!/usr/bin/env xdg-open
 [Desktop Entry]
 Icon=preferences-system-tabbox
 Name[es_ES]=Cambiar de ventanas
 Name=Switch windows
 Type=Application
-Exec=qdbus6 org.kde.kglobalaccel /component/kwin invokeShortcut "Walk Through Windows Alternative"
+Exec=qdbus-qt6 org.kde.kglobalaccel /component/kwin invokeShortcut "Walk Through Windows Alternative"

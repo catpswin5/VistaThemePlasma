@@ -1,6 +1,8 @@
 #!/bin/bash
 CUR_DIR=${PWD}
 
+BRANCH_VERSION="Plasma/6.7"
+
 SU_CMD=sudo
 if [[ -z "$(command -v $SU_CMD)" ]]; then
     SU_CMD=doas
@@ -29,6 +31,7 @@ cd repos
 git clone --depth=1 https://gitgud.io/aeroshell/libplasma.git libplasma
 cd libplasma
 git pull
+git checkout $BRANCH_VERSION
 cmake -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
 cmake --build build || exit 1
 $SU_CMD cmake --install build || exit 1
@@ -39,6 +42,8 @@ cd "$CUR_DIR/repos"
 git clone https://gitgud.io/aeroshell/uac-polkit-agent.git uac-polkit-agent
 cd uac-polkit-agent
 git pull
+git checkout $BRANCH_VERSION
+git checkout $BRANCH_VERSION
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR=$UAC_LIBEXEC_DIR -B build . || exit 1
 cmake --build build || exit 1
 $SU_CMD cmake --install build || exit 1
@@ -49,6 +54,7 @@ cd "$CUR_DIR/repos"
 git clone https://gitgud.io/aeroshell/smod.git smod
 cd smod
 git pull
+git checkout $BRANCH_VERSION
 bash install.sh $@
 cp build/install_manifest.txt "$CUR_DIR/manifest/smod_install_manifest.txt"
 cp smodglow/build-wl/install_manifest.txt "$CUR_DIR/manifest/smodglow_install_manifest.txt"
@@ -63,6 +69,7 @@ cd "$CUR_DIR/repos"
 git clone https://gitgud.io/aeroshell/aeroshell-workspace.git aeroshell-workspace
 cd aeroshell-workspace
 git pull
+git checkout $BRANCH_VERSION
 cmake -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
 cmake --build build || exit 1
 $SU_CMD cmake --install build || exit 1
@@ -74,6 +81,7 @@ cd "$CUR_DIR/repos"
 git clone https://gitgud.io/aeroshell/aeroshell-kwin-components.git aeroshell-kwin-components
 cd aeroshell-kwin-components
 git pull
+git checkout $BRANCH_VERSION
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DKWIN_BUILD_WAYLAND=ON -B build . || exit 1
 cmake --build build || exit 1
 $SU_CMD cmake --install build || exit 1
@@ -91,6 +99,7 @@ cd "$CUR_DIR/repos"
 git clone https://gitgud.io/aeroshell/aeroshell-sddm-kcm.git aeroshell-sddm-kcm
 cd aeroshell-sddm-kcm
 git pull
+git checkout $BRANCH_VERSION
 cmake -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
 cmake --build build || exit 1
 $SU_CMD cmake --install build || exit 1

@@ -9,7 +9,7 @@ This is a fork of [WackyIdeas](https://gitgud.io/wackyideas/)' [AeroThemePlasma]
 VTP is in constant development and testing. So far it has been tested on:
 
 1. Arch Linux x64 and other Arch derivatives
-2. Plasma 6.6.5, KDE Frameworks 6.24.0, Qt 6.11.0
+2. Plasma 6.7.0, KDE Frameworks 6.27.0, Qt 6.11.1
 3. 96 DPI scaling, single monitor
 4. X11, Wayland*
 
@@ -17,7 +17,9 @@ VTP is in constant development and testing. So far it has been tested on:
 
 ## This software comes "as is" without warranty of any kind. It's always recommended to make backups of your system just in case. I am not responsible for broken systems, please proceed with caution.
 
-[GitHub mirror](https://github.com/aeroshell-desktop/vistathemeplasma)
+[![](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/ZDeT6vdqMp)
+
+[VistaThemePlasma](https://github.com/aeroshell-desktop/vistathemeplasma) and all of its AeroShell components are available as read-only [GitHub mirrors](https://github.com/aeroshell-desktop/).
 
 ## Installation
 
@@ -45,8 +47,19 @@ Many thanks to the people who helped out by testing and providing some suggestio
 - [Aero UserChrome](https://gitgud.io/souris/aero-userchrome) by Souris (Geckium in combination with Aero UserChrome works well with AeroThemePlasma and VistaThemePlasma)
 - [AeroThemePlasma](https://gitgud.io/aeroshell/atp/aerothemeplasma) by [WackyIdeas](https://gitgud.io/wackyideas)
 - [Ice2K.sys](https://toiletflusher.neocities.org/ice2k/) by 0penrc
-- [Sevulet](https://gitgud.io/snailatte/sevulet) by [snailatte](https://gitgud.io/snailatte)
 
+## Aero apps for VistaThemePlasma
+- [Aero Dolphin](https://gitgud.io/atmk/dolphin-aero) by Albert Tomanek
+- [Aero GwenView](https://gitgud.io/atmk/gwenview-aero) by Albert Tomanek
+- [Aero KolourPaint](https://invent.kde.org/albert-tomanek/kolourpaint/-/tree/saribbon-aero) by Albert Tomanek
+- [Gadgets](https://gitgud.io/catpswin56/win-gadgets) by me
+- [WinXplorer](https://gitgud.io/catpswin56/winxplorer) by me (unmaintained)
+- [ExecBin](https://gitgud.io/catpswin56/execbin) (run dialog) by me
+- [LinVer](https://gitgud.io/wackyideas/linver) (version dialog) by WackyIdeas
+- [Device Manager](https://github.com/actuallyaridan/linux-devmgmt) by ActuallyAridan
+- ~~[Sevulet](https://gitgud.io/snailatte/sevulet) by [snailatte](https://gitgud.io/snailatte)~~
+
+To install most of these, the commands to run after cloning are: `mkdir build; cd build; cmake .. -DCMAKE_INSTALL_PREFIX=/usr; sudo make install`.
 
 ## Screenshots
 

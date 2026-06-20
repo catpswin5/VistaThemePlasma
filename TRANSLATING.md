@@ -106,7 +106,7 @@ AeroThemePlasma and VistaThemePlasma have translatable `metadata.json` entries i
 
 ### MIME associations <a name="mime"></a>
 
-[AeroShell Workspace](https://gitgud.io/aeroshell/aeroshell-workspace/-/blob/Plasma/6.6/mimetype/x-ms-win.xml?ref_type=heads) features a XML file
+[AeroShell Workspace](https://gitgud.io/aeroshell/aeroshell-workspace/-/blob/Plasma/6.7/mimetype/x-ms-win.xml?ref_type=heads) features a XML file
 for MIME associations, which follows the XML formatting. Keep in mind that the locale codes [differ](https://www.w3.org/International/questions/qa-choosing-language-tags) from the locale codes used in other file formats listed here. The `<comment>` tag that doesn't feature a `xml:lang` attribute is the default fallback string used when no matching string for a given locale can be found. 
 
 ### .po files <a name="po"></a>
