@@ -188,7 +188,7 @@ Item {
 
                 opacity: {
                     if(ma.containsMouse) return 1;
-                    if(listItem.parentKickoffItem.childIndex === model.index) return 0.5;
+                    if(listItem.parentKickoffItem && listItem.parentKickoffItem.childIndex === model.index) return 0.5;
                     return 0;
                 }
             }
@@ -285,17 +285,21 @@ Item {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 cursorShape: listItem.modelChildren || !listItem.smallIcon ? undefined : Qt.PointingHandCursor
                 onEntered: {
-                    if(listItem.parentKickoffItem.childItem && listItem.parentKickoffItem.childItem === listItem) {
-                        listItem.parentKickoffItem.childItem.toolTipTimer.stop();
-                        listItem.parentKickoffItem.childItem.toolTip.hideToolTip();
+                    if(listItem.parentKickoffItem) {
+                        if(listItem.parentKickoffItem.childItem && listItem.parentKickoffItem.childItem === listItem) {
+                            listItem.parentKickoffItem.childItem.toolTipTimer.stop();
+                            listItem.parentKickoffItem.childItem.toolTip.hideToolTip();
+                        }
+                        listItem.parentKickoffItem.childItem = listItem;
                     }
-                    listItem.parentKickoffItem.childItem = listItem;
                     toolTipTimer.start();
                 }
                 onExited: {
                     toolTipTimer.stop();
                     toolTip.hideToolTip();
-                    listItem.parentKickoffItem.childItem = null;
+                    if(listItem.parentKickoffItem) {
+                        listItem.parentKickoffItem.childItem = null;
+                    }
                     listItem.pressX = -1;
                     listItem.pressY = -1;
                 }

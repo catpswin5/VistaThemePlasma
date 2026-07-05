@@ -360,10 +360,7 @@ Item {
             id: childrenColumn
 
             width: parent.width
-            height: {
-                if(!listItem.modelChildren) return 0;
-                return listItem.expanded ? children.count * listItem.implicitHeight : 0
-            }
+            height: listItem.expanded ? implicitHeight : 0
 
             visible: listItem.expanded
 
