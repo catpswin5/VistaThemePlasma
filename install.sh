@@ -126,6 +126,16 @@ $SU_CMD cmake --install build || exit 1
 cp build/install_manifest.txt "$CUR_DIR/manifest/sounds_install_manifest.txt"
 cd "$CUR_DIR/repos"
 
+# WMP Toolbar
+git clone https://gitgud.io/catpswin56/wmp-toolbar-plasmoid wmp-toolbar-plasmoid
+cd wmp-toolbar-plasmoid
+git pull
+cmake -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
+cmake --build build || exit 1
+$SU_CMD cmake --install build || exit 1
+cp build/install_manifest.txt "$CUR_DIR/manifest/wmptoolbar_install_manifest.txt"
+cd "$CUR_DIR/repos"
+
 # Vistathemeplasma
 cd "$CUR_DIR"
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR=$LIBEXEC_DIR -B build . || exit 1

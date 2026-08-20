@@ -1,0 +1,362 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <!--     1. Decoration     -->
+        <file>decoration/sizingmargins</file>
+        <!--     1.1. Buttons     -->
+        <!--     1.1.1. Focused     -->
+        <!--     1.1.1.1. Close     -->
+        <file>decoration/button/focused/close/active</file>
+        <file>decoration/button/focused/close/active@1.25x</file>
+        <file>decoration/button/focused/close/active@1.5x</file>
+        <file>decoration/button/focused/close/hover</file>
+        <file>decoration/button/focused/close/hover@1.25x</file>
+        <file>decoration/button/focused/close/hover@1.5x</file>
+        <file>decoration/button/focused/close/normal</file>
+        <file>decoration/button/focused/close/normal@1.25x</file>
+        <file>decoration/button/focused/close/normal@1.5x</file>
+        <file>decoration/button/focused/close/notresponding</file>
+        <file>decoration/button/focused/close/notresponding@1.25x</file>
+        <file>decoration/button/focused/close/notresponding@1.5x</file>
+        <!--     1.1.1.2. Close Single     -->
+        <file>decoration/button/focused/close-single/active</file>
+        <file>decoration/button/focused/close-single/hover</file>
+        <file>decoration/button/focused/close-single/normal</file>
+        <file>decoration/button/focused/close-single/notresponding</file>
+        <!--     1.1.1.3. Maximize     -->
+        <file>decoration/button/focused/maximize/active</file>
+        <file>decoration/button/focused/maximize/active@1.25x</file>
+        <file>decoration/button/focused/maximize/active@1.5x</file>
+        <file>decoration/button/focused/maximize/hover</file>
+        <file>decoration/button/focused/maximize/hover@1.25x</file>
+        <file>decoration/button/focused/maximize/hover@1.5x</file>
+        <file>decoration/button/focused/maximize/normal</file>
+        <file>decoration/button/focused/maximize/normal@1.25x</file>
+        <file>decoration/button/focused/maximize/normal@1.5x</file>
+        <file>decoration/button/focused/maximize/notresponding</file>
+        <file>decoration/button/focused/maximize/notresponding@1.25x</file>
+        <file>decoration/button/focused/maximize/notresponding@1.5x</file>
+        <!--     1.1.1.4. Minimize     -->
+        <file>decoration/button/focused/minimize/active</file>
+        <file>decoration/button/focused/minimize/active@1.25x</file>
+        <file>decoration/button/focused/minimize/active@1.5x</file>
+        <file>decoration/button/focused/minimize/hover</file>
+        <file>decoration/button/focused/minimize/hover@1.25x</file>
+        <file>decoration/button/focused/minimize/hover@1.5x</file>
+        <file>decoration/button/focused/minimize/normal</file>
+        <file>decoration/button/focused/minimize/normal@1.25x</file>
+        <file>decoration/button/focused/minimize/normal@1.5x</file>
+        <file>decoration/button/focused/minimize/notresponding</file>
+        <file>decoration/button/focused/minimize/notresponding@1.25x</file>
+        <file>decoration/button/focused/minimize/notresponding@1.5x</file>
+        <!--     1.1.2. Unfocused     -->
+        <!--     1.1.2.1. Close     -->
+        <file>decoration/button/unfocused/close/active</file>
+        <file>decoration/button/unfocused/close/active@1.25x</file>
+        <file>decoration/button/unfocused/close/active@1.5x</file>
+        <file>decoration/button/unfocused/close/hover</file>
+        <file>decoration/button/unfocused/close/hover@1.25x</file>
+        <file>decoration/button/unfocused/close/hover@1.5x</file>
+        <file>decoration/button/unfocused/close/normal</file>
+        <file>decoration/button/unfocused/close/normal@1.25x</file>
+        <file>decoration/button/unfocused/close/normal@1.5x</file>
+        <file>decoration/button/unfocused/close/notresponding</file>
+        <file>decoration/button/unfocused/close/notresponding@1.25x</file>
+        <file>decoration/button/unfocused/close/notresponding@1.5x</file>
+        <!--     1.1.2.2. Close Single     -->
+        <file>decoration/button/unfocused/close-single/active</file>
+        <file>decoration/button/unfocused/close-single/hover</file>
+        <file>decoration/button/unfocused/close-single/normal</file>
+        <file>decoration/button/unfocused/close-single/notresponding</file>
+        <!--     1.1.2.3. Maximize     -->
+        <file>decoration/button/unfocused/maximize/active</file>
+        <file>decoration/button/unfocused/maximize/active@1.25x</file>
+        <file>decoration/button/unfocused/maximize/active@1.5x</file>
+        <file>decoration/button/unfocused/maximize/hover</file>
+        <file>decoration/button/unfocused/maximize/hover@1.25x</file>
+        <file>decoration/button/unfocused/maximize/hover@1.5x</file>
+        <file>decoration/button/unfocused/maximize/normal</file>
+        <file>decoration/button/unfocused/maximize/normal@1.25x</file>
+        <file>decoration/button/unfocused/maximize/normal@1.5x</file>
+        <file>decoration/button/unfocused/maximize/notresponding</file>
+        <file>decoration/button/unfocused/maximize/notresponding@1.25x</file>
+        <file>decoration/button/unfocused/maximize/notresponding@1.5x</file>
+        <!--     1.1.2.4. Minimize     -->
+        <file>decoration/button/unfocused/minimize/active</file>
+        <file>decoration/button/unfocused/minimize/active@1.25x</file>
+        <file>decoration/button/unfocused/minimize/active@1.5x</file>
+        <file>decoration/button/unfocused/minimize/hover</file>
+        <file>decoration/button/unfocused/minimize/hover@1.25x</file>
+        <file>decoration/button/unfocused/minimize/hover@1.5x</file>
+        <file>decoration/button/unfocused/minimize/normal</file>
+        <file>decoration/button/unfocused/minimize/normal@1.25x</file>
+        <file>decoration/button/unfocused/minimize/normal@1.5x</file>
+        <file>decoration/button/unfocused/minimize/notresponding</file>
+        <file>decoration/button/unfocused/minimize/notresponding@1.25x</file>
+        <file>decoration/button/unfocused/minimize/notresponding@1.5x</file>
+        <!--     1.2. Frame     -->
+        <file>decoration/frame/glow</file>
+        <!--     1.2.1. Focused     -->
+        <!--     1.2.1.1. Top     -->
+        <file>decoration/frame/focused/top</file>
+        <file>decoration/frame/focused/top_noinner</file>
+        <file>decoration/frame/focused/top_noshadow</file>
+        <file>decoration/frame/focused/top_noshadow_noinner</file>
+        <!--     1.2.1.2. Bottom     -->
+        <file>decoration/frame/focused/bottom</file>
+        <file>decoration/frame/focused/bottom_noinner</file>
+        <file>decoration/frame/focused/bottom_noshadow</file>
+        <file>decoration/frame/focused/bottom_noshadow_noinner</file>
+        <!--     1.2.1.3. Left     -->
+        <file>decoration/frame/focused/left</file>
+        <file>decoration/frame/focused/left_noinner</file>
+        <!--     1.2.1.4. Right     -->
+        <file>decoration/frame/focused/right</file>
+        <file>decoration/frame/focused/right_noinner</file>
+        <!--     1.2.2. Unfocused     -->
+        <!--     1.2.2.1. Top     -->
+        <file>decoration/frame/unfocused/top</file>
+        <file>decoration/frame/unfocused/top_noinner</file>
+        <file>decoration/frame/unfocused/top_noshadow</file>
+        <file>decoration/frame/unfocused/top_noshadow_noinner</file>
+        <!--     1.2.2.2. Bottom     -->
+        <file>decoration/frame/unfocused/bottom</file>
+        <file>decoration/frame/unfocused/bottom_noinner</file>
+        <file>decoration/frame/unfocused/bottom_noshadow</file>
+        <file>decoration/frame/unfocused/bottom_noshadow_noinner</file>
+        <!--     1.2.2.3. Left     -->
+        <file>decoration/frame/unfocused/left</file>
+        <file>decoration/frame/unfocused/left_noinner</file>
+        <!--     1.2.2.4. Right     -->
+        <file>decoration/frame/unfocused/right</file>
+        <file>decoration/frame/unfocused/right_noinner</file>
+        <!--     1.2.3. Shadow     -->
+        <file>decoration/frame/shadow/normal</file>
+        <file>decoration/frame/shadow/unfocus</file>
+        <!--     1.2.4. Sidehighlight     -->
+        <file>decoration/frame/sidehighlight/focus</file>
+        <file>decoration/frame/sidehighlight/unfocus</file>
+        <!--     1.3. Glyphs     -->
+        <!--     1.3.1 Close     -->
+        <file>decoration/glyphs/close/normal</file>
+        <file>decoration/glyphs/close/normal@1.25x</file>
+        <file>decoration/glyphs/close/normal@1.5x</file>
+        <file>decoration/glyphs/close/normal@2x</file>
+        <file>decoration/glyphs/close/hover</file>
+        <file>decoration/glyphs/close/hover@1.25x</file>
+        <file>decoration/glyphs/close/hover@1.5x</file>
+        <file>decoration/glyphs/close/hover@2x</file>
+        <file>decoration/glyphs/close/active</file>
+        <file>decoration/glyphs/close/active@1.25x</file>
+        <file>decoration/glyphs/close/active@1.5x</file>
+        <file>decoration/glyphs/close/active@2x</file>
+        <file>decoration/glyphs/close/disabled</file>
+        <file>decoration/glyphs/close/disabled@1.25x</file>
+        <file>decoration/glyphs/close/disabled@1.5x</file>
+        <file>decoration/glyphs/close/disabled@2x</file>
+        <!--     1.3.2 Maximize     -->
+        <file>decoration/glyphs/maximize/normal</file>
+        <file>decoration/glyphs/maximize/normal@1.25x</file>
+        <file>decoration/glyphs/maximize/normal@1.5x</file>
+        <file>decoration/glyphs/maximize/normal@2x</file>
+        <file>decoration/glyphs/maximize/hover</file>
+        <file>decoration/glyphs/maximize/hover@1.25x</file>
+        <file>decoration/glyphs/maximize/hover@1.5x</file>
+        <file>decoration/glyphs/maximize/hover@2x</file>
+        <file>decoration/glyphs/maximize/active</file>
+        <file>decoration/glyphs/maximize/active@1.25x</file>
+        <file>decoration/glyphs/maximize/active@1.5x</file>
+        <file>decoration/glyphs/maximize/active@2x</file>
+        <file>decoration/glyphs/maximize/disabled</file>
+        <file>decoration/glyphs/maximize/disabled@1.25x</file>
+        <file>decoration/glyphs/maximize/disabled@1.5x</file>
+        <file>decoration/glyphs/maximize/disabled@2x</file>
+        <!--     1.3.3 Restore     -->
+        <file>decoration/glyphs/restore/normal</file>
+        <file>decoration/glyphs/restore/normal@1.25x</file>
+        <file>decoration/glyphs/restore/normal@1.5x</file>
+        <file>decoration/glyphs/restore/normal@2x</file>
+        <file>decoration/glyphs/restore/hover</file>
+        <file>decoration/glyphs/restore/hover@1.25x</file>
+        <file>decoration/glyphs/restore/hover@1.5x</file>
+        <file>decoration/glyphs/restore/hover@2x</file>
+        <file>decoration/glyphs/restore/active</file>
+        <file>decoration/glyphs/restore/active@1.25x</file>
+        <file>decoration/glyphs/restore/active@1.5x</file>
+        <file>decoration/glyphs/restore/active@2x</file>
+        <file>decoration/glyphs/restore/disabled</file>
+        <file>decoration/glyphs/restore/disabled@1.25x</file>
+        <file>decoration/glyphs/restore/disabled@1.5x</file>
+        <file>decoration/glyphs/restore/disabled@2x</file>
+        <!--     1.3.4 Minimize     -->
+        <file>decoration/glyphs/minimize/normal</file>
+        <file>decoration/glyphs/minimize/normal@1.25x</file>
+        <file>decoration/glyphs/minimize/normal@1.5x</file>
+        <file>decoration/glyphs/minimize/normal@2x</file>
+        <file>decoration/glyphs/minimize/hover</file>
+        <file>decoration/glyphs/minimize/hover@1.25x</file>
+        <file>decoration/glyphs/minimize/hover@1.5x</file>
+        <file>decoration/glyphs/minimize/hover@2x</file>
+        <file>decoration/glyphs/minimize/active</file>
+        <file>decoration/glyphs/minimize/active@1.25x</file>
+        <file>decoration/glyphs/minimize/active@1.5x</file>
+        <file>decoration/glyphs/minimize/active@2x</file>
+        <file>decoration/glyphs/minimize/disabled</file>
+        <file>decoration/glyphs/minimize/disabled@1.25x</file>
+        <file>decoration/glyphs/minimize/disabled@1.5x</file>
+        <file>decoration/glyphs/minimize/disabled@2x</file>
+        <!--     1.3.4 Context Help     -->
+        <file>decoration/glyphs/contexthelp/normal</file>
+        <file>decoration/glyphs/contexthelp/normal@1.25x</file>
+        <file>decoration/glyphs/contexthelp/normal@1.5x</file>
+        <file>decoration/glyphs/contexthelp/normal@2x</file>
+        <file>decoration/glyphs/contexthelp/hover</file>
+        <file>decoration/glyphs/contexthelp/hover@1.25x</file>
+        <file>decoration/glyphs/contexthelp/hover@1.5x</file>
+        <file>decoration/glyphs/contexthelp/hover@2x</file>
+        <file>decoration/glyphs/contexthelp/active</file>
+        <file>decoration/glyphs/contexthelp/active@1.25x</file>
+        <file>decoration/glyphs/contexthelp/active@1.5x</file>
+        <file>decoration/glyphs/contexthelp/active@2x</file>
+        <file>decoration/glyphs/contexthelp/disabled</file>
+        <file>decoration/glyphs/contexthelp/disabled@1.25x</file>
+        <file>decoration/glyphs/contexthelp/disabled@1.5x</file>
+        <file>decoration/glyphs/contexthelp/disabled@2x</file>
+        <!--     1.3.5 Overlap     -->
+        <file>decoration/glyphs/overlap/normal</file>
+        <file>decoration/glyphs/overlap/normal@1.25x</file>
+        <file>decoration/glyphs/overlap/normal@1.5x</file>
+        <file>decoration/glyphs/overlap/normal@2x</file>
+        <file>decoration/glyphs/overlap/hover</file>
+        <file>decoration/glyphs/overlap/hover@1.25x</file>
+        <file>decoration/glyphs/overlap/hover@1.5x</file>
+        <file>decoration/glyphs/overlap/hover@2x</file>
+        <file>decoration/glyphs/overlap/active</file>
+        <file>decoration/glyphs/overlap/active@1.25x</file>
+        <file>decoration/glyphs/overlap/active@1.5x</file>
+        <file>decoration/glyphs/overlap/active@2x</file>
+        <file>decoration/glyphs/overlap/disabled</file>
+        <file>decoration/glyphs/overlap/disabled@1.25x</file>
+        <file>decoration/glyphs/overlap/disabled@1.5x</file>
+        <file>decoration/glyphs/overlap/disabled@2x</file>
+        <!--     1.3.6 Underlap     -->
+        <file>decoration/glyphs/underlap/normal</file>
+        <file>decoration/glyphs/underlap/normal@1.25x</file>
+        <file>decoration/glyphs/underlap/normal@1.5x</file>
+        <file>decoration/glyphs/underlap/normal@2x</file>
+        <file>decoration/glyphs/underlap/hover</file>
+        <file>decoration/glyphs/underlap/hover@1.25x</file>
+        <file>decoration/glyphs/underlap/hover@1.5x</file>
+        <file>decoration/glyphs/underlap/hover@2x</file>
+        <file>decoration/glyphs/underlap/active</file>
+        <file>decoration/glyphs/underlap/active@1.25x</file>
+        <file>decoration/glyphs/underlap/active@1.5x</file>
+        <file>decoration/glyphs/underlap/active@2x</file>
+        <file>decoration/glyphs/underlap/disabled</file>
+        <file>decoration/glyphs/underlap/disabled@1.25x</file>
+        <file>decoration/glyphs/underlap/disabled@1.5x</file>
+        <file>decoration/glyphs/underlap/disabled@2x</file>
+        <!--     1.3.7 Shade     -->
+        <file>decoration/glyphs/shade/normal</file>
+        <file>decoration/glyphs/shade/normal@1.25x</file>
+        <file>decoration/glyphs/shade/normal@1.5x</file>
+        <file>decoration/glyphs/shade/normal@2x</file>
+        <file>decoration/glyphs/shade/hover</file>
+        <file>decoration/glyphs/shade/hover@1.25x</file>
+        <file>decoration/glyphs/shade/hover@1.5x</file>
+        <file>decoration/glyphs/shade/hover@2x</file>
+        <file>decoration/glyphs/shade/active</file>
+        <file>decoration/glyphs/shade/active@1.25x</file>
+        <file>decoration/glyphs/shade/active@1.5x</file>
+        <file>decoration/glyphs/shade/active@2x</file>
+        <file>decoration/glyphs/shade/disabled</file>
+        <file>decoration/glyphs/shade/disabled@1.25x</file>
+        <file>decoration/glyphs/shade/disabled@1.5x</file>
+        <file>decoration/glyphs/shade/disabled@2x</file>
+        <!--     1.3.7 Pin     -->
+        <file>decoration/glyphs/pin/normal</file>
+        <file>decoration/glyphs/pin/normal@1.25x</file>
+        <file>decoration/glyphs/pin/normal@1.5x</file>
+        <file>decoration/glyphs/pin/normal@2x</file>
+        <file>decoration/glyphs/pin/hover</file>
+        <file>decoration/glyphs/pin/hover@1.25x</file>
+        <file>decoration/glyphs/pin/hover@1.5x</file>
+        <file>decoration/glyphs/pin/hover@2x</file>
+        <file>decoration/glyphs/pin/active</file>
+        <file>decoration/glyphs/pin/active@1.25x</file>
+        <file>decoration/glyphs/pin/active@1.5x</file>
+        <file>decoration/glyphs/pin/active@2x</file>
+        <file>decoration/glyphs/pin/disabled</file>
+        <file>decoration/glyphs/pin/disabled@1.25x</file>
+        <file>decoration/glyphs/pin/disabled@1.5x</file>
+        <file>decoration/glyphs/pin/disabled@2x</file>
+        <!--     1.3.8 Menu     -->
+        <file>decoration/glyphs/menu/normal</file>
+        <file>decoration/glyphs/menu/normal@1.25x</file>
+        <file>decoration/glyphs/menu/normal@1.5x</file>
+        <file>decoration/glyphs/menu/normal@2x</file>
+        <file>decoration/glyphs/menu/hover</file>
+        <file>decoration/glyphs/menu/hover@1.25x</file>
+        <file>decoration/glyphs/menu/hover@1.5x</file>
+        <file>decoration/glyphs/menu/hover@2x</file>
+        <file>decoration/glyphs/menu/active</file>
+        <file>decoration/glyphs/menu/active@1.25x</file>
+        <file>decoration/glyphs/menu/active@1.5x</file>
+        <file>decoration/glyphs/menu/active@2x</file>
+        <file>decoration/glyphs/menu/disabled</file>
+        <file>decoration/glyphs/menu/disabled@1.25x</file>
+        <file>decoration/glyphs/menu/disabled@1.5x</file>
+        <file>decoration/glyphs/menu/disabled@2x</file>
+        <!--     1.3.9 Exclude from Capture     -->
+        <file>decoration/glyphs/captureexclude/normal</file>
+        <file>decoration/glyphs/captureexclude/normal@1.25x</file>
+        <file>decoration/glyphs/captureexclude/normal@1.5x</file>
+        <file>decoration/glyphs/captureexclude/normal@2x</file>
+        <file>decoration/glyphs/captureexclude/hover</file>
+        <file>decoration/glyphs/captureexclude/hover@1.25x</file>
+        <file>decoration/glyphs/captureexclude/hover@1.5x</file>
+        <file>decoration/glyphs/captureexclude/hover@2x</file>
+        <file>decoration/glyphs/captureexclude/active</file>
+        <file>decoration/glyphs/captureexclude/active@1.25x</file>
+        <file>decoration/glyphs/captureexclude/active@1.5x</file>
+        <file>decoration/glyphs/captureexclude/active@2x</file>
+        <file>decoration/glyphs/captureexclude/disabled</file>
+        <file>decoration/glyphs/captureexclude/disabled@1.25x</file>
+        <file>decoration/glyphs/captureexclude/disabled@1.5x</file>
+        <file>decoration/glyphs/captureexclude/disabled@2x</file>
+
+        <!--     2. Glow     -->
+        <!--     2.1. Textures     -->
+        <!--     2.1.1 Close     -->
+        <file>glow/textures/close</file>
+        <file>glow/textures/close@1.25x</file>
+        <file>glow/textures/close@1.5x</file>
+        <file>glow/textures/close@1.75x</file>
+        <!--     2.1.2 Maximize     -->
+        <file>glow/textures/maximize</file>
+        <file>glow/textures/maximize@1.25x</file>
+        <file>glow/textures/maximize@1.5x</file>
+        <file>glow/textures/maximize@1.75x</file>
+        <!--     2.1.3 Minimize     -->
+        <file>glow/textures/minimize</file>
+        <file>glow/textures/minimize@1.25x</file>
+        <file>glow/textures/minimize@1.5x</file>
+        <file>glow/textures/minimize@1.75x</file>
+
+        <!--     3. Snap     -->
+        <!--     3.1. Animation     -->
+        <file>snap/animation/animrc</file>
+        <file>snap/animation/frame1</file>
+        <file>snap/animation/frame2</file>
+        <file>snap/animation/frame3</file>
+        <file>snap/animation/frame4</file>
+        <file>snap/animation/frame5</file>
+        <file>snap/animation/frame6</file>
+        <file>snap/animation/frame7</file>
+        <file>snap/animation/frame8</file>
+        <file>snap/animation/frame9</file>
+        <file>snap/animation/frame10</file>
+        <file>snap/animation/frame11</file>
+        <file>snap/animation/frame12</file>
+    </qresource>
+</RCC>
