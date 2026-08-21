@@ -11,7 +11,6 @@ set(plasmoids
     io.gitgud.catpswin56.vistastart
     io.gitgud.catpswin56.quicklaunch
     io.gitgud.catpswin56.vistatasks
-    io.gitgud.catpswin56.wmptoolbar
 
     io.gitgud.catpswin56.sidebar
     io.gitgud.catpswin56.desktopcontainment
