@@ -55,13 +55,17 @@ git clone https://gitgud.io/aeroshell/smod.git smod
 cd smod
 git pull
 git checkout $BRANCH_VERSION
-bash install.sh $@
+cmake -DCMAKE_INSTALL_PREFIX=/usr -B build . || exit 1
+cmake --build build || exit 1
+$SU_CMD cmake --install build || exit 1
 cp build/install_manifest.txt "$CUR_DIR/manifest/smod_install_manifest.txt"
-cp smodglow/build-wl/install_manifest.txt "$CUR_DIR/manifest/smodglow_install_manifest.txt"
 
 if [[ ! "$*" == *"--skip-x11"* ]]
 then
-    cp smodglow/build/install_manifest.txt "$CUR_DIR/manifest/smodglow-x11_install_manifest.txt"
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_DECORATION=OFF -DBUILD_EFFECTX11=ON -B build-x11 . || exit 1
+    cmake --build build-x11 || exit 1
+    $SU_CMD cmake --install build-x11 || exit 1
+    cp build-x11/install_manifest.txt "$CUR_DIR/manifest/smodglow-x11_install_manifest.txt"
 fi
 cd "$CUR_DIR/repos"
 
